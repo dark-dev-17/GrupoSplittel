@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div id="app_login">
+    <div class="d-flex align-items-center justify-content-center bg-br-primary ht-100v">
+        <div class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white rounded shadow-base">
+            <div class="signin-logo tx-center tx-28 tx-bold tx-inverse"><span class="tx-normal">Grupo Splittel</span></div>
+            <div class="tx-center mg-b-60">Administrador Ecommerce</div>
+            <div v-if="loading === true">
+                <div class="alert alert-secondary" role="alert" v-if="loginSuccess === true">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    validando información...
+                </div>
+            </div>
+            <div v-if="loading === false">
+                <form class="form-auth-small" action="/" method="post" v-on:submit.prevent="doLogin">
+                    <div class="alert alert-warning" role="alert" v-if="Error.Error === true">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <strong></strong> {{ Error.Description }}
+                    </div>
+                    <div class="alert alert-success" role="alert" v-if="loginSuccess === true">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        Redirigiendo a admin ecommerce
+                    </div>
+                    <div class="form-group mt-4">
+                        <label for="signin-email" class="control-label sr-only">Usuario splinet</label>
+                        <input type="text" class="form-control round" id="signin-email" value="user@domain.com" v-model="userData.Username" placeholder="Usuario splinet">
+                    </div>
+                    <div class="form-group">
+                        <label for="signin-password" class="control-label sr-only">Contraseña</label>
+                        <input type="password" class="form-control round" id="signin-password" value="thisisthepassword" v-model="userData.Password" placeholder="Contraseña">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-round btn-block">Entrar</button>
+                    <div class="mt-4">
+                    </div>
+                </form>
+            </div><!-- login-wrapper -->
+        </div><!-- d-flex -->
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_login = new Vue({
+            el: '#app_login',
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                userData: {
+                    Username: "",
+                    Password: ""
+                },
+                Error: {
+                    Error: false,
+                    Description: ""
+                },
+                loginSuccess: false,
+                loading: false
+            },
+            methods: {
+                doLogin: function (evt) {
+                    this.loading = true;
+                    evt.preventDefault();
+                    var params = new URLSearchParams();
+                        params.append('Username', '' + this.userData.Username);
+                        params.append('Password', '' + this.userData.Password);
+                    axios.post('@Url.Action("DataDoLogin","Login")', params,{headers: this.serverToken}).then(response => {
+                        //alert(response.data);
+                        this.loginSuccess = true;
+                        this.Error.Error = false;
+                        this.Error.Description = "Credenciales correctas";
+                        window.location = response.data;
+                    }).catch(error => {
+                        this.Error.Error = true;
+                        this.Error.Description = error.response.data;
+                        
+                    }).finally(() => this.loading = false)
+                }
+            }
+        })
+    </script>
+}
+

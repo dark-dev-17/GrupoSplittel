@@ -1,0 +1,92 @@
+﻿@model IEnumerable<SAPDataProcess.SAP_Document>
+
+@{
+    ViewData["Title"] = "Pedidos en proceso";
+}
+<div id="app_enProceso">
+    <div class="br-section-wrapper col-lg-12">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap " id="table_enProceso" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocNumEcommerce)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocNum)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocTotal)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocCur)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CardCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Cardname)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TrackNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Status)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(item.DocNumEcommerce + "", "Detalle", "Pedido", new { id = item.DocNumEcommerce }, new { @class = "btn btn-sm btn-outline-success" })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DocNum)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DocDate)
+                            </td>
+                            <td>
+                                $@Html.DisplayFor(modelItem => item.DocTotal)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DocCur)
+                            </td>
+                            <td>
+                                @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success" })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Cardname)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TrackNo)
+                            </td>
+                            <td>
+                                @item.GetStatusDescription()
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_enProceso = new Vue({
+            el: "#app_enProceso",
+            data: {
+            },
+            mounted() {
+                $('#table_enProceso').DataTable({
+                    "order": []
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,86 @@
+﻿@model IEnumerable<SAPDataProcess.SAP_Document>
+
+@{
+    ViewData["Title"] = "Historico de pedidos";
+}
+<div id="app_historico">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap " id="table_historico" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocNumEcommerce)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocNum)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocTotal)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocCur)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CardCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Cardname)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TrackNo)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.DocNumEcommerce + "", "Detalle", "Pedido", new { id = item.DocNumEcommerce }, new { @class = "btn btn-sm btn-outline-success" })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DocNum)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DocDate)
+                        </td>
+                        <td>
+                            $@Html.DisplayFor(modelItem => item.DocTotal)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DocCur)
+                        </td>
+                        <td>
+                            @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success" })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cardname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TrackNo)
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_historico = new Vue({
+            el: "#app_historico",
+            data: {
+            },
+            mounted() {
+                $('#table_historico').DataTable({
+                    "order": []
+                });
+            }
+        });
+    </script>
+}

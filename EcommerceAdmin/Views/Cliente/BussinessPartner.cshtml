@@ -1,0 +1,203 @@
+﻿@model SAPDataProcess.SAP_BussinessPartner
+@{
+    ViewData["Title"] = "Información: " + Model.CardCode;
+
+    Ecom_SAP ecom_SAP = new Ecom_SAP("Ambas");
+    List<EcomDataProccess.Ecom_Pedido> Cotizaciones = ecom_SAP.GetEcom_Pedidos("Cotizacion", Model.CardCode);
+    List<EcomDataProccess.Ecom_Pedido> Pendientes = ecom_SAP.GetEcom_Pedidos("Pendiente", Model.CardCode);
+    List<SAPDataProcess.SAP_Document> EnProceso = ecom_SAP.GetSAP_Document("EnProceso", Model.CardCode);
+    List<SAPDataProcess.SAP_Document> Rechazado = ecom_SAP.GetSAP_Document("Rechazado", Model.CardCode);
+    List<SAPDataProcess.SAP_Document> Historico = ecom_SAP.GetSAP_Document("Historico", Model.CardCode);
+    List<EcomDataProccess.Ecom_Cliente> Usuarios = ecom_SAP.GetEcom_Cliente(Model.CardCode);
+
+    ecom_SAP.CloseConections();
+}
+<style>
+    .br-section-wrapper {
+        padding: 30px;
+        border-radius: 3px;
+    }
+    .br-section-wrapper {
+        padding: 0px !important;
+    }
+    .br-section-wrapper {
+        background-color: #fff;
+        padding: 30px 20px;
+        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0);
+    }
+    table.dataTable {
+	    width: 100%;
+	    /* margin: 0 auto; */
+	    clear: both;
+	    border-collapse: separate;
+	    border-spacing: 0;
+    }
+</style>
+<div id="app_BussinesPartner">
+    <div class="row">
+        <div class="col-lg-2 mg-t-30 mg-lg-t-0">
+            <div class="card pd-20 pd-xs-30 shadow-base bd-0">
+                <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-25">Información de contacto</h6>
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Cliente</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.CardName)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Correo de contacto</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.E_Mail)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Correo de facturación</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.E_MailL_invoice)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Correo de estados de cuenta</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.E_MailL_account)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Telefono(s)</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.Phone2)</p>
+
+                <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-25">Facturación</h6>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Método de pago</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.DescriptPayment)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Moneda</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.Currency)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Monex USD</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.MonexUSD)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Monex MXP</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.MonexMXP)</p>
+
+                <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-25">Grupo Splittel</h6>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Ejecutivo de ventas</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.SlpName)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Correo del ejecutivo</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.Email_employeSales)</p>
+            </div><!-- card -->
+        </div>
+        <div class="col-lg-10 mg-t-30 mg-lg-t-0">
+            <div class="row no-gutters widget-1 shadow-base">
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Linea de crédito</h6>
+                        </div><!-- card-header -->
+                        <div class="card-body">
+                            <span id="spark1"><img src="https://img.icons8.com/ultraviolet/40/000000/bank-card-back-side.png"></span>
+                            <span>$@Html.DisplayFor(model => model.CreditLine) @Html.DisplayFor(model => model.Currency)</span>
+                        </div><!-- card-body -->
+                    </div><!-- card -->
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Saldo a favor</h6>
+                        </div><!-- card-header -->
+                        <div class="card-body">
+                            <span id="spark1"><img src="https://img.icons8.com/ultraviolet/40/000000/bank-card-back-side.png"></span>
+                            <span>$@Html.DisplayFor(model => model.Balance) @Html.DisplayFor(model => model.Currency)</span>
+                        </div><!-- card-body -->
+                    </div><!-- card -->
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Dias extras</h6>
+                        </div><!-- card-header -->
+                        <div class="card-body">
+                            <span id="spark1"><img src="https://img.icons8.com/ultraviolet/40/000000/bank-card-back-side.png"></span>
+                            <span>@Html.DisplayFor(model => model.ExtraDays)</span>
+                        </div><!-- card-body -->
+                    </div><!-- card -->
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">Sección</h6>
+                        </div><!-- card-header -->
+                        <div class="card-body">
+                            <span id="spark1"><img src="https://img.icons8.com/ultraviolet/40/000000/low-price.png"></span>
+                            <span>@Html.DisplayFor(model => model.Section) </span>
+                        </div><!-- card-body -->
+                    </div><!-- card -->
+                </div>
+            </div>
+            <div class="row no-gutters widget-1 shadow-base">
+                <div class="col-xl-12 mt-2">
+                    <div class="card bd">
+                        <div class="card-header bd-b">
+                            <ul class="nav nav-outline active-info flex-column flex-md-row">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Dashboard</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Cotizaciones</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#desccipcion" role="tab" aria-controls="contact" aria-selected="false">Pendientes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">En Proceso</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact" aria-selected="false">Rechazados</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact2" role="tab" aria-controls="contact" aria-selected="false">Historico</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact3" role="tab" aria-controls="contact" aria-selected="false">Usuarios</a>
+                                </li>
+                            </ul>
+                        </div><!-- card-header -->
+                        <div class="card-body color-gray-lighter">
+                            <div class="tab-content col-lg-12" id="myTabContent">
+                                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                                </div>
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <div class="">
+                                        <partial name="../Pedido/Cotizacion" model="Cotizaciones" />
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="desccipcion" role="tabpanel" aria-labelledby="contact-tab">
+                                    <partial name="../Pedido/Pendiente" model="Pendientes" />
+                                </div>
+                                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                                    <div class="">
+                                        <partial name="../Pedido/EnProceso" model="EnProceso" />
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="contact1" role="tabpanel" aria-labelledby="contact-tab">
+                                    <partial name="../Pedido/Rechazado" model="Rechazado" />
+                                </div>
+                                <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact-tab">
+                                    <partial name="../Pedido/Historico" model="Historico" />
+                                    
+                                </div>
+                                <div class="tab-pane fade" id="contact3" role="tabpanel" aria-labelledby="contact-tab">
+                                    <partial name="../Cliente/Index" model="Usuarios" />
+                                </div>
+                            </div>
+                        </div><!-- card-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_BussinesPartner = new Vue({
+            el: "#app_BussinesPartner",
+            data: {
+            },
+            mounted() {
+                $('.table').DataTable({
+                    "order": []
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,467 @@
+﻿@model EcomDataProccess.Ecom_Producto
+@{
+    ViewData["Title"] = "Detalle del producto: " + Model.ItemCode;
+
+}
+<div id="app_productoDetalle">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table table-hover table-custom spacing5">
+                <tr>
+                    <td><strong>Codigo</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.ItemCode)</td>
+                    <td><strong>Nombre</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.Description)</td>
+                </tr>
+                <tr>
+                    <td><strong>Descripcion</strong></td>
+                    <td colspan="3">
+                        <div v-if="controls.EditLargeDescription == false">
+                            @Html.DisplayFor(model => model.LargeDescription)
+                            <button class="btn btn-sm btn-secondary" v-on:click="controls.EditLargeDescription = true">Editar</button>
+                        </div>
+                        <div v-if="controls.EditLargeDescription == true">
+                            <div class="form-group">
+                                <textarea class="form-control" v-model="item.largeDescription">@Html.DisplayFor(model => model.LargeDescription)</textarea>
+                                <button class="btn btn-sm btn-secondary" v-on:click="controls.EditLargeDescription = false">Cancelar</button>
+                                <button class="btn btn-sm btn-success" v-on:click="UpdateLargeDescription()">Guardar</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Categoria</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.Category.Description)</td>
+                    <td><strong>Sub categoria</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.SubCategory.Description)</td>
+                </tr>
+                <tr>
+                    <td><strong>Precio</strong></td>
+                    <td colspan="1">$@Model.UnitPrice.ToString("0.###")</td>
+                    <td><strong>Descuento</strong></td>
+                    <td colspan="1">
+                        @if (Model.Discount < 0)
+                        {
+                            <span>No se aplica descuento</span>
+                        }
+                        else
+                        {
+                            <span>@Html.DisplayFor(model => model.Discount)%</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Stock</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.Stock)</td>
+                    <td><strong>Activo en ecommerce</strong></td>
+                    <td colspan="1">
+                        <button v-if=" item.isActiveEcomerce == false" v-on:click="ActiveItem()" class="">Activar</button>
+                        <button v-if=" item.isActiveEcomerce == true" v-on:click="InActive()" class="">Desactivar</button>
+                    </td>
+                </tr>
+            </table>
+            <div class="col-xl-12">
+                <div class="card bd">
+                    <div class="card-header bd-b">
+                        <ul class="nav nav-outline active-info flex-column flex-md-row">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Imagenes producto</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Información adicional</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#desccipcion" role="tab" aria-controls="contact" aria-selected="false">Descripción</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Ficha tecnica</a>
+                            </li>
+                        </ul>
+                    </div><!-- card-header -->
+                    <div class="card-body color-gray-lighter">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div v-if="images.Producto.isGetting === true">
+                                    cargando imagenes del producto...
+                                </div>
+                                <div v-if="images.Producto.isGetting === false">
+                                    <nav class="navbar navbar-light bg-light justify-content-between">
+                                        <a class="navbar-brand">Producto: @Model.ItemCode</a>
+                                        <form class="form-inline">
+                                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="UpdateProductoImagenes()">Subir imagen</button>
+                                        </form>
+                                    </nav>
+                                    <div class="row">
+                                        <div v-for="(image, index) in images.Producto.images">
+                                            <div class="card bd-0 wd-xs-300">
+                                                <img class="card-img-top img-fluid" :src="image.ruta" alt="Image">
+                                                <div class="card-body bd bd-t-0">
+                                                    {{ image.name }}
+                                                    <center>
+                                                        <div class="btn-group btn-group-sm " role="group" aria-label="Basic example">
+                                                            <button type="button" class="btn btn-secondary" v-on:click="DeleteProductoImagen(index)">Eliminar</button>
+                                                            <button type="button" class="btn btn-secondary" v-on:click="RenameProductoImagen(index)">Rename</button>
+                                                            <a :href="image.ruta" target="_blank" class="btn btn-secondary">Ver</a>
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div v-if="images.Descripcion.isGetting === true">
+                                    cargando imagenes del producto...
+                                </div>
+                                <div v-if="images.Descripcion.isGetting === false">
+                                    <nav class="navbar navbar-light bg-light justify-content-between">
+                                        <a class="navbar-brand">Producto: @Model.ItemCode</a>
+                                        <form class="form-inline">
+                                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="UpdateDescripcionImagenes()">Subir imagen</button>
+                                        </form>
+                                    </nav>
+                                    <div class="row">
+                                        <div v-for="(image, index) in images.Descripcion.images">
+                                            <div class="card bd-0 wd-xs-300">
+                                                <img class="card-img-top img-fluid" :src="image.ruta" alt="Image">
+                                                <div class="card-body bd bd-t-0">
+                                                    {{ image.name }}
+                                                    <center>
+                                                        <div class="btn-group btn-group-sm " role="group" aria-label="Basic example">
+                                                            <button type="button" class="btn btn-secondary" v-on:click="DeleteDescripcionImagen(index)">Eliminar</button>
+                                                            <a :href="image.ruta" target="_blank" class="btn btn-secondary">Ver</a>
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="desccipcion" role="tabpanel" aria-labelledby="contact-tab">
+                                <div v-if="images.InfoAdicional.isGetting === true">
+                                    cargando imagenes del producto...
+                                </div>
+                                <div v-if="images.InfoAdicional.isGetting === false">
+                                    <nav class="navbar navbar-light bg-light justify-content-between">
+                                        <a class="navbar-brand">Producto: @Model.ItemCode</a>
+                                        <form class="form-inline">
+                                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="UpdateInfoAdicionalImagenes()">Subir imagen</button>
+                                        </form>
+                                    </nav>
+                                    <div class="row">
+                                        <div v-for="(image, index) in images.InfoAdicional.images">
+                                            <div class="card bd-0 wd-xs-300">
+                                                <img class="card-img-top img-fluid" :src="image.ruta" alt="Image">
+                                                <div class="card-body bd bd-t-0">
+                                                    {{ image.name }}
+                                                    <center>
+                                                        <div class="btn-group btn-group-sm " role="group" aria-label="Basic example">
+                                                            <button type="button" class="btn btn-secondary" v-on:click="DeleteInfoAdicionalImagen(index)">Eliminar</button>
+                                                            <a :href="image.ruta" target="_blank" class="btn btn-secondary">Ver</a>
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                                
+                            </div>
+                        </div>
+                    </div><!-- card-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_productoDetalle = new Vue({
+            el: "#app_productoDetalle",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                controls: {
+                    EditLargeDescription : false
+                },
+                item: {
+                    Code: "@Model.ItemCode",
+                    largeDescription: '@Html.Raw(Model.LargeDescription.Replace("\n"," "))',
+                    isActiveEcomerce: ("@Model.IsActiveEcomerce" == "True" ? true : false),
+                },
+                images: {
+                    Producto: {
+                        images: [],
+                        isGetting: true
+                    },
+                    Descripcion: {
+                        images: [],
+                        isGetting: true
+                    },
+                    InfoAdicional: {
+                        images: [],
+                        isGetting: true
+                    }
+                }
+            },
+            async mounted() {
+                await this.GetProductoImagenes();
+                await this.GetDescripcionImagenes();
+                await this.GetInfoAdicionalImagenes();
+            },
+            methods: {
+                RenameProductoImagen: async function (index) {
+                    const { value: email } = await Swal.fire({
+                      title: 'Nombre del archivo sin extensión',
+                      input: 'text',
+                      inputPlaceholder: 'Enter your email address'
+                    })
+
+                    if (email) {
+                      var params = new URLSearchParams();
+                            params.append('Filename', '' + this.images.Producto.images[index].name);
+                            params.append('Newname', '' + email);
+                            params.append('ItemCode', '' + this.item.Code);
+                            params.append('ImagessType', 'Producto');
+                            axios.post('@Url.Action("DataRenameFiles","Producto")', params,{ headers: this.serverToken }).then(response => {
+                                 this.ShowMessageErrorShort(response.data,'success')
+                                this.images.Producto.images[index].name = email;
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            }).finally(() => this.images.Producto.isGetting = false)
+                    }
+                },
+                DeleteProductoImagen: async function (index) {
+                    Swal.fire({
+                        title: "¿Deseas eliminar este archivo?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, eliminalo!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var params = new URLSearchParams();
+                            params.append('Filename', '' + this.images.Producto.images[index].name);
+                            params.append('ItemCode', '' + this.item.Code);
+                            params.append('ImagessType', 'Producto');
+                            axios.post('@Url.Action("DataDeleteFiles","Producto")', params,{ headers: this.serverToken }).then(response => {
+                                 this.ShowMessageErrorShort(response.data,'success')
+                                this.images.Producto.images.splice(index, 1);
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            }).finally(() => this.images.Producto.isGetting = false)
+                        }
+                    })
+                },
+                DeleteDescripcionImagen: async function (index) {
+                    Swal.fire({
+                        title: "¿Deseas eliminar este archivo?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, eliminalo!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var params = new URLSearchParams();
+                            params.append('Filename', '' + this.images.Descripcion.images[index].name);
+                            params.append('ItemCode', '' + this.item.Code);
+                            params.append('ImagessType', 'Descripcion');
+                            axios.post('@Url.Action("DataDeleteFiles","Producto")', params,{ headers: this.serverToken }).then(response => {
+                                 this.ShowMessageErrorShort(response.data,'success')
+                                this.images.Descripcion.images.splice(index, 1);
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            }).finally(() => this.images.Descripcion.isGetting = false)
+                        }
+                    })
+                },
+                DeleteInfoAdicionalImagen: async function (index) {
+                    Swal.fire({
+                        title: "¿Deseas eliminar este archivo?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, eliminalo!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var params = new URLSearchParams();
+                            params.append('Filename', '' + this.images.InfoAdicional.images[index].name);
+                            params.append('ItemCode', '' + this.item.Code);
+                            params.append('ImagessType', 'InfoAdicional');
+                            axios.post('@Url.Action("DataDeleteFiles","Producto")', params,{ headers: this.serverToken }).then(response => {
+                                 this.ShowMessageErrorShort(response.data,'success')
+                                this.images.InfoAdicional.images.splice(index, 1);
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            }).finally(() => this.images.InfoAdicional.isGetting = false)
+                        }
+                    })
+                },
+                UpdateProductoImagenes: async function () {
+                    const { value: file } = await Swal.fire({
+                        title: 'Select image',
+                        input: 'file',
+                        inputAttributes: {
+                            'accept': 'image/*',
+                            'aria-label': 'Upload your profile picture'
+                        }
+                    })
+                    if (file) {
+                        let params = new FormData();
+                            params.append('FormFile', file);
+                            params.append('ItemCode', '' + this.item.Code);
+                            params.append('ImagessType', 'Producto' );
+                        await axios.post('@Url.Action("DataUploadFiles","Producto")', params, { headers: this.serverToken }).then(response => {
+                            this.ShowMessageErrorShort(response.data,'success')
+                            this.GetProductoImagenes();
+                            const reader = new FileReader()
+                            reader.onload = (e) => {
+                                Swal.fire({
+                                    title: 'Your uploaded picture',
+                                    imageUrl: e.target.result,
+                                    imageAlt: 'The uploaded picture'
+                                })
+                            }
+                            reader.readAsDataURL(file)
+                        }).catch(error => {
+                            this.ShowMessageErrorShort(error.response.data,'error')
+                        }).finally(() => this.images.Producto.isGetting = false)
+                    }
+                },
+                UpdateDescripcionImagenes: async function () {
+                    const { value: file } = await Swal.fire({
+                        title: 'Select image',
+                        input: 'file',
+                        inputAttributes: {
+                            'accept': 'image/*',
+                            'aria-label': 'Upload your profile picture'
+                        }
+                    })
+                    if (file) {
+                        let params = new FormData();
+                            params.append('FormFile', file);
+                            params.append('ItemCode', '' + this.item.Code);
+                            params.append('ImagessType', 'Descripcion' );
+                        await axios.post('@Url.Action("DataUploadFiles","Producto")', params, { headers: this.serverToken }).then(response => {
+                            this.ShowMessageErrorShort(response.data,'success')
+                            
+                            this.GetDescripcionImagenes();
+                            const reader = new FileReader()
+                            reader.onload = (e) => {
+                                Swal.fire({
+                                    title: 'Your uploaded picture',
+                                    imageUrl: e.target.result,
+                                    imageAlt: 'The uploaded picture'
+                                })
+                            }
+                            reader.readAsDataURL(file)
+                        }).catch(error => {
+                            this.ShowMessageErrorShort(error.response.data,'error')
+                        }).finally(() => this.images.Producto.isGetting = false)
+                    }
+                },
+                UpdateInfoAdicionalImagenes: async function () {
+                    const { value: file } = await Swal.fire({
+                        title: 'Select image',
+                        input: 'file',
+                        inputAttributes: {
+                            'accept': 'image/*',
+                            'aria-label': 'Upload your profile picture'
+                        }
+                    })
+                    if (file) {
+                        let params = new FormData();
+                            params.append('FormFile', file);
+                            params.append('ItemCode', '' + this.item.Code);
+                            params.append('ImagessType', 'InfoAdicional' );
+                        await axios.post('@Url.Action("DataUploadFiles","Producto")', params, { headers: this.serverToken }).then(response => {
+                            this.ShowMessageErrorShort(response.data,'success')
+                            this.GetInfoAdicionalImagenes();
+                            const reader = new FileReader()
+                            reader.onload = (e) => {
+                                Swal.fire({
+                                    title: 'Your uploaded picture',
+                                    imageUrl: e.target.result,
+                                    imageAlt: 'The uploaded picture'
+                                })
+                            }
+                            reader.readAsDataURL(file)
+                        }).catch(error => {
+                            this.ShowMessageErrorShort(error.response.data,'error')
+                        }).finally(() => this.images.Producto.isGetting = false)
+                    }
+                },
+                GetProductoImagenes: async function () {
+                    var params = new URLSearchParams();
+                    params.append('ItemCode', '' + this.item.Code);
+                    params.append('ImagessType', 'Producto');
+                    await axios.post('@Url.Action("DataGetFiles","Producto")',params,{ headers: this.serverToken }).then(response => {
+                        this.images.Producto.images = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.images.Producto.isGetting = false)
+                },
+                GetDescripcionImagenes: async function () {
+                    var params = new URLSearchParams();
+                    params.append('ItemCode', '' + this.item.Code);
+                    params.append('ImagessType', 'Descripcion');
+                    await axios.post('@Url.Action("DataGetFiles","Producto")',params,{ headers: this.serverToken }).then(response => {
+                        this.images.Descripcion.images = response.data;
+                    }).catch(error => {
+                       this.images.Producto.images = response.data;
+                    }).finally(() => this.images.Descripcion.isGetting = false)
+                },
+                GetInfoAdicionalImagenes: async function () {
+                    var params = new URLSearchParams();
+                    params.append('ItemCode', '' + this.item.Code);
+                    params.append('ImagessType', 'InfoAdicional');
+                    await axios.post('@Url.Action("DataGetFiles","Producto")',params,{ headers: this.serverToken }).then(response => {
+                        this.images.InfoAdicional.images = response.data;
+                    }).catch(error => {
+                        this.images.Producto.images = response.data;
+                    }).finally(() => this.images.InfoAdicional.isGetting = false)
+                },
+                ShowMessageError: function (text) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: text,
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+                },
+                ShowMessageErrorShort: function (text,icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+                showConfirmDialog: async function (mensaje, callback) {
+                    
+                }
+            }
+        });
+    </script>
+}

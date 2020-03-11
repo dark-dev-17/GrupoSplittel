@@ -1,0 +1,80 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_Producto>
+
+@{
+    ViewData["Title"] = "Productos";
+}
+<div id="app_producto">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap " id="table_cotizacion" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ItemCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitPrice)
+                        </th>
+                        <th>
+                            Moneda
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Discount)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Stock)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsActiveEcomerce)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.ItemCode, "Detalle", "Producto", new { id = item.ItemCode }, new { @class = "btn btn-sm btn-outline-success" })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            $@item.UnitPrice.ToString("0.###")
+                        </td>
+                        <td>
+                            USD
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Discount)%
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Stock)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActiveEcomerce)
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_producto = new Vue({
+            el: "#app_producto",
+            data: {
+            },
+            mounted() {
+                $('.table').DataTable({
+                    "order": []
+                });
+            }
+        });
+    </script>
+}

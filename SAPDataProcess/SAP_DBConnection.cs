@@ -24,6 +24,36 @@ namespace SAPDataProcess
         #endregion
 
         #region Metodos
+        public DataTable GetData(string sqlStatement)
+        {
+            try
+            {
+                CheckConnection();
+                using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                {
+                    sqlCommand.CommandTimeout = 120;
+                    using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+                    {
+                        DataTable = new DataTable();
+                        sqlDataAdapter.Fill(DataTable);
+                        sqlDataAdapter.Dispose();
+                        return DataTable;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new SAP_Excepcion(string.Format("SqlException - {0}", ex.Message));
+            }
+            catch (SAP_Excepcion ex)
+            {
+                throw new SAP_Excepcion(string.Format("SAP_Excepcion - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new SAP_Excepcion(string.Format("Exception - {0}", ex.Message));
+            }
+        }
         public int GetIntegerValue(string sqlStatement)
         {
             try
@@ -164,7 +194,8 @@ namespace SAPDataProcess
         }
         public void CloseDataBaseAccess()
         {
-            SqlConnection.Close();
+            if (SqlConnection.State == ConnectionState.Open)
+                SqlConnection.Close();
         }
         private void CheckConnection()
         {

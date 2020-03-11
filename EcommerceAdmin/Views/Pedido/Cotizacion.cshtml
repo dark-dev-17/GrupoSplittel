@@ -1,0 +1,105 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_Pedido>
+@{
+    ViewData["Title"] = "Cotizaciones";
+}
+<div id="app_cotizacion">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap " id="table_cotizacion" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocNumEcommerce)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TypeCustomer)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CardCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocSubTotal)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocIva)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocTotal)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocRate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocCur)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PorcentDisaccount)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DocDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id_cliente)
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(item.DocNumEcommerce+"", "Detalle","Pedido", new { id = item.DocNumEcommerce }, new { @class= "btn btn-sm btn-outline-success"})
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TypeCustomer)
+                            </td>
+                            <td>
+                                @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success" })
+                            </td>
+                            <td>
+                                $@Html.DisplayFor(modelItem => item.DocSubTotal)
+                            </td>
+                            <td>
+                                $@Html.DisplayFor(modelItem => item.DocIva)
+                            </td>
+                            <td>
+                                $@Html.DisplayFor(modelItem => item.DocTotal)
+                            </td>
+                            <td>
+                                $@Html.DisplayFor(modelItem => item.DocRate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DocCur)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PorcentDisaccount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DocDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id_cliente)
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_clientes = new Vue({
+            el: "#app_cotizacion",
+            data: {
+            },
+            mounted() {
+                $('#table_cotizacion').DataTable({
+                    "order": []
+                });
+            }
+        });
+    </script>
+}

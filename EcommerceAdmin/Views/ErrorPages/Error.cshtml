@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="ht-100v d-flex align-items-center justify-content-center">
+    <div class="wd-lg-70p wd-xl-90p tx-center pd-x-40">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+                <!-- Image -->
+                <div class="text-center">
+                    <img src="https://dashkit.goodthemes.co/assets/img/illustrations/lost.svg" alt="..." class="img-fluid">
+                </div>
+
+            </div>
+            <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+
+                <div class="text-center">
+
+                    <!-- Preheading -->
+                    <h6 class="text-uppercase text-muted mb-4">
+                        204 error
+                    </h6>
+
+                    <!-- Heading -->
+                    <h1 class="display-4 mb-3">
+                        Error 😭
+                    </h1>
+
+                    <!-- Subheading -->
+                    <p class="text-muted mb-4">
+                        @ViewData["Message"]
+                    </p>
+
+                    <!-- Button -->
+                    <a href="#" onclick="history.go(-1);" class="btn btn-lg btn-primary">
+                        Regresar
+                    </a>
+
+                </div>
+
+            </div>
+        </div> <!-- / .row -->
+    </div>
+</div><!-- ht-100v -->

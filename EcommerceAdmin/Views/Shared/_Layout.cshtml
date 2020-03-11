@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @System.Configuration.ConfigurationManager.AppSettings["ProductionMode"] - Admin Ecom</title>
+
+    <environment include="Development">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <!-- VENDOR CSS -->
+        <link href="~/template/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
+        <link href="~/template/lib/Ionicons/css/ionicons.css" rel="stylesheet">
+        <link href="~/template/lib/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+        <link href="~/template/lib/jquery-switchbutton/jquery.switchButton.css" rel="stylesheet">
+        <link href="~/template/lib/highlightjs/github.css" rel="stylesheet">
+        <link href="~/template/lib/SpinKit/spinkit.css" rel="stylesheet">
+        <link href="~/template/lib/datatables/jquery.dataTables.css" rel="stylesheet">
+        <link href="~/template/lib/rickshaw/rickshaw.min.css" rel="stylesheet">
+        <link href="~/template/lib/chartist/chartist.css" rel="stylesheet">
+        <link href="~/template/lib/select2/css/select2.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <link href="//cdn.jsdelivr.net/npm/@@sweetalert2/theme-dark@3/dark.css" rel="stylesheet">
+        
+        <!-- Bracket CSS -->
+        <link rel="stylesheet" href="~/template/css/bracket.css">
+        <link rel="stylesheet" href="~/css/site.css">
+    </environment>
+    <environment exclude="Development">
+        @*<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <!-- VENDOR CSS -->
+        <link href="~/template/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
+        <link href="~/template/lib/Ionicons/css/ionicons.css" rel="stylesheet">
+        <link href="~/template/lib/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+        <link href="~/template/lib/jquery-switchbutton/jquery.switchButton.css" rel="stylesheet">
+        <link href="~/template/lib/highlightjs/github.css" rel="stylesheet">
+        <link href="~/template/lib/SpinKit/spinkit.css" rel="stylesheet">
+        <link href="~/template/lib/datatables/jquery.dataTables.css" rel="stylesheet">
+        <link href="~/template/lib/rickshaw/rickshaw.min.css" rel="stylesheet">
+        <link href="~/template/lib/chartist/chartist.css" rel="stylesheet">
+        <link href="~/template/lib/select2/css/select2.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <link href="//cdn.jsdelivr.net/npm/@@sweetalert2/theme-dark@3/dark.css" rel="stylesheet">
+        <!-- Bracket CSS -->
+        <link rel="stylesheet" href="~/template/css/bracket.css">
+        <link rel="stylesheet" href="~/css/site.css">
+    </environment>
+</head>
+<body>
+    <div id="PageMain">
+        <div v-if="loadingPageMain == true" id="preloader">
+            <div id="loader"></div>
+        </div>
+    </div>
+
+    @Html.AntiForgeryToken()
+    @using Microsoft.AspNetCore.Http;
+    @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+    @inject IHttpContextAccessor HttpContextAccessor
+    @{
+        var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+        var controllerAction = this.ViewContext.RouteData.Values["action"].ToString();
+    }
+    @if (controllerName == "Login" || controllerName == "ErrorPages")
+    {
+        @RenderBody()
+    }
+    else
+    {
+        <partial name="_SlideBar" />
+        <partial name="_NavBar" />
+        <div class="br-mainpanel">
+            <div class="br-pageheader pd-y-15 pd-l-20">
+                <nav class="breadcrumb pd-0 mg-0 tx-12">
+                    <a class="breadcrumb-item" href="@Url.Action("Index","Home")">Home</a>
+                    <span class="breadcrumb-item active">@ViewData["Title"]</span>
+                </nav>
+            </div>
+            <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+                <h4 class="tx-gray-800 mg-b-5">@ViewData["Title"]</h4>
+            </div>
+            <div class="br-pagebody pd-x-20 pd-sm-x-30 pd-b-20">
+                <div class="row">
+                    <div class="col-12">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+<environment include="Development">
+    <script src="~/template/lib/jquery/jquery.js"></script>
+    <script src="~/template/lib/popper.js/popper.js"></script>
+    <script src="~/template/lib/bootstrap/bootstrap.js"></script>
+    <script src="~/template/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
+    <script src="~/template/lib/moment/moment.js"></script>
+    <script src="~/template/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="~/template/lib/jquery-switchbutton/jquery.switchButton.js"></script>
+    <script src="~/template/lib/peity/jquery.peity.js"></script>
+    <script src="~/template/lib/datatables/jquery.dataTables.js"></script>
+    <script src="~/template/lib/datatables-responsive/dataTables.responsive.js"></script>
+    <script src="~/template/js/bracket.js"></script>
+    <script src="~/template/lib/chartist/chartist.js"></script>
+    <script src="~/template/lib/jquery.sparkline.bower/jquery.sparkline.min.js"></script>
+    <script src="~/template/lib/d3/d3.js"></script>
+    <script src="~/template/lib/rickshaw/rickshaw.min.js"></script>
+    <script src="~/template/lib/highlightjs/highlight.pack.js"></script>
+    <script src="~/template/lib/Flot/jquery.flot.js"></script>
+    <script src="~/template/lib/Flot/jquery.flot.pie.js"></script>
+    <script src="~/template/lib/Flot/jquery.flot.resize.js"></script>
+    <script src="~/template/lib/flot-spline/jquery.flot.spline.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.1/axios.js"></script>
+    <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
+    <script src="sweetalert2/dist/sweetalert2.min.js"></script>
+    @if (controllerName != "Login")
+    {
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    }
+
+</environment>
+    <environment exclude="Development">
+        @*<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
+        </script>*@
+        <script src="~/template/lib/jquery/jquery.js"></script>
+        <script src="~/template/lib/popper.js/popper.js"></script>
+        <script src="~/template/lib/bootstrap/bootstrap.js"></script>
+        <script src="~/template/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
+        <script src="~/template/lib/moment/moment.js"></script>
+        <script src="~/template/lib/jquery-ui/jquery-ui.js"></script>
+        <script src="~/template/lib/jquery-switchbutton/jquery.switchButton.js"></script>
+        <script src="~/template/lib/peity/jquery.peity.js"></script>
+        <script src="~/template/lib/datatables/jquery.dataTables.js"></script>
+        <script src="~/template/lib/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="~/template/js/bracket.js"></script>
+        <script src="~/template/lib/chartist/chartist.js"></script>
+        <script src="~/template/lib/jquery.sparkline.bower/jquery.sparkline.min.js"></script>
+        <script src="~/template/lib/d3/d3.js"></script>
+        <script src="~/template/lib/rickshaw/rickshaw.min.js"></script>
+        <script src="~/template/lib/highlightjs/highlight.pack.js"></script>
+        <script src="~/template/lib/Flot/jquery.flot.js"></script>
+        <script src="~/template/lib/Flot/jquery.flot.pie.js"></script>
+        <script src="~/template/lib/Flot/jquery.flot.resize.js"></script>
+        <script src="~/template/lib/flot-spline/jquery.flot.spline.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.1/axios.js"></script>
+        <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
+        <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
+        @if (controllerName != "Login")
+        {
+            <script src="~/js/site.js" asp-append-version="true"></script>
+        }
+    </environment>
+    <script>
+        var PageMain = new Vue({
+            el: "#PageMain",
+            data: {
+                loadingPageMain: true,
+            },
+            beforeCreate() {
+                this.loadingPageMain = true;
+            },
+            mounted() {
+                this.loadingPageMain = false;
+            },
+            methods: {
+                verCliente: function (CardCode) {
+                    window.location = '@Url.Action("Show","BussinesPartner")/' + CardCode;
+                },
+                test: function (CardCode) {
+                    alert(CardCode)
+                }
+            }
+
+        });
+
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
