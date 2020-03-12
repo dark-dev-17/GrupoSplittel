@@ -69,8 +69,8 @@ namespace SAPDataProcess
                         DocType = Data.GetString(0),
                         Remarks = Data.IsDBNull(4) ? "" : Data.GetString(4),
                         DocNumEcommerce = Data.IsDBNull(5) ? "" : Data.GetInt32(5) + "",
-                        CardCode = Data.IsDBNull(6) ? "" : Data.GetInt32(6) + "",
-                        Cardname = Data.IsDBNull(7) ? "" : Data.GetInt32(7) + "",
+                        CardCode = CardCode_,
+                        //Cardname = Data.IsDBNull(7) ? "" : Data.GetInt32(7) + "",
                     });
                 }
                 return List;
@@ -105,8 +105,8 @@ namespace SAPDataProcess
                         DocType = Data.GetString(0),
                         Remarks = Data.IsDBNull(4) ? "" : Data.GetString(4),
                         DocNumEcommerce = Data.IsDBNull(5) ? "" : Data.GetInt32(5) + "",
-                        CardCode = Data.IsDBNull(6) ? "" : Data.GetInt32(6) + "",
-                        Cardname = Data.IsDBNull(7) ? "" : Data.GetInt32(7) + "",
+                        CardCode = Data.IsDBNull(6) ? "" : Data.GetString(6) + "",
+                        Cardname = Data.IsDBNull(7) ? "" : Data.GetString(7) + "",
                     });
                 }
                 return List;

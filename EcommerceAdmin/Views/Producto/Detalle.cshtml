@@ -1,7 +1,10 @@
 ﻿@model EcomDataProccess.Ecom_Producto
+@using Microsoft.AspNetCore.Http;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor HttpContextAccessor
 @{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
     ViewData["Title"] = "Detalle del producto: " + Model.ItemCode;
-
 }
 <div id="app_productoDetalle">
     <div class="br-section-wrapper">
@@ -16,17 +19,24 @@
                 <tr>
                     <td><strong>Descripcion</strong></td>
                     <td colspan="3">
-                        <div v-if="controls.EditLargeDescription == false">
-                            @Html.DisplayFor(model => model.LargeDescription)
-                            <button class="btn btn-sm btn-secondary" v-on:click="controls.EditLargeDescription = true">Editar</button>
-                        </div>
-                        <div v-if="controls.EditLargeDescription == true">
-                            <div class="form-group">
-                                <textarea class="form-control" v-model="item.largeDescription">@Html.DisplayFor(model => model.LargeDescription)</textarea>
-                                <button class="btn btn-sm btn-secondary" v-on:click="controls.EditLargeDescription = false">Cancelar</button>
-                                <button class="btn btn-sm btn-success" v-on:click="UpdateLargeDescription()">Guardar</button>
+                        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 4 }))
+                        {
+                            <div v-if="controls.EditLargeDescription == false">
+                                {{ item.largeDescription }}
+                                <button class="btn btn-sm btn-secondary" v-on:click="controls.EditLargeDescription = true; item.largeDescription2 = item.largeDescription">Editar</button>
                             </div>
-                        </div>
+                            <div v-if="controls.EditLargeDescription == true">
+                                <div class="form-group">
+                                    <textarea class="form-control" v-model="item.largeDescription2">@Html.DisplayFor(model => model.LargeDescription)</textarea>
+                                    <button class="btn btn-sm btn-secondary" v-on:click="controls.EditLargeDescription = false">Cancelar</button>
+                                    <button class="btn btn-sm btn-success" v-on:click="UpdateLargeDesc()">Guardar</button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => model.LargeDescription)
+                        }
                     </td>
                 </tr>
                 <tr>
@@ -55,8 +65,15 @@
                     <td colspan="1">@Html.DisplayFor(model => model.Stock)</td>
                     <td><strong>Activo en ecommerce</strong></td>
                     <td colspan="1">
-                        <button v-if=" item.isActiveEcomerce == false" v-on:click="ActiveItem()" class="">Activar</button>
-                        <button v-if=" item.isActiveEcomerce == true" v-on:click="InActive()" class="">Desactivar</button>
+                        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 2 }))
+                        {
+                            <button v-if=" item.isActiveEcomerce == false" v-on:click="UpdateActive()" class="btn btn-sm btn-outline-success my-2 my-sm-0">Activar</button>
+                            <button v-if=" item.isActiveEcomerce == true" v-on:click="UpdateDesactive()" class="btn btn-sm btn-outline-danger my-2 my-sm-0">Desactivar</button>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => model.IsActiveEcomerce)
+                        }
                     </td>
                 </tr>
             </table>
@@ -68,10 +85,10 @@
                                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Imagenes producto</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Información adicional</a>
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#desccipcion" role="tab" aria-controls="profile" aria-selected="false">Descripción</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#desccipcion" role="tab" aria-controls="contact" aria-selected="false">Descripción</a>
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="contact" aria-selected="false">Información adicional</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Ficha tecnica</a>
@@ -87,9 +104,12 @@
                                 <div v-if="images.Producto.isGetting === false">
                                     <nav class="navbar navbar-light bg-light justify-content-between">
                                         <a class="navbar-brand">Producto: @Model.ItemCode</a>
-                                        <form class="form-inline">
-                                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="UpdateProductoImagenes()">Subir imagen</button>
-                                        </form>
+                                        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 7 }))
+                                        {
+                                            <form class="form-inline">
+                                                <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="UpdateProductoImagenes()">Subir imagen</button>
+                                            </form>
+                                        }
                                     </nav>
                                     <div class="row">
                                         <div v-for="(image, index) in images.Producto.images">
@@ -99,8 +119,11 @@
                                                     {{ image.name }}
                                                     <center>
                                                         <div class="btn-group btn-group-sm " role="group" aria-label="Basic example">
-                                                            <button type="button" class="btn btn-secondary" v-on:click="DeleteProductoImagen(index)">Eliminar</button>
-                                                            <button type="button" class="btn btn-secondary" v-on:click="RenameProductoImagen(index)">Rename</button>
+                                                            @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 7 }))
+                                                            {
+                                                                <button type="button" class="btn btn-secondary" v-on:click="DeleteProductoImagen(index)">Eliminar</button>
+                                                                <button type="button" class="btn btn-secondary" v-on:click="RenameProductoImagen(index)">Rename</button>
+                                                            }
                                                             <a :href="image.ruta" target="_blank" class="btn btn-secondary">Ver</a>
                                                         </div>
                                                     </center>
@@ -110,16 +133,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="tab-pane fade" id="desccipcion" role="tabpanel" aria-labelledby="profile-tab">
                                 <div v-if="images.Descripcion.isGetting === true">
                                     cargando imagenes del producto...
                                 </div>
                                 <div v-if="images.Descripcion.isGetting === false">
                                     <nav class="navbar navbar-light bg-light justify-content-between">
                                         <a class="navbar-brand">Producto: @Model.ItemCode</a>
-                                        <form class="form-inline">
-                                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="UpdateDescripcionImagenes()">Subir imagen</button>
-                                        </form>
+                                        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 6}))
+                                        {
+                                    <form class="form-inline">
+                                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="UpdateDescripcionImagenes()">Subir imagen</button>
+                                    </form>
+                                        }
+                                            
                                     </nav>
                                     <div class="row">
                                         <div v-for="(image, index) in images.Descripcion.images">
@@ -129,7 +156,11 @@
                                                     {{ image.name }}
                                                     <center>
                                                         <div class="btn-group btn-group-sm " role="group" aria-label="Basic example">
-                                                            <button type="button" class="btn btn-secondary" v-on:click="DeleteDescripcionImagen(index)">Eliminar</button>
+                                                            @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 6 }))
+                                                            {
+                                                                <button type="button" class="btn btn-secondary" v-on:click="DeleteDescripcionImagen(index)">Eliminar</button>
+                                                                <button type="button" class="btn btn-secondary" v-on:click="RenameDescripcionImagen(index)">Rename</button>
+                                                            }
                                                             <a :href="image.ruta" target="_blank" class="btn btn-secondary">Ver</a>
                                                         </div>
                                                     </center>
@@ -139,16 +170,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="desccipcion" role="tabpanel" aria-labelledby="contact-tab">
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="contact-tab">
                                 <div v-if="images.InfoAdicional.isGetting === true">
                                     cargando imagenes del producto...
                                 </div>
                                 <div v-if="images.InfoAdicional.isGetting === false">
                                     <nav class="navbar navbar-light bg-light justify-content-between">
                                         <a class="navbar-brand">Producto: @Model.ItemCode</a>
-                                        <form class="form-inline">
-                                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="UpdateInfoAdicionalImagenes()">Subir imagen</button>
-                                        </form>
+                                        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 5 }))
+                                        {
+                                            <form class="form-inline">
+                                                <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="UpdateInfoAdicionalImagenes()">Subir imagen</button>
+                                            </form>
+                                        }
+
                                     </nav>
                                     <div class="row">
                                         <div v-for="(image, index) in images.InfoAdicional.images">
@@ -158,7 +193,11 @@
                                                     {{ image.name }}
                                                     <center>
                                                         <div class="btn-group btn-group-sm " role="group" aria-label="Basic example">
-                                                            <button type="button" class="btn btn-secondary" v-on:click="DeleteInfoAdicionalImagen(index)">Eliminar</button>
+                                                            @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 5 }))
+                                                            {
+                                                                <button type="button" class="btn btn-secondary" v-on:click="DeleteInfoAdicionalImagen(index)">Eliminar</button>
+                                                                <button type="button" class="btn btn-secondary" v-on:click="RenameInfoAdicionalImagen(index)">Rename</button>
+                                                            }
                                                             <a :href="image.ruta" target="_blank" class="btn btn-secondary">Ver</a>
                                                         </div>
                                                     </center>
@@ -169,7 +208,18 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                
+                                @if (Model.FichaTecnica.Ruta.Length == 0)
+                                {
+                                    <h3>No cuenta con ficha técnica</h3>
+                                }
+                                else
+                                {
+                                    @*@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))*@
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))" typeof="" allowfullscreen></iframe>
+                                    </div>
+                                }
+
                             </div>
                         </div>
                     </div><!-- card-body -->
@@ -192,6 +242,7 @@
                 item: {
                     Code: "@Model.ItemCode",
                     largeDescription: '@Html.Raw(Model.LargeDescription.Replace("\n"," "))',
+                    largeDescription2: '@Html.Raw(Model.LargeDescription.Replace("\n"," "))',
                     isActiveEcomerce: ("@Model.IsActiveEcomerce" == "True" ? true : false),
                 },
                 images: {
@@ -215,26 +266,135 @@
                 await this.GetInfoAdicionalImagenes();
             },
             methods: {
+                UpdateActive: async function () {
+                    var params = new URLSearchParams();
+                    params.append('Active', true);
+                    params.append('ItemCode', '' + this.item.Code);
+                    axios.post('@Url.Action("DataDesactiveActive","Producto")', params,{ headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                        this.item.isActiveEcomerce = true;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.images.Producto.isGetting = false)
+                },
+                UpdateDesactive: async function () {
+                    var params = new URLSearchParams();
+                    params.append('Active', false);
+                    params.append('ItemCode', '' + this.item.Code);
+                    axios.post('@Url.Action("DataDesactiveActive","Producto")', params,{ headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                        this.item.isActiveEcomerce = false;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.images.Producto.isGetting = false)
+                },
+                UpdateLargeDesc: async function () {
+                    var params = new URLSearchParams();
+                    params.append('LargeDescription', '' + this.item.largeDescription2);
+                    params.append('ItemCode', '' + this.item.Code);
+                    axios.post('@Url.Action("DataChangeLargeDescr","Producto")', params,{ headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                        this.controls.EditLargeDescription = false;
+                        this.item.largeDescription = this.item.largeDescription2;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.images.Producto.isGetting = false)
+                },
                 RenameProductoImagen: async function (index) {
-                    const { value: email } = await Swal.fire({
-                      title: 'Nombre del archivo sin extensión',
-                      input: 'text',
-                      inputPlaceholder: 'Enter your email address'
-                    })
-
-                    if (email) {
-                      var params = new URLSearchParams();
+                    Swal.fire({
+                        title: 'Nuevo nombre del archivo',
+                        input: 'text',
+                        inputAttributes: {
+                            autocapitalize: 'off'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Renombrar',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (login) => {
+                            var params = new URLSearchParams();
                             params.append('Filename', '' + this.images.Producto.images[index].name);
-                            params.append('Newname', '' + email);
+                            params.append('Newname', '' + login);
                             params.append('ItemCode', '' + this.item.Code);
                             params.append('ImagessType', 'Producto');
-                            axios.post('@Url.Action("DataRenameFiles","Producto")', params,{ headers: this.serverToken }).then(response => {
-                                 this.ShowMessageErrorShort(response.data,'success')
-                                this.images.Producto.images[index].name = email;
+                            return axios.post('@Url.Action("DataRenameFiles","Producto")', params,{ headers: this.serverToken }).then(response => {
+                                this.images.Producto.images[index].ruta = this.images.Producto.images[index].ruta.replace(this.images.Producto.images[index].name,login + ".jpg");
+                                this.images.Producto.images[index].name = login + ".jpg";
+                                return response.data;
                             }).catch(error => {
                                 this.ShowMessageErrorShort(error.response.data,'error')
-                            }).finally(() => this.images.Producto.isGetting = false)
-                    }
+                            })
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.value) {
+                            this.ShowMessageErrorShort(result.value,'success')
+                        }
+                        console.log(result)
+                    })
+                },
+                RenameDescripcionImagen: async function (index) {
+                    Swal.fire({
+                        title: 'Nuevo nombre del archivo',
+                        input: 'text',
+                        inputAttributes: {
+                            autocapitalize: 'off'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Renombrar',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (login) => {
+                            var params = new URLSearchParams();
+                            params.append('Filename', '' + this.images.Descripcion.images[index].name);
+                            params.append('Newname', '' + login);
+                            params.append('ItemCode', '' + this.item.Code);
+                            params.append('ImagessType', 'Descripcion');
+                            return axios.post('@Url.Action("DataRenameFiles","Producto")', params,{ headers: this.serverToken }).then(response => {
+                                this.images.Descripcion.images[index].ruta = this.images.Descripcion.images[index].ruta.replace(this.images.Descripcion.images[index].name,login + ".jpg");
+                                this.images.Descripcion.images[index].name = login + ".jpg";
+                                return response.data;
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            })
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.value) {
+                            this.ShowMessageErrorShort(result.value,'success')
+                        }
+                        console.log(result)
+                    })
+                },
+                RenameInfoAdicionalImagen: async function (index) {
+                    Swal.fire({
+                        title: 'Nuevo nombre del archivo',
+                        input: 'text',
+                        inputAttributes: {
+                            autocapitalize: 'off'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Renombrar',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (login) => {
+                            var params = new URLSearchParams();
+                            params.append('Filename', '' + this.images.InfoAdicional.images[index].name);
+                            params.append('Newname', '' + login);
+                            params.append('ItemCode', '' + this.item.Code);
+                            params.append('ImagessType', 'InfoAdicional');
+                            return axios.post('@Url.Action("DataRenameFiles","Producto")', params,{ headers: this.serverToken }).then(response => {
+                                this.images.InfoAdicional.images[index].ruta = this.images.InfoAdicional.images[index].ruta.replace(this.images.InfoAdicional.images[index].name,login + ".jpg");
+                                this.images.InfoAdicional.images[index].name = login + ".jpg";
+                                return response.data;
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            })
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.value) {
+                            this.ShowMessageErrorShort(result.value,'success')
+                        }
+                        console.log(result)
+                    })
                 },
                 DeleteProductoImagen: async function (index) {
                     Swal.fire({
@@ -355,7 +515,7 @@
                             params.append('ImagessType', 'Descripcion' );
                         await axios.post('@Url.Action("DataUploadFiles","Producto")', params, { headers: this.serverToken }).then(response => {
                             this.ShowMessageErrorShort(response.data,'success')
-                            
+
                             this.GetDescripcionImagenes();
                             const reader = new FileReader()
                             reader.onload = (e) => {
@@ -459,7 +619,7 @@
                         })
                 },
                 showConfirmDialog: async function (mensaje, callback) {
-                    
+
                 }
             }
         });

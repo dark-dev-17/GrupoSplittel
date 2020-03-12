@@ -41,8 +41,13 @@ namespace EcommerceAdmin.Controllers
                         Ecom_Pedido_.SAP_Estatus = Int32.Parse(sAP_Document.Status);
                         SAP_DBConnection_.CloseDataBaseAccess();
                     }
+                    return View(Ecom_Pedido_);
                 }
-                return View(Ecom_Pedido_);
+                else
+                {
+                    return RedirectToAction("Error", "ErrorPages", new { id = string.Format("El pedido '{0}' no fue encontrado", id) });
+                }
+                
             }
             catch (EcomDataProccess.Ecom_Exception ex)
             {

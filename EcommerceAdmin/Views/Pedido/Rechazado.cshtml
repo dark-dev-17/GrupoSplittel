@@ -17,12 +17,12 @@
                         <th>
                             @Html.DisplayNameFor(model => model.DocDate)
                         </th>
-                        <th>
+                        @*<th>
                             @Html.DisplayNameFor(model => model.DocTotal)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.DocCur)
-                        </th>
+                        </th>*@
                         <th>
                             @Html.DisplayNameFor(model => model.CardCode)
                         </th>
@@ -49,12 +49,12 @@
                             <td>
                                 $@Html.DisplayFor(modelItem => item.DocDate)
                             </td>
-                            <td>
+                            @*<td>
                                 $@Html.DisplayFor(modelItem => item.DocTotal)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.DocCur)
-                            </td>
+                            </td>*@
                             <td>
                                 @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success" })
                             </td>

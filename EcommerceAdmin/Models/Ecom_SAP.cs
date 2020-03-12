@@ -13,8 +13,8 @@ namespace EcommerceAdmin.Models
         private readonly string EcomConnection = ConfigurationManager.AppSettings["Ecommerce_Database"].ToString();
         private readonly string SplitConnection = ConfigurationManager.AppSettings["Splinnet_Database"].ToString();
         private readonly string SAPConnection = ConfigurationManager.AppSettings["SAP_Database"].ToString();
-        private SAP_DBConnection SAP_DBConnection_;
-        private Ecom_DBConnection Ecom_DBConnection_;
+        public SAP_DBConnection SAP_DBConnection_ { get; private set; }
+        public Ecom_DBConnection Ecom_DBConnection_ { get; private set; }
         private string Mode;
         public List<SAPDataProcess.SAP_BussinessPartner> GetBussPartByEmp(int idSplinnet)
         {
@@ -169,6 +169,29 @@ namespace EcommerceAdmin.Models
             {
                 Ecom_DBConnection_.CloseConnection();
                 Ecom_DBConnection_ = null;
+            }
+        }
+        public bool ValidAction(int id_user,int[] action)
+        {
+            
+            try
+            {
+                Ecom_DBConnection_ = new Ecom_DBConnection(SplitConnection);
+                Ecom_DBConnection_.OpenConnection();
+                return new Ecom_Usuario(Ecom_DBConnection_).AccessToAction(id_user, action);
+            }
+            catch (Ecom_Exception)
+            {
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                if (Ecom_DBConnection_ != null)
+                    Ecom_DBConnection_.CloseConnection();
             }
         }
     }

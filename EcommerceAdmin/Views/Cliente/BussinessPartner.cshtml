@@ -9,6 +9,8 @@
     List<SAPDataProcess.SAP_Document> Rechazado = ecom_SAP.GetSAP_Document("Rechazado", Model.CardCode);
     List<SAPDataProcess.SAP_Document> Historico = ecom_SAP.GetSAP_Document("Historico", Model.CardCode);
     List<EcomDataProccess.Ecom_Cliente> Usuarios = ecom_SAP.GetEcom_Cliente(Model.CardCode);
+    List<SAPDataProcess.SAP_Address> Envio = new SAPDataProcess.SAP_Address(ecom_SAP.SAP_DBConnection_).GetList(Model.CardCode,"S");
+    List<SAPDataProcess.SAP_Address> facturacion = new SAPDataProcess.SAP_Address(ecom_SAP.SAP_DBConnection_).GetList(Model.CardCode,"B");
 
     ecom_SAP.CloseConections();
 }
@@ -149,6 +151,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact3" role="tab" aria-controls="contact" aria-selected="false">Usuarios</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact4" role="tab" aria-controls="contact" aria-selected="false">Direcciones de envio</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact5" role="tab" aria-controls="contact" aria-selected="false">Direcciones de facturación</a>
+                                </li>
                             </ul>
                         </div><!-- card-header -->
                         <div class="card-body color-gray-lighter">
@@ -174,10 +182,62 @@
                                 </div>
                                 <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact-tab">
                                     <partial name="../Pedido/Historico" model="Historico" />
-                                    
+
                                 </div>
                                 <div class="tab-pane fade" id="contact3" role="tabpanel" aria-labelledby="contact-tab">
                                     <partial name="../Cliente/Index" model="Usuarios" />
+                                </div>
+                                <div class="tab-pane fade" id="contact4" role="tabpanel" aria-labelledby="contact-tab">
+                                    <table class="table display responsive nowrap" style="width:100% !important;">
+                                        <thead>
+                                            <tr>
+                                                <th>Dirección</th>
+                                                <th>CP</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Envio)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.City) <br />
+                                                        @Html.DisplayFor(modelItem => item.StreetNo) No.Ext:  @Html.DisplayFor(modelItem => item.Street) Col:  @Html.DisplayFor(modelItem => item.Block)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ZipCode)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="contact5" role="tabpanel" aria-labelledby="contact-tab">
+                                    <table class="table display responsive nowrap" style="width:100% !important;">
+                                        <thead>
+                                            <tr>
+                                                <th>Dirección</th>
+                                                <th>CP</th>
+                                                <th>RFC</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in facturacion)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.City) <br />
+                                                        @Html.DisplayFor(modelItem => item.StreetNo) No.Ext:  @Html.DisplayFor(modelItem => item.Street) Col:  @Html.DisplayFor(modelItem => item.Block)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ZipCode)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.FederalTaxID)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div><!-- card-body -->

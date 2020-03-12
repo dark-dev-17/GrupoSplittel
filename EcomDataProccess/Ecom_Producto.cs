@@ -39,6 +39,46 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public bool UpdLargeDescription(string ItemCode_, string LargeDesc)
+        {
+            try
+            {
+                string Statement = string.Format("Admin_Producto_UpdDescripcionLarga|ItemCode@VARCHAR={0}&LargeDescription@VARCHAR={1}", ItemCode_, LargeDesc);
+                int result = Ecom_DBConnection_.ExecuteStoreProcedure(Statement);
+                if(result == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new Ecom_Exception(Ecom_DBConnection_.Message);
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public bool UpdActive(string ItemCode_, bool IsActive)
+        {
+            try
+            {
+                string Statement = string.Format("Admin_Producto_ActDesc|ItemCode@VARCHAR={0}&IsActiveEcomerce@VARCHAR={1}", ItemCode_, (IsActive ? "si" : "no"));
+                int result = Ecom_DBConnection_.ExecuteStoreProcedure(Statement);
+                if (result == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new Ecom_Exception(Ecom_DBConnection_.Message);
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         public bool Get(string codigo_)
         {
             bool result = false;
@@ -108,7 +148,7 @@ namespace EcomDataProccess
                             Category = new Ecom_ProductoCategoria { Description = Data.IsDBNull(6) ? "" : Data.GetString(6), Id = Data.IsDBNull(5) ? 0 : Data.GetInt32(5) },
                             SubCategory = new Ecom_ProductoSubCategoria { Description = Data.IsDBNull(10) ? "" : Data.GetString(10), Id = Data.IsDBNull(8) ? 0 : Data.GetInt32(8) },
                             LargeDescription = Data.IsDBNull(14) ? "Sin descripción" : Data.GetString(14),
-                            FichaTecnica = new Ecom_ProductoFichaTecnica { Id = Data.IsDBNull(12) ? 0 : Data.GetInt32(12), Ruta = Data.IsDBNull(13) ? "" : Data.GetString(13) },
+                            FichaTecnica = new Ecom_ProductoFichaTecnica { Id = Data.IsDBNull(11) ? 0 : Data.GetInt32(11), Ruta = Data.IsDBNull(12) ? "" : Data.GetString(12) },
                         });
 
                     }

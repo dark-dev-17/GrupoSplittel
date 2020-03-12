@@ -1,4 +1,10 @@
-﻿<div class="br-logo"><a href="#"><span>[</span>Ecommerce<span>]</span></a></div>
+﻿@using Microsoft.AspNetCore.Http;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+}
+<div class="br-logo"><a href="#"><span>[</span>Ecommerce<span>]</span></a></div>
 <div class="br-sideleft overflow-y-auto">
     <div class="br-sideleft-menu">
         <a href="@Url.Action("Index","Home")" class="br-menu-link ">
@@ -7,32 +13,54 @@
                 <span class="menu-item-label">Dashboard </span>
             </div><!-- menu-item -->
         </a><!-- br-menu-link -->
-        <a href="#" class="br-menu-link  show-sub">
-            <div class="br-menu-item">
-                <i class="menu-item-icon icon ion-ios-paper-outline  tx-24"></i>
-                <span class="menu-item-label">Ventas</span>
-                <i class="menu-item-arrow fa fa-angle-down"></i>
-            </div><!-- menu-item -->
-        </a><!-- br-menu-link -->
-        <ul class="br-menu-sub nav flex-column">
-            @*<li class="nav-item"><a href="/Document/Tracker" class="nav-link active">Buscador de pedidos</a></li>*@
-            <li class="nav-item"><a href="@Url.Action("Index","Cliente")" class="nav-link">Clientes</a></li>
-            <li class="nav-item"><a href="@Url.Action("Cotizacion","Pedido")" class="nav-link">Cotizaciones ecommerce</a></li>
-            <li class="nav-item"><a href="@Url.Action("Pendiente","Pedido")" class="nav-link">Pedidos pendientes</a></li>
-            <li class="nav-item"><a href="@Url.Action("EnProceso","Pedido")" class="nav-link">Documentos en proceso</a></li>
-            <li class="nav-item"><a href="@Url.Action("Rechazado","Pedido")" class="nav-link">Pedidos rechazados</a></li>
-            <li class="nav-item"><a href="@Url.Action("Historico","Pedido")" class="nav-link">Historico de pedidos</a></li>
-        </ul>
-        <a href="#" class="br-menu-link  show-sub">
-            <div class="br-menu-item">
-                <i class="menu-item-icon icon ion-ios-paper-outline  tx-24"></i>
-                <span class="menu-item-label">Productos</span>
-                <i class="menu-item-arrow fa fa-angle-down"></i>
-            </div><!-- menu-item -->
-        </a><!-- br-menu-link -->
-        <ul class="br-menu-sub nav flex-column">
-            @*<li class="nav-item"><a href="/Document/Tracker" class="nav-link active">Buscador de pedidos</a></li>*@
-            <li class="nav-item"><a href="@Url.Action("Index","Producto")" class="nav-link">Fijos</a></li>
-        </ul>
+        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 9,10,11,12,13,14,15,16,20,21,22,23,24 }))
+        {
+            <a href="#" class="br-menu-link  show-sub">
+                <div class="br-menu-item">
+                    <i class="menu-item-icon icon ion-ios-paper-outline  tx-24"></i>
+                    <span class="menu-item-label">Ventas</span>
+                    <i class="menu-item-arrow fa fa-angle-down"></i>
+                </div><!-- menu-item -->
+            </a><!-- br-menu-link -->
+            <ul class="br-menu-sub nav flex-column">
+                @*<li class="nav-item"><a href="/Document/Tracker" class="nav-link active">Buscador de pedidos</a></li>*@
+                <li class="nav-item"><a href="@Url.Action("Index","Cliente")" class="nav-link">Clientes</a></li>
+                <li class="nav-item"><a href="@Url.Action("Cotizacion","Pedido")" class="nav-link">Cotizaciones ecommerce</a></li>
+                <li class="nav-item"><a href="@Url.Action("Pendiente","Pedido")" class="nav-link">Pedidos pendientes</a></li>
+                <li class="nav-item"><a href="@Url.Action("EnProceso","Pedido")" class="nav-link">Documentos en proceso</a></li>
+                <li class="nav-item"><a href="@Url.Action("Rechazado","Pedido")" class="nav-link">Pedidos rechazados</a></li>
+                <li class="nav-item"><a href="@Url.Action("Historico","Pedido")" class="nav-link">Historico de pedidos</a></li>
+            </ul>
+        }
+
+        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 1, 2, 3, 4, 5, 6, 7 }))
+        {
+            <a href="#" class="br-menu-link  show-sub">
+                <div class="br-menu-item">
+                    <i class="menu-item-icon icon ion-ios-paper-outline  tx-24"></i>
+                    <span class="menu-item-label">Productos</span>
+                    <i class="menu-item-arrow fa fa-angle-down"></i>
+                </div><!-- menu-item -->
+            </a><!-- br-menu-link -->
+            <ul class="br-menu-sub nav flex-column">
+                @*<li class="nav-item"><a href="/Document/Tracker" class="nav-link active">Buscador de pedidos</a></li>*@
+                <li class="nav-item"><a href="@Url.Action("Index","Producto")" class="nav-link">Fijos</a></li>
+            </ul>
+        }
+        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 25 }))
+        {
+            <a href="#" class="br-menu-link  show-sub">
+                <div class="br-menu-item">
+                    <i class="menu-item-icon icon ion-ios-paper-outline  tx-24"></i>
+                    <span class="menu-item-label">Sistema</span>
+                    <i class="menu-item-arrow fa fa-angle-down"></i>
+                </div><!-- menu-item -->
+            </a><!-- br-menu-link -->
+            <ul class="br-menu-sub nav flex-column">
+                @*<li class="nav-item"><a href="/Document/Tracker" class="nav-link active">Buscador de pedidos</a></li>*@
+                <li class="nav-item"><a href="@Url.Action("Acceso","Sistema")" class="nav-link">Permisos</a></li>
+            </ul>
+        }
+
     </div>
 </div>

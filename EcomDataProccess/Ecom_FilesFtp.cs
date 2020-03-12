@@ -152,7 +152,7 @@ namespace EcomDataProccess
         }
         public void Rename(string path,string oldFile, string newName)
         {
-            string UriNew = "ftp://" + FTP_server + path + newName;
+            string UriNew =  path + newName;
             string UriOld = "ftp://" + FTP_server + path + oldFile;
             FtpWebResponse response = null;
             try

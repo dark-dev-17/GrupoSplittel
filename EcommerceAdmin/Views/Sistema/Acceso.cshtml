@@ -1,0 +1,192 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_Usuario>
+@{
+    ViewData["Title"] = "Usuarios";
+}
+<div id="app_usuarios">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap " id="table_cotizacion" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdSplinnet)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Username)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Password)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nombre)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ApellidoPaterno)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Apellidomaterno)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Correo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sociedad)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Foto)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdArea)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdSplinnet)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Password)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Apellidomaterno)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Correo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sociedad)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Foto)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdArea)
+                            </td>
+                            <td>
+                                <button v-on:click="GetUsersPermissions('@item.IdSplinnet')">Ver/editar permisos</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- LARGE MODAL -->
+        <div id="modal_modifyPermiss" class="modal fade">
+            <div class="modal-dialog modal-lg" style="width: 80%; max-width:80%;" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Accesos</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="CloseModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <h4 class=" lh-3 mg-b-20">Acciones</h4>
+                        <p class="mg-b-5">
+                            <div v-if="permissions.isGetting == true">
+                                Obteniendo informacion de permisos
+                            </div>
+                            <div v-if="permissions.isGetting == false">
+                                <dl v-for="(item, index) in permissions.data">
+                                    <dt>{{ item.description }}</dt>
+                                    <dd v-for="(subitem, subindex) in item.acciones" style="margin-left: 30px;">
+                                        <label class="ckbox">
+                                            <input type="checkbox" v-model="subitem.isAccess">
+                                            <span>{{ subitem.description }}</span>
+                                        </label>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </p>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info pd-x-20" v-on:click="UpdateUsersPermissions()">Save changes</button>
+                        <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal" v-on:click="CloseModal()">Close</button>
+                    </div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_usuarios = new Vue({
+            el: "#app_usuarios",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                permissions: {
+                    data: null,
+                    isGetting: true
+                },
+            },
+            mounted() {
+                $('.table').DataTable({
+                    "order": []
+                });
+            },
+            methods: {
+                GetUsersPermissions: async function (USIndex) {
+                    //this.permissions.isGetting = true
+                    $("#modal_modifyPermiss").modal("show");
+                   
+                    let params = new URLSearchParams();
+                    params.append('id', USIndex);
+                    await axios.post('@Url.Action("DataGetPermissByUser","Sistema")', params, { headers: this.serverToken }).then(response => {
+                        this.permissions.data = response.data
+                    }).catch(error => {
+                        console.log(error);
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.permissions.isGetting = false)
+                },
+                UpdateUsersPermissions: async function (USIndex) {
+                    //this.permissions.isGetting = true
+                    
+                    let params = new URLSearchParams();
+                    params.append('id', USIndex);
+                    await axios.post('@Url.Action("DataChangePermissByUser","Sistema")', this.permissions.data, { headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                    }).catch(error => {
+                        console.log(error);
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.permissions.isGetting = false)
+                },
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+                CloseModal: function () {
+                    $("#modal_modifyPermiss").modal("hide");
+                }
+            }
+        });
+    </script>
+}

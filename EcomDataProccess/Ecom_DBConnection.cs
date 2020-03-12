@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Data;
 
 namespace EcomDataProccess
 {
@@ -27,6 +28,87 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public int ExecuteStoreProcedure(string Parameters)
+        {
+            MySqlCommand cmd;
+            try
+            {
+                CheckConnection();
+                cmd = new MySqlCommand();
+                cmd.Connection = Connection;
+                processParameters(Parameters, cmd);
+
+                cmd.Parameters.AddWithValue("@CodeResponse", Int32.Parse("1"));
+                cmd.Parameters["@CodeResponse"].Direction = ParameterDirection.Output;
+
+                cmd.Parameters.AddWithValue("@MessageResponse", "1");
+                cmd.Parameters["@MessageResponse"].Direction = ParameterDirection.Output;
+
+                cmd.ExecuteNonQuery();
+
+                int RequestStatus = (int)cmd.Parameters["@CodeResponse"].Value;
+                if(RequestStatus == 0)
+                {
+                    Message = string.Format("{0}",(string)cmd.Parameters["@MessageResponse"].Value);
+                }
+                else
+                {
+                    Message = string.Format("Error[{0}], {1}", RequestStatus, (string)cmd.Parameters["@MessageResponse"].Value);
+                }
+
+                return RequestStatus;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Ecom_Exception - {0}", ex.Message));
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("MySqlException - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
+            }
+        }
+        private void processParameters(string Parameters, MySqlCommand cmd)
+        {
+            string ProcedureName = Parameters.Split('|')[0];
+            string[] Paramet = Parameters.Split('|')[1].Split('&');
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = ProcedureName;
+
+            foreach (string item in Paramet)
+            {
+                string variable = item.Split('@')[0];
+                string variableValue = item.Split('@')[1];
+                string type = variableValue.Split('=')[0];
+                string value = variableValue.Split('=')[1];
+
+                if (type == "DATETIME")
+                {
+                    cmd.Parameters.AddWithValue("@" + variable, DateTime.Parse(value));
+                    cmd.Parameters["@" + variable].Direction = ParameterDirection.Input;
+                }
+                if (type == "VARCHAR")
+                {
+                    cmd.Parameters.AddWithValue("@" + variable, value);
+                    cmd.Parameters["@" + variable].Direction = ParameterDirection.Input;
+                }
+                if (type == "INT")
+                {
+                    cmd.Parameters.AddWithValue("@" + variable, Int32.Parse(value));
+                    cmd.Parameters["@" + variable].Direction = ParameterDirection.Input;
+                }
+                if (type == "DOUBLE")
+                {
+                    cmd.Parameters.AddWithValue("@" + variable, double.Parse(value));
+                    cmd.Parameters["@" + variable].Direction = ParameterDirection.Input;
+                }
+
+            }
+        }
         public int ExecuteScalarInt(string stattement)
         {
             try
@@ -117,6 +199,50 @@ namespace EcomDataProccess
             if (Connection.State != System.Data.ConnectionState.Open)
             {
                 throw new Ecom_Exception("Sin conexion a base de datos MySQL");
+            }
+        }
+        public int CountDataReader(MySqlDataReader dataReader)
+        {
+            int count = 0;
+            MySqlDataReader dataReader1 = dataReader;
+            while (dataReader1.Read())
+            {
+                count++;
+            }
+            return count;
+        }
+        public bool ExecuteProcedure(string Parameters, string returnValue)
+        {
+            try
+            {
+                CheckConnection();
+                string ProcedureName = Parameters.Split('|')[0];
+                string[] Paramet = Parameters.Split('|')[1].Split('&');
+                MySqlCommand cmd = new MySqlCommand(ProcedureName, Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                //campo @ typevar = valor &
+                foreach (string item in Paramet)
+                {
+                    string variable = item.Split('@')[0];
+                    string type = item.Split('@')[1].Split('=')[0];
+                    string value = item.Split('@')[1].Split('=')[1];
+                    cmd.Parameters.AddWithValue("@" + variable, value);
+                }
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+                dataReader.Close();
+                return false;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Ecom_Exception - {0}", ex.Message));
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("MySqlException - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
             }
         }
         #endregion
