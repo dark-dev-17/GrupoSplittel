@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EcomDataProccess
 {
@@ -79,13 +80,13 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
-        public bool Get(string codigo_)
+        public async Task<bool> Get(string codigo_)
         {
             bool result = false;
             try
             {
                 string Statement = string.Format("SELECT * FROM Admin_producto_categoria_subcategoria where codigo = '{0}'", codigo_);
-                List<Ecom_Producto> List = ReadDatReader(Statement);
+                List<Ecom_Producto> List = await ReadDatReader(Statement);
                 if(List.Count == 1)
                 {
                     List.ForEach(item =>
@@ -111,19 +112,19 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
-        public List<Ecom_Producto> Get()
+        public async Task<List<Ecom_Producto>> Get()
         {
             try
             {
                 string Statement = string.Format("SELECT * FROM Admin_producto_categoria_subcategoria;");
-                return ReadDatReader(Statement);
+                return await ReadDatReader(Statement);
             }
             catch (Ecom_Exception ex)
             {
                 throw ex;
             }
         }
-        private List<Ecom_Producto> ReadDatReader(string Statement)
+        private async Task<List<Ecom_Producto>> ReadDatReader(string Statement)
         {
             List<Ecom_Producto> List = null;
             MySqlDataReader Data = null;

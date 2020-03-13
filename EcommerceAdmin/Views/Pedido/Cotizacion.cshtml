@@ -1,6 +1,10 @@
 ﻿@model IEnumerable<EcomDataProccess.Ecom_Pedido>
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
 @{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
     ViewData["Title"] = "Cotizaciones";
+    bool ctrlShowBussines = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 18 });
 }
 <div id="app_cotizacion">
     <div class="br-section-wrapper">
@@ -49,13 +53,20 @@
                     {
                         <tr>
                             <td>
-                                @Html.ActionLink(item.DocNumEcommerce+"", "Detalle","Pedido", new { id = item.DocNumEcommerce }, new { @class= "btn btn-sm btn-outline-success"})
+                                @Html.ActionLink(item.DocNumEcommerce + "", "Detalle", "Pedido", new { id = item.DocNumEcommerce }, new { @class = "btn btn-sm btn-outline-success" })
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.TypeCustomer)
                             </td>
                             <td>
-                                @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success" })
+                                @if (ctrlShowBussines)
+                                {
+                                    @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.CardCode)
+                                }
                             </td>
                             <td>
                                 $@Html.DisplayFor(modelItem => item.DocSubTotal)

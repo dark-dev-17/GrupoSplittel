@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<EcomDataProccess.Ecom_Producto>
 @using Microsoft.AspNetCore.Http;
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @inject IHttpContextAccessor HttpContextAccessor
 @{
-    ViewData["Title"] = "Productos";
     int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Productos";
+    bool CtrlActive = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 2 });
 }
 <div id="app_producto">
     <div class="br-section-wrapper">
@@ -43,7 +43,7 @@
                                 @Html.ActionLink(item.ItemCode, "Detalle", "Producto", new { id = item.ItemCode }, new { @class = "btn btn-sm btn-outline-success" })
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Description)
+                                @item.Description
                             </td>
                             <td>
                                 $@item.UnitPrice.ToString("0.###")
@@ -58,14 +58,14 @@
                                 }
                                 else
                                 {
-                                    <span>@Html.DisplayFor(modelItem => item.Discount)%</span>
+                                    <span>@item.Discount%</span>
                                 }
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Stock)
+                                @item.Stock
                             </td>
                             <td>
-                                @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 2 }))
+                                @if (CtrlActive)
                                 {
                                     <button id="idDesc_@item.ItemCode" v-on:click="UpdateDesactive('@item.ItemCode')" style="@Html.Raw(item.IsActiveEcomerce ? "" : "display:none")" class="btn btn-sm btn-outline-danger my-2 my-sm-0">Desactivar</button>
                                     <button id="idAct_@item.ItemCode" v-on:click="UpdateActive('@item.ItemCode')" style="@Html.Raw(!item.IsActiveEcomerce ? "" : "display:none")" class="btn btn-sm btn-outline-success my-2 my-sm-0">Activar</button>

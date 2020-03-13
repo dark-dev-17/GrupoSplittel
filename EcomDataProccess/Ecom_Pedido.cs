@@ -54,6 +54,43 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public int GetNoDoumentos(DateTime start, DateTime end, string ModeBussiness,string TypeDoc)
+        {
+            string Statement = string.Format("AdminNoDocuments|startdate@DATETIME={0}&enddate@DATETIME={1}&tipoDocumento@VARCHAR={2}&ModeBussiness@VARCHAR={3}", 
+                start.ToString("yyyy-MM-dd"), 
+                end.ToString("yyyy-MM-dd 23:59:59"),
+                TypeDoc, 
+                ModeBussiness);
+            try
+            {
+                int Result = 0;
+                Result = Ecom_DBConnection_.ExecuteProcedureInttt(Statement, "totalDoc");
+                return Result;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public double GetTotal(DateTime start, DateTime end, string Currency, string ModeBussiness)
+        {
+            // 
+            string Statement = string.Format("Admin_TotalPedidos|startdate@DATETIME={0}&enddate@DATETIME={1}&moneda@VARCHAR={2}&ModeBussiness@VARCHAR={3}", 
+                start.ToString("yyyy-MM-dd"),
+                end.ToString("yyyy-MM-dd 23:59:59"), 
+                Currency, 
+                ModeBussiness);
+            try
+            {
+                double Result = 0;
+                Result = Ecom_DBConnection_.ExecuteProcedureDouble(Statement, "totalCost");
+                return Result;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         public bool GetById(int DocNumEcommerce_)
         {
             string Statement = string.Format("select * from Admin_pedidosInfo where id = '{0}'", DocNumEcommerce_);

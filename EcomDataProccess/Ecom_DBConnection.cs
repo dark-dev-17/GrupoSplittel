@@ -28,6 +28,94 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public double ExecuteProcedureDouble(string Parameters, string output)
+        {
+            MySqlCommand cmd;
+            try
+            {
+                CheckConnection();
+                cmd = new MySqlCommand();
+                cmd.Connection = Connection;
+                processParameters(Parameters, cmd);
+                //value returns
+                cmd.Parameters.AddWithValue("@" + output, double.Parse("1"));
+                cmd.Parameters["@" + output].Direction = ParameterDirection.Output;
+
+                cmd.ExecuteNonQuery();
+
+                double RequestStatus = (double)cmd.Parameters["@" + output].Value;
+
+                return RequestStatus;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Ecom_Exception - {0}", ex.Message));
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("MySqlException - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
+            }
+        }
+        public int ExecuteProcedureInttt(string Parameters, string output)
+        {
+            MySqlCommand cmd;
+            try
+            {
+                CheckConnection();
+                cmd = new MySqlCommand();
+                cmd.Connection = Connection;
+                processParameters(Parameters, cmd);
+                //value returns
+                cmd.Parameters.AddWithValue("@" + output, Int32.Parse("1"));
+                cmd.Parameters["@" + output].Direction = ParameterDirection.Output;
+
+                cmd.ExecuteNonQuery();
+
+                int RequestStatus = (int)cmd.Parameters["@" + output].Value;
+
+                return RequestStatus;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Ecom_Exception - {0}", ex.Message));
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("MySqlException - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
+            }
+        }
+        public MySqlDataReader ExecuteStoreProcedureReader(string Parameters)
+        {
+            try
+            {
+                CheckConnection();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = Connection;
+                processParameters(Parameters, cmd);
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+                return dataReader;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Ecom_Exception - {0}", ex.Message));
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("MySqlException - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
+            }
+        }
         public int ExecuteStoreProcedure(string Parameters)
         {
             MySqlCommand cmd;

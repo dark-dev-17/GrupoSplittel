@@ -391,5 +391,83 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessDataSession]
+        public ActionResult DataTotalDocument(DateTime start, DateTime end, string Currency, string ModeBussiness)
+        {
+            Ecom_DBConnection Ecom_DBConnection_ = null;
+            try
+            {
+                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
+                Ecom_DBConnection_.OpenConnection();
+                double Tota = new Ecom_Pedido(Ecom_DBConnection_).GetTotal(start, end, Currency, ModeBussiness);
+                Ecom_DBConnection_.CloseConnection();
+                return Ok(Tota);
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (Ecom_DBConnection_ != null)
+                {
+                    Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessDataSession]
+        public ActionResult DataNoDocument(DateTime start, DateTime end, string Currency, string ModeBussiness, string TypeDoc)
+        {
+            Ecom_DBConnection Ecom_DBConnection_ = null;
+            try
+            {
+                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
+                Ecom_DBConnection_.OpenConnection();
+                int Tota = new Ecom_Pedido(Ecom_DBConnection_).GetNoDoumentos(start, end, ModeBussiness, TypeDoc);
+                Ecom_DBConnection_.CloseConnection();
+                return Ok(Tota);
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (Ecom_DBConnection_ != null)
+                {
+                    Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DataGetQuoatationsDashboard(DateTime start, DateTime end, string ModeBussiness, string tipoDocumento)
+        {
+            List<Ecom_ProductoCategoria> result;
+            Ecom_DBConnection Ecom_DBConnection_ = null;
+            try
+            {
+                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
+                Ecom_DBConnection_.OpenConnection();
+                result = new Ecom_ProductoCategoria(Ecom_DBConnection_).GetQuoatationsDashboard(start, end, ModeBussiness, tipoDocumento);
+                Ecom_DBConnection_.CloseConnection();
+                return Ok(result);
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (Ecom_DBConnection_ != null)
+                {
+                    Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
     }
 }

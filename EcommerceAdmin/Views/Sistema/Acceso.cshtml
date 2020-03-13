@@ -82,6 +82,12 @@
                     }
                 </tbody>
             </table>
+            <div class="col-xl-12 mt-5 border">
+                @System.Configuration.ConfigurationManager.AppSettings["Splinnet_Database"] <br />
+                @System.Configuration.ConfigurationManager.AppSettings["SAP_Database"] <br />
+                @System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Database"] <br />
+                @System.Configuration.ConfigurationManager.AppSettings["FTP_Server"]
+            </div>
         </div>
         <!-- LARGE MODAL -->
         <div id="modal_modifyPermiss" class="modal fade">

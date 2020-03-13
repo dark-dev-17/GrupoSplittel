@@ -194,5 +194,28 @@ namespace EcommerceAdmin.Models
                     Ecom_DBConnection_.CloseConnection();
             }
         }
+        public List<Ecom_Modelo> Menu(int id_user)
+        {
+            List<Ecom_Modelo> List = new List<Ecom_Modelo>();
+            try
+            {
+                Ecom_DBConnection_ = new Ecom_DBConnection(SplitConnection);
+                Ecom_DBConnection_.OpenConnection();
+                return new Ecom_Modelo(Ecom_DBConnection_).Get(id_user);
+            }
+            catch (Ecom_Exception)
+            {
+                return List;
+            }
+            catch (Exception)
+            {
+                return List;
+            }
+            finally
+            {
+                if (Ecom_DBConnection_ != null)
+                    Ecom_DBConnection_.CloseConnection();
+            }
+        }
     }
 }

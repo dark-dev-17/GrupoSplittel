@@ -22,14 +22,14 @@ namespace EcommerceAdmin.Controllers
         private readonly string FTP_Server = ConfigurationManager.AppSettings["FTP_Server"].ToString();
         // GET: Producto
         [AccessView(IdAction = 1)]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             Ecom_DBConnection Ecom_DBConnection_ = null;
             try
             {
                 Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
                 Ecom_DBConnection_.OpenConnection();
-                List<Ecom_Producto> Ecom_Producto_ = new Ecom_Producto(Ecom_DBConnection_).Get();
+                List<Ecom_Producto> Ecom_Producto_ = await new Ecom_Producto(Ecom_DBConnection_).Get();
                 Ecom_DBConnection_.CloseConnection();
                 return View(Ecom_Producto_);
             }
@@ -48,7 +48,7 @@ namespace EcommerceAdmin.Controllers
 
         // GET: Producto/Details/5
         [AccessView(IdAction = 1)]
-        public ActionResult Detalle(string id)
+        public async Task<ActionResult> Detalle(string id)
         {
             Ecom_DBConnection Ecom_DBConnection_ = null;
             try
@@ -56,7 +56,7 @@ namespace EcommerceAdmin.Controllers
                 Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
                 Ecom_DBConnection_.OpenConnection();
                 Ecom_Producto Ecom_Producto_ = new Ecom_Producto(Ecom_DBConnection_);
-                bool result = Ecom_Producto_.Get(id);
+                bool result = await Ecom_Producto_.Get(id);
                 Ecom_DBConnection_.CloseConnection();
                 if (result)
                 {
@@ -175,6 +175,12 @@ namespace EcommerceAdmin.Controllers
                     string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/productos/{1}/adicional/", Ecommerce_Domain, ItemCode);
                     return Ok(Ecom_FilesFtp.Getfiles(PathItem, PathPublicItem));
                 }
+                else if (ImagessType.Trim() == "Miniatura")
+                {
+                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/*.jpg", ItemCode);
+                    string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/productos/{1}/thumbnail/", Ecommerce_Domain, ItemCode);
+                    return Ok(Ecom_FilesFtp.Getfiles(PathItem, PathPublicItem));
+                }
                 else
                 {
                     return BadRequest("Error de configuración");
@@ -211,6 +217,13 @@ namespace EcommerceAdmin.Controllers
                 {
                     ValidAction(5);
                     string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/adicional/{1}", ItemCode, Filename);
+                    Ecom_FilesFtp.DeleteFile(PathItem);
+                    return Ok("Archivo eliminado");
+                }
+                else if (ImagessType.Trim() == "Miniatura")
+                {
+                    ValidAction(5);
+                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.DeleteFile(PathItem);
                     return Ok("Archivo eliminado");
                 }
@@ -254,6 +267,13 @@ namespace EcommerceAdmin.Controllers
                     Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
                     return Ok("Archivo cargado");
                 }
+                else if (ImagessType.Trim() == "Miniatura")
+                {
+                    ValidAction(5);
+                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Filename);
+                    Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
+                    return Ok("Archivo cargado");
+                }
                 else
                 {
                     return BadRequest("Error de configuración");
@@ -290,6 +310,13 @@ namespace EcommerceAdmin.Controllers
                 {
                     ValidAction(5);
                     string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/adicional/", ItemCode);
+                    Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
+                    return Ok("Archivo renombrado");
+                }
+                else if (ImagessType.Trim() == "Miniatura")
+                {
+                    ValidAction(5);
+                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/", ItemCode);
                     Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
                     return Ok("Archivo renombrado");
                 }

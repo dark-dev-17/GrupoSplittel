@@ -1,7 +1,10 @@
 ﻿@model IEnumerable<EcomDataProccess.Ecom_Cliente>
-
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
 @{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
     ViewData["Title"] = "Clientes Ecommerce";
+    bool ctrlShowBussines = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 18 });
 }
 <div id="app_clientes">
     <div class="br-section-wrapper">
@@ -38,32 +41,39 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr>
-                        <td>
-                            @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success" })
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TipoCliente)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Nombre)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Apellidos)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Telefono)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Email)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FechaReistro)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.LastLogin)
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @if (ctrlShowBussines)
+                                {
+                                    @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.CardCode)
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TipoCliente)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Apellidos)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Telefono)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaReistro)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastLogin)
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -78,7 +88,7 @@
             },
             mounted() {
                 $('#table_clientes').DataTable({
-                     "order": []
+                    "order": []
                 });
             }
         });

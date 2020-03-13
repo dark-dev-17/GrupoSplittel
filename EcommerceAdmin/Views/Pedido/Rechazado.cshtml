@@ -1,6 +1,10 @@
 ﻿@model IEnumerable<SAPDataProcess.SAP_Document>
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
 @{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
     ViewData["Title"] = "Pedidos rechazados";
+    bool ctrlShowBussines = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 18 });
 }
 <div id="app_rechazado">
     <div class="br-section-wrapper">
@@ -18,11 +22,11 @@
                             @Html.DisplayNameFor(model => model.DocDate)
                         </th>
                         @*<th>
-                            @Html.DisplayNameFor(model => model.DocTotal)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DocCur)
-                        </th>*@
+                                @Html.DisplayNameFor(model => model.DocTotal)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DocCur)
+                            </th>*@
                         <th>
                             @Html.DisplayNameFor(model => model.CardCode)
                         </th>
@@ -50,13 +54,20 @@
                                 $@Html.DisplayFor(modelItem => item.DocDate)
                             </td>
                             @*<td>
-                                $@Html.DisplayFor(modelItem => item.DocTotal)
-                            </td>
+                                    $@Html.DisplayFor(modelItem => item.DocTotal)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DocCur)
+                                </td>*@
                             <td>
-                                @Html.DisplayFor(modelItem => item.DocCur)
-                            </td>*@
-                            <td>
-                                @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success" })
+                                @if (ctrlShowBussines)
+                                {
+                                    @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.CardCode)
+                                }
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Cardname)

@@ -1,7 +1,549 @@
 ﻿@{
     ViewData["Title"] = "About";
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
+    <div id="app_dashboard">
+        <div class="row  widget-1">
+            <div class="col-1"></div>
+            <div class="col-sm-6 col-lg-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title">Venta del día {{ Currency }}</h6>
+                        @*<a href="#"><i class="icon ion-android-more-horizontal"></i></a>*@
+                    </div><!-- card-header -->
+                    <div v-if="ventaDia.b2c == null" class="card-footer">Obteniendo B2C...</div>
+                    <div v-if="ventaDia.b2b == null" class="card-footer">Obteniendo B2B......</div>
+                    <div v-if="ventaDia.b2c != null && ventaDia.b2b != null" class="card-body">
+                        <i class="ion ion-bag tx-50 lh-0 tx-purple op-5"></i>
+                        <span class="tx-danger">${{ (ventaDia.b2c + ventaDia.b2b) | formatPrice}} </span>
+                    </div><!-- card-body -->
+                    <div v-if="ventaDia.b2c != null && ventaDia.b2b != null" class="card-footer">
+                        <div>
+                            <span class="tx-11">B2B</span>
+                            <h6 class="tx-inverse">${{ ventaDia.b2b | formatPrice}} </h6>
+                        </div>
+                        <div>
+                            <span class="tx-11">B2C</span>
+                            <h6 class="tx-inverse">${{ ventaDia.b2c | formatPrice}} </h6>
+                        </div>
+                    </div><!-- card-footer -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title">Venta de la semana {{ Currency }}</h6>
+                        @*<a href="#"><i class="icon ion-android-more-horizontal"></i></a>*@
+                    </div><!-- card-header -->
+                    <div v-if="semana.b2c == null" class="card-footer">Obteniendo B2C...</div>
+                    <div v-if="semana.b2b == null" class="card-footer">Obteniendo B2B......</div>
+                    <div v-if="semana.b2c != null && semana.b2b != null" class="card-body">
+                        <i class="ion ion-bag tx-50 lh-0 tx-purple op-5"></i>
+                        <span class="tx-danger">${{ (semana.b2c + semana.b2b) | formatPrice}} </span>
+                    </div><!-- card-body -->
+                    <div v-if="semana.b2c != null && semana.b2b != null" class="card-footer">
+                        <div>
+                            <span class="tx-11">B2B</span>
+                            <h6 class="tx-inverse">${{ semana.b2b | formatPrice}} </h6>
+                        </div>
+                        <div>
+                            <span class="tx-11">B2C</span>
+                            <h6 class="tx-inverse">${{ semana.b2c | formatPrice}} </h6>
+                        </div>
+                    </div><!-- card-footer -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title">Venta del mes {{ Currency }}</h6>
+                        @*<a href="#"><i class="icon ion-android-more-horizontal"></i></a>*@
+                    </div><!-- card-header -->
+                    <div v-if="mes.b2c == null" class="card-footer">Obteniendo B2C...</div>
+                    <div v-if="mes.b2b == null" class="card-footer">Obteniendo B2B......</div>
+                    <div v-if="mes.b2c != null && mes.b2b != null" class="card-body">
+                        <i class="ion ion-bag tx-50 lh-0 tx-purple op-5"></i>
+                        <span class="tx-danger">${{ (mes.b2c + mes.b2b) | formatPrice}} </span>
+                    </div><!-- card-body -->
+                    <div v-if="mes.b2c != null && mes.b2b != null" class="card-footer">
+                        <div>
+                            <span class="tx-11">B2B</span>
+                            <h6 class="tx-inverse">${{ mes.b2b | formatPrice}} </h6>
+                        </div>
+                        <div>
+                            <span class="tx-11">B2C</span>
+                            <h6 class="tx-inverse">${{ mes.b2c | formatPrice}} </h6>
+                        </div>
+                    </div><!-- card-footer -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title">Venta del último mes {{ Currency }}</h6>
+                        @*<a href="#"><i class="icon ion-android-more-horizontal"></i></a>*@
+                    </div><!-- card-header -->
+                    <div v-if="lastmes.b2c == null" class="card-footer">Obteniendo B2C...</div>
+                    <div v-if="lastmes.b2b == null" class="card-footer">Obteniendo B2B......</div>
+                    <div v-if="lastmes.b2c != null && lastmes.b2b != null" class="card-body">
+                        <i class="ion ion-bag tx-50 lh-0 tx-purple op-5"></i>
+                        <span class="tx-danger">${{ (lastmes.b2c + lastmes.b2b) | formatPrice}} </span>
+                    </div><!-- card-body -->
+                    <div v-if="lastmes.b2c != null && lastmes.b2b != null" class="card-footer">
+                        <div>
+                            <span class="tx-11">B2B</span>
+                            <h6 class="tx-inverse">${{ lastmes.b2b | formatPrice}} </h6>
+                        </div>
+                        <div>
+                            <span class="tx-11">B2C</span>
+                            <h6 class="tx-inverse">${{ lastmes.b2c | formatPrice}} </h6>
+                        </div>
+                    </div><!-- card-footer -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title">Venta del año {{ Currency }}</h6>
+                        @*<a href="#"><i class="icon ion-android-more-horizontal"></i></a>*@
+                    </div><!-- card-header -->
+                    <div v-if="year.b2c == null" class="card-footer">Obteniendo B2C...</div>
+                    <div v-if="year.b2b == null" class="card-footer">Obteniendo B2B......</div>
+                    <div v-if="year.b2c != null && year.b2b != null" class="card-body">
+                        <i class="ion ion-bag tx-50 lh-0 tx-purple op-5"></i>
+                        <span class="tx-danger">${{ (lastmes.b2c + lastmes.b2b) | formatPrice}} </span>
+                    </div><!-- card-body -->
+                    <div v-if="year.b2c != null && year.b2b != null" class="card-footer">
+                        <div>
+                            <span class="tx-11">B2B</span>
+                            <h6 class="tx-inverse">${{ year.b2b | formatPrice}} </h6>
+                        </div>
+                        <div>
+                            <span class="tx-11">B2C</span>
+                            <h6 class="tx-inverse">${{ year.b2c | formatPrice}} </h6>
+                        </div>
+                    </div><!-- card-footer -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+        </div>
+        <div class=" bd-0 mg-t-20">
+            <div class="card-header bg-transparent pd-x-25 pd-y-15 bd-b-0 d-flex justify-content-between align-items-center">
+                <div class="d-flex  justify-content-end">
+                    <div class="d-md-flex">
+                        <input type="date" placeholder="Inicio" v-model="report.dates.start" class="form-control form-control-sm">
+                        <input type="date" placeholder="Termino" v-model="report.dates.end" class="form-control form-control-sm">
+                        <button v-on:click="procesar()" class="btn btn-info pd-y-13 pd-x-20 bd-0 mg-md-l-10 mg-t-10 mg-md-t-0 tx-uppercase tx-11 tx-spacing-2">Graficar</button>
+                    </div>
+                </div>
+            </div><!-- card-header -->
+            <div class="card-body pd-x-25 pd-b-25 pd-t-0">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="widget-2">
+                            <div class="card shadow-base overflow-hidden">
+                                <div class="card-body card-body rounded-0">
+                                    <h6 class="tx-inverse tx-14 mg-b-5">Cotizaciones</h6>
+                                    <div class="tx-center mg-y-20">
+                                        <div id="cotizaciones" class="ht-50 ht-sm-100"></div>
+                                    </div>
+                                    <p class="tx-10 tx-uppercase tx-medium mg-b-0 tx-spacing-1">Total</p>
+                                    <h2 class="tx-inverse tx-bold tx-lato">
+                                        <span>{{ cotizaciones.b2b + cotizaciones.b2c }}</span>
+                                    </h2>
+                                    <div class="d-flex justify-content-between tx-12">
+                                        <div>
+                                            <span class="square-10 bg-info mg-r-5"></span> B2B
+                                            <a href="#" v-on:click="GeextrInfoWidget('B2B','COTIZACION')" title="Ver más"><h5 class="mg-b-0 mg-t-5 tx-bold tx-inverse tx-lato">{{ cotizaciones.b2b }}</h5></a>
+                                        </div>
+                                        <div>
+                                            <span class="square-10 bg-gray-300 mg-r-5"></span> B2C
+                                            <a href="#" v-on:click="GeextrInfoWidget('B2C','COTIZACION')" title="Ver más"><h5 class="mg-b-0 mg-t-5 tx-bold tx-inverse tx-lato">{{ cotizaciones.b2c }}</h5></a>
+                                        </div>
+                                    </div><!-- d-flex -->
+                                </div><!-- card-body -->
+                            </div><!-- card -->
+                        </div><!-- widget-2 -->
+                    </div><!-- col-3 -->
+                    <div class="col-lg-2">
+                        <div class="widget-2">
+                            <div class="card shadow-base overflow-hidden">
+                                <div class="card-body card-body rounded-0">
+                                    <h6 class="tx-inverse tx-14 mg-b-5">Pedidos</h6>
+                                    <div class="tx-center mg-y-20">
+                                        <div id="pedidos" class="ht-50 ht-sm-100"></div>
+                                    </div>
+                                    <p class="tx-10 tx-uppercase tx-medium mg-b-0 tx-spacing-1">Total</p>
+                                    <h2 class="tx-inverse tx-bold tx-lato">
+                                        <span>{{ pedidos.b2b + pedidos.b2c }}</span>
+                                    </h2>
+                                    <div class="d-flex justify-content-between tx-12">
+                                        <div>
+                                            <span class="square-10 bg-info mg-r-5"></span> B2B
+                                            <a href="#" v-on:click="GeextrInfoWidget('B2B','PEDIDOS')" title="Ver más"><h5 class="mg-b-0 mg-t-5 tx-bold tx-inverse tx-lato">{{ pedidos.b2b }}</h5></a>
 
-<p>Use this area to provide additional information.</p>
+                                        </div>
+                                        <div>
+                                            <span class="square-10 bg-gray-300 mg-r-5"></span> B2C
+                                            <a href="#" v-on:click="GeextrInfoWidget('B2C','PEDIDOS')" title="Ver más"><h5 class="mg-b-0 mg-t-5 tx-bold tx-inverse tx-lato">{{ pedidos.b2c }}</h5></a>
+                                        </div>
+                                    </div><!-- d-flex -->
+                                </div><!-- card-body -->
+                            </div><!-- card -->
+                        </div><!-- widget-2 -->
+                    </div><!-- col-3 -->
+                    <div class="col-lg-2">
+                        <div class="widget-2">
+                            <div class="card shadow-base overflow-hidden">
+                                <div class="card-body card-body rounded-0">
+                                    <h6 class="tx-inverse tx-14 mg-b-5">Usuarios registrados</h6>
+                                    <div class="tx-center mg-y-20">
+                                        <div id="usuarios" class="ht-50 ht-sm-100"></div>
+                                    </div>
+                                    <p class="tx-10 tx-uppercase tx-medium mg-b-0 tx-spacing-1">Total</p>
+                                    <h2 class="tx-inverse tx-bold tx-lato">
+                                        <span>{{ usuarios.b2b + usuarios.b2c }}</span>
+                                    </h2>
+                                    <div class="d-flex justify-content-between tx-12">
+                                        <div>
+                                            <span class="square-10 bg-info mg-r-5"></span> B2B
+                                            <h5 class="mg-b-0 mg-t-5 tx-bold tx-inverse tx-lato">{{ usuarios.b2b }}</h5>
+                                        </div>
+                                        <div>
+                                            <span class="square-10 bg-gray-300 mg-r-5"></span> B2C
+                                            <h5 class="mg-b-0 mg-t-5 tx-bold tx-inverse tx-lato">{{ usuarios.b2c }}</h5>
+                                        </div>
+                                    </div><!-- d-flex -->
+                                </div><!-- card-body -->
+                            </div><!-- card -->
+                        </div><!-- widget-2 -->
+                    </div><!-- col-3 -->
+                </div>
+            </div>
+        </div>
+        <div id="modaldemo3" class="modal fade">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">{{widget1.mode}}</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <ul class="nav nav-outline active-info flex-column flex-md-row">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#tab_clientes" role="tab" aria-controls="home" aria-selected="true">Clientes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Categorias</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="tab_clientes" role="tabpanel" aria-labelledby="home-tab">
+                                <table class="table display responsive nowrap " id="" v-if="widget1.clientes.isGetting == false">
+                                    <thead>
+                                        <tr>
+                                            <th>Codigo sap</th>
+                                            <th>Cliente</th>
+                                            <th>Total documentos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="item in widget1.clientes.data">
+                                            <td>{{ item.cardCode }}</td>
+                                            <td>{{ item.nombre }} {{ item.apellidos }}</td>
+                                            <td>{{ item.noDocs }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <span v-else>Obteniendo informacion</span>
+                            </div>
+                            <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="home-tab">
+                                <table class="table display responsive nowrap " id="" v-if="widget1.categorias.isGetting == false">
+                                    <thead>
+                                        <tr>
+                                            <th>Categoria</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="item in widget1.categorias.data">
+                                            <td>{{ item.description }}</td>
+                                            <td>{{ item.total }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <span v-else>Obteniendo informacion</span>
+                            </div>
+                        </div>
+
+                    </div><!-- modal-body -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary tx-size-xs" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div>
+@section Scripts {
+    <script>
+        var app_dashboard = new Vue({
+            el: "#app_dashboard",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                Currency: "USD",
+                report: {
+                     dates: {
+                          start: moment().startOf('month').format('YYYY-MM-DD'),
+                        end: moment().endOf('month').format('YYYY-MM-DD'),
+                    }
+                },
+                ventaDia: {
+                    b2c: null,
+                    b2b: null,
+                    dates: {
+                        start: moment().format('YYYY-MM-DD'),
+                        end: moment().format('YYYY-MM-DD'),
+                    },
+                },
+                semana: {
+                    b2c: null,
+                    b2b: null,
+                    dates: {
+                        start: moment().startOf('week').format('YYYY-MM-DD'),
+                        end: moment().endOf('week').format('YYYY-MM-DD'),
+                    },
+                },
+                mes: {
+                    b2c: null,
+                    b2b: null,
+                    dates: {
+                        start: moment().startOf('month').format('YYYY-MM-DD'),
+                        end: moment().endOf('month').format('YYYY-MM-DD'),
+                    },
+                },
+                lastmes: {
+                    b2c: null,
+                    b2b: null,
+                    dates: {
+                        start: moment().add(-1, 'M').startOf('month').format('YYYY-MM-DD'),
+                        end: moment().add(-1, 'M').endOf('month').format('YYYY-MM-DD'),
+                    },
+                },
+                year: {
+                    b2c: null,
+                    b2b: null,
+                    dates: {
+                        start: moment().add(-1, 'M').startOf('year').format('YYYY-MM-DD'),
+                        end: moment().add(-1, 'M').endOf('year').format('YYYY-MM-DD'),
+                    },
+                },
+                cotizaciones: {
+                    b2c: null,
+                    b2b: null,
+                    isGettingB2B: true,
+                    isGettingB2C: true
+                },
+                pedidos: {
+                    b2c: null,
+                    b2b: null,
+                    isGettingB2B: true,
+                    isGettingB2C: true
+                },
+                usuarios: {
+                    b2c: null,
+                    b2b: null,
+                    isGettingB2B: true,
+                    isGettingB2C: true
+                },
+                widget1: {
+                    mode: "B2C",
+                    tipoDocumento: "COTIZACION",
+                    clientes: {
+                        data: null,
+                        isGetting : true
+                    },
+                    categorias: {
+                        data: null,
+                        isGetting : true
+                    }
+                }
+            },
+            async mounted() {
+                this.ventaDia.b2c = await this.GetVenta(this.Currency,"B2C",this.ventaDia.dates.start,this.ventaDia.dates.end,false);
+                this.ventaDia.b2b = await this.GetVenta(this.Currency, "B2B", this.ventaDia.dates.start, this.ventaDia.dates.end, false);
+
+                this.semana.b2c = await this.GetVenta(this.Currency,"B2C",this.semana.dates.start,this.semana.dates.end,false);
+                this.semana.b2b = await this.GetVenta(this.Currency, "B2B", this.semana.dates.start, this.semana.dates.end, false);
+
+                this.mes.b2c = await this.GetVenta(this.Currency, "B2C", this.mes.dates.start, this.mes.dates.end, false);
+                this.mes.b2b = await this.GetVenta(this.Currency, "B2B", this.mes.dates.start, this.mes.dates.end, false);
+
+                this.lastmes.b2c = await this.GetVenta(this.Currency, "B2C", this.lastmes.dates.start, this.lastmes.dates.end, false);
+                this.lastmes.b2b = await this.GetVenta(this.Currency, "B2B", this.lastmes.dates.start, this.lastmes.dates.end, false);
+
+                this.year.b2c = await this.GetVenta(this.Currency, "B2C", this.year.dates.start, this.year.dates.end, false);
+                this.year.b2b = await this.GetVenta(this.Currency, "B2B", this.year.dates.start, this.year.dates.end, false);
+
+                this.cotizaciones.b2c = await this.GetNoDocs("B2C", this.report.dates.start, this.report.dates.end,"COTIZACION", false);
+                this.cotizaciones.b2b = await this.GetNoDocs("B2B", this.report.dates.start, this.report.dates.end,"COTIZACION", false);
+
+                let colors = ['#17a2b8', '#dee2e6', '#F89D44', '#85C441', '#36B3E3'];
+                let piedata = [];
+                piedata.push({ label: "B2B", data: [[1,this.cotizaciones.b2b]], color: colors[0]});
+                piedata.push({ label: "B2C", data: [[1,this.cotizaciones.b2c]], color: colors[1]});
+                this.PieChart(piedata, "#cotizaciones");
+
+                this.pedidos.b2c = await this.GetNoDocs("B2C", this.report.dates.start, this.report.dates.end,"PEDIDO", false);
+                this.pedidos.b2b = await this.GetNoDocs("B2B", this.report.dates.start, this.report.dates.end, "PEDIDO", false);
+
+                let piedata1 = [];
+                piedata1.push({ label: "B2B", data: [[1,this.pedidos.b2b]], color: colors[0]});
+                piedata1.push({ label: "B2C", data: [[1,this.pedidos.b2c]], color: colors[1]});
+                this.PieChart(piedata1, "#pedidos");
+
+                this.usuarios.b2c = await this.GetUsuario("B2C", this.report.dates.start, this.report.dates.end, false);
+                this.usuarios.b2b = await this.GetUsuario("B2B", this.report.dates.start, this.report.dates.end, false);
+
+                let piedata2 = [];
+                piedata2.push({ label: "B2B", data: [[1,this.usuarios.b2b]], color: colors[0]});
+                piedata2.push({ label: "B2C", data: [[1,this.usuarios.b2c]], color: colors[1]});
+                this.PieChart(piedata2, "#usuarios");
+            },
+            
+            methods: {
+                procesar: async function () {
+                     this.cotizaciones.b2c = await this.GetNoDocs("B2C", this.report.dates.start, this.report.dates.end,"COTIZACION", false);
+                this.cotizaciones.b2b = await this.GetNoDocs("B2B", this.report.dates.start, this.report.dates.end,"COTIZACION", false);
+
+                let colors = ['#17a2b8', '#dee2e6', '#F89D44', '#85C441', '#36B3E3'];
+                let piedata = [];
+                piedata.push({ label: "B2B", data: [[1,this.cotizaciones.b2b]], color: colors[0]});
+                piedata.push({ label: "B2C", data: [[1,this.cotizaciones.b2c]], color: colors[1]});
+                this.PieChart(piedata, "#cotizaciones");
+
+                this.pedidos.b2c = await this.GetNoDocs("B2C", this.report.dates.start, this.report.dates.end,"PEDIDO", false);
+                this.pedidos.b2b = await this.GetNoDocs("B2B", this.report.dates.start, this.report.dates.end, "PEDIDO", false);
+
+                let piedata1 = [];
+                piedata1.push({ label: "B2B", data: [[1,this.pedidos.b2b]], color: colors[0]});
+                piedata1.push({ label: "B2C", data: [[1,this.pedidos.b2c]], color: colors[1]});
+                this.PieChart(piedata1, "#pedidos");
+
+                this.usuarios.b2c = await this.GetUsuario("B2C", this.report.dates.start, this.report.dates.end, false);
+                this.usuarios.b2b = await this.GetUsuario("B2B", this.report.dates.start, this.report.dates.end, false);
+
+                let piedata2 = [];
+                piedata2.push({ label: "B2B", data: [[1,this.usuarios.b2b]], color: colors[0]});
+                piedata2.push({ label: "B2C", data: [[1,this.usuarios.b2c]], color: colors[1]});
+                this.PieChart(piedata2, "#usuarios");
+                },
+                GeextrInfoWidget: async function (mode, tipoDocumento) {
+                    this.widget1.mode = mode;
+                    this.widget1.tipoDocumento = tipoDocumento;
+                    // ventas al dia b2c
+                    let params = new FormData();
+                    params.append('start', this.report.dates.start);
+                    params.append('end', this.report.dates.end);
+                    params.append('ModeBussiness', this.widget1.mode);
+                    params.append('tipoDocumento', this.widget1.tipoDocumento);
+                    await axios.post('@Url.Action("DataGetQuoatationsDashboard","Cliente")', params, { headers: this.serverToken }).then(response => {
+                        this.widget1.clientes.data = response.data;
+                    }).catch(error => {
+                        alert(error.response.data);
+                    }).finally(() => this.widget1.clientes.isGetting = false)
+                    // ventas al dia b2b
+                    await axios.post('@Url.Action("DataGetQuoatationsDashboard","Pedido")', params, { headers: this.serverToken }).then(response => {
+                        this.widget1.categorias.data = response.data;
+                    }).catch(error => {
+                        alert(error.response.data);
+                    }).finally(() => this.widget1.categorias.isGetting = false)
+                    $("#modaldemo3").modal("show");
+                },
+                GetUsuario: async function (TypeClient,startDate,endDate,status) {
+                    let params2 = new FormData();
+                    params2.append('start', startDate);
+                    params2.append('end', endDate);
+                    params2.append('ModeBussiness', TypeClient);
+                    return await axios.post('@Url.Action("DataTotal","Cliente")', params2, { headers: this.serverToken }).then(response => {
+                        return response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => status = false)
+                },
+                 GetVenta: async function (moneda,TypeClient,startDate,endDate,status) {
+                    let params2 = new FormData();
+                    params2.append('start', startDate);
+                    params2.append('end', endDate);
+                    params2.append('Currency', moneda);
+                    params2.append('ModeBussiness', TypeClient);
+                    return await axios.post('@Url.Action("DataTotalDocument","Pedido")', params2, { headers: this.serverToken }).then(response => {
+                        return response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => status = false)
+                },
+                GetNoDocs: async function (TypeClient,startDate,endDate,TypeDoc,status) {
+                    let params = new FormData();
+                    params.append('start', startDate);
+                    params.append('end', endDate);
+                    params.append('ModeBussiness', TypeClient);
+                    params.append('TypeDoc', TypeDoc);
+                    return await axios.post('@Url.Action("DataNoDocument","Pedido")', params, { headers: this.serverToken }).then(response => {
+                        return response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => status = false)
+                },
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+                PieChart: function (piedata, id) {
+                    $.plot(id, piedata, {
+                      series: {
+                        pie: {
+                          show: true,
+                          radius: 1,
+                          label: {
+                            show: true,
+                            radius: 2/3,
+                            formatter: this.labelFormatter,
+                            threshold: 0.1
+                          }
+                        }
+                      },
+                      grid: {
+                        hoverable: true,
+                        clickable: true
+                      }
+                    });
+                },
+                labelFormatter: function labelFormatter(label, series) {
+		            return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + Math.round(series.percent) + "%</div>";
+	            }
+            },
+             filters: {
+                formatPrice(value) {
+                    let val = (value/1).toFixed(2).replace('.', ',')
+                    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                }
+            }
+        });
+    </script>
+}

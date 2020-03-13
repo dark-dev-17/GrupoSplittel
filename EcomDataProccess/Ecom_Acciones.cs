@@ -9,6 +9,11 @@ namespace EcomDataProccess
         #region Propiedades
         public int Id { set; get; }
         public string Description { set; get; }
+        public string Route { set; get; }
+        public string Action { set; get; }
+        public string Text { set; get; }
+        public string Icon { set; get; }
+        public string ClassActive { set; get; }
         public bool isAccess { set; get; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
@@ -33,6 +38,41 @@ namespace EcomDataProccess
         {
             this.Ecom_DBConnection_ = Ecom_DBConnection_;
         }
+        public List<Ecom_Acciones> Get(int idModulo, int id_user)
+        {
+            MySqlDataReader Data = null;
+            try
+            {
+                string Statement = string.Format("SELECT * FROM Admin_SubModulos where t01_pk01 = '{0}' and clienteKey = '{1}'", idModulo, id_user);
+                List<Ecom_Acciones> Lista = new List<Ecom_Acciones>();
+                Data = Ecom_DBConnection_.DoQuery(Statement);
+                while (Data.Read())
+                {
+                    Ecom_Acciones acciones = new Ecom_Acciones();
+                    acciones.Id = (int)Data.GetUInt32(0);
+                    acciones.Description = Data.IsDBNull(1) ? "" : Data.GetString(1);
+                    acciones.Route = Data.IsDBNull(2) ? "" : Data.GetString(2);
+                    acciones.Action = Data.IsDBNull(3) ? "" : Data.GetString(3);
+                    acciones.Text = Data.IsDBNull(4) ? "" : Data.GetString(4);
+                    acciones.Icon = Data.IsDBNull(5) ? "" : Data.GetString(5);
+                    acciones.isAccess = false;
+                    Lista.Add(acciones);
+                }
+                Data.Close();
+                return Lista;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (Data != null)
+                {
+                    Data.Close();
+                }
+            }
+        }
         public List<Ecom_Acciones> Get(int idModulo)
         {
             MySqlDataReader Data = null;
@@ -46,6 +86,10 @@ namespace EcomDataProccess
                     Ecom_Acciones acciones = new Ecom_Acciones();
                     acciones.Id = (int)Data.GetUInt32(0);
                     acciones.Description = Data.IsDBNull(1) ? "" : Data.GetString(1);
+                    acciones.Route = Data.IsDBNull(5) ? "" : Data.GetString(5);
+                    acciones.Action = Data.IsDBNull(6) ? "" : Data.GetString(6);
+                    acciones.Text = Data.IsDBNull(7) ? "" : Data.GetString(7);
+                    acciones.Icon = Data.IsDBNull(8) ? "" : Data.GetString(8);
                     acciones.isAccess = false;
                     Lista.Add(acciones);
                 }

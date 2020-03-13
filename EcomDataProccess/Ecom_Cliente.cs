@@ -36,6 +36,24 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public int GetTotal(string ModeBussiness, DateTime start, DateTime end)
+        {
+            int total;
+            try
+            {
+                string Statement = string.Format("Admin_totalClientes|ModeBussiness@VARCHAR={0}&startdate@DATETIME={1}&enddate@DATETIME={2}", 
+                    ModeBussiness, 
+                    start.ToString("yyyy-MM-dd"), 
+                    end.ToString("yyyy-MM-dd 23:59:59")
+                );
+                total = Ecom_DBConnection_.ExecuteProcedureInttt(Statement, "TotalClientes");
+                return total;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         public bool Get(int id_cliente)
         {
             string Statement = string.Format("select * from admin_clientes where id_cliente = '{0}' ", id_cliente);
@@ -90,6 +108,44 @@ namespace EcomDataProccess
         {
             string Statement = string.Format("select * from admin_clientes where cardcode = '{0}' order by last_login desc", CardCode_);
             return ReadDatReader(Statement);
+        }
+        public List<Ecom_Cliente> GetQuoatationsDashboard(DateTime start, DateTime end, string ModeBussiness, string tipoDocumento)
+        {
+            string Statement = string.Format("Admin_QuotationsDashboard|startdate@DATETIME={0}&enddate@DATETIME={1}&tipoDocumento@VARCHAR={2}&ModeBussiness@VARCHAR={3}&ModeQuery@INT={4}",
+                start.ToString("yyyy-MM-dd"),
+                end.ToString("yyyy-MM-dd 23:59:59"),
+                tipoDocumento,
+                ModeBussiness,
+                1);
+            MySqlDataReader data = null;
+            List<Ecom_Cliente> List;
+            try
+            {
+                data = Ecom_DBConnection_.ExecuteStoreProcedureReader(Statement);
+                List = new List<Ecom_Cliente>();
+                while (data.Read())
+                {
+                    Ecom_Cliente cliente = new Ecom_Cliente();
+                    cliente.Id_cliente = data.IsDBNull(0) ? 0 : data.GetInt32(0);
+                    cliente.Nombre = data.IsDBNull(1) ? "" : data.GetString(1);
+                    cliente.Apellidos = data.IsDBNull(2) ? "" : data.GetString(2);
+                    cliente.NoDocs = data.IsDBNull(3) ? 0 : data.GetInt32(3);
+                    cliente.CardCode = data.IsDBNull(4) ? "" : data.GetString(4);
+                    List.Add(cliente);
+                }
+                return List;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (data != null)
+                {
+                    data.Close();
+                }
+            }
         }
         private List<Ecom_Cliente> ReadDatReader(string Statement)
         {
