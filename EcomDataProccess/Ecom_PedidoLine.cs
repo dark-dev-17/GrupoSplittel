@@ -16,7 +16,8 @@ namespace EcomDataProccess
         public double Quantity { get; set; }
         public double Price { get; set; }
         public string Currency { get; set; }
-        public string ImageLink { get { return ConfigurationManager.AppSettings["Ecommerce_Domain"].ToString() + string.Format(@"/store/public/images/img_spl/productos/{0}/1.jpg", ItemCode); } }
+        public string Imageprincipal { get; set; }
+        public string ImageLink { get { return ConfigurationManager.AppSettings["Ecommerce_Domain"].ToString() + string.Format(@"/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Imageprincipal); } }
         public double Rate { get; set; }
         public double LineTotal { get; set; }
         public double LineSubTotal { get; set; }
@@ -62,6 +63,7 @@ namespace EcomDataProccess
                         LineSubTotal = (double)Data.GetDouble(4),
                         LineTotal = (double)Data.GetDouble(5),
                         PorcentDiscount = (double)Data.GetDouble(7),
+                        Imageprincipal = Data.IsDBNull(10) ? "" : Data.GetString(10),
                     });
 
                 }

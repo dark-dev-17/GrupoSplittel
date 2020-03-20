@@ -222,9 +222,10 @@ namespace EcommerceAdmin.Controllers
                 }
                 else if (ImagessType.Trim() == "Miniatura")
                 {
-                    ValidAction(5);
+                    ValidAction(26);
                     string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.DeleteFile(PathItem);
+                    UpdateImageName(ItemCode, "");
                     return Ok("Archivo eliminado");
                 }
                 else
@@ -269,9 +270,16 @@ namespace EcommerceAdmin.Controllers
                 }
                 else if (ImagessType.Trim() == "Miniatura")
                 {
-                    ValidAction(5);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Filename);
+                    ValidAction(26);
+                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/*.jpg", ItemCode);
+                    string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/productos/{1}/thumbnail/", Ecommerce_Domain, ItemCode);
+                    if(Ecom_FilesFtp.Getfiles(PathItem, PathPublicItem).Count > 0)
+                    {
+                        return BadRequest("ya existe una imagen como miniatura predeterminada");
+                    }
+                    PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
+                    UpdateImageName(ItemCode, Filename);
                     return Ok("Archivo cargado");
                 }
                 else
@@ -315,9 +323,10 @@ namespace EcommerceAdmin.Controllers
                 }
                 else if (ImagessType.Trim() == "Miniatura")
                 {
-                    ValidAction(5);
+                    ValidAction(26);
                     string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/", ItemCode);
                     Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
+                    UpdateImageName(ItemCode, Newname + ".jpg");
                     return Ok("Archivo renombrado");
                 }
                 else
@@ -349,6 +358,29 @@ namespace EcommerceAdmin.Controllers
             {
                 throw ex;
             }finally
+            {
+                if (Ecom_DBConnection_ != null)
+                {
+                    Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
+        private void UpdateImageName(string ItemCode, string imageName)
+        {
+            Ecom_DBConnection Ecom_DBConnection_ = null;
+            try
+            {
+                int USR_IdSplinnet = (int)HttpContext.Session.GetInt32("USR_IdSplinnet");
+                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
+                Ecom_DBConnection_.OpenConnection();
+                bool AccessBysalesEmp = new Ecom_Producto(Ecom_DBConnection_).UpdImagenPrincipal(ItemCode, imageName);
+                Ecom_DBConnection_.CloseConnection();
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+            finally
             {
                 if (Ecom_DBConnection_ != null)
                 {

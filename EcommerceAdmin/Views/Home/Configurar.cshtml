@@ -1,0 +1,162 @@
+﻿@{
+    ViewData["Title"] = "Contact";
+}
+    <div id="app_configurar" class="row">
+        
+        <div class="col-xl-12">
+            <a href="#" class="btn btn-default" v-on:click="saveMemory()">Guardar en memoriaa</a>
+            <div class="row">
+                <div class="col-lg-2">
+                    <table class="table table-sm" border="0">
+                        <tr>
+                            <td>Caracteristica</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm" placeholder="nueva" name="name" value="" v-model="caracteristica.nombre" v-on:keyup.enter="agregarCaracteristica()" /></td>
+                            <td></td>
+                        </tr>
+                        <tr v-for="(item, index) in caracteristicas">
+                            <td><input type="text" class="form-control form-control-sm" name="name" value="" v-model="item.nombre" /></td>
+                            <td>
+                                @*<a href="#" v-on:click="quitarCaracteristica(index)">Eliminar</a> |*@
+                                <a href="#" v-on:click="VerCaracteristica(index)">Ver</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-4" v-if="caracteristicas2 != null">
+                    <table class="table table-sm" border="0">
+                        <tr>
+                            <td colspan="3">{{ caracteristicas2.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 90px;">Valor</td>
+                            <td>Text</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm" placeholder="nueva" v-on:keyup.enter="agregaropcion()" id="ocpion" v-model="opcion.value" name="name" value="" /> </td>
+                            <td><input type="text" class="form-control form-control-sm" placeholder="nueva" v-on:keyup.enter="agregaropcion()" v-model="opcion.text" name="name" value="" /> </td>
+                            <td></td>
+                        </tr>
+                        <tr v-for="(item, index) in caracteristicas2.opciones">
+                            <td><input type="text" class="form-control form-control-sm" v-model="item.value" name="name" value="" /> </td>
+                            <td><input type="text" class="form-control form-control-sm" v-model="item.text" name="name" value="" /> </td>
+                            <td>
+                                @*<a href="#" v-on:click="quitarOpcion(index)">Eliminar</a>*@
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-6">
+                    <table class="table table-sm" border="0">
+                        <tr>
+                            <td style="width: 90px;">Calve</td>
+                            <td>Producto</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm" placeholder="nueva" v-on:keyup.enter="agregarConf()" id="configuracion" v-model="opcion.value" name="name" value="" /> </td>
+                            <td><input type="text" class="form-control form-control-sm" placeholder="nueva" v-on:keyup.enter="agregarConf()" v-model="opcion.text" name="name" value="" /> </td>
+                            <td></td>
+                        </tr>
+                        <tr v-for="(item, index) in configuraciones">
+                            <td><input type="text" class="form-control form-control-sm" v-model="item.value" name="name" value="" /> </td>
+                            <td><input type="text" class="form-control form-control-sm" v-model="item.text" name="name" value="" /> </td>
+                            <td>
+                                @*<a href="#" v-on:click="quitarOpcion(index)">Eliminar</a>*@
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+@section Scripts {
+    <script>
+        var app_configurar = new Vue({
+            el: "#app_configurar",
+            data: {
+                caracteristicas: [],
+                caracteristica: {
+                    nombre: "",
+                    opciones: []
+                },
+                opcion: {
+                    value: "",
+                    text: ""
+                },
+                caracteristicas2: null,
+                indexSelected: null,
+                configuraciones: [],
+                configuracion: {
+                    value: "",
+                    text: "",
+                    actives: []
+                }
+            },
+            mounted() {
+                
+                data = localStorage.getItem('caracteristicas')
+                if (data != null) {
+                    this.caracteristicas = JSON.parse(data)
+                }
+                configuraciones = localStorage.getItem('configuraciones')
+                if (configuraciones != null) {
+                    this.configuraciones = JSON.parse(configuraciones)
+                }
+                console.log(this.configuraciones)
+            },
+            methods: {
+                agregarConf: function () {
+                    this.configuraciones.push({
+                        value: this.opcion.value,
+                        text: this.opcion.text,
+                        opciones: []
+                    });
+                    this.opcion.value = "";
+                    this.opcion.text = "";
+                    document.getElementById("configuracion").focus(); 
+                },
+                saveMemory: function () {
+                    console.log(this.caracteristicas)
+                    localStorage.setItem('caracteristicas', JSON.stringify(this.caracteristicas));
+                    localStorage.setItem('configuraciones', JSON.stringify(this.configuraciones));
+                },
+                quitarCaracteristica: function (index) {
+                    if (this.indexSelected == index) {
+                        this.caracteristicas2 = null;
+                    }
+                    this.caracteristicas.splice(index, 1);
+                },
+                quitarOpcion: function (index) {
+                    this.caracteristicas2.opciones.splice(index, 1);
+                },
+                VerCaracteristica: function (index) {
+                    this.caracteristicas2 = this.caracteristicas[index]
+                },
+                agregarCaracteristica: function () {
+                    this.caracteristicas.push({
+                        nombre: this.caracteristica.nombre,
+                        opciones: this.caracteristica.opciones
+                    });
+                    this.caracteristica.nombre = "";
+                    this.caracteristica.opciones = []
+                    
+                },
+                agregaropcion: function () {
+                    this.caracteristicas2.opciones.push({
+                        value: this.opcion.value,
+                        text: this.opcion.text
+                    });
+                    this.opcion.value = "";
+                    this.opcion.text = "";
+                    document.getElementById("ocpion").focus(); 
+                }
+
+                
+            }
+        });
+    </script>
+}

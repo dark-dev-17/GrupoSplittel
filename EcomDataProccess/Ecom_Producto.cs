@@ -40,6 +40,26 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public bool UpdImagenPrincipal(string ItemCode_, string ImagenPrincipal)
+        {
+            try
+            {
+                string Statement = string.Format("Admin_Producto_UpdImagenPrincial|ItemCode@VARCHAR={0}&ImagenNombre@VARCHAR={1}", ItemCode_, ImagenPrincipal);
+                int result = Ecom_DBConnection_.ExecuteStoreProcedure(Statement);
+                if (result == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new Ecom_Exception(Ecom_DBConnection_.Message);
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         public bool UpdLargeDescription(string ItemCode_, string LargeDesc)
         {
             try
@@ -80,6 +100,7 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
+
         public async Task<bool> Get(string codigo_)
         {
             bool result = false;
