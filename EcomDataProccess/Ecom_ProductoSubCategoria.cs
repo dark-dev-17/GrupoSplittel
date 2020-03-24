@@ -8,6 +8,7 @@ namespace EcomDataProccess
     {
         #region Propiedades
         public int Id { get; set; }
+        public string Id_subcategoria { get; set; }
         public string Description { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion

@@ -194,7 +194,11 @@ namespace EcomDataProccess
                     cmd.Parameters.AddWithValue("@" + variable, double.Parse(value));
                     cmd.Parameters["@" + variable].Direction = ParameterDirection.Input;
                 }
-
+                if (type == "TEXT")
+                {
+                    cmd.Parameters.AddWithValue("@" + variable, value);
+                    cmd.Parameters["@" + variable].Direction = ParameterDirection.Input;
+                }
             }
         }
         public int ExecuteScalarInt(string stattement)

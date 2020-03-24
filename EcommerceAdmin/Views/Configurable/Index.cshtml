@@ -1,0 +1,156 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_ProductoConfigurable>
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Configurables";
+    bool CtrlActiveEcom = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 28 });
+    bool CtrlActiveProximamente = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 29 });
+
+}
+<div id="app_producto">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap " id="table_prodcutosConf" style="width: 100%;">
+                <thead>
+                    <tr>
+
+                        <th>
+                            Codigo
+                        </th>
+                        <th>
+                            Descripción
+                        </th>
+                        <th>
+                            Categoria
+                        </th>
+                        <th>
+                            Subcategoria
+                        </th>
+                        <th>
+                            Visible Ecommerce
+                        </th>
+                        <th>
+                            Proximamente
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @Html.ActionLink(item.CodigoProducto, "Detalle", "Configurable", new { id = item.CodigoProducto }, new { @class = "btn btn-sm btn-outline-success" })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Descripcion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Ecom_ProductoCategoria_.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Ecom_ProductoSubCategoria_.Description)
+                            </td>
+                            <td>
+                                @if (CtrlActiveEcom)
+                                {
+                                    <button id="idDesc_@item.CodigoProducto" v-on:click="UpdateEstatusEcommerce('@item.CodigoProducto',false)" style="@Html.Raw(item.IsActiveEcommerce ? "" : "display:none")" class="btn btn-sm btn-outline-danger my-2 my-sm-0">Desactivar</button>
+                                    <button id="idAct_@item.CodigoProducto" v-on:click="UpdateEstatusEcommerce('@item.CodigoProducto', true)" style="@Html.Raw(!item.IsActiveEcommerce ? "" : "display:none")" class="btn btn-sm btn-outline-success my-2 my-sm-0">Activar</button>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.IsActiveEcommerce)
+                                }
+                            </td>
+                            <td>
+                                @if (CtrlActiveProximamente)
+                                {
+                                    <button id="idDesc_Prox_@item.CodigoProducto" v-on:click="UpdateStstusproximanente('@item.CodigoProducto',false)" style="@Html.Raw(item.IsProximanente ? "" : "display:none")" class="btn btn-sm btn-outline-danger my-2 my-sm-0">Desactivar</button>
+                                    <button id="idAct_Prox_@item.CodigoProducto" v-on:click="UpdateStstusproximanente('@item.CodigoProducto',true)" style="@Html.Raw(!item.IsProximanente ? "" : "display:none")" class="btn btn-sm btn-outline-success my-2 my-sm-0">Activar</button>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.IsProximanente)
+                                }
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_producto = new Vue({
+            el: "#app_producto",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+            },
+            mounted() {
+                $('.table').DataTable({
+                    "order": []
+                });
+            },
+            methods: {
+                UpdateEstatusEcommerce: async function (itemCode,status) {
+                    var params = new URLSearchParams();
+                    params.append('Active', status);
+                    params.append('ItemCode', '' + itemCode);
+                    axios.post('@Url.Action("DataActDescEcommerce","Configurable")', params, { headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                        if (status) {
+                            document.getElementById("idAct_" + itemCode).style.display = 'none'
+                            document.getElementById("idDesc_" + itemCode).style.display = 'block'
+                        } else {
+                            document.getElementById("idAct_" + itemCode).style.display = 'block'
+                            document.getElementById("idDesc_" + itemCode).style.display = 'none'
+                        }
+                        
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    });
+                },
+                UpdateStstusproximanente: async function (itemCode,status) {
+                    var params = new URLSearchParams();
+                    params.append('Active', status);
+                    params.append('ItemCode', '' + itemCode);
+                    axios.post('@Url.Action("DataActDescProximamente","Configurable")', params,{ headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                        if (status) {
+                            document.getElementById("idAct_Prox_" + itemCode).style.display = 'none'
+                            document.getElementById("idDesc_Prox_" + itemCode).style.display = 'block'
+                        } else {
+                            document.getElementById("idAct_Prox_" + itemCode).style.display = 'block'
+                            document.getElementById("idDesc_Prox_" + itemCode).style.display = 'none'
+                        }
+                        
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    })
+                },
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+                },
+            }
+        });
+    </script>
+}

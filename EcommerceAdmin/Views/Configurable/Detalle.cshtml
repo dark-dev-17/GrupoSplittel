@@ -1,0 +1,8 @@
+﻿@model EcomDataProccess.Ecom_ProductoConfigurable
+@using Microsoft.AspNetCore.Http;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Detalle del producto: " + Model.CodigoProducto;
+}

@@ -45,6 +45,7 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+        
 
         // GET: Producto/Details/5
         [AccessView(IdAction = 1)]
@@ -388,5 +389,6 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+        
     }
 }
