@@ -4,5 +4,31 @@
 @inject IHttpContextAccessor HttpContextAccessor
 @{
     int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
-    ViewData["Title"] = "Detalle del producto: " + Model.CodigoProducto;
+    ViewData["Title"] = "Detalle del configurable: " + Model.CodigoProducto;
 }
+<div class="br-section-wrapper">
+    <div class="table-wrapper">
+        <table class="table table-hover table-custom spacing5">
+            <tr>
+                <td><strong>Codigo</strong></td>
+                <td colspan="1">@Model.CodigoProducto</td>
+                <td><strong>Nombre</strong></td>
+                <td colspan="1">@Model.Descripcion</td>
+            </tr>
+            <tr>
+                <td><strong>Categoria</strong></td>
+                <td colspan="1">@Model.Ecom_ProductoCategoria_.Description</td>
+                <td><strong>Sub categoria</strong></td>
+                <td colspan="1">@Model.Ecom_ProductoSubCategoria_.Description</td>
+            </tr>
+            <tr>
+                <td><strong>Activo en ecommerce</strong></td>
+                <td colspan="1">@Html.DisplayFor(modelItem => Model.IsActiveEcommerce)</td>
+                <td><strong>Activo en proximamente</strong></td>
+                <td colspan="1">
+                    @Html.DisplayFor(modelItem => Model.IsProximanente)
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

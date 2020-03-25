@@ -6,7 +6,7 @@
     ViewData["Title"] = "Configurables";
     bool CtrlActiveEcom = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 28 });
     bool CtrlActiveProximamente = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 29 });
-
+    
 }
 <div id="app_producto">
     <div class="br-section-wrapper">
@@ -110,7 +110,7 @@
                             document.getElementById("idAct_" + itemCode).style.display = 'block'
                             document.getElementById("idDesc_" + itemCode).style.display = 'none'
                         }
-                        
+
                     }).catch(error => {
                         this.ShowMessageErrorShort(error.response.data, 'error')
                     });
@@ -128,7 +128,7 @@
                             document.getElementById("idAct_Prox_" + itemCode).style.display = 'block'
                             document.getElementById("idDesc_Prox_" + itemCode).style.display = 'none'
                         }
-                        
+
                     }).catch(error => {
                         this.ShowMessageErrorShort(error.response.data,'error')
                     })

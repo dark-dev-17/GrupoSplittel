@@ -1,0 +1,46 @@
+﻿@model EcomDataProccess.Ecom_ProductoCategoria
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Detalle categoria: " + Model.Id_categoria;
+    //bool CtrlActiveEcom = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 28 });
+    //bool CtrlActiveProximamente = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 29 });
+}
+
+    <div>
+        <div class="br-section-wrapper">
+            <div class="table-wrapper">
+                <table class="table table-hover table-custom spacing5">
+                    <tr>
+                        <td><strong>@Html.DisplayNameFor(model => model.Id_categoria)</strong></td>
+                        <td colspan="1">@Html.DisplayFor(model => model.Id_categoria)</td>
+                        <td><strong>@Html.DisplayNameFor(model => model.Description)</strong></td>
+                        <td colspan="3"> @Html.DisplayFor(model => model.Description)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>@Html.DisplayNameFor(model => model.Imagen)</strong></td>
+                        <td colspan="1">@Html.DisplayFor(model => model.Imagen)</td>
+                        <td><strong>@Html.DisplayNameFor(model => model.FolderName)</strong></td>
+                        <td colspan="1"> @Html.DisplayFor(model => model.FolderName)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>@Html.DisplayNameFor(model => model.IsActive)</strong></td>
+                        <td colspan="1">@Html.DisplayFor(model => model.IsActive)</td>
+                        <td><strong> @Html.DisplayNameFor(model => model.IsActiveMenu1)</strong></td>
+                        <td colspan="1">@Html.DisplayFor(model => model.IsActiveMenu1)</td>
+                        <td><strong> @Html.DisplayNameFor(model => model.IsActiveMenu2)</strong></td>
+                        <td colspan="1">@Html.DisplayFor(model => model.IsActiveMenu2)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>@Html.DisplayNameFor(model => model.DescripcionLarga)</strong></td>
+                        <td colspan="4">@Html.DisplayFor(model => model.DescripcionLarga)</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="float-right">
+                <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+            </div>
+        </div>
+    </div>
+

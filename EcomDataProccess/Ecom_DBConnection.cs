@@ -141,7 +141,7 @@ namespace EcomDataProccess
                 }
                 else
                 {
-                    Message = string.Format("Error[{0}], {1}", RequestStatus, (string)cmd.Parameters["@MessageResponse"].Value);
+                    Message = string.Format("{0}", (string)cmd.Parameters["@MessageResponse"].Value);
                 }
 
                 return RequestStatus;

@@ -51,17 +51,17 @@ namespace EcommerceAdmin.Controllers
         // GET: Configurable/Details/5
         public ActionResult Detalle(string id)
         {
-            Ecom_DBConnection Ecom_DBConnection_ = null;
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
             try
             {
-                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
-                Ecom_DBConnection_.OpenConnection();
-                Ecom_ProductoConfigurable Ecom_Producto_ = new Ecom_ProductoConfigurable(Ecom_DBConnection_);
-                bool result = Ecom_Producto_.Get(id);
-                Ecom_DBConnection_.CloseConnection();
+                ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_ProductoConfigurable Ecom_ProductoConf_ = (Ecom_ProductoConfigurable)ecomData.GetObject(ObjectSource.ProductoConfigurable);
+                bool result = Ecom_ProductoConf_.Get(id);
                 if (result)
                 {
-                    return View(Ecom_Producto_);
+                    //Ecom_Producto Ecom_Producto_ = (Ecom_Producto)ecomData.GetObject(ObjectSource.ProductoFijo);
+                    //Ecom_ProductoConf_.Productos = await Ecom_Producto_.Get(Ecom_ProductoConf_.Ecom_ProductoSubCategoria_.Id_subcategoria, FiltroProducto.Subcategoria);
+                    return View(Ecom_ProductoConf_);
                 }
                 else
                 {
@@ -74,9 +74,9 @@ namespace EcommerceAdmin.Controllers
             }
             finally
             {
-                if (Ecom_DBConnection_ != null)
+                if (ecomData != null)
                 {
-                    Ecom_DBConnection_.CloseConnection();
+                    ecomData.Disconect(ServerSource.Ecommerce);
                 }
             }
         }

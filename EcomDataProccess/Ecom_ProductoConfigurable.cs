@@ -15,6 +15,7 @@ namespace EcomDataProccess
         public string ClaveCodigoProg { get;  set; }
         public bool IsActiveEcommerce { get;  set; }
         public bool IsProximanente { get;  set; }
+        //public List<Ecom_Producto> Productos { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
 
@@ -118,21 +119,21 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
-        public List<Ecom_ProductoConfigurable> Get(string Regla, string Tipo)
+        public List<Ecom_ProductoConfigurable> Get(string Regla, FiltroProducto filtroProducto)
         {
             try
             {
-                if(Tipo.Trim() == "Categoria")
+                if(filtroProducto == FiltroProducto.Categoria)
                 {
                     return ReadDatReader(string.Format("select * from admin_productosConfigurables where id_categoria = '{0}'", Regla));
                 }
-                else if (Tipo.Trim() == "SubCategoria")
+                else if (filtroProducto == FiltroProducto.Subcategoria)
                 {
                     return ReadDatReader(string.Format("select * from admin_productosConfigurables where id_subcategoria = '{0}'", Regla));
                 }
                 else
                 {
-                    throw new Ecom_Exception(string.Format("El tipo de consulta '{0}' no es valido", Tipo));
+                    throw new Ecom_Exception(string.Format("El tipo de consulta '{0}' no es valido", filtroProducto.ToString()));
                 }
             }
             catch (Ecom_Exception ex)

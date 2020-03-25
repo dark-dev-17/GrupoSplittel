@@ -1,0 +1,110 @@
+﻿@model EcomDataProccess.Ecom_ProductoCategoria
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Editar categoria: " + Model.Id_categoria;
+    bool CtrleditAdmin = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 31 });
+    bool Ctrleditbasic = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 32 });
+}
+    <div>
+        @if (CtrleditAdmin && Ctrleditbasic)
+        {
+            <div class="alert alert-bordered alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <strong class="d-block d-sm-inline-block-force">Warning!</strong> Error en la configuración de permisos para esta sección, Contacta al departamento De TI
+            </div>
+        }
+        else
+        {
+            <div class="br-section-wrapper">
+                <div class="table-wrapper">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form asp-action="Edit">
+                        <table class="table table-hover table-custom spacing5">
+                            <tr>
+                                <td><strong>Categoria</strong></td>
+                                <td colspan="1">
+                                    <input type="hidden" class="form-control form-control-sm" id="Id" name="Id" value="@Model.Id" />
+                                    <input asp-for="Id_categoria" class="form-control form-control-sm" readonly />
+                                    <span asp-validation-for="Id_categoria" class="text-danger"></span>
+                                </td>
+                                <td><strong>Familia</strong></td>
+                                <td colspan="3">
+                                    <input asp-for="Description" class="form-control form-control-sm" />
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </td>
+                            </tr>
+                            @if (CtrleditAdmin)
+                            {
+                                <tr>
+                                    <td><strong>Imagen</strong></td>
+                                    <td colspan="1">
+                                        <input asp-for="Imagen" class="form-control form-control-sm" />
+                                        <span asp-validation-for="Imagen" class="text-danger"></span>
+                                    </td>
+                                    <td><strong>Folder productos</strong></td>
+                                    <td colspan="2">
+                                        <input asp-for="FolderName" class="form-control form-control-sm" />
+                                        <span asp-validation-for="FolderName" class="text-danger"></span>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td><strong>Imagen</strong></td>
+                                    <td colspan="1">
+                                        <input asp-for="Imagen" class="form-control form-control-sm" readonly />
+                                        <span asp-validation-for="Imagen" class="text-danger"></span>
+                                    </td>
+                                    <td><strong>Folder productos</strong></td>
+                                    <td colspan="2">
+                                        <input asp-for="FolderName" class="form-control form-control-sm" readonly />
+                                        <span asp-validation-for="FolderName" class="text-danger"></span>
+                                    </td>
+                                </tr>
+                            }
+
+                            <tr>
+                                <td><strong>Descripcion</strong></td>
+                                <td colspan="4">
+                                    <textarea asp-for="DescripcionLarga" class="form-control form-control-sm"></textarea>
+                                    <span asp-validation-for="DescripcionLarga" class="text-danger"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <strong>
+                                        <label>
+                                            <input asp-for="IsActive" /> Mostrar en E-commerce
+                                        </label>
+                                    </strong>
+                                </td>
+                                <td colspan="2">
+                                    <strong>
+                                        <label>
+                                            <input asp-for="IsActiveMenu1" /> Mostrar en información técnica
+                                        </label>
+                                    </strong>
+                                </td>
+                                <td colspan="2">
+                                    <strong>
+                                        <label>
+                                            <input asp-for="IsActiveMenu2" /> Mostrar en Hojas técnicas
+                                        </label>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="form-group  float-right">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <input type="submit" value="Guardar cambios" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>

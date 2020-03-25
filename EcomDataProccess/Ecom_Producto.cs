@@ -137,8 +137,32 @@ namespace EcomDataProccess
         {
             try
             {
-                string Statement = string.Format("SELECT * FROM Admin_producto_categoria_subcategoria;");
+                string Statement = string.Format("SELECT * FROM Admin_producto_categoria_subcategoria where codigo_configurable  = '';");
                 return await ReadDatReader(Statement);
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<List<Ecom_Producto>> Get(string Regla, FiltroProducto filtroProducto)
+        {
+            try
+            {
+                if(filtroProducto == FiltroProducto.Categoria)
+                {
+                    string Statement = string.Format("SELECT * FROM Admin_producto_categoria_subcategoria where id_codigo  = '{0}';", Regla);
+                    return await ReadDatReader(Statement);
+                }
+                else if (filtroProducto == FiltroProducto.Subcategoria)
+                {
+                    string Statement = string.Format("SELECT * FROM Admin_producto_categoria_subcategoria where id_subcategoria = '{0}';", Regla);
+                    return await ReadDatReader(Statement);
+                }
+                else
+                {
+                    throw new Ecom_Exception(string.Format("El tipo de consulta '{0}' no es valido", filtroProducto.ToString()));
+                }
             }
             catch (Ecom_Exception ex)
             {
