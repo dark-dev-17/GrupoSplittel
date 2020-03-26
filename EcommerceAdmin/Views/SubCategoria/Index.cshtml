@@ -1,0 +1,111 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_ProductoSubCategoria>
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Sub Categorias";
+    bool EditCtrl = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 34, 35 });
+    bool CtrlShowcategoria = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 30 });
+    //bool CtrlActiveProximamente = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 29 });
+
+}
+<div id="app_subcategoria">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap " id="table_app_subcategoria" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id_subcategoria)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id_categoria)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.HasSubNivel)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsActiveEcommerce)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id_subcategoria)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @if (CtrlShowcategoria)
+                                {
+                                    @Html.ActionLink(item.Id_categoria, "Details", "Categoria", new { id = item.Id_categoria }, new { title = "Ver categoria" })
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(model => item.Id_categoria)
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HasSubNivel)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActiveEcommerce)
+                            </td>
+                            <td>
+                                @if (EditCtrl)
+                                {
+                                    @Html.ActionLink("Editar", "Edit", new { id = item.Id_subcategoria }) <span>|</span>
+                                }
+                                @Html.ActionLink("Ver", "Details", new { id = item.Id_subcategoria })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_subcategoria = new Vue({
+            el: "#app_subcategoria",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+            },
+            mounted() {
+                $('.table').DataTable({
+                    "order": []
+                });
+            },
+            methods: {
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+                },
+            }
+        });
+    </script>
+}

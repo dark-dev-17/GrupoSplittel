@@ -10,21 +10,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAdmin.Controllers
 {
-    public class CategoriaController : Controller
+    public class SubCategoriaController : Controller
     {
         private readonly string EcomConnection = ConfigurationManager.AppSettings["Ecommerce_Database"].ToString();
         private readonly string SplitConnection = ConfigurationManager.AppSettings["Splinnet_Database"].ToString();
         private readonly string SAPConnection = ConfigurationManager.AppSettings["SAP_Database"].ToString();
-        // GET: Categoria
-        [AccessView(IdAction = 30)]
+        // GET: SubCategoria
+        [AccessView(IdAction = 33)]
         public ActionResult Index()
         {
             EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
             try
             {
                 ecomData.Connect(ServerSource.Ecommerce);
-                Ecom_ProductoCategoria Ecom_ProductoCategoria_ = (Ecom_ProductoCategoria)ecomData.GetObject(ObjectSource.ProductoCategoria);
-                List<Ecom_ProductoCategoria> result = Ecom_ProductoCategoria_.Get();
+                Ecom_ProductoSubCategoria Ecom_ProductoSubCategoria_ = (Ecom_ProductoSubCategoria)ecomData.GetObject(ObjectSource.ProductoSubcategoria);
+                List<Ecom_ProductoSubCategoria> result = Ecom_ProductoSubCategoria_.Get();
                 return View(result);
             }
             catch (Ecom_Exception ex)
@@ -40,24 +40,25 @@ namespace EcommerceAdmin.Controllers
             }
         }
 
-        // GET: Categoria/Details/5
-        [AccessView(IdAction = 30)]
+        // GET: SubCategoria/Details/5
+        [AccessView(IdAction = 33)]
         public ActionResult Details(string id)
         {
             EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
             try
             {
                 ecomData.Connect(ServerSource.Ecommerce);
-                Ecom_ProductoCategoria Ecom_ProductoCategoria_ = (Ecom_ProductoCategoria)ecomData.GetObject(ObjectSource.ProductoCategoria);
-                bool result = Ecom_ProductoCategoria_.Get(id);
+                Ecom_ProductoSubCategoria Ecom_ProductoSubCategoria_ = (Ecom_ProductoSubCategoria)ecomData.GetObject(ObjectSource.ProductoSubcategoria);
+                bool result = Ecom_ProductoSubCategoria_.GetById(id);
                 if (result)
                 {
-                    return View(Ecom_ProductoCategoria_);
+                    return View(Ecom_ProductoSubCategoria_);
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = string.Format("El producto con codigo: '{0}' no fue encontrado", id) });
+                    return RedirectToAction("Error", "ErrorPages", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
                 }
+                
             }
             catch (Ecom_Exception ex)
             {
@@ -72,13 +73,13 @@ namespace EcommerceAdmin.Controllers
             }
         }
 
-        // GET: Categoria/Create
+        // GET: SubCategoria/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Categoria/Create
+        // POST: SubCategoria/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -95,24 +96,25 @@ namespace EcommerceAdmin.Controllers
             }
         }
 
-        // GET: Categoria/Edit/5
-        [AccessMultipleView(IdAction = new int[] { 31, 32 })]
+        // GET: SubCategoria/Edit/5
+        [AccessMultipleView(IdAction = new int[] { 34, 35 })]
         public ActionResult Edit(string id)
         {
             EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
             try
             {
                 ecomData.Connect(ServerSource.Ecommerce);
-                Ecom_ProductoCategoria Ecom_ProductoCategoria_ = (Ecom_ProductoCategoria)ecomData.GetObject(ObjectSource.ProductoCategoria);
-                bool result = Ecom_ProductoCategoria_.Get(id);
+                Ecom_ProductoSubCategoria Ecom_ProductoSubCategoria_ = (Ecom_ProductoSubCategoria)ecomData.GetObject(ObjectSource.ProductoSubcategoria);
+                bool result = Ecom_ProductoSubCategoria_.GetById(id);
                 if (result)
                 {
-                    return View(Ecom_ProductoCategoria_);
+                    return View(Ecom_ProductoSubCategoria_);
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = string.Format("El producto con codigo: '{0}' no fue encontrado", id) });
+                    return RedirectToAction("Error", "ErrorPages", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
                 }
+
             }
             catch (Ecom_Exception ex)
             {
@@ -127,10 +129,10 @@ namespace EcommerceAdmin.Controllers
             }
         }
 
-        // POST: Categoria/Edit/5
+        // POST: SubCategoria/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Ecom_ProductoCategoria Ecom_ProductoCategoria_)
+        public ActionResult Edit(Ecom_ProductoSubCategoria Ecom_ProductoSubCategoria_)
         {
             EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
             int USR_IdSplinnet = (int)HttpContext.Session.GetInt32("USR_IdSplinnet");
@@ -138,17 +140,17 @@ namespace EcommerceAdmin.Controllers
             {
                 ecomData.Connect(ServerSource.Ecommerce);
                 ecomData.Connect(ServerSource.Splitnet);
-                bool AdminPermiss = ecomData.validPermissAction(USR_IdSplinnet, 31);
-                bool basicPermiss = ecomData.validPermissAction(USR_IdSplinnet, 32);
-                Ecom_ProductoCategoria_ = (Ecom_ProductoCategoria)ecomData.SetObjectConnection(Ecom_ProductoCategoria_, ObjectSource.ProductoCategoria);
+                bool AdminPermiss = ecomData.validPermissAction(USR_IdSplinnet, 34);
+                bool basicPermiss = ecomData.validPermissAction(USR_IdSplinnet, 35);
+                Ecom_ProductoSubCategoria_ = (Ecom_ProductoSubCategoria)ecomData.SetObjectConnection(Ecom_ProductoSubCategoria_, ObjectSource.ProductoSubcategoria);
                 bool result = false;
                 if (AdminPermiss && !basicPermiss)
                 {
-                    result = Ecom_ProductoCategoria_.Update(2);
+                    result = Ecom_ProductoSubCategoria_.Update(2);
                 }
                 else if (!AdminPermiss && basicPermiss)
                 {
-                    result = Ecom_ProductoCategoria_.Update(3);
+                    result = Ecom_ProductoSubCategoria_.Update(3);
                 }
                 else
                 {
@@ -167,7 +169,7 @@ namespace EcommerceAdmin.Controllers
             catch (Ecom_Exception ex)
             {
                 ModelState.AddModelError(string.Empty, string.Format("{0}", ex.Message));
-                return View(Ecom_ProductoCategoria_);
+                return View(Ecom_ProductoSubCategoria_);
             }
             finally
             {
@@ -179,13 +181,13 @@ namespace EcommerceAdmin.Controllers
             }
         }
 
-        // GET: Categoria/Delete/5
+        // GET: SubCategoria/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Categoria/Delete/5
+        // POST: SubCategoria/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

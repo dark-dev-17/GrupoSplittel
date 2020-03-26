@@ -14,7 +14,8 @@ namespace EcomDataProccess
         ProductoConfigurable = 0,
         ProductoFijo = 1,
         ProductoCategoria = 2,
-        ProductoSubcategoria = 3
+        ProductoSubcategoria = 3,
+        Blog = 4
     }
     public enum FiltroProducto
     {

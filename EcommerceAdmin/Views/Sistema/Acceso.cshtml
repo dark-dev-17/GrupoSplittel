@@ -105,15 +105,17 @@
                             <div v-if="permissions.isGetting == true">
                                 Obteniendo informacion de permisos
                             </div>
-                            <div v-if="permissions.isGetting == false">
-                                <dl v-for="(item, index) in permissions.data">
+                            <div v-if="permissions.isGetting == false" class="row">
+                                <dl v-for="(item, index) in permissions.data" class="col-lg-4">
                                     <dt>{{ item.description }}</dt>
+                                    <hr />
                                     <dd v-for="(subitem, subindex) in item.acciones" style="margin-left: 30px;">
                                         <label class="ckbox">
                                             <input type="checkbox" v-model="subitem.isAccess">
                                             <span>{{ subitem.description }}</span>
                                         </label>
                                     </dd>
+
                                 </dl>
                             </div>
                         </p>

@@ -144,7 +144,7 @@ namespace EcomDataProccess
                     Message = string.Format("{0}", (string)cmd.Parameters["@MessageResponse"].Value);
                 }
 
-                return RequestStatus;
+                return (int)RequestStatus;
             }
             catch (Ecom_Exception ex)
             {

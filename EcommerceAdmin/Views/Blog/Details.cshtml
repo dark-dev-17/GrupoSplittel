@@ -1,0 +1,82 @@
+﻿@model EcomDataProccess.Ecom_Blog
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Blog: " + Model.Title;
+    //bool CtrlShowcategoria = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 30 });
+    //bool CtrlActiveProximamente = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 29 });
+}
+
+<div id="app_blog_details">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table table-hover table-custom spacing5">
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.Title)</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.Title)</td>
+                    <td><strong>@Html.DisplayNameFor(model => model.Titlelargo)</strong></td>
+                    <td colspan="3"> @Html.DisplayFor(model => model.Titlelargo)</td>
+                </tr>
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.Comillas)</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.Comillas)</td>
+                    <td><strong>@Html.DisplayNameFor(model => model.ContentShort)</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.ContentShort)</td>
+                </tr>
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.DateBlog)</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.DateBlog) </td>
+                    <td><strong> @Html.DisplayNameFor(model => model.IsActiveEcommerce)</strong></td>
+                    <td colspan="2">@Html.DisplayFor(model => model.IsActiveEcommerce)</td>
+                </tr>
+                <tr>
+                    <td colspan="5"><strong>@Html.DisplayNameFor(model => model.Contentlarge)</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="5"><div id="summernote">@Model.Contentlarge</div></td>
+                </tr>
+            </table>
+        </div>
+        <div class="float-right">
+            <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_blog_details = new Vue({
+            el: "#app_blog_details",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+            },
+            mounted() {
+                $('#summernote').summernote({
+                    height: 550,
+                })
+                $('#summernote').summernote('disable');
+            },
+            methods: {
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+                },
+            }
+        });
+    </script>
+}

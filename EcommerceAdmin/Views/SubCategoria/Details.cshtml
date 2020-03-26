@@ -1,0 +1,53 @@
+﻿@model EcomDataProccess.Ecom_ProductoSubCategoria
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Sub categoria: " + Model.Id_subcategoria;
+    bool CtrlShowcategoria = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 30 });
+    //bool CtrlActiveProximamente = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 29 });
+}
+
+<div>
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table table-hover table-custom spacing5">
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.Id_subcategoria)</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.Id_subcategoria)</td>
+                    <td><strong>@Html.DisplayNameFor(model => model.Description)</strong></td>
+                    <td colspan="3"> @Html.DisplayFor(model => model.Description)</td>
+                </tr>
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.FolderNameView)</strong></td>
+                    <td colspan="5">@Html.DisplayFor(model => model.FolderNameView)</td>
+                </tr>
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.Id_categoria)</strong></td>
+                    <td colspan="1">
+
+                        @if (CtrlShowcategoria)
+                        {
+                            @Html.ActionLink(Model.Id_categoria, "Details","Categoria", new { id = Model.Id_categoria }, new { title="Ver categoria" })
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => model.Id_categoria)
+                        }
+                    </td>
+                    <td><strong> @Html.DisplayNameFor(model => model.HasSubNivel)</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.HasSubNivel)</td>
+                    <td><strong> @Html.DisplayNameFor(model => model.IsActiveEcommerce)</strong></td>
+                    <td colspan="1">@Html.DisplayFor(model => model.IsActiveEcommerce)</td>
+                </tr>
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.LargeDescripton)</strong></td>
+                    <td colspan="5">@Html.DisplayFor(model => model.LargeDescripton)</td>
+                </tr>
+            </table>
+        </div>
+        <div class="float-right">
+            <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+        </div>
+    </div>
+</div>

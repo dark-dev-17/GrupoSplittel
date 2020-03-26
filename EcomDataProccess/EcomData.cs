@@ -26,6 +26,18 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.ProductoSubcategoria)
+            {
+                Ecom_ProductoSubCategoria objeto = (Ecom_ProductoSubCategoria)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.Blog)
+            {
+                Ecom_Blog objeto = (Ecom_Blog)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -44,6 +56,14 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.ProductoCategoria)
             {
                 return new Ecom_ProductoCategoria(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoSubcategoria)
+            {
+                return new Ecom_ProductoSubCategoria(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.Blog)
+            {
+                return new Ecom_Blog(Ecom_DBEcommerce);
             }
             else
             {

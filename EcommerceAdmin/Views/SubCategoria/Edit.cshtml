@@ -1,0 +1,91 @@
+﻿@model EcomDataProccess.Ecom_ProductoSubCategoria
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Editar Sub categoria: " + Model.Id_subcategoria;
+    Ecom_SAP Ecom_SAP = new Ecom_SAP("Ecommerce");
+    List<EcomDataProccess.Ecom_ProductoCategoria> Categorias = new EcomDataProccess.Ecom_ProductoCategoria(Ecom_SAP.Ecom_DBConnection_).Get();
+    Ecom_SAP.CloseConections();
+
+    bool CtrleditAdmin = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 34 });
+    bool Ctrleditbasic = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 35 });
+}
+
+    <div>
+        @if (CtrleditAdmin && Ctrleditbasic)
+        {
+            <div class="alert alert-bordered alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <strong class="d-block d-sm-inline-block-force">Warning!</strong> Error en la configuración de permisos para esta sección, Contacta al departamento De TI
+            </div>
+        }
+        else
+        {
+            <div class="br-section-wrapper">
+                <div class="table-wrapper">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <table class="table table-hover table-custom spacing5">
+                            <tr>
+                                <td><strong><label asp-for="Id_subcategoria" class="control-label"></label></strong></td>
+                                <td colspan="1">
+                                    <input asp-for="Id" type="hidden" class="form-control" value="@Model.Id" />
+                                    <input asp-for="Id_subcategoria" class="form-control" readonly />
+                                    <span asp-validation-for="Id_subcategoria" class="text-danger"></span>
+                                </td>
+                                <td><strong><label asp-for="Description" class="control-label"></label></strong></td>
+                                <td colspan="3">
+                                    <input asp-for="Description" class="form-control" />
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong><label asp-for="FolderNameView" class="control-label"></label></strong></td>
+                                <td colspan="5">
+                                    <input asp-for="FolderNameView" class="form-control" />
+                                    <span asp-validation-for="FolderNameView" class="text-danger"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Html.DisplayNameFor(model => model.Id_categoria)</strong></td>
+                                <td colspan="1">
+                                    <select asp-for="Id_categoria" asp-items="@(new SelectList(Categorias,"Id_categoria","Description",Model.Id_categoria))" class="form-control">
+                                        <option>Please select one</option>
+                                    </select>
+                                </td>
+                                <td colspan="2">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input asp-for="HasSubNivel" /> @Html.DisplayNameFor(model => model.HasSubNivel)
+                                        </label>
+                                    </div>
+                                </td>
+                                <td colspan="2">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input asp-for="IsActiveEcommerce" /> @Html.DisplayNameFor(model => model.IsActiveEcommerce)
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong><label asp-for="LargeDescripton" class="control-label"></label></strong></td>
+                                <td colspan="5">
+                                    <input asp-for="LargeDescripton" class="form-control" />
+                                    <span asp-validation-for="LargeDescripton" class="text-danger"></span>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="form-group  float-right">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <input type="submit" value="Guardar cambios" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+
+    </div>
