@@ -38,7 +38,6 @@
                         <th>
                             @Html.DisplayNameFor(model => model.IdArea)
                         </th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,7 +48,7 @@
                                 @Html.DisplayFor(modelItem => item.IdSplinnet)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Username)
+                                <button class="btn btn-sm btn-success" v-on:click="GetUsersPermissions('@item.IdSplinnet')">@Html.DisplayFor(modelItem => item.Username)</button>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Password)
@@ -74,9 +73,6 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.IdArea)
-                            </td>
-                            <td>
-                                <button v-on:click="GetUsersPermissions('@item.IdSplinnet')">Ver/editar permisos</button>
                             </td>
                         </tr>
                     }

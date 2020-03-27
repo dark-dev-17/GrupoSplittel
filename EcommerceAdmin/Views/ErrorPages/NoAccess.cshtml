@@ -1,46 +1,29 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Sin acceso";
 }
-
-<div class="ht-100v d-flex align-items-center justify-content-center">
-    <div class="wd-lg-70p wd-xl-90p tx-center pd-x-40">
-        <div class="row align-items-center">
-            <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
-
-                <!-- Image -->
-                <div class="text-center">
-                    <img src="https://dashkit.goodthemes.co/assets/img/illustrations/lost.svg" alt="..." class="img-fluid">
+    <div  id="preloader">
+        <div class="container h-100">
+            <div class="row align-items-center h-100">
+                <div class="col-6 mx-auto">
+                    <div class="jumbotron" style="background-color: #fff">
+                        <div class="card text-center">
+                            <div class="card-header">
+                                
+                            </div>
+                            <div class="card-body">
+                                <center><img style="width: 250px;" src="~/images/logo_fibremex.png" alt="Alternate Text" /></center>
+                                <p class="card-text mt-5">No tienes acceso a esta sección</p>
+                                @Html.ActionLink("Ir a Home", "Index", "Home", null, new { @class = "btn btn-sm btn-primary" })
+                            </div>
+                            <div class="card-footer text-muted">
+                               
+                            </div>
+                        </div>
+                        @*
+                        <center><h3 class="mt-5">No tienes acceso a esta sección</h3></center>
+                        <center></center>*@
+                    </div>
                 </div>
-
             </div>
-            <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
-
-                <div class="text-center">
-
-                    <!-- Preheading -->
-                    <h6 class="text-uppercase text-muted mb-4">
-                        403 error
-                    </h6>
-
-                    <!-- Heading -->
-                    <h1 class="display-4 mb-3">
-                        Acceso denegado 😭
-                    </h1>
-
-                    <!-- Subheading -->
-                    <p class="text-muted mb-4">
-                        Por favor contacta al administrador del sistema
-                    </p>
-
-                    <!-- Button -->
-                    <a href="#" onclick="history.go(-1);" class="btn btn-lg btn-primary">
-                        Regresar
-                    </a>
-
-                </div>
-
-            </div>
-        </div> <!-- / .row -->
+        </div>
     </div>
-</div><!-- ht-100v -->

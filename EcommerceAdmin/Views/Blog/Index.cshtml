@@ -4,7 +4,7 @@
 @{
     int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
     ViewData["Title"] = "Blogs";
-    bool EditCtrl = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 34, 35 });
+    bool EditCtrl = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 37 });
     //bool CtrlActiveProximamente = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 29 });
 
 }
@@ -49,8 +49,11 @@
                                     @Html.DisplayFor(modelItem => item.IsActiveEcommerce)
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                                    @if (EditCtrl)
+                                    {
+                                        @Html.ActionLink("Editar", "Edit", new { id = item.Id }) <span>|</span>
+                                    }
+                                    @Html.ActionLink("Ver", "Details", new { id = item.Id })
                                 </td>
                             </tr>
                         }

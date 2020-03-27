@@ -79,7 +79,10 @@ namespace EcommerceAdmin.Models.Filters
                 Ecom_DBConnection_.CloseConnection();
                 if (!AccessAuth)
                 {
-                    filterContext.Result = new RedirectResult("~/ErrorPages/NoAccess");
+                    filterContext.Result = new ViewResult {
+                        ViewName = "../ErrorPages/NoAccess",
+
+                    };
                     return;
                 }
             }
