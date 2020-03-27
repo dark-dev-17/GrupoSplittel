@@ -53,8 +53,8 @@ namespace EcomDataProccess
                     throw new Ecom_Exception("Ninguna categoria seleccionada");
                 }
                 string Statement = string.Format("Admin_Subcategoria|" +
-                    "Id@INT={0}" +
-                    "&Id_subcategoria@VARCHAR={1}" +
+                    "Idd@INT={0}" +
+                    "&Id_subcategoriaa@VARCHAR={1}" +
                     "&Descriptionn@VARCHAR={2}" +
                     "&Id_categoria@VARCHAR={3}" +
                     "&HasSubNivel@VARCHAR={4}" +

@@ -1,71 +1,294 @@
 ﻿@model EcomDataProccess.Ecom_Blog
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Editar Blog: " + Model.Title;
+}
+<div id="app_blog_details">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-outline active-info flex-column flex-md-row">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#Detalle" role="tab" aria-controls="home" aria-selected="true">Detalle</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes" role="tab" aria-controls="profile" aria-selected="false">Imagenes</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="Detalle" role="tabpanel" aria-labelledby="home-tab">
+                                    <form asp-action="Edit">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <table class="table  table-sm">
+                                            <tr>
+                                                <td><strong><label asp-for="Title" class="control-label"></label></strong></td>
+                                                <td colspan="3">
+                                                    <input asp-for="Title" class="form-control form-control-sm" />
+                                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                                </td>
+                                                <td><strong><label asp-for="Titlelargo" class="control-label"></label></strong></td>
+                                                <td colspan="3">
+                                                    <input asp-for="Titlelargo" class="form-control form-control-sm" />
+                                                    <span asp-validation-for="Titlelargo" class="text-danger"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong><label asp-for="Comillas" class="control-label"></label></strong></td>
+                                                <td colspan="1">
+                                                    <input asp-for="Comillas" class="form-control form-control-sm" />
+                                                    <span asp-validation-for="Comillas" class="text-danger"></span>
+                                                </td>
+                                                <td><strong><label asp-for="ContentShort" class="control-label"></label></strong></td>
+                                                <td colspan="3">
+                                                    <input asp-for="ContentShort" class="form-control form-control-sm" />
+                                                    <span asp-validation-for="ContentShort" class="text-danger"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong><label asp-for="DateBlog" class="control-label"></label></strong></td>
+                                                <td colspan="1">
+                                                    <input asp-for="DateBlog" class="form-control form-control-sm" />
+                                                    <span asp-validation-for="DateBlog" class="text-danger"></span>
+                                                </td>
+                                                <td colspan="4">
+                                                    <div>
+                                                        <label class="ckbox">
+                                                            <input type="checkbox" asp-for="IsActiveEcommerce" /> <span> @Html.DisplayNameFor(model => model.IsActiveEcommerce)</span>
+                                                        </label>
+                                                    </div>
+                                                </td>
 
-<h4>Ecom_Blog</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Titlelargo" class="control-label"></label>
-                <input asp-for="Titlelargo" class="form-control" />
-                <span asp-validation-for="Titlelargo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ContentShort" class="control-label"></label>
-                <input asp-for="ContentShort" class="form-control" />
-                <span asp-validation-for="ContentShort" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Contentlarge" class="control-label"></label>
-                <input asp-for="Contentlarge" class="form-control" />
-                <span asp-validation-for="Contentlarge" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Comillas" class="control-label"></label>
-                <input asp-for="Comillas" class="form-control" />
-                <span asp-validation-for="Comillas" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageCoverPage" class="control-label"></label>
-                <input asp-for="ImageCoverPage" class="form-control" />
-                <span asp-validation-for="ImageCoverPage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageBlog" class="control-label"></label>
-                <input asp-for="ImageBlog" class="form-control" />
-                <span asp-validation-for="ImageBlog" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateBlog" class="control-label"></label>
-                <input asp-for="DateBlog" class="form-control" />
-                <span asp-validation-for="DateBlog" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="IsActiveEcommerce" /> @Html.DisplayNameFor(model => model.IsActiveEcommerce)
-                    </label>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="8"><strong><label asp-for="Contentlarge" class="control-label"></label></strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="8">
+                                                    <textarea asp-for="Contentlarge" class="form-control  form-control-sm" rows="25">@Model.Contentlarge</textarea>
+                                                    <span asp-validation-for="Contentlarge" class="text-danger"></span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div class="form-group  float-right">
+                                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                                            <input type="submit" value="Guardar cambios" class="btn btn-success" />
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade show " id="Imagenes" role="tabpanel" aria-labelledby="home-tab">
+                                    <div class="row">
+                                        <div class="media-body mg-l-20 border p-3 col-lg-6">
+                                            <div class="d-flex justify-content-between mg-b-10">
+                                                <div class="col-12">
+                                                    <nav class="navbar navbar-light bg-light justify-content-between">
+                                                        <a class="navbar-brand"><label asp-for="ImageCoverPage" class="control-label"></label></a>
+                                                        <form class="form-inline">
+                                                            <button type="button" v-on:click="UploadImage('Caratula')" class="btn btn-outline-success my-2 my-sm-0">Subir imagen</button>
+                                                        </form>
+                                                    </nav>
+                                                </div>
+                                            </div><!-- d-flex -->
+                                            <img  v-if="coverImage != ''" :src="Rute+coverImage" class="img-fluid mg-b-20" alt="">
+                                            <div v-if="coverImage != ''" class="media-footer">
+                                                <div>
+                                                    <a href="#" v-on:click="RenameImage('Caratula')" class="btn btn-sm btn-secondary" title="Renombrar imagen">Renombrar</a>
+                                                    <a href="#" v-on:click="DeleteImage('Caratula')" class="btn btn-sm btn-secondary" title="Eliminar imagen">Eliminar</a>
+                                                    <a :href="Rute+coverImage" target="_blank" class="btn btn-sm btn-secondary">Ver</a>
+                                                </div>
+                                            </div><!-- d-flex -->
+                                        </div>
+                                        <div class="media-body mg-l-20 border p-3 col-lg-6">
+                                            <div class="d-flex justify-content-between mg-b-10">
+                                                <div class="col-12">
+                                                    <nav class="navbar navbar-light bg-light justify-content-between">
+                                                        <a class="navbar-brand"><label asp-for="ImageBlog" class="control-label"></label></a>
+                                                        <form class="form-inline">
+                                                            <button type="button" v-on:click="UploadImage('Blog')" class="btn btn-outline-success my-2 my-sm-0">Subir imagen</button>
+                                                        </form>
+                                                    </nav>
+                                                </div>
+                                            </div><!-- d-flex -->
+                                            <img v-if="image != ''" :src="Rute+image" class="img-fluid mg-b-20" alt="">
+                                            <div v-if="image != ''" class="media-footer">
+                                                <div>
+                                                    <a href="#" v-on:click="RenameImage('Blog')" class="btn btn-sm btn-secondary" title="Renombrar imagen">Renombrar</a>
+                                                    <a href="#" v-on:click="DeleteImage('Blog')" class="btn btn-sm btn-secondary" title="Eliminar imagen">Eliminar</a>
+                                                    <a :href="Rute+image" target="_blank" class="btn btn-sm btn-secondary">Ver</a>
+                                                </div>
+                                            </div><!-- d-flex -->
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <div class="float-right">
+                                            <a asp-action="Index" class="btn btn-secondary">Terminar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+@*app_blog_details*@
+@section Scripts {
+    <script>
+    var app_blog_details = new Vue({
+        el: "#app_blog_details",
+        data: {
+            serverToken: {
+                'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+            },
+            coverImage: "@Model.ImageCoverPage",
+            image: "@Model.ImageBlog",
+            Rute: "@Html.Raw(string.Format("{0}/store/public/images/img_spl/blog/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))",
+            newName: ""
+        },
+        mounted(){
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+        },
+        methods: {
+            
+            UploadImage: async function (tipe) {
+                const { value: file } = await Swal.fire({
+                        title: 'Select image',
+                        input: 'file',
+                        inputAttributes: {
+                            'accept': 'image/*',
+                            'aria-label': 'Upload your picture'
+                        }
+                    })
+                    if (file) {
+                        let params = new FormData();
+                            params.append('FormFile', file);
+                            params.append('id', '@Model.Id');
+                            params.append('TypeFile', tipe);
+                        await axios.post('@Url.Action("DataUploadFiles","Blog")', params, { headers: this.serverToken }).then(response => {
+                            this.ShowMessageErrorShort(response.data, 'success')
+                            if (tipe == "Blog") {
+                                this.image = file.name
+                            }
+                            if (tipe == "Caratula") {
+                                this.coverImage = file.name
+                            };
+                            const reader = new FileReader()
+                            reader.onload = (e) => {
+                                Swal.fire({
+                                    title: 'Your uploaded picture',
+                                    imageUrl: e.target.result,
+                                    imageAlt: 'The uploaded picture'
+                                })
+                            }
+                            reader.readAsDataURL(file)
+                        }).catch(error => {
+                            this.ShowMessageErrorShort(error.response.data,'error')
+                        }).finally(() => this.newName = "")
+                    }
+            },
+            DeleteImage: async function (tipe) {
+                Swal.fire({
+                    title: "¿Deseas eliminar este archivo?",
+                    text: "",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, eliminalo!'
+                }).then((result) => {
+                    if (result.value) {
+                        var params = new URLSearchParams();
+                        if (tipe == "Blog") {
+                            params.append('NameFile', '' + this.image);
+                        }
+                        if (tipe == "Caratula") {
+                            params.append('NameFile', '' + this.coverImage);
+                        };
+                        params.append('id', '@Model.Id');
+                        params.append('TypeFile', tipe);
+                        axios.post('@Url.Action("DataDeleteFiles","Blog")', params, { headers: this.serverToken }).then(response => {
+                            if (tipe == "Blog") {
+                                this.image = ""
+                            }
+                            if (tipe == "Caratula") {
+                                this.coverImage = ""
+                            };
+                                this.ShowMessageErrorShort(response.data,'success')
+                        }).catch(error => {
+                            this.ShowMessageErrorShort(error.response.data,'error')
+                        }).finally(() => this.newName = "")
+                    }
+                })
+            },
+            RenameImage: async function (tipe) {
+                 Swal.fire({
+                        title: 'Nuevo nombre del archivo',
+                        input: 'text',
+                        inputAttributes: {
+                            autocapitalize: 'off'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Renombrar',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (login) => {
+                            this.newName = login
+                            var params = new URLSearchParams();
+                            if (tipe == "Blog") {
+                                params.append('Filename', '' + this.image);
+                            }
+                            if (tipe == "Caratula") {
+                                params.append('Filename', '' + this.coverImage);
+                            }
+                            params.append('Newname', '' + login);
+                            params.append('id', '@Model.Id');
+                            params.append('TypeFile', tipe);
+                            return axios.post('@Url.Action("DataRenameFiles","Blog")', params, { headers: this.serverToken }).then(response => {
+                                
+                                return response.data;
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            })
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.value) {
+                            if (tipe == "Blog") {
+                                this.image = this.newName + ".jpg"
+                            }
+                            if (tipe == "Caratula") {
+                                this.coverImage = this.newName + ".jpg"
+                            }
+                            this.ShowMessageErrorShort(result.value,'success')
+                        }
+                        console.log(result)
+                    })
+            },
+            ShowMessageErrorShort: function (text,icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
 
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+        }
+    });
+    </script>
+}

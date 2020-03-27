@@ -1,22 +1,45 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.AspNetCore.Http;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EcomDataProccess
 {
     public class Ecom_Blog
     {
         #region Propiedades
+        [Display(Name = "Id")]
         public int Id { get; set; }
+        [Display(Name = "Titulo caratula")]
+        [Required]
         public string Title { get; set; }
+        [Display(Name = "Titulo contenido")]
+        [Required]
         public string Titlelargo { get; set; }
+        [Display(Name = "Contenido caratura")]
+        [Required]
         public string ContentShort { get; set; }
+        [Display(Name = "Contenido completo")]
+        [Required]
         public string Contentlarge { get; set; }
+        [Display(Name = "Descripción web")]
+        [Required]
         public string Comillas { get; set; }
+        [Display(Name = "Imagen caratura")]
+        
         public string ImageCoverPage { get; set; }
+        [Display(Name = "Imagen blog")]
+        
         public string ImageBlog { get; set; }
+        [Display(Name = "Fecha")]
+        [Required]
         public DateTime DateBlog { get; set; }
+        [Display(Name = "Visible en E-commerce")]
+        [Required]
         public bool IsActiveEcommerce { get; set; }
+        public IFormFile BlogCover { get; set; }
+        public IFormFile BlogImage { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
 
@@ -36,6 +59,68 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public bool Add()
+        {
+            try
+            {
+                Ecom_DBConnection_.StartProcedure("Admin_blog");
+                Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
+                Ecom_DBConnection_.AddParameter(Title, "Title", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Titlelargo, "Titlelargo", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(ContentShort, "ContentShort", "TEXT");
+                Ecom_DBConnection_.AddParameter(Contentlarge, "Contentlarge", "TEXT");
+                Ecom_DBConnection_.AddParameter(Comillas, "Comillass", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(ImageCoverPage, "ImageCoverPage", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(ImageBlog, "ImageBlog", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(DateBlog, "DateBlog", "DATETIME");
+                Ecom_DBConnection_.AddParameter((IsActiveEcommerce ? "si": "no"), "IsActiveEcommerce", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(1, "ModeProcedure", "INT");
+                int result = Ecom_DBConnection_.ExecProcedure();
+                if(result == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public bool Update(int mode)
+        {
+            try
+            {
+                Ecom_DBConnection_.StartProcedure("Admin_blog");
+                Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
+                Ecom_DBConnection_.AddParameter(Title, "Title", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Titlelargo, "Titlelargo", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(ContentShort, "ContentShort", "TEXT");
+                Ecom_DBConnection_.AddParameter(Contentlarge, "Contentlarge", "TEXT");
+                Ecom_DBConnection_.AddParameter(Comillas, "Comillass", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(ImageCoverPage, "ImageCoverPage", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(ImageBlog, "ImageBlog", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(DateBlog, "DateBlog", "DATETIME");
+                Ecom_DBConnection_.AddParameter((IsActiveEcommerce ? "si" : "no"), "IsActiveEcommerce", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(mode, "ModeProcedure", "INT");
+                int result = Ecom_DBConnection_.ExecProcedure();
+                if (result == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         public bool Get(int id)
         {
             try

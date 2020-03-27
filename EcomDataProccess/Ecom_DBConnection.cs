@@ -10,6 +10,7 @@ namespace EcomDataProccess
         private string ConnectionString;
         public string Message { get; set; }
         public MySqlConnection Connection { get; private set; }
+        public MySqlCommand Comando { get; private set; }
         #endregion
 
         #region Constructores
@@ -28,6 +29,85 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public void StartProcedure(string ProcedureName)
+        {
+            CheckConnection();
+            Comando = new MySqlCommand();
+            Comando.Connection = Connection;
+            Comando.CommandType = CommandType.StoredProcedure;
+            Comando.CommandText = ProcedureName;
+        }
+        public void AddParameter(object value, string variable, string type)
+        {
+            if (type == "DATETIME")
+            {
+                Comando.Parameters.AddWithValue("@" + variable, value);
+                Comando.Parameters["@" + variable].Direction = ParameterDirection.Input;
+            }
+            else if (type == "VARCHAR")
+            {
+                Comando.Parameters.AddWithValue("@" + variable, value);
+                Comando.Parameters["@" + variable].Direction = ParameterDirection.Input;
+            }
+            else if(type == "INT")
+            {
+                Comando.Parameters.AddWithValue("@" + variable, Convert.ToInt32(value));
+                Comando.Parameters["@" + variable].Direction = ParameterDirection.Input;
+            }
+            else if (type == "DOUBLE")
+            {
+                Comando.Parameters.AddWithValue("@" + variable, value);
+                Comando.Parameters["@" + variable].Direction = ParameterDirection.Input;
+            }
+            else if(type == "TEXT")
+            {
+                Comando.Parameters.AddWithValue("@" + variable, value);
+                Comando.Parameters["@" + variable].Direction = ParameterDirection.Input;
+            }
+            else
+            {
+                throw new Ecom_Exception(string.Format("{0} no es valido como parametro", type));
+            }
+        }
+        public int ExecProcedure()
+        {
+            try
+            {
+                Comando.Parameters.AddWithValue("@CodeResponse", Int32.Parse("1"));
+                Comando.Parameters["@CodeResponse"].Direction = ParameterDirection.Output;
+
+                Comando.Parameters.AddWithValue("@MessageResponse", "1");
+                Comando.Parameters["@MessageResponse"].Direction = ParameterDirection.Output;
+
+                Comando.ExecuteNonQuery();
+
+                int RequestStatus = (int)Comando.Parameters["@CodeResponse"].Value;
+                if (RequestStatus == 0)
+                {
+                    Message = string.Format("{0}", (string)Comando.Parameters["@MessageResponse"].Value);
+                }
+                else
+                {
+                    Message = string.Format("{0}", (string)Comando.Parameters["@MessageResponse"].Value);
+                }
+
+                return (int)RequestStatus;
+
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Ecom_Exception - {0}", ex.Message));
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("MySqlException - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
+            }
+            
+        }
         public double ExecuteProcedureDouble(string Parameters, string output)
         {
             MySqlCommand cmd;

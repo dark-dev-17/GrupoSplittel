@@ -1,0 +1,95 @@
+﻿@model EcomDataProccess.Ecom_Blog
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Crear Blog: ";
+}
+<div id="app_blog_details">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-outline active-info flex-column flex-md-row">
+                                Detalle
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <form asp-action="Create" enctype="multipart/form-data">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <table class="table  table-sm">
+                                        <tr>
+                                            <td><strong><label asp-for="Title" class="control-label"></label></strong></td>
+                                            <td colspan="3">
+                                                <input asp-for="Title" class="form-control form-control-sm" />
+                                                <span asp-validation-for="Title" class="text-danger"></span>
+                                            </td>
+                                            <td><strong><label asp-for="Titlelargo" class="control-label"></label></strong></td>
+                                            <td colspan="3">
+                                                <input asp-for="Titlelargo" class="form-control form-control-sm" />
+                                                <span asp-validation-for="Titlelargo" class="text-danger"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><label asp-for="Comillas" class="control-label"></label></strong></td>
+                                            <td colspan="1">
+                                                <input asp-for="Comillas" class="form-control form-control-sm" />
+                                                <span asp-validation-for="Comillas" class="text-danger"></span>
+                                            </td>
+                                            <td><strong><label asp-for="ContentShort" class="control-label"></label></strong></td>
+                                            <td colspan="3">
+                                                <input asp-for="ContentShort" class="form-control form-control-sm" />
+                                                <span asp-validation-for="ContentShort" class="text-danger"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>landing</strong></td>
+                                            <td colspan="1">
+                                                <input asp-for="BlogImage"  class="form-control form-control-sm" />
+                                                <span asp-validation-for="DateBlog" class="text-danger"></span>
+                                            </td>
+                                            <td><strong>Cover</strong></td>
+                                            <td colspan="3">
+                                                <input asp-for="BlogCover" type="file" class="form-control form-control-sm" />
+                                                <span asp-validation-for="DateBlog" class="text-danger"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><label asp-for="DateBlog" class="control-label"></label></strong></td>
+                                            <td colspan="1">
+                                                <input asp-for="DateBlog" class="form-control form-control-sm" />
+                                                <span asp-validation-for="DateBlog" class="text-danger"></span>
+                                            </td>
+                                            <td colspan="4">
+                                                <div>
+                                                    <label class="ckbox">
+                                                        <input type="checkbox" asp-for="IsActiveEcommerce" /> <span> @Html.DisplayNameFor(model => model.IsActiveEcommerce)</span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8"><strong><label asp-for="Contentlarge" class="control-label"></label></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8">
+                                                <textarea asp-for="Contentlarge" class="form-control  form-control-sm" rows="25">@Model.Contentlarge</textarea>
+                                                <span asp-validation-for="Contentlarge" class="text-danger"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="form-group  float-right">
+                                        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                                        <input type="submit" value="Guardar cambios" class="btn btn-success" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

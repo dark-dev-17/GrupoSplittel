@@ -11,35 +11,85 @@
 <div id="app_blog_details">
     <div class="br-section-wrapper">
         <div class="table-wrapper">
-            <table class="table table-hover table-custom spacing5">
-                <tr>
-                    <td><strong>@Html.DisplayNameFor(model => model.Title)</strong></td>
-                    <td colspan="1">@Html.DisplayFor(model => model.Title)</td>
-                    <td><strong>@Html.DisplayNameFor(model => model.Titlelargo)</strong></td>
-                    <td colspan="3"> @Html.DisplayFor(model => model.Titlelargo)</td>
-                </tr>
-                <tr>
-                    <td><strong>@Html.DisplayNameFor(model => model.Comillas)</strong></td>
-                    <td colspan="1">@Html.DisplayFor(model => model.Comillas)</td>
-                    <td><strong>@Html.DisplayNameFor(model => model.ContentShort)</strong></td>
-                    <td colspan="1">@Html.DisplayFor(model => model.ContentShort)</td>
-                </tr>
-                <tr>
-                    <td><strong>@Html.DisplayNameFor(model => model.DateBlog)</strong></td>
-                    <td colspan="1">@Html.DisplayFor(model => model.DateBlog) </td>
-                    <td><strong> @Html.DisplayNameFor(model => model.IsActiveEcommerce)</strong></td>
-                    <td colspan="2">@Html.DisplayFor(model => model.IsActiveEcommerce)</td>
-                </tr>
-                <tr>
-                    <td colspan="5"><strong>@Html.DisplayNameFor(model => model.Contentlarge)</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="5"><div id="summernote">@Model.Contentlarge</div></td>
-                </tr>
-            </table>
-        </div>
-        <div class="float-right">
-            <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-outline active-info flex-column flex-md-row">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#Detalle" role="tab" aria-controls="home" aria-selected="true">Detalle</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes" role="tab" aria-controls="profile" aria-selected="false">Imagenes</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="Detalle" role="tabpanel" aria-labelledby="home-tab">
+                                    <table class="table  table-sm">
+                                        <tr>
+                                            <td><strong>@Html.DisplayNameFor(model => model.Title)</strong></td>
+                                            <td colspan="1">@Html.DisplayFor(model => model.Title)</td>
+                                            <td><strong>@Html.DisplayNameFor(model => model.Titlelargo)</strong></td>
+                                            <td colspan="3"> @Html.DisplayFor(model => model.Titlelargo)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>@Html.DisplayNameFor(model => model.Comillas)</strong></td>
+                                            <td colspan="1">@Html.DisplayFor(model => model.Comillas)</td>
+                                            <td><strong>@Html.DisplayNameFor(model => model.ContentShort)</strong></td>
+                                            <td colspan="1">@Html.DisplayFor(model => model.ContentShort)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>@Html.DisplayNameFor(model => model.DateBlog)</strong></td>
+                                            <td colspan="1">@Html.DisplayFor(model => model.DateBlog) </td>
+                                            <td><strong> @Html.DisplayNameFor(model => model.IsActiveEcommerce)</strong></td>
+                                            <td colspan="2">@Html.DisplayFor(model => model.IsActiveEcommerce)</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5"><strong>@Html.DisplayNameFor(model => model.Contentlarge)</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5">
+                                                <p class="text-justify" id="summernote">
+                                                    <textarea class="form-control" rows="35" disabled>@Model.Contentlarge</textarea>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade show " id="Imagenes" role="tabpanel" aria-labelledby="home-tab">
+                                    <div class="row">
+                                        <div class="media-body mg-l-20 border p-3 col-lg-6">
+                                            <div class="d-flex justify-content-between mg-b-10">
+                                                <div class="col-12">
+                                                    <nav class="navbar navbar-light bg-light justify-content-between">
+                                                        <a class="navbar-brand"><label asp-for="ImageCoverPage" class="control-label"></label></a>
+                                                    </nav>
+                                                </div>
+                                            </div><!-- d-flex -->
+                                            <img src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/blog/{1}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ImageCoverPage))" class="img-fluid mg-b-20" alt="">
+                                        </div>
+                                        <div class="media-body mg-l-20 border p-3 col-lg-6">
+                                            <div class="d-flex justify-content-between mg-b-10">
+                                                <div class="col-12">
+                                                    <nav class="navbar navbar-light bg-light justify-content-between">
+                                                        <a class="navbar-brand"><label asp-for="ImageBlog" class="control-label"></label></a>
+                                                    </nav>
+                                                </div>
+                                            </div><!-- d-flex -->
+                                            <img src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/blog/{1}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ImageBlog))" class="img-fluid mg-b-20" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="float-right">
+                                    <a asp-action="Index" class="btn btn-secondary">Regresar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -53,10 +103,10 @@
                 },
             },
             mounted() {
-                $('#summernote').summernote({
-                    height: 550,
-                })
-                $('#summernote').summernote('disable');
+                //$('#summernote').summernote({
+                //    height: 550,
+                //})
+                //$('#summernote').summernote('disable');
             },
             methods: {
                 ShowMessageErrorShort: function (text, icon) {

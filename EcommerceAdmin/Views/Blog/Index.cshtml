@@ -8,54 +8,57 @@
     //bool CtrlActiveProximamente = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 29 });
 
 }
-<div id="app_blog">
-    <div class="br-section-wrapper">
-        <div class="table-wrapper">
-            <table class="table display responsive nowrap " id="table_app_blog" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Title)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Comillas)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DateBlog)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.IsActiveEcommerce)
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+    <div id="app_blog">
+        <nav class="navbar navbar-light bg-light justify-content-between">
+            <a class="navbar-brand">@Html.ActionLink("Agregar", "Create", "Blog", null, new { @class = "btn btn-sm btn-secondary" })</a>
+        </nav>
+        <div class="br-section-wrapper">
+            <div class="table-wrapper">
+                <table class="table display responsive nowrap " id="table_app_blog" style="width: 100%;">
+                    <thead>
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Title)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Comillas)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateBlog)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.IsActiveEcommerce)
-                            </td>
-                            <td>
-                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                @Html.ActionLink("Details", "Details", new { id = item.Id })
-                            </td>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Comillas)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DateBlog)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsActiveEcommerce)
+                            </th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Comillas)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateBlog)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsActiveEcommerce)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 @section Scripts {
     <script>
         var app_blog = new Vue({
