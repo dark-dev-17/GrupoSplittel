@@ -22,6 +22,7 @@ namespace EcommerceAdmin.Controllers
         private readonly string FTP_Server = ConfigurationManager.AppSettings["FTP_Server"].ToString();
         // GET: Producto
         [AccessView(IdAction = 1)]
+        [OutputCache(Duration = 120, VaryByParam = "none")]
         public async Task<ActionResult> Index()
         {
             Ecom_DBConnection Ecom_DBConnection_ = null;
@@ -30,6 +31,31 @@ namespace EcommerceAdmin.Controllers
                 Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
                 Ecom_DBConnection_.OpenConnection();
                 List<Ecom_Producto> Ecom_Producto_ = await new Ecom_Producto(Ecom_DBConnection_).Get();
+                Ecom_DBConnection_.CloseConnection();
+                return View(Ecom_Producto_);
+            }
+            catch (Ecom_Exception ex)
+            {
+                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+            }
+            finally
+            {
+                if (Ecom_DBConnection_ != null)
+                {
+                    Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
+        [AccessView(IdAction = 1)]
+        [OutputCache(Duration = 120, VaryByParam = "none")]
+        public async Task<ActionResult> FijoConfigurable()
+        {
+            Ecom_DBConnection Ecom_DBConnection_ = null;
+            try
+            {
+                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
+                Ecom_DBConnection_.OpenConnection();
+                List<Ecom_Producto> Ecom_Producto_ = await new Ecom_Producto(Ecom_DBConnection_).GetConf();
                 Ecom_DBConnection_.CloseConnection();
                 return View(Ecom_Producto_);
             }
@@ -65,12 +91,12 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = string.Format("El producto con codigo: '{0}' no fue encontrado", id) });
+                    return View("../ErrorPages/Error", new { id = string.Format("El producto con codigo: '{0}' no fue encontrado", id) });
                 }
             }
             catch (Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {

@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EcomDataProccess
 {
@@ -8,28 +9,47 @@ namespace EcomDataProccess
     {
         #region Propiedades
         public string DocEntry { get; set; }
-        public string DocNum { get; set; }
+        [Display(Name = "Fecha")]
         public DateTime DocDate { get; set; }
+        [Display(Name = "Total")]
         public double DocTotal { get; set; }
+        [Display(Name = "SubTotal")]
         public double DocSubTotal { get; set; }
+        [Display(Name = "Iva")]
         public double DocIva { get; set; }
+        [Display(Name = "TC")]
         public double DocRate { get; set; }
-        public string DocType { get; set; }
+        [Display(Name = "Tipo Cliente")]
         public string TypeCustomer { get; set; }
+        [Display(Name = "Codigo Cliente")]
         public string CardCode { get; set; }
+        [Display(Name = "Cliente")]
         public string Cardname { get; set; }
+        [Display(Name = "Moneda")]
         public string DocCur { get; set; }
+        [Display(Name = "Guia")]
         public string TrackNo { get; set; }
+        [Display(Name = "Estatus")]
         public string Status { get; set; }
+        [Display(Name = "Metodo pago")]
         public string PaymentMethod { get; set; }
+        [Display(Name = "Dir Envio")]
         public string ShipTo { get; set; }
+        [Display(Name = "Dir Facturación")]
         public string BillTo { get; set; }
+        [Display(Name = "Uso CFDI")]
         public string CFDIUser { get; set; }
+        [Display(Name = "Descuento")]
         public int PorcentDisaccount { get; set; }
+        [Display(Name = "Referencia envio")]
         public string ShipRefences { get; private set; }
+        [Display(Name = "Requiere factura")]
         public bool RequireInvoice { get; private set; }
+        [Display(Name = "Requiere costo envio")]
+        public int RequireShipCost { get; private set; }
         public int Id_cliente { get; set; }
         public int TransportationCode { get; set; }
+        [Display(Name = "NO.E-commerce")]
         public int DocNumEcommerce { get; set; }
         public int SAP_Estatus { get; set; }
         public int StatusProcessWS { get; private set; }
@@ -114,7 +134,7 @@ namespace EcomDataProccess
                         DocCur = Data.IsDBNull(11) ? "" : Data.GetString(11);
                         ShipTo = Data.IsDBNull(12) ? "" : Data.GetString(12);
                         BillTo = Data.IsDBNull(13) ? "" : Data.GetString(13);
-                        TransportationCode = Data.IsDBNull(15) ? 0 : Data.GetInt32(15);
+                        //TransportationCode = Data.IsDBNull(14) ? 0 : Data.GetInt32(14);
                         DocRate = Data.IsDBNull(16) ? 0 : Data.GetDouble(16);
                         CFDIUser = Data.IsDBNull(18) ? "" : Data.GetString(18);
                         PorcentDisaccount = Data.IsDBNull(19) ? 0 : Data.GetInt32(19);
@@ -122,8 +142,9 @@ namespace EcomDataProccess
                         ShipRefences = Data.IsDBNull(22) ? "" : Data.GetString(22);
                         TypeCustomer = Data.IsDBNull(20) ? "" : Data.GetString(20);
                         RequireInvoice = Data.IsDBNull(24) ? false: (Data.GetString(24) == "false" ? false : true);
+                        RequireShipCost = Data.IsDBNull(5) ? -1: Data.GetInt32(5);
                         DocNumEcommerce = DocNumEcommerce_;
-                        if (DocCur != "USD")
+                        if (DocCur != "USD" && Status != "C")
                         {
                             DocIva *= DocRate;
                             DocTotal *= DocRate;

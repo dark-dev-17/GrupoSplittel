@@ -145,6 +145,18 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
+        public async Task<List<Ecom_Producto>> GetConf()
+        {
+            try
+            {
+                string Statement = string.Format("SELECT * FROM Admin_producto_categoria_subcategoria where codigo_configurable  != '';");
+                return await ReadDatReader(Statement);
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<List<Ecom_Producto>> Get(string Regla, FiltroProducto filtroProducto)
         {
             try

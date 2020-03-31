@@ -29,7 +29,7 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -56,13 +56,13 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
+                    return View("../ErrorPages/Error", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
                 }
                 
             }
             catch (Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -112,13 +112,13 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
+                    return View("../ErrorPages/Error", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
                 }
 
             }
             catch (Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {

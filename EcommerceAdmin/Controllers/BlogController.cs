@@ -33,7 +33,7 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -99,7 +99,14 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-
+                    if (Ecom_Blog_.BlogImage == null || Ecom_Blog_.BlogCover == null)
+                    {
+                        if(Ecom_Blog_.BlogImage == null)
+                            ModelState.AddModelError("BlogImage", "Please choose a file");
+                        if (Ecom_Blog_.BlogCover == null)
+                            ModelState.AddModelError("BlogCover", "Please choose a file");
+                        return View(Ecom_Blog_);
+                    }
                     ecomData.Connect(ServerSource.Ecommerce);
                     ecomData.Connect(ServerSource.Splitnet);
                     bool AdminPermiss = ecomData.validPermissAction(USR_IdSplinnet, 37);
@@ -110,7 +117,7 @@ namespace EcommerceAdmin.Controllers
                         Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
                         var FilenameBlogImage = Ecom_Blog_.BlogImage.FileName;
                         var FilenameBlogCover = Ecom_Blog_.BlogCover.FileName;
-                        if(FilenameBlogImage == FilenameBlogCover)
+                        if (FilenameBlogImage == FilenameBlogCover)
                         {
                             throw new Ecom_Exception("Los archivos no pueden tener el mismo nombre");
                         }

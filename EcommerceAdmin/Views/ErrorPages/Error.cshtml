@@ -1,6 +1,8 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Error";
+    ViewData["messsage"] = Model;
+    string data = ViewData["messsage"].ToString();
+    data = data.Replace("{", "").Replace("}", "");
 }
 
 <div id="preloader">
@@ -14,7 +16,7 @@
                         </div>
                         <div class="card-body">
                             <center><img style="width: 250px;" src="~/images/logo_fibremex.png" alt="Alternate Text" /></center>
-                            <p class="card-text mt-5">@ViewData["Message"]</p>
+                            <p class="card-text mt-5">@data.Replace("id = ","")</p>
                             <a href="#" onclick="history.go(-1);" class="btn btn-sm btn-primary">
                                 Regresar
                             </a>

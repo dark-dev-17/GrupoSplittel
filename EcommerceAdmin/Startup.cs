@@ -32,7 +32,6 @@ namespace EcommerceAdmin
             //    options.AutomaticAuthentication = false;
             //});
             services.AddResponseCompression();
-
             services.Configure<GzipCompressionProviderOptions>(options =>
             {
                 options.Level = CompressionLevel.Fastest;
@@ -46,7 +45,7 @@ namespace EcommerceAdmin
 
             });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+            services.AddOutputCaching();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -67,6 +66,7 @@ namespace EcommerceAdmin
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
+            app.UseOutputCaching();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

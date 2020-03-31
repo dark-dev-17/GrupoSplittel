@@ -16,46 +16,52 @@ namespace EcommerceAdmin.Controllers
         private readonly string EcomConnection = ConfigurationManager.AppSettings["Ecommerce_Database"].ToString();
         private readonly string SplitConnection = ConfigurationManager.AppSettings["Splinnet_Database"].ToString();
         private readonly string SAPConnection = ConfigurationManager.AppSettings["SAP_Database"].ToString();
+
         [AccessMultipleView(IdAction = new int[] { 22 })]
         public ActionResult Detalle(int id)
         {
             Ecom_DBConnection Ecom_DBConnection_ = null;
             SAPDataProcess.SAP_DBConnection SAP_DBConnection_ = null;
             try
-            {
-                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
-                Ecom_DBConnection_.OpenConnection();
-                Ecom_Pedido Ecom_Pedido_ = new Ecom_Pedido(Ecom_DBConnection_);
-                bool result = Ecom_Pedido_.GetById(id);
-                Ecom_DBConnection_.CloseConnection();
-                if (result)
+            {   if(id != 0)
                 {
-                    if(Ecom_Pedido_.StatusProcessWS == 0)
+                    Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
+                    Ecom_DBConnection_.OpenConnection();
+                    Ecom_Pedido Ecom_Pedido_ = new Ecom_Pedido(Ecom_DBConnection_);
+                    bool result = Ecom_Pedido_.GetById(id);
+                    Ecom_DBConnection_.CloseConnection();
+                    if (result)
                     {
-                        SAP_DBConnection_ = new SAPDataProcess.SAP_DBConnection(SAPConnection);
-                        SAP_DBConnection_.OpenConnection();
-                        SAPDataProcess.SAP_Document sAP_Document = new SAPDataProcess.SAP_Document(SAP_DBConnection_);
-                        sAP_Document.GetSapEstatus(Ecom_Pedido_.DocNumEcommerce);
-                        Ecom_Pedido_.TrackNo = sAP_Document.TrackNo;
-                        Ecom_Pedido_.DocEntry = sAP_Document.DocEntry;
-                        Ecom_Pedido_.SAP_Estatus = Int32.Parse(sAP_Document.Status);
-                        SAP_DBConnection_.CloseDataBaseAccess();
+                        if (Ecom_Pedido_.StatusProcessWS == 0)
+                        {
+                            SAP_DBConnection_ = new SAPDataProcess.SAP_DBConnection(SAPConnection);
+                            SAP_DBConnection_.OpenConnection();
+                            SAPDataProcess.SAP_Document sAP_Document = new SAPDataProcess.SAP_Document(SAP_DBConnection_);
+                            sAP_Document.GetSapEstatus(Ecom_Pedido_.DocNumEcommerce);
+                            Ecom_Pedido_.TrackNo = sAP_Document.TrackNo;
+                            Ecom_Pedido_.DocEntry = sAP_Document.DocEntry;
+                            Ecom_Pedido_.SAP_Estatus = Int32.Parse(sAP_Document.Status);
+                            SAP_DBConnection_.CloseDataBaseAccess();
+                        }
+                        return View(Ecom_Pedido_);
                     }
-                    return View(Ecom_Pedido_);
+                    else
+                    {
+                        return View("../ErrorPages/Error", new { id = string.Format("El pedido '{0}' no fue encontrado", id) });
+                    }
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = string.Format("El pedido '{0}' no fue encontrado", id) });
+                    return View(new Ecom_Pedido { DocNumEcommerce = 0});
                 }
-                
             }
             catch (EcomDataProccess.Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             catch (SAPDataProcess.SAP_Excepcion ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -105,16 +111,16 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = "Error en la configuración de permisos de usuario" });
+                    return View("../ErrorPages/Error", new { id = "Error en la configuración de permisos de usuario" });
                 }
             }
             catch (EcomDataProccess.Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             catch (SAPDataProcess.SAP_Excepcion ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -170,16 +176,16 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = "Error en la configuración de permisos de usuario" });
+                    return View("../ErrorPages/Error", new { id = "Error en la configuración de permisos de usuario" });
                 }
             }
             catch (EcomDataProccess.Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             catch (SAPDataProcess.SAP_Excepcion ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -236,16 +242,16 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = "Error en la configuración de permisos de usuario" });
+                    return View("../ErrorPages/Error", new { id = "Error en la configuración de permisos de usuario" });
                 }
             }
             catch (EcomDataProccess.Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             catch (SAPDataProcess.SAP_Excepcion ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -302,16 +308,16 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = "Error en la configuración de permisos de usuario" });
+                    return View("../ErrorPages/Error", new { id = "Error en la configuración de permisos de usuario" });
                 }
             }
             catch (EcomDataProccess.Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             catch (SAPDataProcess.SAP_Excepcion ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -368,16 +374,16 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = "Error en la configuración de permisos de usuario" });
+                    return View("../ErrorPages/Error", new { id = "Error en la configuración de permisos de usuario" });
                 }
             }
             catch (EcomDataProccess.Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             catch (SAPDataProcess.SAP_Excepcion ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -391,6 +397,7 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessDataSession]
@@ -417,6 +424,7 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessDataSession]
@@ -443,6 +451,7 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DataGetQuoatationsDashboard(DateTime start, DateTime end, string ModeBussiness, string tipoDocumento)

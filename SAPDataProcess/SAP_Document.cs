@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 
 namespace SAPDataProcess
@@ -7,17 +8,29 @@ namespace SAPDataProcess
     public class SAP_Document
     {
         #region Propiedades
+        [Display(Name = "No.Documento")]
         public string DocEntry { get; set; }
+        [Display(Name = "No.Documento")]
         public string DocNum { get; set; }
+        [Display(Name = "Fecha")]
         public DateTime DocDate { get; set; }
+        [Display(Name = "Total")]
         public double DocTotal { get; set; }
+        [Display(Name = "Tipo documento")]
         public string DocType { get; set; }
+        [Display(Name = "No.Cliente")]
         public string CardCode { get; set; }
+        [Display(Name = "Moneda")]
         public string DocCur { get; set; }
+        [Display(Name = "Guia")]
         public string TrackNo { get; set; }
+        [Display(Name = "Cliente")]
         public string Cardname { get; set; }
+        [Display(Name = "Estatus")]
         public string Status { get; set; }
+        [Display(Name = "Comentarios")]
         public string Remarks { get; set; }
+        [Display(Name = "NO.E-commerce")]
         public string DocNumEcommerce { get; set; }
         private SAP_DBConnection SAP_DBConnection_;
         private SAP_DI_API SAP_DI_API_;

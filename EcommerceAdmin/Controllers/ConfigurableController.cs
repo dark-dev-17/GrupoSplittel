@@ -37,7 +37,7 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -65,12 +65,12 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Error", "ErrorPages", new { id = string.Format("El producto con codigo: '{0}' no fue encontrado", id) });
+                    return View("../ErrorPages/Error", new { id = string.Format("El producto con codigo: '{0}' no fue encontrado", id) });
                 }
             }
             catch (Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {

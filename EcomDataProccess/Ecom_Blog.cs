@@ -18,12 +18,13 @@ namespace EcomDataProccess
         [Required]
         public string Titlelargo { get; set; }
         [Display(Name = "Contenido caratura")]
+        [MaxLength(110, ErrorMessage = "Description cannot be longer than 110 characters.")]
         [Required]
         public string ContentShort { get; set; }
         [Display(Name = "Contenido completo")]
         [Required]
         public string Contentlarge { get; set; }
-        [Display(Name = "Descripción web")]
+        [Display(Name = "Posicionamiento web")]
         [Required]
         public string Comillas { get; set; }
         [Display(Name = "Imagen caratura")]
@@ -33,12 +34,16 @@ namespace EcomDataProccess
         
         public string ImageBlog { get; set; }
         [Display(Name = "Fecha")]
+        [DataType(DataType.Date)]
         [Required]
         public DateTime DateBlog { get; set; }
         [Display(Name = "Visible en E-commerce")]
         [Required]
         public bool IsActiveEcommerce { get; set; }
+        [Display(Name = "Caratula")]
+    
         public IFormFile BlogCover { get; set; }
+        [Display(Name = "Landing")]
         public IFormFile BlogImage { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion

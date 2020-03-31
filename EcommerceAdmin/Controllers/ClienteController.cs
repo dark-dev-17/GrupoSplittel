@@ -110,11 +110,11 @@ namespace EcommerceAdmin.Controllers
             }
             catch (EcomDataProccess.Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             catch (SAPDataProcess.SAP_Excepcion ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {

@@ -28,25 +28,27 @@
                                         <table class="table  table-sm">
                                             <tr>
                                                 <td><strong><label asp-for="Title" class="control-label"></label></strong></td>
-                                                <td colspan="3">
+                                                <td colspan="1">
                                                     <input asp-for="Title" class="form-control form-control-sm" />
                                                     <span asp-validation-for="Title" class="text-danger"></span>
                                                 </td>
                                                 <td><strong><label asp-for="Titlelargo" class="control-label"></label></strong></td>
-                                                <td colspan="3">
+                                                <td colspan="5">
                                                     <input asp-for="Titlelargo" class="form-control form-control-sm" />
                                                     <span asp-validation-for="Titlelargo" class="text-danger"></span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><strong><label asp-for="Comillas" class="control-label"></label></strong></td>
-                                                <td colspan="1">
+                                                <td colspan="4">
                                                     <input asp-for="Comillas" class="form-control form-control-sm" />
                                                     <span asp-validation-for="Comillas" class="text-danger"></span>
                                                 </td>
+                                            </tr>
+                                            <tr>
                                                 <td><strong><label asp-for="ContentShort" class="control-label"></label></strong></td>
-                                                <td colspan="3">
-                                                    <input asp-for="ContentShort" class="form-control form-control-sm" />
+                                                <td colspan="4">
+                                                    <textarea asp-for="ContentShort" class="form-control form-control-sm"></textarea>
                                                     <span asp-validation-for="ContentShort" class="text-danger"></span>
                                                 </td>
                                             </tr>
@@ -96,7 +98,9 @@
                                             </div><!-- d-flex -->
                                             <img  v-if="coverImage != ''" :src="Rute+coverImage" class="img-fluid mg-b-20" alt="">
                                             <div v-if="coverImage != ''" class="media-footer">
+                                                <span>@Model.ImageCoverPage</span>
                                                 <div>
+
                                                     <a href="#" v-on:click="RenameImage('Caratula')" class="btn btn-sm btn-secondary" title="Renombrar imagen">Renombrar</a>
                                                     <a href="#" v-on:click="DeleteImage('Caratula')" class="btn btn-sm btn-secondary" title="Eliminar imagen">Eliminar</a>
                                                     <a :href="Rute+coverImage" target="_blank" class="btn btn-sm btn-secondary">Ver</a>
@@ -116,7 +120,9 @@
                                             </div><!-- d-flex -->
                                             <img v-if="image != ''" :src="Rute+image" class="img-fluid mg-b-20" alt="">
                                             <div v-if="image != ''" class="media-footer">
+                                                <span>@Model.ImageBlog</span>
                                                 <div>
+
                                                     <a href="#" v-on:click="RenameImage('Blog')" class="btn btn-sm btn-secondary" title="Renombrar imagen">Renombrar</a>
                                                     <a href="#" v-on:click="DeleteImage('Blog')" class="btn btn-sm btn-secondary" title="Eliminar imagen">Eliminar</a>
                                                     <a :href="Rute+image" target="_blank" class="btn btn-sm btn-secondary">Ver</a>

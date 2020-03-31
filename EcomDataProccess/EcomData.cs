@@ -38,6 +38,12 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.PedidoLine)
+            {
+                Ecom_PedidoLine objeto = (Ecom_PedidoLine)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -64,6 +70,10 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.Blog)
             {
                 return new Ecom_Blog(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.PedidoLine)
+            {
+                return new Ecom_PedidoLine(Ecom_DBEcommerce);
             }
             else
             {

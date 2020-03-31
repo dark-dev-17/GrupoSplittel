@@ -1,0 +1,146 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_Producto>
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    ViewData["Title"] = "Productos configurables";
+    bool CtrlActive = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 2 });
+}
+<div id="app_producto">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap table-sm" id="table_cotizacion" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            Codigo
+                        </th>
+                        <th>
+                            Descripción
+                        </th>
+                        <th>
+                            Precio
+                        </th>
+                        <th>
+                            Moneda
+                        </th>
+                        <th>
+                            Descuento
+                        </th>
+                        <th>
+                            Stock
+                        </th>
+                        <th>
+                            Activo en Ecommerce
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(item.ItemCode, "Detalle", "Producto", new { id = item.ItemCode }, new { @class = "btn btn-sm btn-outline-success" })
+                            </td>
+                            <td>
+                                @item.Description
+                            </td>
+                            <td>
+                                $@item.UnitPrice.ToString("0.###")
+                            </td>
+                            <td>
+                                USD
+                            </td>
+                            <td>
+                                @if (item.Discount < 0)
+                                {
+                                    <span>No se aplica descuento</span>
+                                }
+                                else
+                                {
+                                    <span>@item.Discount%</span>
+                                }
+                            </td>
+                            <td>
+                                @item.Stock
+                            </td>
+                            <td>
+                                @if (CtrlActive)
+                                {
+                                    <button id="idDesc_@item.ItemCode" v-on:click="UpdateDesactive('@item.ItemCode')" style="@Html.Raw(item.IsActiveEcomerce ? "" : "display:none")" class="btn btn-sm btn-outline-danger my-2 my-sm-0">Desactivar</button>
+                                    <button id="idAct_@item.ItemCode" v-on:click="UpdateActive('@item.ItemCode')" style="@Html.Raw(!item.IsActiveEcomerce ? "" : "display:none")" class="btn btn-sm btn-outline-success my-2 my-sm-0">Activar</button>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.IsActiveEcomerce)
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_producto = new Vue({
+            el: "#app_producto",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+            },
+            mounted() {
+                $('.table').DataTable({
+                    "order": []
+                });
+            },
+            methods: {
+                UpdateActive: async function (itemCode) {
+                    var params = new URLSearchParams();
+                    params.append('Active', true);
+                    params.append('ItemCode', '' + itemCode);
+                    axios.post('@Url.Action("DataDesactiveActive","Producto")', params, { headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                        document.getElementById("idAct_" + itemCode).style.display = 'none'
+                        document.getElementById("idDesc_" + itemCode).style.display = 'block'
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    });
+                },
+                UpdateDesactive: async function (itemCode) {
+                    var params = new URLSearchParams();
+                    params.append('Active', false);
+                    params.append('ItemCode', '' + itemCode);
+                    axios.post('@Url.Action("DataDesactiveActive","Producto")', params,{ headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                        document.getElementById("idAct_" + itemCode).style.display = 'block'
+                        document.getElementById("idDesc_" + itemCode).style.display = 'none'
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    })
+                },
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+            }
+        });
+    </script>
+}
