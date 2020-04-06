@@ -18,5 +18,12 @@ namespace EcomDataProccess
                 throw new Ecom_Exception(string.Format("please enter the '{0}'", ParameterName));
             }
         }
+        public static void ValidIntParameter(int Parameter, string ParameterName)
+        {
+            if (Parameter == 0)
+            {
+                throw new Ecom_Exception(string.Format("please enter the '{0}'", ParameterName));
+            }
+        }
     }
 }

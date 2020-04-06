@@ -185,6 +185,11 @@ namespace EcomDataProccess
             string Statement = string.Format("select * from Admin_pedidosInfo where estatus = 'P' and estatusWS != 0 and cardcode = '{0}' order by fecha desc", CardCode_);
             return ReadDatReader(Statement);
         }
+        public List<Ecom_Pedido> GetCotizacionParaEnvio(string CardCode)
+        {
+            string Statement = string.Format("select * from Admin_pedidosInfo where estatus = 'C' and envio = 1 and cardCode = '{0}' order by fecha desc", CardCode);
+            return ReadDatReader(Statement);
+        }
         public List<Ecom_Pedido> GetCotizacion()
         {
             string Statement = string.Format("select * from Admin_pedidosInfo where estatus = 'C' order by fecha desc");
@@ -275,4 +280,4 @@ namespace EcomDataProccess
         }
         #endregion
     }
-    }
+}

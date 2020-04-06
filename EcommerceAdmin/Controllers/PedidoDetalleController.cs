@@ -14,6 +14,17 @@ namespace EcommerceAdmin.Controllers
     {
         private readonly string EcomConnection = ConfigurationManager.AppSettings["Ecommerce_Database"].ToString();
         private readonly string SplitConnection = ConfigurationManager.AppSettings["Splinnet_Database"].ToString();
+
+        private readonly string SMTP_Server = ConfigurationManager.AppSettings["SMTP_Server"].ToString();
+        private readonly string SMTP_Port = ConfigurationManager.AppSettings["SMTP_Port"].ToString();
+        private readonly string SMTP_ssl = ConfigurationManager.AppSettings["SMTP_ssl"].ToString();
+        private readonly string SMTP_account = ConfigurationManager.AppSettings["SMTP_account"].ToString();
+        private readonly string SMTP_user = ConfigurationManager.AppSettings["SMTP_user"].ToString();
+        private readonly string SMTP_pass = ConfigurationManager.AppSettings["SMTP_pass"].ToString();
+        private readonly string SMTP_list_Sistemas = ConfigurationManager.AppSettings["SMTP_list_Sistemas"].ToString();
+        private readonly string ProductionMode = ConfigurationManager.AppSettings["ProductionMode"].ToString();
+
+
         // POST: PedidoDetalle/DataAddCostoEnvio/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -32,7 +43,14 @@ namespace EcommerceAdmin.Controllers
                 bool result = Ecom_PedidoLine_.Add("CostoEnvio", 4);
                 if (result)
                 {
-                    return Ok(ecomData.GetLastMessage(ServerSource.Ecommerce));
+                    ecomData.Ecom_Email_ = new Ecom_Email(SMTP_Server, SMTP_account, Int32.Parse(SMTP_Port), SMTP_user, SMTP_pass, (SMTP_ssl == "true" ? true : false));
+                    Ecom_Pedido Ecom_Pedido_ = (Ecom_Pedido)ecomData.GetObject(ObjectSource.Pedido);
+                    Ecom_Pedido_.GetById(id);
+                    string htmls = string.Format("" +
+                        "<p align='left'>Se ha asignado el costo de envio a tu pedido : <strong></strong>{0}</strong></strong></p>" +
+                        " Para poder adquirir tu pedido ingresa a <a href='https://fibremex.com/store/views/Home/'> fibremex.com </a> en la sección de mis cotizaciones del apartado de <strong>Mi cuenta</strong> ", id);
+                    bool emailStatus = emailStatus = ecomData.Ecom_Email_.SendMailNotification(htmls, Ecom_Pedido_.Ecom_Cliente_.Email, "", SMTP_list_Sistemas);
+                    return Ok(ecomData.GetLastMessage(ServerSource.Ecommerce) + " " + (!emailStatus ? ecomData.Ecom_Email_.GetMessage() : ""));
                 }
                 else
                 {
@@ -52,6 +70,7 @@ namespace EcommerceAdmin.Controllers
             }
         }
         // POST: PedidoDetalle/DataUpdCostoEnvioPrice/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessData(IdAction = 39)]
@@ -88,5 +107,7 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+
+
     }
 }

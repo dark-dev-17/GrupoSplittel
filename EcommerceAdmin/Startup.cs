@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using SmartBreadcrumbs.Attributes;
 namespace EcommerceAdmin
 {
     public class Startup
@@ -45,8 +45,8 @@ namespace EcommerceAdmin
 
             });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddOutputCaching();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +66,7 @@ namespace EcommerceAdmin
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
-            app.UseOutputCaching();
+            //app.UseOutputCaching();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

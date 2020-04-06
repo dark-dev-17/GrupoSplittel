@@ -16,11 +16,21 @@ namespace EcomDataProccess
         ProductoCategoria = 2,
         ProductoSubcategoria = 3,
         Blog = 4,
-        PedidoLine = 5
+        PedidoLine = 5,
+        Pedido = 6,
+        Cliente = 7,
+        Usuario = 8,
+        UsuarioArea = 9,
     }
     public enum FiltroProducto
     {
         Categoria = 0,
         Subcategoria = 1,
+    }
+    public enum EmailList
+    {
+        To = 0,
+        CC = 1,
+        BCC = 2,
     }
 }

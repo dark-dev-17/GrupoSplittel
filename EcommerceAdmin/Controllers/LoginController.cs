@@ -80,7 +80,6 @@ namespace EcommerceAdmin.Controllers
             HttpContext.Session.SetInt32("USR_IdArea", Ecom_Usuario_.IdArea);
             HttpContext.Session.SetString("USR_Sociedad", Ecom_Usuario_.Sociedad);
             HttpContext.Session.SetString("USR_Foto", Ecom_Usuario_.Foto);
-            
         }
     }
 }

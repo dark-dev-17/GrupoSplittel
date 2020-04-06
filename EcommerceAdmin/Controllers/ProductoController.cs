@@ -22,7 +22,6 @@ namespace EcommerceAdmin.Controllers
         private readonly string FTP_Server = ConfigurationManager.AppSettings["FTP_Server"].ToString();
         // GET: Producto
         [AccessView(IdAction = 1)]
-        [OutputCache(Duration = 120, VaryByParam = "none")]
         public async Task<ActionResult> Index()
         {
             Ecom_DBConnection Ecom_DBConnection_ = null;
@@ -36,7 +35,7 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -47,7 +46,6 @@ namespace EcommerceAdmin.Controllers
             }
         }
         [AccessView(IdAction = 1)]
-        [OutputCache(Duration = 120, VaryByParam = "none")]
         public async Task<ActionResult> FijoConfigurable()
         {
             Ecom_DBConnection Ecom_DBConnection_ = null;
@@ -61,7 +59,7 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
-                return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+                return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {

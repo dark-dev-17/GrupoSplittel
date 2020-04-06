@@ -5,6 +5,8 @@
 @{
     int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
     ViewData["Title"] = "Detalle del producto: " + Model.ItemCode;
+
+    string DescripcioProduto = Model.LargeDescription.Replace("\r\n", "").Replace("\n", "").Replace("\r", "");
 }
 <div id="app_productoDetalle">
     <div class="br-section-wrapper">
@@ -19,6 +21,7 @@
                 <tr>
                     <td><strong>Descripcion</strong></td>
                     <td colspan="3">
+                        <textarea style="display:none" class="form-control" id="Pro_largeDescription">@Html.DisplayFor(model => model.LargeDescription)</textarea>
                         @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 4 }))
                         {
                             <div v-if="controls.EditLargeDescription == false">
@@ -281,8 +284,8 @@
                 },
                 item: {
                     Code: "@Model.ItemCode",
-                    largeDescription: '@Html.Raw(Model.LargeDescription.Replace("\n"," "))',
-                    largeDescription2: '@Html.Raw(Model.LargeDescription.Replace("\n"," "))',
+                    largeDescription: "@Html.Raw(DescripcioProduto)",
+                    largeDescription2: "@Html.Raw(DescripcioProduto)",
                     isActiveEcomerce: ("@Model.IsActiveEcomerce" == "True" ? true : false),
                 },
                 images: {

@@ -48,7 +48,7 @@ namespace EcomDataProccess
                 }
                 else
                 {
-                    Ecom_DBConnection_.Message = "Usuario no encontrado";
+                    Ecom_DBConnection_.Message = "Registro no encontrado";
                 }
                 return List;
             }

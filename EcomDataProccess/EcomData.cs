@@ -44,6 +44,18 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.Usuario)
+            {
+                Ecom_Usuario objeto = (Ecom_Usuario)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.UsuarioArea)
+            {
+                Ecom_UsuarioArea objeto = (Ecom_UsuarioArea)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -74,6 +86,22 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.PedidoLine)
             {
                 return new Ecom_PedidoLine(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.Pedido)
+            {
+                return new Ecom_Pedido(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.Cliente)
+            {
+                return new Ecom_Cliente(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.Usuario)
+            {
+                return new Ecom_Usuario(Ecom_DBSplittel);
+            }
+            else if (objectSource == ObjectSource.UsuarioArea)
+            {
+                return new Ecom_UsuarioArea(Ecom_DBSplittel);
             }
             else
             {
@@ -134,6 +162,21 @@ namespace EcomDataProccess
                 return "";
             }
         }
+        public Ecom_DBConnection GetConnection(ServerSource serverSource)
+        {
+            if (serverSource == ServerSource.Ecommerce)
+            {
+                return Ecom_DBEcommerce;
+            }
+            else if (serverSource == ServerSource.Splitnet)
+            {
+                return Ecom_DBSplittel;
+            }
+            else
+            {
+                return null;
+            }
+        }
         #endregion
         #region Constructores
         public EcomData()
@@ -150,6 +193,7 @@ namespace EcomDataProccess
         private string SplitConnection { set; get; }
         private Ecom_DBConnection Ecom_DBEcommerce;
         private Ecom_DBConnection Ecom_DBSplittel;
+        public Ecom_Email Ecom_Email_;
         
         #endregion
     }

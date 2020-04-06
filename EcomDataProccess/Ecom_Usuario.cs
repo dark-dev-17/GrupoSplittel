@@ -7,7 +7,7 @@ namespace EcomDataProccess
     public class Ecom_Usuario
     {
         #region Propiedades
-        public int IdSplinnet { private set; get; }
+        public int IdSplinnet {  set; get; }
         public string Username { private set; get; }
         public string Password { private set; get; }
         public string Nombre { private set; get; }
@@ -124,51 +124,66 @@ namespace EcomDataProccess
         public bool Get(int IdSplinnet_)
         {
             string Statement = string.Format("SELECT ID,username,email,nombre,apaterno,amaterno,id_area,sociedad,foto,password FROM signup where ID = '{0}';", IdSplinnet_);
-            bool result = false;
-            MySqlDataReader Data = null;
             try
             {
-                Ecom_Tools.ValidDBobject(Ecom_DBConnection_);
-                Data = Ecom_DBConnection_.DoQuery(Statement);
-                if (Data.HasRows)
+                List<Ecom_Usuario> List = ReaderData(Statement);
+                if(List.Count > 0)
                 {
-                    while (Data.Read())
-                    {
-                        IdSplinnet = Data.IsDBNull(0) ? 0 : (int)Data.GetUInt32(0);
-                        Username = Data.IsDBNull(1) ? "" : Data.GetString(1);
-                        Correo = Data.IsDBNull(2) ? "" : Data.GetString(2);
-                        Nombre = Data.IsDBNull(3) ? "" : Data.GetString(3);
-                        ApellidoPaterno = Data.IsDBNull(4) ? "" : Data.GetString(4);
-                        Apellidomaterno = Data.IsDBNull(5) ? "" : Data.GetString(5);
-                        IdArea = Data.IsDBNull(6) ? 0 : Data.GetInt32(6);
-                        Sociedad = Data.IsDBNull(7) ? "" : Data.GetString(7);
-                        Foto = Data.IsDBNull(8) ? "" : Data.GetString(8);
-                        Password = Data.IsDBNull(9) ? "" : Data.GetString(9);
-                    }
-                    Data.Close();
-                    result = true;
+                    List.ForEach(item => {
+                        IdSplinnet = item.IdSplinnet;
+                        Username = item.Username;
+                        Correo = item.Correo;
+                        Nombre = item.Nombre;
+                        ApellidoPaterno = item.ApellidoPaterno;
+                        Apellidomaterno = item.Apellidomaterno;
+                        IdArea = item.IdArea;
+                        Sociedad = item.Sociedad;
+                        Foto = item.Foto;
+                        Password = item.Password;
+                    });
+                    return true;
                 }
                 else
                 {
                     Ecom_DBConnection_.Message = "Usuario no encontrado";
+                    return false;
                 }
-                return result;
+                
+                   
             }
             catch (Ecom_Exception ex)
             {
                 throw ex;
             }
-            finally
+        }
+        public List<Ecom_Usuario> GetByArea(int Area)
+        {
+            string Statement = string.Format("SELECT ID,username,email,nombre,apaterno,amaterno,id_area,sociedad,foto,password FROM signup where id_area = '{0}'",Area);
+            try
             {
-                if (Data != null)
-                {
-                    Data.Close();
-                }
+
+                return ReaderData(Statement);
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
             }
         }
         public List<Ecom_Usuario> Get()
         {
             string Statement = string.Format("SELECT ID,username,email,nombre,apaterno,amaterno,id_area,sociedad,foto,password FROM signup");
+            try
+            {
+               
+                return ReaderData(Statement);
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
+        private List<Ecom_Usuario> ReaderData(string Statement)
+        {
             MySqlDataReader Data = null;
             List<Ecom_Usuario> List = null;
             try
@@ -180,7 +195,8 @@ namespace EcomDataProccess
                 {
                     while (Data.Read())
                     {
-                        List.Add(new Ecom_Usuario {
+                        List.Add(new Ecom_Usuario
+                        {
                             IdSplinnet = Data.IsDBNull(0) ? 0 : (int)Data.GetUInt32(0),
                             Username = Data.IsDBNull(1) ? "" : Data.GetString(1),
                             Correo = Data.IsDBNull(2) ? "" : Data.GetString(2),
@@ -192,7 +208,7 @@ namespace EcomDataProccess
                             Foto = Data.IsDBNull(8) ? "" : Data.GetString(8),
                             Password = Data.IsDBNull(9) ? "" : Data.GetString(9)
                         });
-                        
+
                     }
                     Data.Close();
                 }

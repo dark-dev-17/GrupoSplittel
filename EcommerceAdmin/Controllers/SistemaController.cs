@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using EcomDataProccess;
+using EcommerceAdmin.Models;
 using EcommerceAdmin.Models.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -73,6 +74,36 @@ namespace EcommerceAdmin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessDataSession]
+        public ActionResult DataGetPermiss()
+        {
+            Ecom_DBConnection Ecom_DBConnection_ = null;
+            try
+            {
+                Ecom_DBConnection_ = new Ecom_DBConnection(SplitConnection);
+                Ecom_DBConnection_.OpenConnection();
+                List<Ecom_Modelo> Ecom_Modelo_ = new Ecom_Modelo(Ecom_DBConnection_).Get();
+                Ecom_Modelo_.ForEach(p1 => {
+                    p1.IdUser = 0;
+                    p1.Acciones.ForEach(a => a.isAccess = false);
+                });
+                Ecom_DBConnection_.CloseConnection();
+                return Ok(Ecom_Modelo_);
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (Ecom_DBConnection_ != null)
+                {
+                    Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessDataSession]
         public ActionResult DataChangePermissByUser([FromBody]List<Ecom_Modelo> Permissions)
         {
             Ecom_DBConnection Ecom_DBConnection_ = null;
@@ -96,6 +127,42 @@ namespace EcommerceAdmin.Controllers
                 if (Ecom_DBConnection_ != null)
                 {
                     Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessDataSession]
+        public ActionResult DataAccessByArea([FromBody]AccionesArea AccionesArea_)
+        {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
+            try
+            {
+                if(AccionesArea_ == null)
+                {
+                    throw new Ecom_Exception("Por favor selecciona una area");
+                }
+                ecomData.Connect(ServerSource.Splitnet);
+                Ecom_Tools.ValidIntParameter(AccionesArea_.IdArea, "Area");
+                Ecom_Usuario Ecom_Usuario_ = (Ecom_Usuario)ecomData.GetObject(ObjectSource.Usuario);
+                Ecom_Usuario_.GetByArea(AccionesArea_.IdArea).ForEach(usuario => {
+                    AccionesArea_.Permissions.ForEach(m => m.Acciones.ForEach(a => {
+                        a.SetConnectionMYsql(ecomData.GetConnection(ServerSource.Splitnet));
+                        a.ChangePermissToUser(usuario.IdSplinnet, a.Id, (a.isAccess ? 1 : 0));
+                    }));
+                });
+                
+                return Ok("Cambios guardados");
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Splitnet);
                 }
             }
         }
