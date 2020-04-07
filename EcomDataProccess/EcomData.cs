@@ -6,7 +6,77 @@ namespace EcomDataProccess
 {
     public class EcomData
     {
+        #region Propiedades
+        private string EcomConnection { set; get; }
+        private string SplitConnection { set; get; }
+        private Ecom_DBConnection Ecom_DBEcommerce;
+        private Ecom_DBConnection Ecom_DBSplittel;
+        public Ecom_Email Ecom_Email_;
+        private Ecom_Notificacion Ecom_Notificacion_;
+        #endregion
+
+        #region Constructores
+        public EcomData()
+        {
+        }
+        public EcomData(string EcomConnection, string SplitConnection)
+        {
+            this.EcomConnection = EcomConnection;
+            this.SplitConnection = SplitConnection;
+        }
+        #endregion
+
         #region Metodos
+        public List<Ecom_Notificacion> getNotifications(int USR_IdSplinnet, int USR_IdArea)
+        {
+            Connect(ServerSource.Ecommerce);
+            Ecom_Notificacion_ = new Ecom_Notificacion(Ecom_DBEcommerce);
+            Connect(ServerSource.Splitnet);
+            bool AccesMaster = validPermissAction(USR_IdSplinnet, 40);
+            bool AccesArea = validPermissAction(USR_IdSplinnet, 41);
+            bool AccesUser = validPermissAction(USR_IdSplinnet, 42);
+            List<Ecom_Notificacion> Notificaciones =  new List<Ecom_Notificacion>();
+            if (AccesMaster)
+            {
+                Notificaciones = Ecom_Notificacion_.GetTipo("info");
+            }
+            if (AccesArea)
+            {
+                Notificaciones = Ecom_Notificacion_.GetArea(USR_IdArea);
+            }
+            if (AccesUser)
+            {
+                Notificaciones = Ecom_Notificacion_.GetUsuario(USR_IdSplinnet);
+            }
+            
+            if (Notificaciones.Count > 0)
+            {
+                
+                
+                Notificaciones.ForEach(not => {
+                    EcomDataProccess.Ecom_Usuario Ecom_Usuario = (EcomDataProccess.Ecom_Usuario)GetObject(EcomDataProccess.ObjectSource.Usuario);
+                    Ecom_Usuario.Get(not.Usuario);
+                    not.Ecom_Usuario_ = Ecom_Usuario;
+                });
+                
+            }
+            Disconect(ServerSource.Ecommerce);
+            Disconect(ServerSource.Splitnet);
+            return Notificaciones;
+        }
+        public void SaveNotification(int Usuario,int Area, string Tipo, string Descripcion, string Controller, string Action, string Parameter, string ExceptionMessage)
+        {
+            Ecom_Notificacion_ = new Ecom_Notificacion(Ecom_DBEcommerce);
+            Ecom_Notificacion_.Usuario = Usuario;
+            Ecom_Notificacion_.Tipo = Tipo;
+            Ecom_Notificacion_.Area = Area;
+            Ecom_Notificacion_.Descripcion = Descripcion;
+            Ecom_Notificacion_.Controller = Controller;
+            Ecom_Notificacion_.Action = Action;
+            Ecom_Notificacion_.Parameter = Parameter;
+            Ecom_Notificacion_.ExceptionMessage = ExceptionMessage;
+            Ecom_Notificacion_.Add();
+        }
         public bool validPermissAction(int USR_IdSplinnet, int action)
         {
             try
@@ -56,6 +126,18 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.Notificacion)
+            {
+                Ecom_Notificacion objeto = (Ecom_Notificacion)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.DireccionEnvio)
+            {
+                Ecom_DireccionEnvio objeto = (Ecom_DireccionEnvio)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -102,6 +184,14 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.UsuarioArea)
             {
                 return new Ecom_UsuarioArea(Ecom_DBSplittel);
+            }
+            else if (objectSource == ObjectSource.Notificacion)
+            {
+                return new Ecom_Notificacion(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.DireccionEnvio)
+            {
+                return new Ecom_DireccionEnvio(Ecom_DBEcommerce);
             }
             else
             {
@@ -178,23 +268,6 @@ namespace EcomDataProccess
             }
         }
         #endregion
-        #region Constructores
-        public EcomData()
-        {
-        }
-        public EcomData(string EcomConnection, string SplitConnection)
-        {
-            this.EcomConnection = EcomConnection;
-            this.SplitConnection = SplitConnection;
-        }
-        #endregion
-        #region Propiedades
-        private string EcomConnection { set; get; }
-        private string SplitConnection { set; get; }
-        private Ecom_DBConnection Ecom_DBEcommerce;
-        private Ecom_DBConnection Ecom_DBSplittel;
-        public Ecom_Email Ecom_Email_;
         
-        #endregion
     }
 }

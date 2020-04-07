@@ -41,6 +41,37 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+        [AccessViewSession]
+        public ActionResult InfoNotification(int id)
+        {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
+            try
+            {
+                ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_Notificacion Ecom_Notificacion_ = (Ecom_Notificacion)ecomData.GetObject(ObjectSource.Notificacion);
+                if (Ecom_Notificacion_.Get(id))
+                {
+                    Ecom_Notificacion_.Update(2);
+                    return RedirectToAction(Ecom_Notificacion_.Action, Ecom_Notificacion_.Controller, new { id = Ecom_Notificacion_.Parameter });
+                }
+                else
+                {
+                    throw new Ecom_Exception("No se contro la notificación");
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                return View("../ErrorPages/Error", new { id = ex.Message });
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                    ecomData.Disconect(ServerSource.Splitnet);
+                }
+            }
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessDataSession]

@@ -1,0 +1,35 @@
+﻿@model SAPDataProcess.SAP_Address
+    <table class="table table-sm table-bordered">
+        <tr>
+            <td><strong>Nombre de la persona de contacto</strong></td>
+            <td colspan="3">@Html.DisplayFor(model => model.ContactPerson.Name) </td>
+        </tr>
+        <tr>
+            <td><strong>Email</strong></td>
+            <td>@Html.DisplayFor(model => model.ContactPerson.Email)</td>
+            <td><strong>Telefono</strong></td>
+            <td>@Html.DisplayFor(model => model.ContactPerson.Telphone)</td>
+        </tr>
+        <tr>
+            <td><strong>Calle</strong></td>
+            <td>@Html.DisplayFor(model => model.Street)</td>
+            <td><strong>No.Casa</strong></td>
+            <td>@Html.DisplayFor(model => model.StreetNo)</td>
+        </tr>
+        <tr>
+            <td><strong>Código Postal</strong></td>
+            <td>@Html.DisplayFor(model => model.ZipCode)</td>
+            <td><strong>Estado</strong></td>
+            <td>@Html.DisplayFor(model => model.State)</td>
+        </tr>
+        <tr>
+            <td><strong>Ciudad</strong></td>
+            <td>@Html.DisplayFor(model => model.City)</td>
+            <td><strong>Delegación</strong></td>
+            <td>@Html.DisplayFor(model => model.County)</td>
+        </tr>
+        @*<tr>
+            <td><strong>@Html.DisplayNameFor(model => model.FederalTaxID)</strong></td>
+            <td>@Html.DisplayFor(model => model.FederalTaxID)</td>
+        </tr>*@
+    </table>

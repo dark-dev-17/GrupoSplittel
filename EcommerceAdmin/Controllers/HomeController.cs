@@ -5,27 +5,32 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EcommerceAdmin.Models;
+using EcommerceAdmin.Models.Filters;
 
 namespace EcommerceAdmin.Controllers
 {
     public class HomeController : Controller
     {
+        [AccessViewSession]
         public IActionResult Index()
         {
             return View();
         }
+        [AccessViewSession]
         public IActionResult General()
         {
             ViewData["Message"] = "Your application description page.";
 
             return View();
         }
+        [AccessViewSession]
         public IActionResult Empleado()
         {
             ViewData["Message"] = "Your contact page.";
 
             return View();
         }
+        [AccessViewSession]
         public IActionResult GetConfiguracion()
         {
             List<EcomDataProccess.Ecom_ProducProp> Caractersticas = new List<EcomDataProccess.Ecom_ProducProp>();

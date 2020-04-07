@@ -13,7 +13,9 @@ namespace EcommerceAdmin.Controllers
 {
     public class LoginController : Controller
     {
-        private string EcomConnection = ConfigurationManager.AppSettings["Splinnet_Database"].ToString();
+        private readonly string EcomConnection = ConfigurationManager.AppSettings["Ecommerce_Database"].ToString();
+        private readonly string SplitConnection = ConfigurationManager.AppSettings["Splinnet_Database"].ToString();
+        private readonly string SAPConnection = ConfigurationManager.AppSettings["SAP_Database"].ToString();
         public IActionResult Index()
         {
             return View();
@@ -22,19 +24,20 @@ namespace EcommerceAdmin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DataDoLogin(string Username, string Password)
         {
-            Ecom_DBConnection Ecom_DBConnection_ = null;
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
             try
             {
-                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
-                Ecom_DBConnection_.OpenConnection();
-                Ecom_Usuario Ecom_Usuario_ = new Ecom_Usuario(Ecom_DBConnection_);
+                ecomData.Connect(ServerSource.Ecommerce);
+                ecomData.Connect(ServerSource.Splitnet);
+                Ecom_Usuario Ecom_Usuario_ = (Ecom_Usuario)ecomData.GetObject(ObjectSource.Usuario);
                 bool Result = Ecom_Usuario_.ValidLogin(Username, Password);
                 if (Result)
                 {
                     StartSessions(Ecom_Usuario_);
-                    bool General = Ecom_Usuario_.AccessToAction(Ecom_Usuario_.IdSplinnet, 19);
-                    bool Empleado = Ecom_Usuario_.AccessToAction(Ecom_Usuario_.IdSplinnet, 18);
-                    if(General && !Empleado)
+                    bool General = ecomData.validPermissAction(Ecom_Usuario_.IdSplinnet, 19);
+                    bool Empleado = ecomData.validPermissAction(Ecom_Usuario_.IdSplinnet, 18);
+                    ecomData.SaveNotification(Ecom_Usuario_.IdSplinnet, Ecom_Usuario_.IdArea, "success", "Ha iniciado sesión", "", "", "", "");
+                    if (General && !Empleado)
                     {
                         return Ok("../Home/General");
                     }
@@ -46,22 +49,22 @@ namespace EcommerceAdmin.Controllers
                     {
                         return Ok("../Home/");
                     }
-                    
                 }
                 else
                 {
                     return BadRequest("Usuario o contraseña incorrectas");
                 }
             }
-            catch (EcomDataProccess.Ecom_Exception ex)
+            catch (Ecom_Exception ex)
             {
                 return BadRequest(ex.Message);
             }
             finally
             {
-                if (Ecom_DBConnection_ != null)
+                if (ecomData != null)
                 {
-                    Ecom_DBConnection_.CloseConnection();
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                    ecomData.Disconect(ServerSource.Splitnet);
                 }
             }
         }

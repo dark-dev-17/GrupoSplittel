@@ -50,15 +50,21 @@ namespace EcommerceAdmin.Controllers
                         "<p align='left'>Se ha asignado el costo de envio a tu pedido : <strong></strong>{0}</strong></strong></p>" +
                         " Para poder adquirir tu pedido ingresa a <a href='https://fibremex.com/store/views/Home/'> fibremex.com </a> en la sección de mis cotizaciones del apartado de <strong>Mi cuenta</strong> ", id);
                     bool emailStatus = emailStatus = ecomData.Ecom_Email_.SendMailNotification(htmls, Ecom_Pedido_.Ecom_Cliente_.Email, "", SMTP_list_Sistemas);
-                    return Ok(ecomData.GetLastMessage(ServerSource.Ecommerce) + " " + (!emailStatus ? ecomData.Ecom_Email_.GetMessage() : ""));
+
+                    string Respuesta = ecomData.GetLastMessage(ServerSource.Ecommerce);
+
+                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", string.Format("Ha definido costos de envio de la orden: {0}", id), "Pedido", "Detalle", id + "", "");
+
+                    return Ok(Respuesta + " " + (!emailStatus ? ecomData.Ecom_Email_.GetMessage() : ""));
                 }
                 else
                 {
-                    return BadRequest(ecomData.GetLastMessage(ServerSource.Ecommerce));
+                    throw new Ecom_Exception(ecomData.GetLastMessage(ServerSource.Ecommerce));
                 }
             }
             catch (Ecom_Exception ex)
             {
+                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
                 return BadRequest(ex.Message);
             }
             finally
@@ -88,15 +94,18 @@ namespace EcommerceAdmin.Controllers
                 bool result = Ecom_PedidoLine_.Add("CostoEnvio", 5);
                 if (result)
                 {
-                    return Ok(ecomData.GetLastMessage(ServerSource.Ecommerce));
+                    string Respuesta = ecomData.GetLastMessage(ServerSource.Ecommerce);
+                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", string.Format("Ha actualizado costos de envio de la orden: {0}",id), "Pedido", "Detalle", id + "", "");
+                    return Ok(Respuesta);
                 }
                 else
                 {
-                    return BadRequest(ecomData.GetLastMessage(ServerSource.Ecommerce));
+                    throw new Ecom_Exception(ecomData.GetLastMessage(ServerSource.Ecommerce));
                 }
             }
             catch (Ecom_Exception ex)
             {
+                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
                 return BadRequest(ex.Message);
             }
             finally

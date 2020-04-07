@@ -6,9 +6,11 @@
     int USR_IdSplinnet = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
     int USR_IdArea = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdArea");
     List<EcomDataProccess.Ecom_Pedido> ListEnvioCotizaciones = new List<EcomDataProccess.Ecom_Pedido>();
+    List<EcomDataProccess.Ecom_Notificacion> Notificaciones = new List<EcomDataProccess.Ecom_Notificacion>();
+    EcomDataProccess.EcomData EcomData_ = new EcomDataProccess.EcomData(System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Database"].ToString(),System.Configuration.ConfigurationManager.AppSettings["Splinnet_Database"].ToString());
+
     if(USR_IdArea == 3)
     {
-        EcomDataProccess.EcomData EcomData_ = new EcomDataProccess.EcomData(System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Database"].ToString(),System.Configuration.ConfigurationManager.AppSettings["Splinnet_Database"].ToString());
         EcomData_.Connect(EcomDataProccess.ServerSource.Splitnet);
         EcomDataProccess.Ecom_Usuario Ecom_Usuario = (EcomDataProccess.Ecom_Usuario)EcomData_.GetObject(EcomDataProccess.ObjectSource.Usuario);
         Ecom_Usuario.IdSplinnet = USR_IdSplinnet;
@@ -30,6 +32,8 @@
             Ecom_SAP.CloseConections();
         }
     }
+    EcomData_.Connect(EcomDataProccess.ServerSource.Ecommerce);
+    Notificaciones = EcomData_.getNotifications(USR_IdSplinnet,USR_IdArea);
 }
 <div class="br-header">
     <div class="br-header-left">
@@ -64,6 +68,34 @@
                                     </div>
                                 </div><!-- media -->
                             </a>
+                        }
+                        @foreach (EcomDataProccess.Ecom_Notificacion not in Notificaciones)
+                        {
+                            @if (not.Tipo == "info")
+                            {
+                                <a href="@Url.Action("InfoNotification","Sistema",new {id = not.Id })" title="Ver notificacion:" class="media-list-link @Html.Raw(not.Estatus == "Visto" ? "" : "read")">
+                                    <div class="media pd-x-20 pd-y-15">
+                                        <img src="https://regalosparabebes.com.uy/wp-content/uploads/2018/08/icono-envios-en-el-dia.png" class="wd-40 rounded-circle" alt="">
+                                        <div class="media-body">
+                                            <p class="tx-13 mg-b-0 tx-gray-700"><strong class="tx-medium tx-gray-800">@not.Ecom_Usuario_.Nombre @not.Ecom_Usuario_.ApellidoPaterno</strong> @not.Descripcion</p>
+                                            <span class="tx-12">@not.Creacion</span>
+                                        </div>
+                                    </div><!-- media -->
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="#" title="Ver notificacion:" class="media-list-link @Html.Raw(not.Estatus == "Visto" ? "" : "read")">
+                                    <div class="media pd-x-20 pd-y-15">
+                                        <img src="https://regalosparabebes.com.uy/wp-content/uploads/2018/08/icono-envios-en-el-dia.png" class="wd-40 rounded-circle" alt="">
+                                        <div class="media-body">
+                                            <p class="tx-13 mg-b-0 tx-gray-700"><strong class="tx-medium tx-gray-800">@not.Ecom_Usuario_.Nombre @not.Ecom_Usuario_.ApellidoPaterno</strong> @not.Descripcion</p>
+                                            <span class="tx-12">@not.Creacion</span>
+                                        </div>
+                                    </div><!-- media -->
+                                </a>
+                            }
+
                         }
                         <!-- loop ends here -->
                         <div class="pd-y-10 tx-center bd-t">

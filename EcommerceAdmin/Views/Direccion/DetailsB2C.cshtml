@@ -1,0 +1,37 @@
+﻿@model EcomDataProccess.Ecom_DireccionEnvio
+    <table class="table table-sm table-bordered">
+        <tr>
+            <td><strong>Nombre de la persona de contacto</strong></td>
+            <td colspan="3">@Html.DisplayFor(model => model.Nombre) @Html.DisplayFor(model => model.Apellido)</td>
+        </tr>
+        <tr>
+            <td><strong>@Html.DisplayNameFor(model => model.Celular)</strong></td>
+            <td>@Html.DisplayFor(model => model.Celular)</td>
+            <td><strong>@Html.DisplayNameFor(model => model.Telefono)</strong></td>
+            <td>@Html.DisplayFor(model => model.Telefono)</td>
+        </tr>
+        <tr>
+            <td><strong>@Html.DisplayNameFor(model => model.Calle)</strong></td>
+            <td>@Html.DisplayFor(model => model.Calle)</td>
+            <td><strong>@Html.DisplayNameFor(model => model.NoExterior)</strong></td>
+            <td>@Html.DisplayFor(model => model.NoExterior)</td>
+        </tr>
+        <tr>
+            <td><strong>@Html.DisplayNameFor(model => model.CodigoPostal)</strong></td>
+            <td>@Html.DisplayFor(model => model.CodigoPostal)</td>
+            <td><strong>@Html.DisplayNameFor(model => model.Estado)</strong></td>
+            <td>@Html.DisplayFor(model => model.Estado)</td>
+        </tr>
+        <tr>
+            <td><strong>@Html.DisplayNameFor(model => model.Ciudad)</strong></td>
+            <td>@Html.DisplayFor(model => model.Ciudad)</td>
+            <td><strong>@Html.DisplayNameFor(model => model.Delegacion)</strong></td>
+            <td>@Html.DisplayFor(model => model.Delegacion)</td>
+        </tr>
+        <tr>
+            <td><strong>@Html.DisplayNameFor(model => model.Colonia)</strong></td>
+            <td>@Html.DisplayFor(model => model.Colonia)</td>
+            <td><strong>@Html.DisplayNameFor(model => model.Referencia)</strong></td>
+            <td>@Html.DisplayFor(model => model.Referencia)</td>
+        </tr>
+    </table>

@@ -21,6 +21,9 @@ namespace EcomDataProccess
         Cliente = 7,
         Usuario = 8,
         UsuarioArea = 9,
+        Notificacion = 10,
+        DireccionEnvio = 11,
+        DireccionFacturacion = 12,
     }
     public enum FiltroProducto
     {

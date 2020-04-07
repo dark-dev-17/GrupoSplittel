@@ -33,6 +33,7 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
+                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"),(int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
                 return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
@@ -60,11 +61,12 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return View("../ErrorPages/Error", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
+                    throw new Ecom_Exception(ecomData.GetLastMessage(ServerSource.Ecommerce));
                 }
             }
             catch (Ecom_Exception ex)
             {
+                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
                 return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
@@ -138,6 +140,7 @@ namespace EcommerceAdmin.Controllers
                     }
                     if (result)
                     {
+                        ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha creado un nuevo blog", "Blog", "Detalle", "" + Ecom_Blog_.GetLastId(), "");
                         return RedirectToAction(nameof(Index));
                     }
                     else
@@ -148,6 +151,7 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
+                
                 ModelState.AddModelError(string.Empty, string.Format("{0}", ex.Message));
                 return View(Ecom_Blog_);
             }
@@ -177,11 +181,12 @@ namespace EcommerceAdmin.Controllers
                 }
                 else
                 {
-                    return View("../ErrorPages/Error", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
+                    throw new Ecom_Exception(ecomData.GetLastMessage(ServerSource.Ecommerce));
                 }
             }
             catch (Ecom_Exception ex)
             {
+                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
                 return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
@@ -224,6 +229,7 @@ namespace EcommerceAdmin.Controllers
                     }
                     if (result)
                     {
+                        ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha editado el blog " + Ecom_Blog_.Title.Substring(0,15), "Blog", "Detalle", "" + Ecom_Blog_.Id, "");
                         return RedirectToAction(nameof(Index));
                     }
                     else
@@ -234,6 +240,7 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
+                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
                 ModelState.AddModelError(string.Empty, string.Format("{0}", ex.Message));
                 return View(Ecom_Blog_);
             }
@@ -249,64 +256,115 @@ namespace EcommerceAdmin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AccessView(IdAction = 37)]
+        [AccessData(IdAction = 37)]
         public ActionResult DataDeleteFiles(int id, string NameFile, string TypeFile)
         {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
             try
             {
                 Ecom_Tools.ValidStringParameter(NameFile, "Nombre nuevo del archivo");
                 Ecom_Tools.ValidStringParameter(TypeFile, "Tipo del archivo");
-               
-                // borrar archivo
-                Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
-                string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", NameFile);
-                Ecom_FilesFtp.DeleteFile(PathItem);
-                UpdateImages(id,"", TypeFile);
-                return Ok("Imagen eliminada");
+
+                Ecom_Blog Ecom_Blog_ = (Ecom_Blog)ecomData.GetObject(ObjectSource.Blog);
+                if (Ecom_Blog_.Get(id))
+                {
+                    // borrar archivo
+                    Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
+                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", NameFile);
+                    Ecom_FilesFtp.DeleteFile(PathItem);
+                    UpdateImages(id, "", TypeFile);
+                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha eliminado la imagen "+ TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Detalle", "" + Ecom_Blog_.Id, "");
+                    return Ok("Imagen eliminada");
+                }
+                else
+                {
+                    return BadRequest("No existe el blog seleccionado");
+                }
             }
             catch (Ecom_Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
+            }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AccessDataSession]
+        [AccessData(IdAction = 37)]
         public ActionResult DataUploadFiles(IFormFile FormFile, int id, string TypeFile)
         {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
             try
             {
-                Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
-                var Filename = FormFile.FileName;
-                string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/*.jpg");
-                string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/blog/", Ecommerce_Domain);
-                
-                PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", Filename);
-                Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
-                UpdateImages(id, Filename, TypeFile);
-                return Ok("Imagen  cargada");
+                Ecom_Blog Ecom_Blog_ = (Ecom_Blog)ecomData.GetObject(ObjectSource.Blog);
+                if (Ecom_Blog_.Get(id))
+                {
+                    Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
+                    var Filename = FormFile.FileName;
+                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/*.jpg");
+                    string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/blog/", Ecommerce_Domain);
+
+                    PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", Filename);
+                    Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
+                    UpdateImages(id, Filename, TypeFile);
+                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha cargado nueva imagen " + TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Detalle", "" + Ecom_Blog_.Id, "");
+                    return Ok("Imagen  cargada");
+                }
+                else
+                {
+                    return BadRequest("No existe el blog seleccionado");
+                }
             }
             catch (Ecom_Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
             }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AccessDataSession]
+        [AccessData(IdAction = 37)]
         public ActionResult DataRenameFiles(string TypeFile, string Filename, int id, string Newname)
         {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
             try
             {
-                Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
-                string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/");
-                Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
-                UpdateImages(id, Newname + ".jpg", TypeFile); ;
-                return Ok("Archivo renombrado");
+                Ecom_Blog Ecom_Blog_ = (Ecom_Blog)ecomData.GetObject(ObjectSource.Blog);
+                if (Ecom_Blog_.Get(id))
+                {
+                    Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
+                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/");
+                    Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
+                    UpdateImages(id, Newname + ".jpg", TypeFile);
+                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha renombrado la imagen " + TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Detalle", "" + Ecom_Blog_.Id, "");
+                    return Ok("Archivo renombrado");
+                }
+                else
+                {
+                    return BadRequest("No existe el blog seleccionado");
+                }
             }
             catch (Ecom_Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
             }
         }
         private void UpdateImages(int id, string NameFile, string TypeFile)

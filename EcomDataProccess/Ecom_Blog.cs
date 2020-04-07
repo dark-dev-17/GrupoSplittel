@@ -126,6 +126,10 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
+        public int GetLastId()
+        {
+            return Ecom_DBConnection_.ExecuteScalarInt("SELECT max(id) FROM menu_blog");
+        }
         public bool Get(int id)
         {
             try

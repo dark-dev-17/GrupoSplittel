@@ -21,202 +21,223 @@
         ViewData["Title"] = "Buscar pedido";
     }
 }
-<div id="app_pedidoDetalle">
-    <div class="row">
-        <div class="col-lg-12">
-            <form asp-action="Detalle" method="get">
-                <div class="d-flex wd-300">
-                    <div class="form-group mg-b-0">
-                        <label>No.Documento Ecommerce</label>
-                        <input type="number" name="id" class="form-control form-control-sm wd-250" placeholder="introduce" required>
-                    </div><!-- form-group -->
-                    <div class="mg-l-10 mg-t-25 pd-t-4">
-                        <button type="submit" class="btn btn-sm btn-info">Buscar</button>
-
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    @if (Model.DocNumEcommerce != 0)
-    {
+    <div id="app_pedidoDetalle">
         <div class="row">
-            <div class="d-flex align-items-center justify-content-center mt-3 col-lg-12">
-                @if (Model.Status == "C")
-                {
-                    @if (Model.DocDate.AddDays(10) >= DateTime.Now)
-                    {
-                        <div role="alert" class="alert alert-bordered alert-success col-12">
-                            Cotización vigente
+            <div class="col-lg-12">
+                <form asp-action="Detalle" method="get">
+                    <div class="d-flex wd-300">
+                        <div class="form-group mg-b-0">
+                            <label>No.Documento Ecommerce</label>
+                            <input type="number" name="id" class="form-control form-control-sm wd-250" placeholder="introduce" required>
+                        </div><!-- form-group -->
+                        <div class="mg-l-10 mg-t-25 pd-t-4">
+                            <button type="submit" class="btn btn-sm btn-info">Buscar</button>
+
                         </div>
-                    }
-                    else
-                    {
-                        <div role="alert" class="alert alert-bordered alert-danger col-12">
-                            Cotización no vigente
-                        </div>
-                    }
-                }
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-2">
-                <div class="card pd-20 pd-xs-30 shadow-base bd-0">
-                    <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Información del documento</h6>
-                    <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">No.Documento Ecommerce</label>
-                    <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.DocNumEcommerce)</p>
-                    <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Tipo de documento</label>
-                    @if (Model.Status == "P")
+
+        @if (Model.DocNumEcommerce != 0)
+        {
+            <div class="row">
+                <div class="d-flex align-items-center justify-content-center mt-3 col-lg-12">
+                    @if (Model.Status == "C")
                     {
-                        <p class="mg-b-5 badge badge-success">Pedido</p>
-                    }
-                    else
-                    {
-                        <p class="mg-b-5 badge badge-danger">Cotización</p>
-                    }
-                    <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Fecha del documento</label>
-                    <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.DocDate)</p>
-                    <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Moneda del documento</label>
-                    <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.DocCur)</p>
-                    <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Tipo de cambio</label>
-                    <p class="tx-info mg-b-5">$@Html.DisplayFor(model => model.DocRate)</p>
-                    <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Sub total</label>
-                    <p class="tx-info mg-b-5">$@Html.DisplayFor(model => model.DocSubTotal)</p>
-                    <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Iva</label>
-                    <p class="tx-info mg-b-5">$@Html.DisplayFor(model => model.DocIva)</p>
-                    <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Total</label>
-                    <p class="tx-info mg-b-5">$@Html.DisplayFor(model => model.DocTotal)</p>
-                    @if (Model.Status == "P")
-                    {
-                        <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Finanzas</h6>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Metodo de pago</label>
-                        <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.PaymentMethod)</p>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Uso de CFDI</label>
-                        <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.CFDIUser)</p>
-                        @if (Model.Ecom_Cliente_.TipoCliente == "B2C")
+                        @if (Model.DocDate.AddDays(10) >= DateTime.Now)
                         {
-                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Requiere factura</label>
-                            <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.RequireInvoice)</p>
+                            <div role="alert" class="alert alert-bordered alert-success col-12">
+                                Cotización vigente
+                            </div>
                         }
-                        <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Logistica</h6>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Dirección de envio</label>
-                        <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="OpenModal('modal_shipto')" title="Ver información de la dirección">@Html.DisplayFor(model => model.ShipTo)</a></p>
-
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Dirección de facturación</label>
-                        <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="OpenModal('modal_BillTo')" title="Ver información de la dirección">@Html.DisplayFor(model => model.BillTo)</a></p>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Referencias de envio</label>
-                        <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.ShipRefences)</p>
-                    }
-                    else
-                    {
-
+                        else
+                        {
+                            <div role="alert" class="alert alert-bordered alert-danger col-12">
+                                Cotización no vigente
+                            </div>
+                        }
                     }
                 </div>
             </div>
-            <div class="col-lg-8">
-                <div class="card pd-20 pd-xs-30 shadow-base bd-0">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Partidas del documento</h6>
-                        </div>
-                        <div class="col-lg-6 text-right">
-                            @if (Model.Status == "C" && Model.DocDate.AddDays(10) >= DateTime.Now)
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="card pd-20 pd-xs-30 shadow-base bd-0">
+                        <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Información del documento</h6>
+                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">No.Documento Ecommerce</label>
+                        <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.DocNumEcommerce)</p>
+                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Tipo de documento</label>
+                        @if (Model.Status == "P")
+                        {
+                            <p class="mg-b-5 badge badge-success">Pedido</p>
+                        }
+                        else
+                        {
+                            <p class="mg-b-5 badge badge-danger">Cotización</p>
+                        }
+                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Fecha del documento</label>
+                        <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.DocDate)</p>
+                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Moneda del documento</label>
+                        <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.DocCur)</p>
+                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Tipo de cambio</label>
+                        <p class="tx-info mg-b-5">$@Html.DisplayFor(model => model.DocRate)</p>
+                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Sub total</label>
+                        <p class="tx-info mg-b-5">$@Html.DisplayFor(model => model.DocSubTotal)</p>
+                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Iva</label>
+                        <p class="tx-info mg-b-5">$@Html.DisplayFor(model => model.DocIva)</p>
+                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Total</label>
+                        <p class="tx-info mg-b-5">$@Html.DisplayFor(model => model.DocTotal)</p>
+                        @if (Model.Status == "P")
+                        {
+                            <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Finanzas</h6>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Metodo de pago</label>
+                            <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.PaymentMethod)</p>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Uso de CFDI</label>
+                            <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.CFDIUser)</p>
+                            @if (Model.Ecom_Cliente_.TipoCliente == "B2C")
                             {
-                                @if (Model.RequireShipCost == 1 && ctrlCosto)
-                                {
-                                    <button type="button" v-on:click="AgregarCostoEnvio" class="btn btn-sm btn-info">Costo envio</button>
-                                }
-                                else if (Model.RequireShipCost == 0 && ctrlCosto)
-                                {
-                                    <button type="button" v-on:click="actualizarCostoEnvio('0','0')" class="btn btn-sm btn-info">Actualizar costo envio</button>
-                                }
+                                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Requiere factura</label>
+                                <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.RequireInvoice)</p>
                             }
+                            <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Logistica</h6>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Dirección de envio</label>
+                            <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="VerDireccionEnvio('@Model.Ecom_Cliente_.TipoCliente','@Model.ShipTo','@Model.Ecom_Cliente_.CardCode')" title="Ver información de la dirección">@Html.DisplayFor(model => model.ShipTo)</a></p>
+
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Dirección de facturación</label>
+                            <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="OpenModal('modal_BillTo')" title="Ver información de la dirección">@Html.DisplayFor(model => model.BillTo)</a></p>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Referencias de envio</label>
+                            <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.ShipRefences)</p>
+                        }
+                        else if (Model.Status == "C" && Model.RequireShipCost >= 0)
+                        {
+                            <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Logistica</h6>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Dirección de envio</label>
+                            <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="VerDireccionEnvio('@Model.Ecom_Cliente_.TipoCliente','@Model.ShipTo','@Model.Ecom_Cliente_.CardCode')" title="Ver información de la dirección">@Html.DisplayFor(model => model.ShipTo)</a></p>
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card pd-20 pd-xs-30 shadow-base bd-0">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Partidas del documento</h6>
+                            </div>
+                            <div class="col-lg-6 text-right">
+                                @if (Model.Status == "C" && Model.DocDate.AddDays(10) >= DateTime.Now)
+                                {
+                                    @if (Model.RequireShipCost == 1 && ctrlCosto)
+                                    {
+                                        <button type="button" v-on:click="AgregarCostoEnvio" class="btn btn-sm btn-info">Costo envio</button>
+                                    }
+                                    else if (Model.RequireShipCost == 0 && ctrlCosto)
+                                    {
+                                        <button type="button" v-on:click="actualizarCostoEnvio('0','0')" class="btn btn-sm btn-info">Actualizar costo envio</button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <table class="table display responsive nowrap" id="DocumentLInesCotizacionBP">
+                            <thead>
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Codigo</th>
+                                    <th>Descripción</th>
+                                    <th>Cantidad</th>
+                                    <th>Sub Total</th>
+                                    <th>Total + iva</th>
+                                    <th>Descuento</th>
+                                    <th>Moneda</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Ecom_PedidoLines_)
+                                {
+                                    <tr>
+                                        <td><img style="width: 100px;" src="@Html.DisplayFor(modelItem => item.ImageLink)" alt="imagen" /></td>
+                                        <td class="align-middle">@Html.DisplayFor(modelItem => item.ItemCode)</td>
+                                        <td class="align-middle">@Html.DisplayFor(modelItem => item.Dscription)</td>
+                                        <td class="align-middle">
+                                            @{
+                                                if (item.Quantity > 0)
+                                                {
+                                                    <p class="mg-b-5 badge badge-success">@Html.DisplayFor(modelItem => item.Quantity)</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="mg-b-5 badge badge-danger">Eliminado</p>
+                                                }
+                                            }
+                                        </td>
+                                        <td class="align-middle">$@Html.DisplayFor(modelItem => item.LineSubTotal)</td>
+                                        <td class="align-middle">$@Html.DisplayFor(modelItem => item.LineTotal)</td>
+                                        <td class="align-middle">$@Html.DisplayFor(modelItem => item.PorcentDiscount)</td>
+                                        <td class="align-middle">@Html.DisplayFor(modelItem => item.Currency)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="card pd-20 pd-xs-30 shadow-base bd-0">
+                        <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Información del cliente</h6>
+                        @if (Model.Id_cliente != 0)
+                        {
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Cliente</label>
+                            <p class="tx-info mg-b-5"> @Model.Ecom_Cliente_.Nombre @Model.Ecom_Cliente_.Apellidos</p>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Telefono</label>
+                            <p class="tx-info mg-b-5">@Model.Ecom_Cliente_.Telefono</p>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Correo</label>
+                            <p class="tx-info mg-b-5">@Model.Ecom_Cliente_.Email</p>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Tipo de cliente</label>
+                            <p class="tx-info mg-b-5">@Model.Ecom_Cliente_.TipoCliente</p>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Codigo SAP</label>
+                            <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="verCliente(Cliente.data.objeto.cardCode)" title="Ver información del cliente">@Model.Ecom_Cliente_.CardCode</a></p>
+
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Sociedad</label>
+                            <p class="tx-info mg-b-5">@Model.Ecom_Cliente_.Sociedad</p>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning" role="alert">
+                                Esta cotización ha sido generada por un usuario sin sesión activa
+                            </div>
+                        }
+                        @if (Model.StatusProcessWS == 0)
+                        {
+                            <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Información de servicio</h6>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Cotizacion SAP</label>
+                            <p class="tx-info mg-b-5">@Model.DocEntry</p>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Estatus</label>
+                            <p class="mg-b-5 badge badge-info">@Model.GetStatusDescription()</p>
+                            <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Número de guia</label>
+                            <p class="tx-info mg-b-5">@Model.TrackNo</p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div id="modal_DireccionEnvio" class="modal fade">
+                <div class="modal-dialog modal-lg" style="width: 80%; max-width:80%;" role="document">
+                    <div class="modal-content tx-size-sm">
+                        <div class="modal-header pd-x-20">
+                            <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Dirección de envio</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="CloseModal()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body pd-20" id="modal_DireccionEnvio_body">
+                            
+                        </div><!-- modal-body -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal" v-on:click="CloseModal()">Close</button>
                         </div>
                     </div>
-                    <table class="table display responsive nowrap" id="DocumentLInesCotizacionBP">
-                        <thead>
-                            <tr>
-                                <th>Imagen</th>
-                                <th>Codigo</th>
-                                <th>Descripción</th>
-                                <th>Cantidad</th>
-                                <th>Sub Total</th>
-                                <th>Total + iva</th>
-                                <th>Descuento</th>
-                                <th>Moneda</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Ecom_PedidoLines_)
-                            {
-                                <tr>
-                                    <td><img style="width: 100px;" src="@Html.DisplayFor(modelItem => item.ImageLink)" alt="imagen" /></td>
-                                    <td class="align-middle">@Html.DisplayFor(modelItem => item.ItemCode)</td>
-                                    <td class="align-middle">@Html.DisplayFor(modelItem => item.Dscription)</td>
-                                    <td class="align-middle">
-                                        @{
-                                            if (item.Quantity > 0)
-                                            {
-                                                <p class="mg-b-5 badge badge-success">@Html.DisplayFor(modelItem => item.Quantity)</p>
-                                            }
-                                            else
-                                            {
-                                                <p class="mg-b-5 badge badge-danger">Eliminado</p>
-                                            }
-                                        }
-                                    </td>
-                                    <td class="align-middle">$@Html.DisplayFor(modelItem => item.LineSubTotal)</td>
-                                    <td class="align-middle">$@Html.DisplayFor(modelItem => item.LineTotal)</td>
-                                    <td class="align-middle">$@Html.DisplayFor(modelItem => item.PorcentDiscount)</td>
-                                    <td class="align-middle">@Html.DisplayFor(modelItem => item.Currency)</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="card pd-20 pd-xs-30 shadow-base bd-0">
-                    <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Información del cliente</h6>
-                    @if (Model.Id_cliente != 0)
-                    {
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Cliente</label>
-                        <p class="tx-info mg-b-5"> @Model.Ecom_Cliente_.Nombre @Model.Ecom_Cliente_.Apellidos</p>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Telefono</label>
-                        <p class="tx-info mg-b-5">@Model.Ecom_Cliente_.Telefono</p>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Correo</label>
-                        <p class="tx-info mg-b-5">@Model.Ecom_Cliente_.Email</p>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Tipo de cliente</label>
-                        <p class="tx-info mg-b-5">@Model.Ecom_Cliente_.TipoCliente</p>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Codigo SAP</label>
-                        <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="verCliente(Cliente.data.objeto.cardCode)" title="Ver información del cliente">@Model.Ecom_Cliente_.CardCode</a></p>
+                </div><!-- modal-dialog -->
+            </div><!-- modal -->
+        }
 
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Sociedad</label>
-                        <p class="tx-info mg-b-5">@Model.Ecom_Cliente_.Sociedad</p>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning" role="alert">
-                            Esta cotización ha sido generada por un usuario sin sesión activa
-                        </div>
-                    }
-                    @if (Model.StatusProcessWS == 0)
-                    {
-                        <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-10">Información de servicio</h6>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Cotizacion SAP</label>
-                        <p class="tx-info mg-b-5">@Model.DocEntry</p>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Estatus</label>
-                        <p class="mg-b-5 badge badge-info">@Model.GetStatusDescription()</p>
-                        <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Número de guia</label>
-                        <p class="tx-info mg-b-5">@Model.TrackNo</p>
-                    }
-                </div>
-            </div>
-        </div>
-    }
-
-</div>
+    </div>
 @section Scripts {
     <script>
         var app_pedidoDetalle = new Vue({
@@ -228,6 +249,29 @@
             },
             mounted() { },
             methods: {
+                VerDireccionEnvio: async function (tipoCliente,id, cardCode) {
+                    if (tipoCliente == 'B2C') {
+                        $("#modal_DireccionEnvio").modal("show");
+                        var params = new URLSearchParams();
+                            params.append('id', id);
+                        return axios.post('@Url.Action("DetailsEnvioB2C","Direccion")', params, null).then(response => {
+                            document.getElementById("modal_DireccionEnvio_body").innerHTML = response.data
+                        }).catch(error => {
+                            this.ShowMessageErrorShort(error.response.data,'error')
+                        })
+                    }
+                    if (tipoCliente == 'B2B') {
+                        $("#modal_DireccionEnvio").modal("show");
+                        var params = new URLSearchParams();
+                            params.append('id', id);
+                            params.append('CardCode', cardCode);
+                        return axios.post('@Url.Action("DetailsEnvioB2B","Direccion")', params, null).then(response => {
+                            document.getElementById("modal_DireccionEnvio_body").innerHTML = response.data
+                        }).catch(error => {
+                            this.ShowMessageErrorShort(error.response.data,'error')
+                        })
+                    }
+                },
                 AgregarCostoEnvio: async function () {
                     Swal.mixin({
                         input: 'number',
