@@ -12,7 +12,7 @@
         <partial name="_Styles" />
     </environment>
 </head>
-<body>
+<body class = "@Html.Raw((this.ViewContext.RouteData.Values["controller"].ToString() == "FichaTecnica" ? "" : ""))">
     <div id="PageMain">
         <div v-if="loadingPageMain == true" id="preloader">
             <div class="container h-100">
@@ -48,9 +48,12 @@
                     <partial name="_BreadCrums" />
                 </nav>
             </div>
-            <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
-                <h4 class="tx-gray-800 mg-b-5">@ViewData["Title"]</h4>
-            </div>
+            @if (controllerName != "FichaTecnica")
+            {
+                <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+                    <h4 class="tx-gray-800 mg-b-5">@ViewData["Title"]</h4>
+                </div>
+            }
             <div class="br-pagebody pd-x-20 pd-sm-x-30 pd-b-20">
                 <div class="row">
                     <div class="col-12">

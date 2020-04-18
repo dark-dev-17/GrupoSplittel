@@ -1,0 +1,259 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_Archivos>
+@{
+    ViewData["Title"] = "Ficha técnica";
+    List<EcomDataProccess.Ecom_Archivos> Listfolders = Model.Where(item => item.IsDirectory == true).ToList().OrderBy(item => item.Name).ToList();
+    List<EcomDataProccess.Ecom_Archivos> ListFiles = Model.Where(item => item.IsDirectory == false).ToList().OrderBy(item => item.Name).ToList();
+    string [] Rute =  @ViewData["Folder"].ToString().Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+}
+    <div id="app_fichatecnica">
+        <nav class="navbar navbar-light bg-light justify-content-between">
+            @*<a class="navbar-brand">@Html.ActionLink("Agregar", "Create", "Blog", null, new { @class = "btn btn-sm btn-secondary" })</a>*@
+           @Rute[Rute.Length-1]
+            <button class="btn btn-sm btn-secondary" v-on:click="UploadFicha()">Agregar PDF</button>
+        </nav>
+        <div class="br-section-wrapper">
+            <div class="table-wrapper">
+                <table class="table display responsive nowrap " id="table_app_blog" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="wd-5p">
+                                <label class="ckbox mg-b-0">
+                                    <input type="checkbox"><span></span>
+                                </label>
+                            </th>
+                            <th class="tx-10-force tx-mont tx-medium">Name</th>
+                            <th class="tx-10-force tx-mont tx-medium hidden-xs-down">DB</th>
+                            <th class="wd-5p"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Listfolders)
+                        {
+                            <tr>
+                                <td class="valign-middle">
+                                    <label class="ckbox mg-b-0">
+                                        <input type="checkbox"><span></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <i class="icon ion-ios-folder-outline tx-24 tx-warning lh-0 valign-middle"></i>
+                                    <span class="pd-l-5"> <a href="./List?Folder=@item.Path">@item.Name</a> </span>
+                                </td>
+                                <td class="hidden-xs-down">
+                                    @{
+                                        EcomDataProccess.Ecom_ProductoFichaTecnica obj = (EcomDataProccess.Ecom_ProductoFichaTecnica)item.Objecto;
+                                        if (obj != null)
+                                        {
+                                            <span>Ok</span>
+                                        }
+                                        else
+                                        {
+                                            <span>---</span>
+                                        }
+                                    }
+                                </td>
+                                <td class="dropdown">
+                                    <a href="#" data-toggle="dropdown" class="btn pd-y-3 tx-gray-500 hover-info"><i class="icon ion-more"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right pd-10">
+                                        <nav class="nav nav-style-1 flex-column">
+                                            <a href="" class="nav-link">Renombrar</a>
+                                        </nav>
+                                    </div><!-- dropdown-menu -->
+                                </td>
+                            </tr>
+                        }
+                        @foreach (var item in ListFiles)
+                        {
+                            <tr>
+                                <td class="valign-middle">
+                                    <label class="ckbox mg-b-0">
+                                        <input type="checkbox"><span></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <i class="fa fa-file-pdf-o tx-22 tx-danger lh-0 valign-middle"></i>
+                                    <span class="pd-l-5"> <a href="@Html.Raw(string.Format("{0}/{1}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],item.Path.Replace("public_html/","")))" target="_blank">@item.Name</a> </span>
+                                </td>
+                                <td class="hidden-xs-down">
+                                    @{
+                                        EcomDataProccess.Ecom_ProductoFichaTecnica obj = (EcomDataProccess.Ecom_ProductoFichaTecnica)item.Objecto;
+                                        if (obj != null)
+                                        {
+                                            <span>@obj.Codigo</span>
+                                        }
+                                        else
+                                        {
+                                            <span>---</span>
+                                        }
+                                    }
+                                </td>
+                                <td class="dropdown">
+                                    <a href="#" data-toggle="dropdown" class="btn pd-y-3 tx-gray-500 hover-info"><i class="icon ion-more"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right pd-10">
+                                        <nav class="nav nav-style-1 flex-column">
+                                            <a href="#" v-on:click="RenamePDFFile('@item.Name')" class="nav-link">Renombrar</a>
+                                            <a href="#" v-on:click="remplazarPDf('@item.Name')" class="nav-link">Cambiar pdf</a>
+                                            @if(item.Objecto == null)
+                                            {
+                                                <a href="" v-on:click="RegisterPDF('@item.Name')" class="nav-link">Registrar</a>
+                                            }
+                                        </nav>
+                                    </div><!-- dropdown-menu -->
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        @section Scripts {
+            <script>
+                var app_fichatecnica = new Vue({
+                    el: "#app_fichatecnica",
+                    data: {
+                        serverToken: {
+                            'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                        },
+                    },
+                    mounted() {
+                        $('.table').DataTable({
+                            "order": []
+                        });
+                    },
+                    methods: {
+                        RegisterPDF: async function (FileActual) {
+                            Swal.fire({
+                                title: "¿Deseas registrar este archivo?",
+                                text: "",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Si, registralo!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    var params = new URLSearchParams();
+                                    params.append('FileName', FileActual);
+                                    params.append('Folder', '@Html.Raw(ViewData["Folder"].ToString())');
+                                    axios.post('@Url.Action("DataRegisterFiles","FichaTecnica")', params,{ headers: this.serverToken }).then(response => {
+                                         this.ShowMessageErrorShort(response.data,'success')
+                                        this.images.Producto.images.splice(index, 1);
+                                    }).catch(error => {
+                                        this.ShowMessageErrorShort(error.response.data,'error')
+                                    }).finally(() => this.images.Producto.isGetting = false)
+                                }
+                            })
+                        },
+                        remplazarPDf: async function (FileActual) {
+                            const { value: file } = await Swal.fire({
+                                title: 'Select PDF',
+                                input: 'file',
+                                inputAttributes: {
+                                    'accept': 'application/pdf',
+                                    'aria-label': 'Upload your PDF'
+                                }
+                            })
+                            if (file) {
+                                let params = new FormData();
+                                    params.append('FileActual', FileActual);
+                                    params.append('FormFile', file);
+                                    params.append('Folder', '@Html.Raw(ViewData["Folder"].ToString())');
+                                await axios.post('@Url.Action("DataChangeFiles","FichaTecnica")', params, { headers: this.serverToken }).then(response => {
+                                    this.ShowMessageErrorShort(response.data,'success')
+                                    const reader = new FileReader()
+                                    reader.onload = (e) => {
+                                        Swal.fire({
+                                            title: 'Your uploaded PDF',
+                                            imageUrl: e.target.result,
+                                            imageAlt: 'The uploaded PDF'
+                                        })
+                                    }
+                                    reader.readAsDataURL(file)
+                                    location.reload();
+                                }).catch(error => {
+                                    this.ShowMessageErrorShort(error.response.data,'error')
+                                }).finally(() => this.images.Miniatura.isGetting = false)
+                            }
+                        },
+                        RenamePDFFile: async function (nameFile) {
+                            Swal.fire({
+                                title: 'Nuevo nombre del archivo',
+                                input: 'text',
+                                inputAttributes: {
+                                    autocapitalize: 'off'
+                                },
+                                showCancelButton: true,
+                                confirmButtonText: 'Renombrar',
+                                showLoaderOnConfirm: true,
+                                preConfirm: (login) => {
+                                    var params = new URLSearchParams();
+                                    params.append('Newname', '' + login);
+                                    params.append('ActualName', '' + nameFile);
+                                    params.append('Folder', '@Html.Raw(ViewData["Folder"].ToString())');
+                                    return axios.post('@Url.Action("DataRenameFiles","FichaTecnica")', params,{ headers: this.serverToken }).then(response => {
+                                        return response.data;
+                                    }).catch(error => {
+                                        this.ShowMessageErrorShort(error.response.data,'error')
+                                    })
+                                },
+                                allowOutsideClick: () => !Swal.isLoading()
+                            }).then((result) => {
+                                if (result.value) {
+                                    this.ShowMessageErrorShort(result.value, 'success')
+                                    location.reload();
+                                }
+                                console.log(result)
+                            })
+                        },
+                        UploadFicha: async function () {
+                            const { value: file } = await Swal.fire({
+                                title: 'Select PDF',
+                                input: 'file',
+                                inputAttributes: {
+                                    'accept': 'application/pdf',
+                                    'aria-label': 'Upload your PDF'
+                                }
+                            })
+                            if (file) {
+                                let params = new FormData();
+                                    params.append('FormFile', file);
+                                    params.append('Folder', '@Html.Raw(ViewData["Folder"].ToString())');
+                                await axios.post('@Url.Action("DataUploadFiles","FichaTecnica")', params, { headers: this.serverToken }).then(response => {
+                                    this.ShowMessageErrorShort(response.data,'success')
+                                    const reader = new FileReader()
+                                    reader.onload = (e) => {
+                                        Swal.fire({
+                                            title: 'Your uploaded PDF',
+                                            imageUrl: e.target.result,
+                                            imageAlt: 'The uploaded PDF'
+                                        })
+                                    }
+                                    reader.readAsDataURL(file)
+                                    location.reload();
+                                }).catch(error => {
+                                    this.ShowMessageErrorShort(error.response.data,'error')
+                                }).finally(() => this.images.Miniatura.isGetting = false)
+                            }
+                        },
+                        ShowMessageErrorShort: function (text, icon) {
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 4000,
+                                timerProgressBar: true,
+                                onOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+                            Toast.fire({
+                                icon: icon,
+                                title: text
+                            })
+                        },
+                    }
+                });
+            </script>
+        }

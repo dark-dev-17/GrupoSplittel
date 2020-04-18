@@ -30,7 +30,9 @@
                                     <table class="table  table-sm">
                                         <tr>
                                             <td><strong>@Html.DisplayNameFor(model => model.Title)</strong></td>
-                                            <td colspan="1">@Html.DisplayFor(model => model.Title)</td>
+                                            <td colspan="1">
+                                                <a target="_blank" title="ver en E-commerce" href="@Html.Raw(string.Format("{0}/store/views/Blog/detalle.php?id={1}&nom={2}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.Id,Model.Comillas))">@Html.DisplayFor(model => model.Title)</a>
+                                            </td>
                                             <td><strong>@Html.DisplayNameFor(model => model.Titlelargo)</strong></td>
                                             <td colspan="3"> @Html.DisplayFor(model => model.Titlelargo)</td>
                                         </tr>
@@ -52,7 +54,7 @@
                                         <tr>
                                             <td colspan="5">
                                                 <p class="text-justify" id="summernote">
-                                                    <textarea class="form-control" rows="35" disabled>@Model.Contentlarge</textarea>
+                                                    <textarea class="form-control" id="summernote" rows="35" disabled>@Model.Contentlarge</textarea>
                                                 </p>
                                             </td>
                                         </tr>
@@ -103,10 +105,10 @@
                 },
             },
             mounted() {
-                //$('#summernote').summernote({
-                //    height: 550,
-                //})
-                //$('#summernote').summernote('disable');
+                $('#summernote').summernote({
+                height: 650
+            })
+                $('#summernote').summernote('disable');
             },
             methods: {
                 ShowMessageErrorShort: function (text, icon) {

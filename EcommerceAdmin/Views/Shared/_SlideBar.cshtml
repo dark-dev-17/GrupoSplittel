@@ -34,6 +34,7 @@
     }
     EcomData_.Connect(EcomDataProccess.ServerSource.Ecommerce);
     Notificaciones = EcomData_.getNotifications(USR_IdSplinnet,USR_IdArea);
+    Notificaciones = Notificaciones.OrderByDescending(item => item.Creacion).ToList();
 }
 <div class="br-header">
     <div class="br-header-left">
@@ -55,7 +56,7 @@
                         <label class="tx-12 tx-info tx-uppercase tx-semibold tx-spacing-2 mg-b-0">Notifications</label>
                         @*<a href="" class="tx-11">Mark All as Read</a>*@
                     </div><!-- d-flex -->
-                    <div class="media-list">
+                    <div class="media-list" style="overflow: auto;height: 327px;">
                         <!-- loop starts here -->
                         @foreach (EcomDataProccess.Ecom_Pedido doc in ListEnvioCotizaciones)
                         {

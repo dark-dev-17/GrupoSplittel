@@ -41,6 +41,88 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+        [AccessView(IdAction = 44)]
+        public ActionResult ProcesoEmail()
+        {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
+            try
+            {
+                ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_ProcesoEmail Ecom_ProcesoEmail_ = (Ecom_ProcesoEmail)ecomData.GetObject(ObjectSource.ProcesoEmail);
+                return View(Ecom_ProcesoEmail_.Get());
+            }
+            catch (Ecom_Exception ex)
+            {
+                return View("../ErrorPages/Error", new { id = ex.Message });
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
+            }
+        }
+        [AccessView(IdAction = 44)]
+        public ActionResult DataGetProcesoEmail(int id)
+        {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
+            try
+            {
+                ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_ProcesoEmail Ecom_ProcesoEmail_ = (Ecom_ProcesoEmail)ecomData.GetObject(ObjectSource.ProcesoEmail);
+                if (Ecom_ProcesoEmail_.Get(id))
+                {
+                    return Ok(Ecom_ProcesoEmail_);
+                }
+                else
+                {
+                    return BadRequest("Proceso no encontrado");
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
+            }
+        }
+        [AccessView(IdAction = 44)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DataUpdateProcesoEmail([FromBody]Ecom_ProcesoEmail Ecom_ProcesoEmail_)
+        {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
+            try
+            {
+                ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_ProcesoEmail_ = (Ecom_ProcesoEmail)ecomData.SetObjectConnection(Ecom_ProcesoEmail_,ObjectSource.ProcesoEmail);
+                if (Ecom_ProcesoEmail_.Update(1))
+                {
+                    return Ok(ecomData.GetLastMessage(ServerSource.Ecommerce));
+                }
+                else
+                {
+                    return BadRequest("Proceso no encontrado");
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
+            }
+        }
         [AccessViewSession]
         public ActionResult InfoNotification(int id)
         {

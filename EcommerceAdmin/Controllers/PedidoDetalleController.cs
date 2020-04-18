@@ -49,7 +49,12 @@ namespace EcommerceAdmin.Controllers
                     string htmls = string.Format("" +
                         "<p align='left'>Se ha asignado el costo de envio a tu pedido : <strong></strong>{0}</strong></strong></p>" +
                         " Para poder adquirir tu pedido ingresa a <a href='https://fibremex.com/store/views/Home/'> fibremex.com </a> en la sección de mis cotizaciones del apartado de <strong>Mi cuenta</strong> ", id);
-                    bool emailStatus = emailStatus = ecomData.Ecom_Email_.SendMailNotification(htmls, Ecom_Pedido_.Ecom_Cliente_.Email, "", SMTP_list_Sistemas);
+
+                    //verificar que exista una proceso de email
+
+
+
+                    bool emailStatus = emailStatus = ecomData.SendMailNotification(1,htmls, Ecom_Pedido_.Ecom_Cliente_.Email);
 
                     string Respuesta = ecomData.GetLastMessage(ServerSource.Ecommerce);
 
@@ -96,6 +101,7 @@ namespace EcommerceAdmin.Controllers
                 {
                     string Respuesta = ecomData.GetLastMessage(ServerSource.Ecommerce);
                     ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", string.Format("Ha actualizado costos de envio de la orden: {0}",id), "Pedido", "Detalle", id + "", "");
+
                     return Ok(Respuesta);
                 }
                 else

@@ -27,6 +27,22 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public bool SendMailNotification(int idProcess,string BodyHTML, string AddressesoT)
+        {
+            Ecom_ProcesoEmail Ecom_ProcesoEmail_ = new Ecom_ProcesoEmail(Ecom_DBEcommerce);
+            if (idProcess != 0)
+            {
+               
+                if (Ecom_ProcesoEmail_.Get(idProcess))
+                {
+                    if (Ecom_ProcesoEmail_.IsActive)
+                    {
+                        Ecom_ProcesoEmail_.ListaTo.Add(AddressesoT);
+                    }
+                }
+            }
+            return Ecom_Email_.SendMailNotification(BodyHTML, Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaTo), Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaCC), Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaBCC));
+        }
         public List<Ecom_Notificacion> getNotifications(int USR_IdSplinnet, int USR_IdArea)
         {
             Connect(ServerSource.Ecommerce);
@@ -138,6 +154,36 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.DireccionFacturacion)
+            {
+                Ecom_DireccionFacturacion objeto = (Ecom_DireccionFacturacion)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProcesoEmail)
+            {
+                Ecom_ProcesoEmail objeto = (Ecom_ProcesoEmail)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProcesoEmail)
+            {
+                Ecom_ProcesoEmail objeto = (Ecom_ProcesoEmail)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoDescripcion)
+            {
+                Ecom_ProductoDescripcion objeto = (Ecom_ProductoDescripcion)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoFichaTecnica)
+            {
+                Ecom_ProductoFichaTecnica objeto = (Ecom_ProductoFichaTecnica)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -192,6 +238,22 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.DireccionEnvio)
             {
                 return new Ecom_DireccionEnvio(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.DireccionFacturacion)
+            {
+                return new Ecom_DireccionFacturacion(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProcesoEmail)
+            {
+                return new Ecom_ProcesoEmail(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoDescripcion)
+            {
+                return new Ecom_ProductoDescripcion(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoFichaTecnica)
+            {
+                return new Ecom_ProductoFichaTecnica(Ecom_DBEcommerce);
             }
             else
             {

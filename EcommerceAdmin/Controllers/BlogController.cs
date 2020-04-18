@@ -33,7 +33,6 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
-                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"),(int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
                 return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
@@ -66,7 +65,6 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
-                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
                 return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
@@ -140,7 +138,7 @@ namespace EcommerceAdmin.Controllers
                     }
                     if (result)
                     {
-                        ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha creado un nuevo blog", "Blog", "Detalle", "" + Ecom_Blog_.GetLastId(), "");
+                        ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha creado un nuevo blog", "Blog", "Details", "" + Ecom_Blog_.GetLastId(), "");
                         return RedirectToAction(nameof(Index));
                     }
                     else
@@ -186,7 +184,6 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
-                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
                 return View("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
@@ -273,7 +270,7 @@ namespace EcommerceAdmin.Controllers
                     string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", NameFile);
                     Ecom_FilesFtp.DeleteFile(PathItem);
                     UpdateImages(id, "", TypeFile);
-                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha eliminado la imagen "+ TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Detalle", "" + Ecom_Blog_.Id, "");
+                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha eliminado la imagen "+ TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Details", "" + Ecom_Blog_.Id, "");
                     return Ok("Imagen eliminada");
                 }
                 else
@@ -312,7 +309,7 @@ namespace EcommerceAdmin.Controllers
                     PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", Filename);
                     Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
                     UpdateImages(id, Filename, TypeFile);
-                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha cargado nueva imagen " + TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Detalle", "" + Ecom_Blog_.Id, "");
+                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha cargado nueva imagen " + TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Details", "" + Ecom_Blog_.Id, "");
                     return Ok("Imagen  cargada");
                 }
                 else
@@ -347,7 +344,7 @@ namespace EcommerceAdmin.Controllers
                     string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/");
                     Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
                     UpdateImages(id, Newname + ".jpg", TypeFile);
-                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha renombrado la imagen " + TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Detalle", "" + Ecom_Blog_.Id, "");
+                    ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha renombrado la imagen " + TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Details", "" + Ecom_Blog_.Id, "");
                     return Ok("Archivo renombrado");
                 }
                 else

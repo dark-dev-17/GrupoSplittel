@@ -19,7 +19,60 @@ namespace EcommerceAdmin.Controllers
         {
             return View();
         }
-
+        public ActionResult DetailsFacturacionB2B(string id, string CardCode)
+        {
+            SAPDataProcess.SAP_DBConnection SAP_DBConnection_ = null;
+            try
+            {
+                SAP_DBConnection_ = new SAPDataProcess.SAP_DBConnection(SAPConnection);
+                SAP_DBConnection_.OpenConnection();
+                SAPDataProcess.SAP_Address SAP_Document_ = new SAPDataProcess.SAP_Address(SAP_DBConnection_);
+                SAP_Document_.GetByAddressName(CardCode, "B", id);
+                SAP_DBConnection_.CloseDataBaseAccess();
+                return PartialView(SAP_Document_);
+            }
+            catch (Ecom_Exception ex)
+            {
+                return PartialView("../ErrorPages/Error", new { id = ex.Message });
+            }
+            finally
+            {
+                if (SAP_DBConnection_ != null)
+                {
+                    SAP_DBConnection_.CloseDataBaseAccess();
+                }
+            }
+        }
+        public ActionResult DetailsFacturacionB2C(int id)
+        {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
+            try
+            {
+                ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_DireccionFacturacion Ecom_DireccionFacturacion_ = (Ecom_DireccionFacturacion)ecomData.GetObject(ObjectSource.DireccionFacturacion);
+                bool result = Ecom_DireccionFacturacion_.Get(id);
+                if (result)
+                {
+                    return PartialView(Ecom_DireccionFacturacion_);
+                }
+                else
+                {
+                    throw new Ecom_Exception(ecomData.GetLastMessage(ServerSource.Ecommerce));
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
+                return PartialView("../ErrorPages/Error", new { id = ex.Message });
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
+            }
+        }
         // GET: Addresses/Details/5
         public ActionResult DetailsEnvioB2C(int id)
         {
@@ -41,7 +94,7 @@ namespace EcommerceAdmin.Controllers
             catch (Ecom_Exception ex)
             {
                 ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
-                return View("../ErrorPages/Error", new { id = ex.Message });
+                return PartialView("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {
@@ -65,7 +118,7 @@ namespace EcommerceAdmin.Controllers
             }
             catch (Ecom_Exception ex)
             {
-                return View("../ErrorPages/Error", new { id = ex.Message });
+                return PartialView("../ErrorPages/Error", new { id = ex.Message });
             }
             finally
             {

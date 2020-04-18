@@ -78,23 +78,71 @@ namespace EcommerceAdmin.Controllers
             Ecom_DBConnection Ecom_DBConnection_ = null;
             try
             {
-                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
-                Ecom_DBConnection_.OpenConnection();
-                Ecom_Producto Ecom_Producto_ = new Ecom_Producto(Ecom_DBConnection_);
-                bool result = await Ecom_Producto_.Get(id);
-                Ecom_DBConnection_.CloseConnection();
-                if (result)
+                if(string.IsNullOrEmpty(id) || string.IsNullOrWhiteSpace(id))
                 {
+                    Ecom_Producto Ecom_Producto_ = new Ecom_Producto();
                     return View(Ecom_Producto_);
                 }
                 else
                 {
-                    return View("../ErrorPages/Error", new { id = string.Format("El producto con codigo: '{0}' no fue encontrado", id) });
+                    
+                    Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
+                    Ecom_DBConnection_.OpenConnection();
+                    Ecom_Producto Ecom_Producto_ = new Ecom_Producto(Ecom_DBConnection_);
+                    bool result = await Ecom_Producto_.Get(id);
+                    Ecom_DBConnection_.CloseConnection();
+                    if (result)
+                    {
+                        return View(Ecom_Producto_);
+                    }
+                    else
+                    {
+                        return View("../ErrorPages/Error", new { id = string.Format("El producto con codigo: '{0}' no fue encontrado", id) });
+                    }
                 }
+                
             }
             catch (Ecom_Exception ex)
             {
                 return View("../ErrorPages/Error", new { id = ex.Message });
+            }
+            finally
+            {
+                if (Ecom_DBConnection_ != null)
+                {
+                    Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessData(IdAction = 4)]
+        public ActionResult DataChangeDescription(string ItemCode, string IdDescripcionLarga)
+        {
+            Ecom_DBConnection Ecom_DBConnection_ = null;
+            try
+            {
+                Ecom_Tools.ValidStringParameter(ItemCode, "ItemCode");
+                Ecom_Tools.ValidStringParameter(IdDescripcionLarga, "IdDescripcionLarga");
+                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
+                Ecom_DBConnection_.OpenConnection();
+                Ecom_Producto Ecom_Producto_ = new Ecom_Producto(Ecom_DBConnection_);
+                Ecom_Producto_.ItemCode = ItemCode;
+                Ecom_Producto_.IdDescripcionLarga = IdDescripcionLarga;
+                bool result = Ecom_Producto_.Update(1);
+                Ecom_DBConnection_.CloseConnection();
+                if (result)
+                {
+                    return Ok(Ecom_DBConnection_.Message);
+                }
+                else
+                {
+                    return BadRequest(Ecom_DBConnection_.Message);
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
             finally
             {

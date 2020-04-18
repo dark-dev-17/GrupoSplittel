@@ -5,24 +5,29 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EcomDataProccess
 {
-    public class Base
+    public class Ecom_ProductoDescripcion
     {
         #region Propiedades
         [Display(Name = "Id")]
         public int Id { get; set; }
+        [Display(Name = "Codigo")]
+        public string Codigo { get; set; }
+        [Display(Name = "Descripción")]
+        [Required]
+        public string Descripcion { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
 
         #region Constructores
-        ~Base()
+        ~Ecom_ProductoDescripcion()
         {
             
         }
-        public Base()
+        public Ecom_ProductoDescripcion()
         {
 
         }
-        public Base(Ecom_DBConnection Ecom_DBConnection_)
+        public Ecom_ProductoDescripcion(Ecom_DBConnection Ecom_DBConnection_)
         {
             this.Ecom_DBConnection_ = Ecom_DBConnection_;
         }
@@ -33,8 +38,10 @@ namespace EcomDataProccess
         {
             try
             {
-                Ecom_DBConnection_.StartProcedure("Admin_sp");
+                Ecom_DBConnection_.StartProcedure("Admin_ProductoDescripcion");
                 Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
+                Ecom_DBConnection_.AddParameter(Codigo, "Codigo", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Descripcion, "Descripcion", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(1, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
@@ -56,9 +63,11 @@ namespace EcomDataProccess
             try
             {
 
-                Ecom_DBConnection_.StartProcedure("Admin_sp");
+                Ecom_DBConnection_.StartProcedure("Admin_ProductoDescripcion");
                 Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
-                Ecom_DBConnection_.AddParameter(1, "ModeProcedure", "INT");
+                Ecom_DBConnection_.AddParameter(Codigo, "Codigo", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Descripcion, "Descripcion", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(modeUpdate, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
                 {
@@ -74,13 +83,15 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
-        public bool Get(int idDescripcion)
+        public bool Get(string idDescripcion)
         {
-            List<Base> List = ReadDatReader(string.Format("", idDescripcion));
-            if (List.Count > 0)
+            List<Ecom_ProductoDescripcion> List = ReadDatReader(string.Format("SELECT * FROM catalogo_descripciones where id_desc_larga = '{0}'", idDescripcion));
+            if(List.Count > 0)
             {
                 List.ForEach(item => {
-
+                    Id = item.Id;
+                    Codigo = item.Codigo;
+                    Descripcion = item.Descripcion;
                 });
                 return true;
             }
@@ -89,26 +100,28 @@ namespace EcomDataProccess
                 return false;
             }
         }
-        public List<Base> Get()
+        public List<Ecom_ProductoDescripcion> Get()
         {
-            return ReadDatReader(string.Format(""));
+            return ReadDatReader(string.Format("SELECT * FROM catalogo_descripciones;"));
         }
-        private List<Base> ReadDatReader(string Statement)
+        private List<Ecom_ProductoDescripcion> ReadDatReader(string Statement)
         {
-            List<Base> List = null;
+            List<Ecom_ProductoDescripcion> List = null;
             MySqlDataReader Data = null;
             try
             {
                 Ecom_Tools.ValidDBobject(Ecom_DBConnection_);
                 Data = Ecom_DBConnection_.DoQuery(Statement);
-                List = new List<Base>();
+                List = new List<Ecom_ProductoDescripcion>();
                 if (Data.HasRows)
                 {
                     while (Data.Read())
                     {
-                        List.Add(new Base
+                        List.Add(new Ecom_ProductoDescripcion
                         {
-
+                            Id = Data.IsDBNull(0) ? 0 : (int)Data.GetUInt32(0),
+                            Codigo = Data.IsDBNull(1) ? "" : Data.GetString(1),
+                            Descripcion = Data.IsDBNull(2) ? "" : Data.GetString(2),
                         });
 
                     }

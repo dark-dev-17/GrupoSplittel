@@ -1,0 +1,202 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_ProcesoEmail>
+@{
+    ViewData["Title"] = "Procesos de notificación por correo";
+
+}
+<div id="app_procesos">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap table-sm" id="table_cotizacion" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nombre)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsActive)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td>
+                                <a href="#" v-on:click="VerProceso('@item.Id')">Editar</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="modal_Editar" class="modal fade" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg" style="width: 80%; max-width:80%;" role="document">
+            <div class="modal-content tx-size-sm">
+                <div class="modal-header pd-x-20">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Proceso</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="CloseModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-20">
+                    <div class="row" v-if="Proceso != undefined">
+                        <div class="col-6">
+                            <table class="table display responsive nowrap table-sm">
+                                <tr>
+                                    <td><strong>Nombre</strong></td>
+                                    <td><input type="text" name="name" class="form-control form-control-sm" value="" v-model="Proceso.nombre" /></td>
+                                    <td><strong>Activa</strong></td>
+                                    <td><input type="checkbox" name="name" class="form-control form-control-sm" value="" v-model="Proceso.isActive" /></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-4">
+                            <h5>Lista de correos "Para"</h5>
+                            <table class="table display responsive nowrap table-sm" >
+                                <tr>
+                                    <td><input type="email" name="name" value="" id="EmailTo" placeholder="nuevo correo" v-on:keyup.enter="AddEmail('To')" class="form-control form-control-sm" /></td>
+                                    <td></td>
+                                </tr>
+                                <tr v-if="Proceso != undefined && Proceso.listaTo.length" v-for="(item, index) in Proceso.listaTo">
+                                    <td>{{ item }}</td>
+                                    <td><a href="#" v-on:click="DeleteEmail('To',index)">Quitar</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-4">
+                            <h5>Lista de correos "Copia"</h5>
+                            <table class="table display responsive nowrap table-sm" >
+                                <tr>
+                                    <td><input type="email" name="name" value="" id="EmailCC" placeholder="nuevo correo" v-on:keyup.enter="AddEmail('CC')" class="form-control form-control-sm" /></td>
+                                    <td></td>
+                                </tr>
+                                <tr v-if="Proceso != undefined && Proceso.listaCC.length" v-for="(item, index) in Proceso.listaCC">
+                                    <td>{{ item }}</td>
+                                    <td><a href="#" v-on:click="DeleteEmail('CC',index)">Quitar</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-4">
+                            <h5>Lista de correos "Copia oculta"</h5>
+                            <table class="table display responsive nowrap table-sm">
+                                <tr>
+                                    <td><input type="email" name="name" value="" id="EmailBCC" placeholder="nuevo correo" v-on:keyup.enter="AddEmail('BCC')" class="form-control form-control-sm" /></td>
+                                    <td></td>
+                                </tr>
+                                <tr v-if="Proceso != undefined && Proceso.listaBCC.length" v-for="(item, index) in Proceso.listaBCC">
+                                    <td>{{ item }}</td>
+                                    <td><a href="#" v-on:click="DeleteEmail('BCC',index)">Quitar</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary pd-x-20" v-on:click="UpdateProceso()" >Save</button>
+                </div>
+            </div>
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+</div>
+@section Scripts {
+    <script>
+    var app_procesos = new Vue({
+        el: "#app_procesos",
+        data: {
+            serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+            },
+            IsGetting: false,
+            Proceso: {}
+        },
+        mounted() {
+
+        },
+        methods: {
+            UpdateProceso: async function () {
+                await axios.post('@Url.Action("DataUpdateProcesoEmail","Sistema")',this.Proceso, { headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                    }).catch(error => {
+                        console.log(error);
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.IsGetting = false)
+            },
+            AddEmail: function (tipo) {
+                if (tipo == "To") {
+                    this.Proceso.listaTo.push(document.getElementById("EmailTo").value)
+                    document.getElementById("EmailTo").value = ""
+                    document.getElementById("EmailTo").focus();
+                }
+                if (tipo == "CC") {
+                    this.Proceso.listaCC.push(document.getElementById("EmailCC").value)
+                    document.getElementById("EmailCC").value = ""
+                    document.getElementById("EmailCC").focus();
+                }
+                if (tipo == "BCC") {
+                    this.Proceso.listaBCC.push(document.getElementById("EmailBCC").value)
+                    document.getElementById("EmailBCC").value = ""
+                    document.getElementById("EmailBCC").focus();
+                }
+            },
+            DeleteEmail: function (tipo, id) {
+                if (tipo == "To") {
+                    this.Proceso.listaTo.splice(id, 1)
+                }
+                if (tipo == "CC") {
+                    this.Proceso.listaCC.splice(id, 1)
+                }
+                if (tipo == "BCC") {
+                    this.Proceso.listaBCC.splice(id, 1)
+                }
+            },
+            VerProceso: async function (id) {
+                $("#modal_Editar").modal("show");
+                let params = new URLSearchParams();
+                    params.append('id', id);
+                await axios.post('@Url.Action("DataGetProcesoEmail","Sistema")', params, { headers: this.serverToken }).then(response => {
+                    this.Proceso = response.data
+                }).catch(error => {
+                    console.log(error);
+                    this.ShowMessageErrorShort(error.response.data,'error')
+                }).finally(() => this.IsGetting = false)
+            },
+            ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+        }
+    });
+    </script>
+}

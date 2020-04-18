@@ -1,0 +1,31 @@
+﻿@model EcomDataProccess.Ecom_ProductoDescripcion
+@{
+    ViewData["Title"] = "Registrar nuevo";
+}
+<div id="app_blog_details">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="Id" value="0" class="form-control" />
+                            <input type="hidden" asp-for="Codigo" value="0" class="form-control disabled" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Descripcion" class="control-label"></label>
+                            <textarea asp-for="Descripcion" class="form-control"></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                        </div>
+                        <div class="form-group  float-right">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <input type="submit" value="Guardar cambios" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

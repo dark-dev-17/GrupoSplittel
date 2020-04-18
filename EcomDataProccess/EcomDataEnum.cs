@@ -24,6 +24,9 @@ namespace EcomDataProccess
         Notificacion = 10,
         DireccionEnvio = 11,
         DireccionFacturacion = 12,
+        ProcesoEmail = 13,
+        ProductoDescripcion = 14,
+        ProductoFichaTecnica = 15,
     }
     public enum FiltroProducto
     {

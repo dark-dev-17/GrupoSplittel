@@ -72,7 +72,7 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="8">
-                                                    <textarea asp-for="Contentlarge" class="form-control  form-control-sm" rows="25">@Model.Contentlarge</textarea>
+                                                    <textarea asp-for="Contentlarge" id="summernote" class="form-control  form-control-sm" rows="25">@Model.Contentlarge</textarea>
                                                     <span asp-validation-for="Contentlarge" class="text-danger"></span>
                                                 </td>
                                             </tr>
@@ -159,7 +159,9 @@
             newName: ""
         },
         mounted(){
-
+            $('#summernote').summernote({
+                height: 650
+            })
         },
         methods: {
             

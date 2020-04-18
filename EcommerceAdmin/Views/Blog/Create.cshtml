@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "Crear Blog: ";
 }
-<div id="app_blog_details">
+<div id="app_blog_create">
     <div class="br-section-wrapper">
         <div class="table-wrapper">
             <div class="row">
@@ -77,7 +77,7 @@
                                         </tr>
                                         <tr>
                                             <td colspan="8">
-                                                <textarea asp-for="Contentlarge" class="form-control  form-control-sm" rows="25">@Model.Contentlarge</textarea>
+                                                <textarea asp-for="Contentlarge" id="summernote" class="form-control  form-control-sm" rows="25">@Model.Contentlarge</textarea>
                                                 <span asp-validation-for="Contentlarge" class="text-danger"></span>
                                             </td>
                                         </tr>
@@ -95,3 +95,40 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+    var app_blog_create = new Vue({
+        el: "#app_blog_create",
+        data: {
+            serverToken: {
+                'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+            },
+        },
+        mounted(){
+            $('#summernote').summernote({
+                height: 650
+            })
+        },
+        methods: {
+            ShowMessageErrorShort: function (text,icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+        }
+    });
+    </script>
+}

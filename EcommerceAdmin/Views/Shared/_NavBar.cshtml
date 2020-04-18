@@ -24,15 +24,15 @@
         {
             @foreach (var item in menuList)
             {
-                <a href="#" class="br-menu-link @item.ClassActive">
-                    <div class="br-menu-item">
-                        <i class="menu-item-icon @Html.DisplayFor(modelItem => item.Icon)  tx-24"></i>
-                        <span class="menu-item-label">@Html.DisplayFor(modelItem => item.Text)</span>
-                        <i class="menu-item-arrow fa fa-angle-down"></i>
-                    </div>
-                </a>
                 @if (item.Acciones.Count > 0)
                 {
+                    <a href="#" class="br-menu-link @item.ClassActive">
+                        <div class="br-menu-item">
+                            <i class="menu-item-icon @Html.DisplayFor(modelItem => item.Icon)  tx-24"></i>
+                            <span class="menu-item-label">@Html.DisplayFor(modelItem => item.Text)</span>
+                            <i class="menu-item-arrow fa fa-angle-down"></i>
+                        </div>
+                    </a>
                     <ul class="br-menu-sub nav flex-column">
                         @foreach (var item2 in item.Acciones)
                         {

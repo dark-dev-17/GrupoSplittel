@@ -104,7 +104,7 @@
                             <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="VerDireccionEnvio('@Model.Ecom_Cliente_.TipoCliente','@Model.ShipTo','@Model.Ecom_Cliente_.CardCode')" title="Ver información de la dirección">@Html.DisplayFor(model => model.ShipTo)</a></p>
 
                             <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Dirección de facturación</label>
-                            <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="OpenModal('modal_BillTo')" title="Ver información de la dirección">@Html.DisplayFor(model => model.BillTo)</a></p>
+                            <p class=" mg-b-5 "><a href="#" class="btn btn-sm btn-outline-success btn-block" v-on:click="VerDireccionFacturacion('@Model.Ecom_Cliente_.TipoCliente','@Model.BillTo','@Model.Ecom_Cliente_.CardCode')" title="Ver información de la dirección">@Html.DisplayFor(model => model.BillTo)</a></p>
                             <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Referencias de envio</label>
                             <p class="tx-info mg-b-5">@Html.DisplayFor(model => model.ShipRefences)</p>
                         }
@@ -227,7 +227,25 @@
                             </button>
                         </div>
                         <div class="modal-body pd-20" id="modal_DireccionEnvio_body">
-                            
+
+                        </div><!-- modal-body -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal" v-on:click="CloseModal()">Close</button>
+                        </div>
+                    </div>
+                </div><!-- modal-dialog -->
+            </div><!-- modal -->
+            <div id="modal_DireccionFacturacion" class="modal fade">
+                <div class="modal-dialog modal-lg" style="width: 80%; max-width:80%;" role="document">
+                    <div class="modal-content tx-size-sm">
+                        <div class="modal-header pd-x-20">
+                            <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Dirección de Facturación</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="CloseModal()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body pd-20" id="modal_DireccionFacturacion_body">
+
                         </div><!-- modal-body -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal" v-on:click="CloseModal()">Close</button>
@@ -249,23 +267,50 @@
             },
             mounted() { },
             methods: {
+                VerDireccionFacturacion: async function (tipoCliente,id, cardCode) {
+                    if (tipoCliente == 'B2C') {
+                        
+                        var params = new URLSearchParams();
+                            params.append('id', id);
+                        return axios.post('@Url.Action("DetailsFacturacionB2C","Direccion")', params, null).then(response => {
+                            $("#modal_DireccionFacturacion").modal("show");
+                            document.getElementById("modal_DireccionFacturacion_body").innerHTML = response.data
+                        }).catch(error => {
+                            this.ShowMessageErrorShort(error.response.data,'error')
+                        })
+                    }
+                    if (tipoCliente == 'B2B') {
+                        
+                        var params = new URLSearchParams();
+                            params.append('id', id);
+                            params.append('CardCode', cardCode);
+                        return axios.post('@Url.Action("DetailsFacturacionB2B","Direccion")', params, null).then(response => {
+                            $("#modal_DireccionFacturacion").modal("show");
+                            document.getElementById("modal_DireccionFacturacion_body").innerHTML = response.data
+                        }).catch(error => {
+                            this.ShowMessageErrorShort(error.response.data,'error')
+                        })
+                    }
+                },
                 VerDireccionEnvio: async function (tipoCliente,id, cardCode) {
                     if (tipoCliente == 'B2C') {
-                        $("#modal_DireccionEnvio").modal("show");
+                        
                         var params = new URLSearchParams();
                             params.append('id', id);
                         return axios.post('@Url.Action("DetailsEnvioB2C","Direccion")', params, null).then(response => {
+                            $("#modal_DireccionEnvio").modal("show");
                             document.getElementById("modal_DireccionEnvio_body").innerHTML = response.data
                         }).catch(error => {
                             this.ShowMessageErrorShort(error.response.data,'error')
                         })
                     }
                     if (tipoCliente == 'B2B') {
-                        $("#modal_DireccionEnvio").modal("show");
+                       
                         var params = new URLSearchParams();
                             params.append('id', id);
                             params.append('CardCode', cardCode);
                         return axios.post('@Url.Action("DetailsEnvioB2B","Direccion")', params, null).then(response => {
+                             $("#modal_DireccionEnvio").modal("show");
                             document.getElementById("modal_DireccionEnvio_body").innerHTML = response.data
                         }).catch(error => {
                             this.ShowMessageErrorShort(error.response.data,'error')

@@ -1,0 +1,82 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_ProductoDescripcion>
+
+@{
+    ViewData["Title"] = "Descripciones";
+}
+    <div id="app_blog">
+        <nav class="navbar navbar-light bg-light justify-content-between">
+            <a class="navbar-brand">@Html.ActionLink("Agregar", "Create", "DescripcionesProducto", null, new { @class = "btn btn-sm btn-secondary" })</a>
+        </nav>
+        <div class="br-section-wrapper">
+            <div class="table-wrapper">
+                <table class="table display responsive nowrap " id="table_app_blog" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">
+                                @Html.DisplayNameFor(model => model.Codigo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Descripcion)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Codigo)
+                                </td>
+                                <td>
+                                    @Html.Raw( item.Descripcion.Length >=170 ? item.Descripcion.Substring(0, 170) : item.Descripcion)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Codigo }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.Codigo }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.Codigo })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @section Scripts {
+        <script>
+            var app_blog = new Vue({
+                el: "#app_blog",
+                data: {
+                    serverToken: {
+                        'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                    },
+                },
+                mounted() {
+                    $('.table').DataTable({
+                        "order": []
+                    });
+                },
+                methods: {
+                    ShowMessageErrorShort: function (text, icon) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+                        Toast.fire({
+                            icon: icon,
+                            title: text
+                        })
+                    },
+                }
+            });
+        </script>
+    }
+

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace EcomDataProccess
 {
@@ -215,6 +216,140 @@ namespace EcomDataProccess
                 }
             }
         }
+        public List<Ecom_Archivos> ListDirectory(string pattern)
+        {
+                string Uri = "ftp://" + FTP_server + pattern;
+
+                Stream responseStream = null;
+                StreamReader reader = null;
+                FtpWebResponse response = null;
+                //StreamWriter writeStream = null;
+                try
+                {
+                    FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(Uri));
+                    request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+                    request.Credentials = new NetworkCredential(FTP_user, FTP_password);
+                    response = (FtpWebResponse)request.GetResponse();
+                    List<Ecom_Archivos> lista = new List<Ecom_Archivos>();
+                    responseStream = response.GetResponseStream();
+                    reader = new StreamReader(responseStream);
+                    Regex re = new System.Text.RegularExpressions.Regex(@".{10}\s*\d\s.+\s.+\s+\d+\s([a-zA-Z]{3})(\s\d\d|\s\s\d)(\s.{5})\s*(.+)");
+                    string regex =
+                        @"^" +                          //# Start of line
+                        @"(?<dir>[\-ld])" +             //# File size          
+                        @"(?<permission>[\-rwx]{9})" +  //# Whitespace          \n
+                        @"\s+" +                        //# Whitespace          \n
+                        @"(?<filecode>\d+)" +
+                        @"\s+" +                        //# Whitespace          \n
+                        @"(?<owner>\w+)" +
+                        @"\s+" +                        //# Whitespace          \n
+                        @"(?<group>\w+)" +
+                        @"\s+" +                        //# Whitespace          \n
+                        @"(?<size>\d+)" +
+                        @"\s+" +                        //# Whitespace          \n
+                        @"(?<month>\w{3})" +            //# Month (3 letters)   \n
+                        @"\s+" +                        //# Whitespace          \n
+                        @"(?<day>\d{1,2})" +            //# Day (1 or 2 digits) \n
+                        @"\s+" +                        //# Whitespace          \n
+                        @"(?<timeyear>[\d:]{4,5})" +    //# Time or year        \n
+                        @"\s+" +                        //# Whitespace          \n
+                        @"(?<filename>(.*))" +          //# Filename            \n
+                        @"$";                           //# End of line
+                    Match match;
+                    while (reader.Peek() >= 0)
+                    {
+                        var split = new Regex(regex).Match(reader.ReadLine());
+                        string dir = split.Groups["dir"].ToString();
+                        string filename = split.Groups["filename"].ToString();
+                        bool isDirectory = !string.IsNullOrWhiteSpace(dir) && dir.Equals("d", StringComparison.OrdinalIgnoreCase);
+                        if (filename != "." && filename != ".." && filename != ".ftpquota")
+                        {
+                            lista.Add(new Ecom_Archivos
+                            {
+                                Name = filename,
+                                IsDirectory = isDirectory
+                            });
+                        }
+                        
+                    }
+                    return lista;
+                }
+                catch (WebException ex)
+                {
+                    if (ex.Status == WebExceptionStatus.ProtocolError)
+                        throw new Ecom_Exception(string.Format("No se encontraron archivos"));
+                    else
+                        throw new Ecom_Exception(string.Format("WebException FTP - {0}", ex.Message));
+                }
+                catch (Exception ex)
+                {
+                    throw new Ecom_Exception(string.Format("Exception FTP - {0}", ex.Message));
+                }
+                finally
+                {
+                    if (reader != null)
+                    {
+                        reader.Close();
+                    }
+                    if (response != null)
+                    {
+                        response.Close();
+                    }
+                }
+            }
+        public string ListDirectoryDetails(string pattern)
+        {
+            string Uri = "ftp://" + FTP_server + pattern;
+
+            Stream responseStream = null;
+            StreamReader reader = null;
+            FtpWebResponse response = null;
+            //StreamWriter writeStream = null;
+            try
+            {
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(Uri));
+                request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+                request.Credentials = new NetworkCredential(FTP_user, FTP_password);
+                response = (FtpWebResponse)request.GetResponse();
+                responseStream = response.GetResponseStream();
+                reader = new StreamReader(responseStream);
+                
+                return reader.ReadToEnd();
+            }
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.ProtocolError)
+                    throw new Ecom_Exception(string.Format("No se encontraron archivos"));
+                else
+                    throw new Ecom_Exception(string.Format("WebException FTP - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception FTP - {0}", ex.Message));
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                if (response != null)
+                {
+                    response.Close();
+                }
+            }
+        }
         #endregion
+    }
+    public class Ecom_Archivos
+    {
+        public bool IsDirectory { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public string Extension { get; set; }
+        public string PathAux { get; set; }
+        public string PathFolder { get; set; }
+        public object Objecto { get; set; }
+
     }
 }

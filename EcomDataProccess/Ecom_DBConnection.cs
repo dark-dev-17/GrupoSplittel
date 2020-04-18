@@ -223,7 +223,6 @@ namespace EcomDataProccess
                 {
                     Message = string.Format("{0}", (string)cmd.Parameters["@MessageResponse"].Value);
                 }
-
                 return (int)RequestStatus;
             }
             catch (Ecom_Exception ex)
@@ -298,8 +297,40 @@ namespace EcomDataProccess
                     {
                         return Convert.ToInt32(result);
                     }
-                    
                     return (int)result;
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Ecom_Exception - {0}", ex.Message));
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("MySqlException - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
+            }
+        }
+        public string ExecuteScalarString(string stattement)
+        {
+            try
+            {
+                CheckConnection();
+                MySqlCommand cmd = new MySqlCommand(stattement, Connection);
+                object result = (object)cmd.ExecuteScalar();
+                if (result is System.DBNull || result == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    if (result.GetType() == typeof(string))
+                    {
+                        return Convert.ToString(result);
+                    }
+                    return (string)result;
                 }
             }
             catch (Ecom_Exception ex)
@@ -323,7 +354,6 @@ namespace EcomDataProccess
                 MySqlCommand command = new MySqlCommand(stattement, Connection);
                 MySqlDataReader dataReader = command.ExecuteReader();
                 return dataReader;
-
             }
             catch (Ecom_Exception ex)
             {

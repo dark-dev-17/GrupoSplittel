@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace EcomDataProccess
 {
@@ -23,6 +25,51 @@ namespace EcomDataProccess
             if (Parameter == 0)
             {
                 throw new Ecom_Exception(string.Format("please enter the '{0}'", ParameterName));
+            }
+        }
+        public static List<string> ProcessEmailList(string adress)
+        {
+            List<string> lista = new List<string>();
+            string[] allAddresses = adress.Split(";,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string emailAddress in allAddresses)
+            {
+                lista.Add(emailAddress.Replace("'", "").Replace("\"", ""));
+            }
+            return lista;
+        }
+        public static string ConvevrtListString(List<string> Emails)
+        {
+            string Cadena = "";
+            if(Emails != null)
+            {
+                if (Emails.Count != 0)
+                {
+                    foreach (string EmailDir in Emails)
+                    {
+                        Cadena += EmailDir + ";";
+                    }
+                }
+            }
+            
+            return Cadena;
+        }
+        public static bool IsValidEmail(string email)
+        {
+            try
+            {
+                string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                  @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                  @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+                Regex re = new Regex(strRegex);
+                if (!re.IsMatch(email.Trim()))
+                    return false;
+                else
+                    return true;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
             }
         }
     }

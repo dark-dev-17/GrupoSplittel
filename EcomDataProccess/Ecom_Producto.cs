@@ -8,20 +8,36 @@ namespace EcomDataProccess
     public class Ecom_Producto
     {
         #region Propiedades
-        public int IdProducto { get; private set; }
-        public string ItemCode { get; private set; }
-        public string Description { get; private set; }
-        public string LargeDescription { get; private set; }
-        public Ecom_ProductoCategoria Category { get; private set; }
-        public Ecom_ProductoSubCategoria SubCategory { get; private set; }
-        public Ecom_ProductoFichaTecnica FichaTecnica { get; private set; }
-        public string DataSheetPath { get; private set; }
-        public double UnitPrice { get; private set; }
-        public double Discount { get; private set; }
-        public double Stock { get; private set; }
-        public double Quantity { get; private set; }
-        public bool IsActiveEcomerce { get; private set; }
+        public int IdProducto { get;  set; }
+        public string ItemCode { get;  set; }
+        public string Description { get;  set; }
+        public string LargeDescription { get;  set; }
+        public Ecom_ProductoCategoria Category { get;  set; }
+        public Ecom_ProductoSubCategoria SubCategory { get;  set; }
+        public Ecom_ProductoFichaTecnica FichaTecnica { get;  set; }
+        public double UnitPrice { get;  set; }
+        public double Discount { get;  set; }
+        public double Stock { get;  set; }
+        public bool IsActiveEcomerce { get;  set; }
+        public object IdDescripcionLarga { get;  set; }
+        public object IdImagen { get;  set; }
+        public object Categoria { get;  set; }
+        public object SubCategoria { get;  set; }
+        public object IdMarca { get;  set; }
+        public object ImgPrincipal { get;  set; }
+        public object CodigoConfigurable { get;  set; }
+        public object ProductoRelacionados { get;  set; }
+        public object InfoAdicional { get;  set; }
+        public object PesosDimencionales { get;  set; }
+        public object HojaTecnica { get;  set; }
+        public object Novedades { get;  set; }
+        public object InfoTecnica { get;  set; }
+        public object Caracteristicas { get;  set; }
+        public object Descuento { get;  set; }
+        public object Valoraciones { get;  set; }
+
         private Ecom_DBConnection Ecom_DBConnection_;
+        private bool RequireShiptCost;
         #endregion
 
         #region Constructores
@@ -40,6 +56,48 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public bool Update(int ModeProcedure)
+        {
+            try
+            {
+                Ecom_DBConnection_.StartProcedure("Admin_productos");
+                Ecom_DBConnection_.AddParameter(ItemCode, "ItemCode", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Description, "Descripcion", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(IdDescripcionLarga, "IdDescripcionLarga", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(IdImagen, "IdImagen", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Categoria, "Categoria", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(SubCategoria, "SubCategoria", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(IdMarca, "IdMarca", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Valoraciones, "Valoraciones", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(UnitPrice, "Precio", "DOUBLE");
+                Ecom_DBConnection_.AddParameter(Descuento, "Descuento", "INT");
+                Ecom_DBConnection_.AddParameter(Caracteristicas, "Caracteristicas", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(InfoTecnica, "InfoTecnica", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Novedades, "Novedades", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(HojaTecnica, "HojaTecnica", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(PesosDimencionales, "PesosDimencionales", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(InfoAdicional, "InfoAdicional", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(ProductoRelacionados, "ProductoRelacionados", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(CodigoConfigurable, "CodigoConfigurable", "VARCHAR");
+                Ecom_DBConnection_.AddParameter((IsActiveEcomerce ? "si" : "no"), "IsActiveEcomerce", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(ImgPrincipal, "ImgPrincipal", "TEXT");
+                Ecom_DBConnection_.AddParameter((RequireShiptCost ? "si" : "no"), "RequireShiptCost", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(ModeProcedure, "ModeProcedure", "INT");
+                int result = Ecom_DBConnection_.ExecProcedure();
+                if (result == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         public bool UpdImagenPrincipal(string ItemCode_, string ImagenPrincipal)
         {
             try
@@ -123,6 +181,7 @@ namespace EcomDataProccess
                         SubCategory = item.SubCategory;
                         LargeDescription = item.LargeDescription;
                         FichaTecnica = item.FichaTecnica;
+                        IdDescripcionLarga = item.IdDescripcionLarga;
                     });
                     result = true;
                 }
@@ -205,6 +264,7 @@ namespace EcomDataProccess
                             IsActiveEcomerce = Data.IsDBNull(16) ? false : Data.GetString(16) == "si" ? true : false,//
                             Category = new Ecom_ProductoCategoria { Description = Data.IsDBNull(6) ? "" : Data.GetString(6), Id = Data.IsDBNull(5) ? 0 : Data.GetInt32(5) },
                             SubCategory = new Ecom_ProductoSubCategoria { Description = Data.IsDBNull(10) ? "" : Data.GetString(10), Id = Data.IsDBNull(8) ? 0 : Data.GetInt32(8) },
+                            IdDescripcionLarga = Data.IsDBNull(13) ? "" : Data.GetString(13),
                             LargeDescription = Data.IsDBNull(14) ? "Sin descripción" : Data.GetString(14),
                             FichaTecnica = new Ecom_ProductoFichaTecnica { Id = Data.IsDBNull(11) ? 0 : Data.GetInt32(11), Ruta = Data.IsDBNull(12) ? "" : Data.GetString(12) },
                         });

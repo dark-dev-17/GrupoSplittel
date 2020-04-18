@@ -1,0 +1,29 @@
+﻿@model EcomDataProccess.Ecom_ProductoDescripcion
+<div id="app_blog_details">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <dl>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Codigo)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Codigo)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Descripcion)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Descripcion)
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-12 float-right">
+                    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Codigo }, new { @class = "btn btn-success" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

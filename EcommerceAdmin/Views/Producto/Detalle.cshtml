@@ -4,11 +4,37 @@
 @inject IHttpContextAccessor HttpContextAccessor
 @{
     int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
-    ViewData["Title"] = "Detalle del producto: " + Model.ItemCode;
+    ViewData["Title"] = "";
 
-    string DescripcioProduto = Model.LargeDescription.Replace("\r\n", "").Replace("\n", "").Replace("\r", "");
+    string DescripcioProduto = "";
+    if (!string.IsNullOrEmpty(Model.ItemCode) && !string.IsNullOrWhiteSpace(Model.ItemCode))
+    {
+        DescripcioProduto = Model.LargeDescription.Replace("\r\n", "").Replace("\n", "").Replace("\r", "").Replace("\"", "''");
+        ViewData["Title"] = "Detalle del producto: " + Model.ItemCode;
+    }
 }
+@if (string.IsNullOrEmpty(Model.ItemCode) || string.IsNullOrWhiteSpace(Model.ItemCode))
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <form asp-action="Detalle" method="get">
+                <div class="d-flex wd-300">
+                    <div class="form-group mg-b-0">
+                        <label>Código del producto</label>
+                        <input type="text" name="id" class="form-control form-control-sm wd-250" placeholder="introduce" required>
+                    </div><!-- form-group -->
+                    <div class="mg-l-10 mg-t-25 pd-t-4">
+                        <button type="submit" class="btn btn-sm btn-info">Buscar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else
+{
 <div id="app_productoDetalle">
+
     <div class="br-section-wrapper">
         <div class="table-wrapper">
             <table class="table table-hover table-custom spacing5">
@@ -20,13 +46,15 @@
                 </tr>
                 <tr>
                     <td><strong>Descripcion</strong></td>
-                    <td colspan="3">
+                    <td>@Model.IdDescripcionLarga</td>
+                    <td colspan="2">
                         <textarea style="display:none" class="form-control" id="Pro_largeDescription">@Html.DisplayFor(model => model.LargeDescription)</textarea>
                         @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 4 }))
                         {
                             <div v-if="controls.EditLargeDescription == false">
                                 {{ item.largeDescription }}
                                 <button class="btn btn-sm btn-secondary" v-on:click="controls.EditLargeDescription = true; item.largeDescription2 = item.largeDescription">Editar</button>
+                                <button class="btn btn-sm btn-secondary" v-on:click="verdescripciones()">Cambiar por otra</button>
                             </div>
                             <div v-if="controls.EditLargeDescription == true">
                                 <div class="form-group">
@@ -259,7 +287,7 @@
                                 {
                                     @*@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))*@
                                     <div class="embed-responsive embed-responsive-16by9">
-                                        <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))" typeof="" allowfullscreen></iframe>
+                                        <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))" type="application/pdf" allowfullscreen></iframe>
                                     </div>
                                 }
 
@@ -270,9 +298,43 @@
             </div>
         </div>
     </div>
+
+    <div id="modal_descripciones" class="modal fade">
+        <div class="modal-dialog modal-lg" style="width: 80%; max-width:80%;" role="document">
+            <div class="modal-content tx-size-sm">
+                <div class="modal-header pd-x-20">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Descripciones</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="CloseModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-20" id="modal_DireccionFacturacion_body">
+                    <table class="table table-sm  table-striped" id="tabla_descripciones">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px !important;">Codigo</th>
+                                <th>Descripcion</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           <tr v-if="Descripciones.length" v-for="(item, index) in Descripciones">
+                               <td  style="width: 30px !important;">{{ item.codigo }}</td>
+                               <td>{{ item.descripcion }}</td>
+                               <td><button class="btn btn-sm btn-secondary" v-on:click="CambiarDescripcion(item.codigo)">Cambiar</button></td>
+                           </tr>
+                        </tbody>
+                    </table>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal" v-on:click="CloseModal()">Close</button>
+                </div>
+            </div>
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
 </div>
-@section Scripts {
-    <script>
+    @section Scripts {
+        <script>
         var app_productoDetalle = new Vue({
             el: "#app_productoDetalle",
             data: {
@@ -304,16 +366,50 @@
                     Miniatura: {
                         images: [],
                         isGetting: true
-                    }
-                }
+                    },
+                    
+                },
+                Descripciones: []
             },
             async mounted() {
                 await this.GetProductoImagenes();
                 await this.GetDescripcionImagenes();
                 await this.GetInfoAdicionalImagenes();
                 await this.GetMiniaturaImagenes();
+                 
             },
             methods: {
+                CambiarDescripcion: async function (nuevaDescripcion) {
+                     Swal.fire({
+                        title: "¿Deseas camiar la descripción?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var params = new URLSearchParams();
+                            params.append('IdDescripcionLarga', '' + nuevaDescripcion);
+                            params.append('ItemCode', '' + this.item.Code);
+                            axios.post('@Url.Action("DataChangeDescription","Producto")', params,{ headers: this.serverToken }).then(response => {
+                                 this.ShowMessageErrorShort(response.data,'success')
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            }).finally(() => this.images.Producto.isGetting = false)
+                        }
+                    })
+                },
+                verdescripciones: async function () {
+                    await axios.post('@Url.Action("DataGet","DescripcionesProducto")',null,{ headers: this.serverToken }).then(response => {
+                        this.Descripciones = response.data;
+                        $("#modal_descripciones").modal("show")
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.images.Producto.isGetting = false)
+                    $('#tabla_descripciones').DataTable();
+                },
                 UpdateActive: async function () {
                     var params = new URLSearchParams();
                     params.append('Active', true);
@@ -337,7 +433,7 @@
                     }).finally(() => this.images.Producto.isGetting = false)
                 },
                 UpdateLargeDesc: async function () {
-                    
+
                      Swal.fire({
                         title: "¿Deseas guardar los cambios, esto puede afectar varios productos?",
                         text: "",
@@ -781,5 +877,6 @@
                 }
             }
         });
-    </script>
+        </script>
+    }
 }
