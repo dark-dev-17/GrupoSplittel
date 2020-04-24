@@ -32,7 +32,14 @@
         var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
         var controllerAction = this.ViewContext.RouteData.Values["action"].ToString();
     }
-    @if (controllerName == "Login" || controllerName == "ErrorPages")
+    @if (controllerName == "Login" ||  controllerName == "ErrorPages"  || controllerName == "ProductoPatchCord"  || controllerName == "ProductoMPO"  || 
+        controllerName == "ProductoPigtail"  || 
+        controllerName == "ProductoCabServicio"  || 
+        controllerName == "ProductoDistribuidor" ||
+        controllerName == "ProductoJumperConector" ||
+        controllerName == "ProductoJumperCable" ||
+        controllerName == "ProductoDistribuidorPrecon" 
+    )
     {
         @RenderBody()
     }

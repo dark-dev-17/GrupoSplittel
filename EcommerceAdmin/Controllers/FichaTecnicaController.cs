@@ -21,9 +21,9 @@ namespace EcommerceAdmin.Controllers
         private readonly string FTP_Password = ConfigurationManager.AppSettings["FTP_Password"].ToString();
         private readonly string FTP_Server = ConfigurationManager.AppSettings["FTP_Server"].ToString();
         private EcomData ecomData;
-        
+
         // GET: FichaTecnica
-        [AccessViewSession]
+        [AccessView(IdAction = 46)]
         public ActionResult List(string Folder)
         {
             try
@@ -75,7 +75,60 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
-        [AccessViewSession]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessView(IdAction = 46)]
+        public ActionResult DataList(string Folder)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(Folder) || string.IsNullOrWhiteSpace(Folder))
+                {
+                    Folder = @"public_html/store/public/images/img_spl/FICHAS TÉCNICAS/";
+                }
+                Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
+                List<Ecom_Archivos> List = Ecom_FilesFtp.ListDirectory(Folder);
+                ecomData = new EcomData(EcomConnection, SplitConnection);
+                ecomData.Connect(ServerSource.Ecommerce);
+
+                List.ForEach(item => {
+                    item.Path = string.Format("{0}{1}", Folder, item.Name);
+                    int tam = item.Path.Length;
+                    item.PathAux = item.Path.Substring(40, tam - 40);
+                    item.PathFolder = string.Format("{0}", Folder);
+                    if (!item.IsDirectory)
+                    {
+                        Ecom_ProductoFichaTecnica Ecom_ProductoFichaTecnica_ = (Ecom_ProductoFichaTecnica)ecomData.GetObject(ObjectSource.ProductoFichaTecnica);
+                        item.PathAux = item.PathAux.Substring(0, item.PathAux.Length - 4);
+                        if (Ecom_ProductoFichaTecnica_.GetByRute(item.PathAux))
+                        {
+                            item.Objecto = Ecom_ProductoFichaTecnica_;
+                        }
+                        else
+                        {
+                            item.Objecto = null;
+                        }
+                    }
+                    else
+                    {
+                        item.Path = item.Path + "/";
+                    }
+                });
+                return Ok(List);
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
+            }
+        }
+        [AccessData(IdAction = 46)]
         public ActionResult ShowDirectory(string Folder)
         {
             try
@@ -101,7 +154,7 @@ namespace EcommerceAdmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AccessDataSession]
+        [AccessView(IdAction = 46)]
         public ActionResult DataRegisterFiles(string FileName, string Folder)
         {
             try
@@ -136,7 +189,7 @@ namespace EcommerceAdmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AccessDataSession]
+        [AccessView(IdAction = 46)]
         public ActionResult DataRenameFiles(string Folder,string ActualName, string Newname)
         {
             try
@@ -164,7 +217,7 @@ namespace EcommerceAdmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AccessDataSession]
+        [AccessView(IdAction = 46)]
         public ActionResult DataUploadFiles(IFormFile FormFile, string Folder)
         {
             try
@@ -201,7 +254,7 @@ namespace EcommerceAdmin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AccessDataSession]
+        [AccessView(IdAction = 46)]
         public ActionResult DataChangeFiles(IFormFile FormFile, string Folder, string FileActual)
         {
             try

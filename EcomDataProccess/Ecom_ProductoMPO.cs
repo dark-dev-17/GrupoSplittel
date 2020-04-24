@@ -1,35 +1,34 @@
-﻿using Microsoft.AspNetCore.Http;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EcomDataProccess
 {
-    public class Ecom_ProductoFichaTecnica
+    public class Ecom_ProductoMPO
     {
         #region Propiedades
+        [Display(Name = "Id")]
         public int Id { get; set; }
-        [Display(Name = "Código")]
-        public string Codigo { get; set; }
-        public string Ruta { get; set; }
-        [Display(Name = "PDF")]
-        [DataType(DataType.Upload)]
+        [Display(Name = "Componente")]
+        public string Componente { get; set; }
+        [Display(Name = "Precio")]
+        [RegularExpression(@"^\d+\.\d{0,3}$", ErrorMessage = "Solo se permiten 3 decimales")]
         [Required]
-        public IFormFile FichaPDF { get; set; }
+        public double Precio { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
 
         #region Constructores
-        ~Ecom_ProductoFichaTecnica()
+        ~Ecom_ProductoMPO()
         {
             
         }
-        public Ecom_ProductoFichaTecnica()
+        public Ecom_ProductoMPO()
         {
 
         }
-        public Ecom_ProductoFichaTecnica(Ecom_DBConnection Ecom_DBConnection_)
+        public Ecom_ProductoMPO(Ecom_DBConnection Ecom_DBConnection_)
         {
             this.Ecom_DBConnection_ = Ecom_DBConnection_;
         }
@@ -40,10 +39,10 @@ namespace EcomDataProccess
         {
             try
             {
-                Ecom_DBConnection_.StartProcedure("Admin_FichaTecnica");
+                Ecom_DBConnection_.StartProcedure("Admin_PrecioMPO");
                 Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
-                Ecom_DBConnection_.AddParameter(Codigo, "Codigo", "VARCHAR");
-                Ecom_DBConnection_.AddParameter(Ruta, "Rutaa", "TEXT");
+                Ecom_DBConnection_.AddParameter(Componente, "Componente_", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Precio, "Precio_", "DOUBLE");
                 Ecom_DBConnection_.AddParameter(1, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
@@ -60,15 +59,16 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
-        public bool Update(int ModeProcedure)
+        public bool Update(int modeUpdate)
         {
             try
             {
-                Ecom_DBConnection_.StartProcedure("Admin_FichaTecnica");
+
+                Ecom_DBConnection_.StartProcedure("Admin_PrecioMPO");
                 Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
-                Ecom_DBConnection_.AddParameter(Codigo, "Codigo", "VARCHAR");
-                Ecom_DBConnection_.AddParameter(Ruta, "Rutaa", "TEXT");
-                Ecom_DBConnection_.AddParameter(ModeProcedure, "ModeProcedure", "INT");
+                Ecom_DBConnection_.AddParameter(Componente, "Componente_", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Precio, "Precio_", "DOUBLE");
+                Ecom_DBConnection_.AddParameter(modeUpdate, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
                 {
@@ -84,27 +84,15 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
-        public string GetLastCodigo()
+        public bool Get(int IdElemento)
         {
-            try
-            {
-               return Ecom_DBConnection_.ExecuteScalarString("");
-            }
-            catch (Ecom_Exception ex)
-            {
-                throw ex;
-            }
-            
-        }
-        public bool GetByRute(string Rute)
-        {
-            List<Ecom_ProductoFichaTecnica>  List = ReadDatReader(string.Format("SELECT * FROM catalogo_fichas_tecnicas where ruta like '{0}'", Rute));
-            if(List.Count > 0)
+            List<Ecom_ProductoMPO> List = ReadDatReader(string.Format("SELECT * FROM t24_precios_mpo where id = '{0}'", IdElemento));
+            if (List.Count > 0)
             {
                 List.ForEach(item => {
                     Id = item.Id;
-                    Codigo = item.Codigo;
-                    Ruta = item.Ruta;
+                    Componente = item.Componente;
+                    Precio = item.Precio;
                 });
                 return true;
             }
@@ -113,45 +101,41 @@ namespace EcomDataProccess
                 return false;
             }
         }
-        public Ecom_ProductoFichaTecnica GetID(int Id_)
+
+        public int GetlastId()
         {
-            List<Ecom_ProductoFichaTecnica> List = ReadDatReader(string.Format("SELECT * FROM catalogo_fichas_tecnicas where id =  '{0}'", Id_));
-            if (List.Count > 0)
+            try
             {
-                List.ForEach(item => {
-                    Id = item.Id;
-                    Codigo = item.Codigo;
-                    Ruta = item.Ruta;
-                });
-                return this;
+                return Ecom_DBConnection_.ExecuteScalarInt("SELECT max(id) FROM t24_precios_mpo;");
             }
-            else
+            catch (Ecom_Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
-        public List<Ecom_ProductoFichaTecnica> Get()
+
+        public List<Ecom_ProductoMPO> Get()
         {
-            return ReadDatReader("SELECT * FROM catalogo_fichas_tecnicas;");
+            return ReadDatReader(string.Format("SELECT * FROM t24_precios_mpo;"));
         }
-        private List<Ecom_ProductoFichaTecnica> ReadDatReader(string Statement)
+        private List<Ecom_ProductoMPO> ReadDatReader(string Statement)
         {
-            List<Ecom_ProductoFichaTecnica> List = null;
+            List<Ecom_ProductoMPO> List = null;
             MySqlDataReader Data = null;
             try
             {
                 Ecom_Tools.ValidDBobject(Ecom_DBConnection_);
                 Data = Ecom_DBConnection_.DoQuery(Statement);
-                List = new List<Ecom_ProductoFichaTecnica>();
+                List = new List<Ecom_ProductoMPO>();
                 if (Data.HasRows)
                 {
                     while (Data.Read())
                     {
-                        List.Add(new Ecom_ProductoFichaTecnica
+                        List.Add(new Ecom_ProductoMPO
                         {
-                           Id = Data.IsDBNull(0) ? 0 : (int)Data.GetUInt32(0),
-                           Codigo = Data.IsDBNull(1) ? "" : Data.GetString(1),
-                           Ruta = Data.IsDBNull(1) ? "" : Data.GetString(2),
+                            Id = Data.IsDBNull(0) ? -1 : (int)Data.GetUInt32(0),
+                            Componente = Data.IsDBNull(1) ? "--" : Data.GetString(1),
+                            Precio = Data.IsDBNull(2) ? -1 : Data.GetDouble(2),
                         });
 
                     }
@@ -159,7 +143,7 @@ namespace EcomDataProccess
                 }
                 else
                 {
-                    Ecom_DBConnection_.Message = "Usuario no encontrado";
+                    Ecom_DBConnection_.Message = "Registro no encontrado";
                 }
                 return List;
             }

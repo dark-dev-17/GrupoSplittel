@@ -1,0 +1,48 @@
+﻿@model EcomDataProccess.Ecom_ProductoJumperCable
+@{
+    ViewData["Title"] = "Editar precio Distribuidor";
+}
+<div class="container h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-6 mx-auto">
+            <div class="jumbotron  mt-3" style="background-color: #fff">
+                <div class="card text-center">
+                    <div class="card-header">
+                        @ViewData["Title"]
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="EditForm">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <input asp-for="Id" type="hidden" class="form-control form-control-sm" />
+                                <label asp-for="Precio" class="control-label"></label>
+                                <input asp-for="Precio" class="form-control" />
+                                <span asp-validation-for="Precio" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="TipoJumperDesc" class="control-label"></label>
+                                <input asp-for="TipoJumperDesc" class="form-control" readonly />
+                                <span asp-validation-for="TipoJumperDesc" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="TipoFibraDesc" class="control-label"></label>
+                                <input asp-for="TipoFibraDesc" class="form-control" readonly />
+                                <span asp-validation-for="TipoFibraDesc" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="TipoCubiertaDesc" class="control-label"></label>
+                                <input asp-for="TipoCubiertaDesc" class="form-control" readonly />
+                                <span asp-validation-for="TipoCubiertaDesc" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="button" onclick="window.open('', '_self', ''); window.close();" id="closeWindow" value="Cancelar" class="btn btn-default" />
+                                <input type="submit" value="Guardar" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

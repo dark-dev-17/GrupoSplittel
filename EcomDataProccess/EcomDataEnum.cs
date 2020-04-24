@@ -27,6 +27,14 @@ namespace EcomDataProccess
         ProcesoEmail = 13,
         ProductoDescripcion = 14,
         ProductoFichaTecnica = 15,
+        ProductoPatchCord = 16,
+        ProductoMPO = 17,
+        ProductoPigtail = 18,
+        ProductoCabServicio = 19,
+        ProductoDistribuidor = 20,
+        ProductoJumperConector = 21,
+        ProductoJumperCable = 22,
+        ProductoDistribuidorPrecon = 23,
     }
     public enum FiltroProducto
     {

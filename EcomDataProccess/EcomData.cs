@@ -184,6 +184,54 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.ProductoPatchCord)
+            {
+                Ecom_ProductoPatchCord objeto = (Ecom_ProductoPatchCord)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoMPO)
+            {
+                Ecom_ProductoMPO objeto = (Ecom_ProductoMPO)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoPigtail)
+            {
+                Ecom_ProductoPigtail objeto = (Ecom_ProductoPigtail)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoCabServicio)
+            {
+                Ecom_ProductoCabServicio objeto = (Ecom_ProductoCabServicio)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoDistribuidor)
+            {
+                Ecom_ProductoDistribuidor objeto = (Ecom_ProductoDistribuidor)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoJumperConector)
+            {
+                Ecom_ProductoJumperConector objeto = (Ecom_ProductoJumperConector)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoJumperCable)
+            {
+                Ecom_ProductoJumperCable objeto = (Ecom_ProductoJumperCable)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoDistribuidorPrecon)
+            {
+                Ecom_ProductoDistribuidorPrecon objeto = (Ecom_ProductoDistribuidorPrecon)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -254,6 +302,38 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.ProductoFichaTecnica)
             {
                 return new Ecom_ProductoFichaTecnica(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoPatchCord)
+            {
+                return new Ecom_ProductoPatchCord(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoMPO)
+            {
+                return new Ecom_ProductoMPO(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoPigtail)
+            {
+                return new Ecom_ProductoPigtail(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoCabServicio)
+            {
+                return new Ecom_ProductoCabServicio(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoDistribuidor)
+            {
+                return new Ecom_ProductoDistribuidor(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoJumperCable)
+            {
+                return new Ecom_ProductoJumperCable(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoJumperConector)
+            {
+                return new Ecom_ProductoJumperConector(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoDistribuidorPrecon)
+            {
+                return new Ecom_ProductoDistribuidorPrecon(Ecom_DBEcommerce);
             }
             else
             {

@@ -20,6 +20,7 @@ namespace EcommerceAdmin.Controllers
         private readonly string FTP_User = ConfigurationManager.AppSettings["FTP_User"].ToString();
         private readonly string FTP_Password = ConfigurationManager.AppSettings["FTP_Password"].ToString();
         private readonly string FTP_Server = ConfigurationManager.AppSettings["FTP_Server"].ToString();
+        private EcomData ecomData;
         // GET: Producto
         [AccessView(IdAction = 1)]
         public async Task<ActionResult> Index()
@@ -45,6 +46,12 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+        [AccessView(IdAction = 47)]
+        public ActionResult Precio(string tabActive)
+        {
+            ViewData["tabActive"] = tabActive;
+            return View();
+        }
         [AccessView(IdAction = 1)]
         public async Task<ActionResult> FijoConfigurable()
         {
@@ -69,8 +76,6 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
-        
-
         // GET: Producto/Details/5
         [AccessView(IdAction = 1)]
         public async Task<ActionResult> Detalle(string id)
@@ -111,6 +116,47 @@ namespace EcommerceAdmin.Controllers
                 if (Ecom_DBConnection_ != null)
                 {
                     Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessData(IdAction = 3)]
+        public async Task<ActionResult> DataCambiarFichaTecnicaAsync(string ItemCode, string Codigoficha)
+        {
+            try
+            {
+                ecomData = new EcomData(EcomConnection, SplitConnection);
+                ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_ProductoFichaTecnica Ecom_ProductoFichaTecnica_ = (Ecom_ProductoFichaTecnica)ecomData.GetObject(ObjectSource.ProductoFichaTecnica);
+                Ecom_Producto Ecom_Producto_ = (Ecom_Producto)ecomData.GetObject(ObjectSource.ProductoFijo);
+                if (await Ecom_Producto_.Get(ItemCode))
+                {
+                    Ecom_Producto_.InfoTecnica = Codigoficha;
+                    if (Ecom_Producto_.Update(2))
+                    {
+                        ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha cambiado la ficha tecnica del producto: " + Ecom_Producto_.ItemCode, "Producto", "Detalle", "", Ecom_Producto_.ItemCode + "");
+                        return Ok("Ficha técnica guardada");
+                    }
+                    else
+                    {
+                        return BadRequest(ecomData.GetLastMessage(ServerSource.Ecommerce));
+                    }
+                }
+                else
+                {
+                    return BadRequest("Producto no encontrado");
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
                 }
             }
         }

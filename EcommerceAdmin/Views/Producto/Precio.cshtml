@@ -1,0 +1,449 @@
+﻿@{
+    ViewData["Title"] = "Precios de configurables";
+}
+    <div id="app_precio">
+        <div class="br-section-wrapper">
+            <div class="table-wrapper">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <ul class="nav nav-outline active-info flex-column flex-md-row">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#Detalle" role="tab" aria-controls="home" aria-selected="true">PatchCord</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes" role="tab" aria-controls="profile" aria-selected="false">MPO</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes1" role="tab" aria-controls="profile" aria-selected="false">Pigtail</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes2" role="tab" aria-controls="profile" aria-selected="false">Cable de servicio</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes3" role="tab" aria-controls="profile" aria-selected="false">Distribuidor</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes4" role="tab" aria-controls="profile" aria-selected="false">Jumpers Cable</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes5" role="tab" aria-controls="profile" aria-selected="false">Jumpers Conector</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes6" role="tab" aria-controls="profile" aria-selected="false">Distribuidor preconectorizado</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="Detalle" role="tabpanel" aria-labelledby="home-tab">
+                                        <table class="table display responsive nowrap table-sm" v-if="PatchCord.isGetting == false">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Base</th>
+                                                    <th>Factor</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="PatchCord.data.length" v-for="(item, index) in PatchCord.data">
+                                                    <td>{{ item.tipo }}</td>
+                                                    <td>${{ item.base }}</td>
+                                                    <td>${{ item.factor }}</td>
+                                                    <td><a href="#" v-on:click="EditarPatchCord(index)">Ediar precio</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div v-if="PatchCord.isGetting == true">Obteniendo lista de precios</div>
+                                    </div>
+                                    <div class="tab-pane fade show " id="Imagenes" role="tabpanel" aria-labelledby="home-tab">
+                                        <table class="table display responsive nowrap table-sm" v-if="MPO.isGetting == false">
+                                            <thead>
+                                                <tr>
+                                                    <th>Componente</th>
+                                                    <th>Precio</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="MPO.data.length" v-for="(item, index) in MPO.data">
+                                                    <td>{{ item.componente }}</td>
+                                                    <td>${{ item.precio }}</td>
+                                                    <td><a href="#" v-on:click="EditarMPO(index)">Ediar precio</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div v-if="MPO.isGetting == true">Obteniendo lista de precios</div>
+                                    </div>
+                                    <div class="tab-pane fade show " id="Imagenes1" role="tabpanel" aria-labelledby="home-tab">
+                                        <table class="table display responsive nowrap table-sm" v-if="Pigtail.isGetting == false">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Componente</th>
+                                                    <th>Precio</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="Pigtail.data.length" v-for="(item, index) in Pigtail.data">
+                                                    <td>{{ item.tipo }}</td>
+                                                    <td>{{ item.componente }}</td>
+                                                    <td>${{ item.precio }}</td>
+                                                    <td><a href="#" v-on:click="EditarPigtail(index)">Ediar precio</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div v-if="Pigtail.isGetting == true">Obteniendo lista de precios</div>
+                                    </div>
+                                    <div class="tab-pane fade show " id="Imagenes2" role="tabpanel" aria-labelledby="home-tab">
+                                        <table class="table display responsive nowrap table-sm" v-if="CabServicio.isGetting == false">
+                                            <thead>
+                                                <tr>
+                                                    <th>Componente</th>
+                                                    <th>Precio</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="CabServicio.data.length" v-for="(item, index) in CabServicio.data">
+                                                    <td>{{ item.componente }}</td>
+                                                    <td>${{ item.precio }}</td>
+                                                    <td><a href="#" v-on:click="EditarCabServicio(index)">Ediar precio</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div v-if="CabServicio.isGetting == true">Obteniendo lista de precios</div>
+                                    </div>
+                                    <div class="tab-pane fade show " id="Imagenes3" role="tabpanel" aria-labelledby="home-tab">
+                                        <table class="table display responsive nowrap table-sm" v-if="Distribuidor.isGetting == false">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Componente</th>
+                                                    <th>Precio</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="Distribuidor.data.length" v-for="(item, index) in Distribuidor.data">
+                                                    <td>{{ item.tipo }}</td>
+                                                    <td>{{ item.componente }}</td>
+                                                    <td>${{ item.precio }}</td>
+                                                    <td><a href="#" v-on:click="EditarDistribuidor(index)">Ediar precio</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div v-if="Distribuidor.isGetting == true">Obteniendo lista de precios</div>
+                                    </div>
+                                    <div class="tab-pane fade show " id="Imagenes4" role="tabpanel" aria-labelledby="home-tab">
+                                        <table class="table display responsive nowrap table-sm" v-if="JumperCable.isGetting == false">
+                                            <thead>
+                                                <tr>
+                                                    <th>Precio</th>
+                                                    <th>Tipo de Jumper</th>
+                                                    <th>Tipo Fibra</th>
+                                                    <th>Tipo Cubierta</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="JumperCable.data.length" v-for="(item, index) in JumperCable.data">
+                                                    <td>${{ item.precio }}</td>
+                                                    <td>{{ item.tipoJumperDesc }}</td>
+                                                    <td>{{ item.tipoFibraDesc }}</td>
+                                                    <td>{{ item.tipoCubiertaDesc }}</td>
+                                                    <td><a href="#" v-on:click="EditarJumperCable(index)">Ediar precio</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div v-if="JumperCable.isGetting == true">Obteniendo lista de precios</div>
+                                    </div>
+                                    <div class="tab-pane fade show " id="Imagenes5" role="tabpanel" aria-labelledby="home-tab">
+                                        <table class="table display responsive nowrap table-sm" v-if="JumperConector.isGetting == false">
+                                            <thead>
+                                                <tr>
+                                                    <th>Precio</th>
+                                                    <th>Conector</th>
+                                                    <th>Tipo de Jumper</th>
+                                                    <th>Pulido</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="JumperConector.data.length" v-for="(item, index) in JumperConector.data">
+                                                    <td>${{ item.precio }}</td>
+                                                    <td>{{ item.conectorDesc }}</td>
+                                                    <td>{{ item.tipoJumperDesc }}</td>
+                                                    <td>{{ item.pulidoDesc }}</td>
+                                                    <td><a href="#" v-on:click="EditarJumperConector(index)">Ediar precio</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div v-if="JumperConector.isGetting == true">Obteniendo lista de precios</div>
+                                    </div>
+                                    <div class="tab-pane fade show " id="Imagenes6" role="tabpanel" aria-labelledby="home-tab">
+                                        <table class="table display responsive nowrap table-sm" v-if="DistribuidorPrecon.isGetting == false">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Componente</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="DistribuidorPrecon.data.length" v-for="(item, index) in DistribuidorPrecon.data">
+                                                    <td>{{ item.tipo }}</td>
+                                                    <td>{{ item.componente }}</td>
+                                                    <td>{{ item.cantidad }}</td>
+                                                    <td>${{ item.precio }}</td>
+                                                    <td><a href="#" v-on:click="EditarDistribuidorPrecon(index)">Ediar precio</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div v-if="DistribuidorPrecon.isGetting == true">Obteniendo lista de precios</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modal_precio" class="modal fade">
+            <div class="modal-dialog modal-lg" style="width: 80%; max-width:80%;" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Precios</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe id="iframeedit" class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+                        </div>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer">
+                        @*<button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>*@
+                    </div>
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div>
+@section Scripts {
+    <script>
+        var app_precio = new Vue({
+            el: "#app_precio",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                PatchCord: {
+                    data: [],
+                    isGetting: false,
+                    isProcessing: false
+                },
+                MPO: {
+                    data: [],
+                    isGetting: false,
+                    isProcessing: false
+                },
+                Pigtail: {
+                    data: [],
+                    isGetting: false,
+                    isProcessing: false
+                },
+                CabServicio: {
+                    data: [],
+                    isGetting: false,
+                    isProcessing: false
+                },
+                Distribuidor: {
+                    data: [],
+                    isGetting: false,
+                    isProcessing: false
+                },
+                JumperCable: {
+                    data: [],
+                    isGetting: false,
+                    isProcessing: false
+                },
+                JumperConector: {
+                    data: [],
+                    isGetting: false,
+                    isProcessing: false
+                },
+                DistribuidorPrecon: {
+                    data: [],
+                    isGetting: false,
+                    isProcessing: false
+                }
+            },
+            async mounted() {
+                await this.GetpatchCord();
+                await this.GetMPO();
+                await this.GetPigtail();
+                await this.GetCabServicio();
+                await this.GetDistribuidor();
+                await this.GetJumperCable();
+                await this.GetJumperConector();
+                await this.GetDistribuidorPrecon();
+            },
+            methods: {
+                EditarDistribuidorPrecon: async function (index) {
+                    var myWindow = window.open('@Url.Action("Edit","ProductoDistribuidorPrecon")' + '/' + this.DistribuidorPrecon.data[index].id, "MsgWindow", "width=800,height=600");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        app_precio.GetDistribuidorPrecon();
+                    }
+                    myWindow.focus();
+                },
+                EditarJumperConector: async function (index) {
+                    var myWindow = window.open('@Url.Action("Edit","ProductoJumperConector")' + '/' + this.JumperCable.data[index].id, "MsgWindow", "width=800,height=600");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        app_precio.GetJumperConector();
+                    }
+                    myWindow.focus();
+                },
+                EditarJumperCable: async function (index) {
+                    var myWindow = window.open('@Url.Action("Edit","ProductoJumperCable")' + '/' + this.JumperCable.data[index].id, "MsgWindow", "width=800,height=600");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        app_precio.GetJumperCable();
+                    }
+                    myWindow.focus();
+                },
+                EditarDistribuidor: async function (index) {
+                    var myWindow = window.open('@Url.Action("Edit","ProductoDistribuidor")' + '/' + this.Distribuidor.data[index].id, "MsgWindow", "width=800,height=600");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        app_precio.GetDistribuidor();
+                    }
+                    myWindow.focus();
+                },
+                EditarCabServicio: async function (index) {
+                    var myWindow = window.open('@Url.Action("Edit","ProductoCabServicio")' + '/' + this.CabServicio.data[index].id, "MsgWindow", "width=800,height=500");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        app_precio.GetCabServicio();
+                    }
+                     myWindow.focus();
+                },
+                EditarPigtail: async function (index) {
+                    var myWindow = window.open('@Url.Action("Edit","ProductoPigtail")' + '/' + this.Pigtail.data[index].id, "MsgWindow", "width=800,height=600");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        app_precio.GetPigtail();
+                    }
+                     myWindow.focus();
+                },
+                EditarMPO: async function (index) {
+                    var myWindow = window.open('@Url.Action("Edit","ProductoMPO")' + '/' + this.MPO.data[index].id, "MsgWindow", "width=800,height=500");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        app_precio.GetMPO();
+                    }
+                     myWindow.focus();
+                },
+                EditarPatchCord: async function (index) {
+                    var myWindow = window.open('@Url.Action("Edit","ProductoPatchCord")' + '/' + this.PatchCord.data[index].id, "MsgWindow", "width=800,height=500");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        app_precio.GetpatchCord();
+                    }
+                     myWindow.focus();
+                    @*$("#modal_precio").modal("show")
+                    document.getElementById("iframeedit").src = '@Url.Action("Edit","ProductoPatchCord")' + '/' + this.PatchCord.data[index].id;*@
+                },
+                GetDistribuidorPrecon: async function () {
+                    this.DistribuidorPrecon.isGetting = true;
+                    await axios.post('@Url.Action("Dataget","ProductoDistribuidorPrecon")', null, { headers: this.serverToken }).then(response => {
+                        this.DistribuidorPrecon.data = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    }).finally(() => this.DistribuidorPrecon.isGetting = false)
+                },
+                GetJumperConector: async function () {
+                    this.JumperConector.isGetting = true;
+                    await axios.post('@Url.Action("Dataget","ProductoJumperConector")', null, { headers: this.serverToken }).then(response => {
+                        this.JumperConector.data = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    }).finally(() => this.JumperConector.isGetting = false)
+                },
+                GetJumperCable: async function () {
+                    this.JumperCable.isGetting = true;
+                    await axios.post('@Url.Action("Dataget","ProductoJumperCable")', null, { headers: this.serverToken }).then(response => {
+                        this.JumperCable.data = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    }).finally(() => this.JumperCable.isGetting = false)
+                },
+                GetDistribuidor: async function () {
+                    this.Distribuidor.isGetting = true;
+                    await axios.post('@Url.Action("Dataget","ProductoDistribuidor")', null, { headers: this.serverToken }).then(response => {
+                        this.Distribuidor.data = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    }).finally(() => this.Distribuidor.isGetting = false)
+                },
+                GetCabServicio: async function () {
+                    this.CabServicio.isGetting = true;
+                    await axios.post('@Url.Action("Dataget","ProductoCabServicio")', null, { headers: this.serverToken }).then(response => {
+                        this.CabServicio.data = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    }).finally(() => this.CabServicio.isGetting = false)
+                },
+                GetPigtail: async function () {
+                    this.Pigtail.isGetting = true;
+                    await axios.post('@Url.Action("Dataget","ProductoPigtail")', null, { headers: this.serverToken }).then(response => {
+                        this.Pigtail.data = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    }).finally(() => this.Pigtail.isGetting = false)
+                },
+                GetMPO: async function () {
+                    this.MPO.isGetting = true;
+                    await axios.post('@Url.Action("Dataget","ProductoMPO")', null, { headers: this.serverToken }).then(response => {
+                        this.MPO.data = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    }).finally(() => this.MPO.isGetting = false)
+                },
+                GetpatchCord: async function () {
+                    this.PatchCord.isGetting = true;
+                    await axios.post('@Url.Action("Dataget","ProductoPatchCord")', null, { headers: this.serverToken }).then(response => {
+                        this.PatchCord.data = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    }).finally(() => this.PatchCord.isGetting = false)
+                },
+                ShowMessageErrorShort: function (text,icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+            }
+        });
+    </script>
+    }

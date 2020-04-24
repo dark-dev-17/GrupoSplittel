@@ -19,22 +19,22 @@ namespace EcomDataProccess
         public double Discount { get;  set; }
         public double Stock { get;  set; }
         public bool IsActiveEcomerce { get;  set; }
-        public object IdDescripcionLarga { get;  set; }
-        public object IdImagen { get;  set; }
-        public object Categoria { get;  set; }
-        public object SubCategoria { get;  set; }
-        public object IdMarca { get;  set; }
-        public object ImgPrincipal { get;  set; }
-        public object CodigoConfigurable { get;  set; }
-        public object ProductoRelacionados { get;  set; }
-        public object InfoAdicional { get;  set; }
-        public object PesosDimencionales { get;  set; }
-        public object HojaTecnica { get;  set; }
-        public object Novedades { get;  set; }
-        public object InfoTecnica { get;  set; }
-        public object Caracteristicas { get;  set; }
+        public string IdDescripcionLarga { get;  set; }
+        public string IdImagen { get;  set; }
+        public string Categoria { get;  set; }
+        public string SubCategoria { get;  set; }
+        public string IdMarca { get;  set; }
+        public string ImgPrincipal { get;  set; }
+        public string CodigoConfigurable { get;  set; }
+        public string ProductoRelacionados { get;  set; }
+        public string InfoAdicional { get;  set; }
+        public string PesosDimencionales { get;  set; }
+        public string HojaTecnica { get;  set; }
+        public string Novedades { get;  set; }
+        public string InfoTecnica { get;  set; }
+        public string Caracteristicas { get;  set; }
         public object Descuento { get;  set; }
-        public object Valoraciones { get;  set; }
+        public string Valoraciones { get;  set; }
 
         private Ecom_DBConnection Ecom_DBConnection_;
         private bool RequireShiptCost;
@@ -182,6 +182,7 @@ namespace EcomDataProccess
                         LargeDescription = item.LargeDescription;
                         FichaTecnica = item.FichaTecnica;
                         IdDescripcionLarga = item.IdDescripcionLarga;
+                        FichaTecnica = new Ecom_ProductoFichaTecnica(Ecom_DBConnection_).GetID(FichaTecnica.Id);
                     });
                     result = true;
                 }
