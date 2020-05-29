@@ -116,7 +116,7 @@ namespace EcomDataProccess
 
         public List<Ecom_ProductoMPO> Get()
         {
-            return ReadDatReader(string.Format("SELECT * FROM t24_precios_mpo;"));
+            return ReadDatReader(string.Format("SELECT * FROM t24_precios_mpo  order by componente asc;"));
         }
         private List<Ecom_ProductoMPO> ReadDatReader(string Statement)
         {

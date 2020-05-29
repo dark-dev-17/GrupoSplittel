@@ -32,6 +32,7 @@ namespace SAPDataProcess
         public string Remarks { get; set; }
         [Display(Name = "NO.E-commerce")]
         public string DocNumEcommerce { get; set; }
+        public object ObjetoAux { get; set; }
         private SAP_DBConnection SAP_DBConnection_;
         private SAP_DI_API SAP_DI_API_;
         #endregion

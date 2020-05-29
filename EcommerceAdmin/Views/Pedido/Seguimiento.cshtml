@@ -1,0 +1,167 @@
+﻿
+<div id="app_seguimiento">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <div id="demo"></div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/jquery-gantt.js"></script>
+    <script src="~/js/jquery-gantt.l10n.ru.js"></script>
+    <script>
+    var app_seguimiento = new Vue({
+        el: "#app_seguimiento",
+        data: {
+            serverToken: {
+                'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+            },
+            getData: true,
+            eventsData: [],
+        },
+        async mounted(){
+            await this.Getpendientes();
+            await this.GetInProcess();
+            $.fn.gantt.setDefaults({language: 'ru'});
+            $('#demo').gantt({
+              data: this.eventsData,
+              startDate: new Date('2020-01-01'),
+              endDate: new Date('2020-06-29'),
+              language: 'ru'
+            });
+        },
+        methods: {
+            GetInProcess: async function () {
+                this.getData = true;
+                await axios.post('@Url.Action("ListInProcesss","Pedido")', null, { headers: this.serverToken }).then(response => {
+                    response.data.forEach((e,i) => {
+                        data = {
+                            title: "Pedido : " + e.docNumEcommerce,
+                            startdate: e.docDate.substring(0,10).replace("-","/").replace("-","/"),
+                            enddate: "2020/05/12",
+                            url: '@Url.Action("Detalle","Pedido")/'+ e.docNumEcommerce,
+                            type: "proceso",
+                            minNight: ""+this.DiffDays(e.docDate.substring(0,10).replace("-","/").replace("-","/")),
+                            price: {
+                                original: {
+                                    price: e.docTotal,
+                                    priceType: e.docCur
+                                },
+                                converted: {
+                                    price: e.docRate,
+                                    priceType: "TC"
+                                }
+                            },
+                            tooltipData: {
+                                title: "Cliente: " ,
+                                image: "https://img.icons8.com/cotton/64/000000/purchase-order.png",
+                                desc: ["Tipo cliente: ", " Estatus: "+this.GetStatus(e.status), e.cardCode],
+                                dates: {
+                                    begin: e.docDate.substring(0,10).replace("-","/").replace("-","/"),
+                                    end: "--"
+                                },
+                                url: null
+                            },
+                            dateorder: "\/Date(1469048400000)\/"
+                        }
+                        this.eventsData.push(data);
+                    });
+                }).catch(error => {
+                    this.ShowMessageErrorShort(error.response.data,'error')
+                }).finally(() => this.getData = false)
+            },
+            Getpendientes: async function () {
+                this.getData = true;
+                await axios.post('@Url.Action("DataGetPendientes","Pedido")', null, { headers: this.serverToken }).then(response => {
+                    response.data.forEach((e,i) => {
+                        data = {
+                            title: "Pedido " + e.ecom_Cliente_.tipoCliente +": " + e.docNumEcommerce,
+                            startdate: e.docDate.substring(0,10).replace("-","/").replace("-","/"),
+                            enddate: "2020/05/12",
+                            url: '@Url.Action("Detalle","Pedido")/'+ e.docNumEcommerce,
+                            type: "pendiente",
+                            minNight: ""+this.DiffDays(e.docDate.substring(0,10).replace("-","/").replace("-","/")),
+                            price: {
+                                original: {
+                                    price: e.docTotal,
+                                    priceType: e.docCur
+                                },
+                                converted: {
+                                    price: e.docRate,
+                                    priceType: "TC"
+                                }
+                            },
+                            tooltipData: {
+                                title: "Cliente: " + e.ecom_Cliente_.nombre + " " + e.ecom_Cliente_.apellidos,
+                                image: "https://img.icons8.com/cotton/64/000000/purchase-order.png",
+                                desc: ["Tipo cliente: " + e.ecom_Cliente_.tipoCliente, " Estatus: Pendiente",(e.ecom_Cliente_.tipoCliente == "B2B" ? "Código cliente SAP: " + e.ecom_Cliente_.cardCode : "")],
+                                dates: {
+                                    begin: e.docDate.substring(0,10).replace("-","/").replace("-","/"),
+                                    end: "--"
+                                },
+                                url: null
+                            },
+                            dateorder: "\/Date(1469048400000)\/"
+                        }
+                        this.eventsData.push(data);
+                    });
+                }).catch(error => {
+                    this.ShowMessageErrorShort(error.response.data,'error')
+                }).finally(() => this.getData = false)
+            },
+            DiffDays: function (dateStart) {
+                const dateA = moment(dateStart, 'YYYY-MM-DD');
+                const dateB = moment();
+
+                return dateB.diff(dateA, 'days');
+            },
+            ShowMessageErrorShort: function (text,icon) {
+                const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+            },
+            GetStatus: function (Status) {
+                if (parseInt(Status) == 1)
+                {
+                    return "En proceso";
+                }
+                else if (parseInt(Status) == 2)
+                {
+                    return "Surtiendo";
+                }
+                else if (parseInt(Status) == 3)
+                {
+                    return "Embarcando";
+                }
+                else if (parseInt(Status) == 4)
+                {
+                    return "Enviando";
+                }
+                else if (parseInt(Status) == 5)
+                {
+                    return "Entregando";
+                }
+                else
+                {
+                    return "Error";
+                }
+            }
+        },
+
+
+    });
+    </script>
+}

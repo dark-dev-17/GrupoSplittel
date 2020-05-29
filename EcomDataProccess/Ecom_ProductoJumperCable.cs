@@ -11,7 +11,7 @@ namespace EcomDataProccess
         [Display(Name = "Id")]
         public int Id { get; set; }
         [Display(Name = "Precio")]
-        [RegularExpression(@"^\d+\.\d{0,3}$", ErrorMessage = "Solo se permiten 3 decimales")]
+        //[RegularExpression(@"^\d+\.\d{0,3}$", ErrorMessage = "Solo se permiten 3 decimales")]
         [Required]
         public double Precio { get; set; }
         [Display(Name = "Tipo de Jumper")]

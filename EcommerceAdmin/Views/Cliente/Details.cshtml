@@ -1,0 +1,292 @@
+﻿@model EcomDataProccess.Ecom_Cliente
+@{
+    ViewData["Title"] = "Información general del cliente: " + Model.Nombre + " " + Model.Apellidos;
+
+    Ecom_SAP ecom_SAP = new Ecom_SAP("Ambas");
+    List<EcomDataProccess.Ecom_Pedido> Cotizaciones = ecom_SAP.GetEcom_Pedidos("Cotizacion", Model.CardCode).Where(pedido => pedido.Id_cliente == Model.Id_cliente).ToList();
+    List<EcomDataProccess.Ecom_Pedido> Pendientes = ecom_SAP.GetEcom_Pedidos("Pendiente", Model.CardCode).Where(pedido => pedido.Id_cliente == Model.Id_cliente).ToList();
+    List<SAPDataProcess.SAP_Document> EnProceso = ecom_SAP.GetSAP_Document("EnProceso", Model.CardCode);
+    List<SAPDataProcess.SAP_Document> Rechazado = ecom_SAP.GetSAP_Document("Rechazado", Model.CardCode);
+    List<SAPDataProcess.SAP_Document> Historico = ecom_SAP.GetSAP_Document("Historico", Model.CardCode);
+
+    List<SAPDataProcess.SAP_Address> Envio = new List<SAPDataProcess.SAP_Address>();
+    List<SAPDataProcess.SAP_Address> facturacion = new List<SAPDataProcess.SAP_Address>();
+
+
+    if(Model.TipoCliente == "B2B")
+    {
+        Envio = new SAPDataProcess.SAP_Address(ecom_SAP.SAP_DBConnection_).GetList(Model.CardCode,"S");
+        facturacion = new SAPDataProcess.SAP_Address(ecom_SAP.SAP_DBConnection_).GetList(Model.CardCode,"B");
+    }
+    ecom_SAP.CloseConections();
+
+    EcomDataProccess.EcomData ecomData = ecom_SAP.GetEcomData();
+    ecomData.Connect(EcomDataProccess.ServerSource.Ecommerce);
+
+    EcomDataProccess.Ecom_Pedido Ecom_Pedido_ = (EcomDataProccess.Ecom_Pedido)ecomData.GetObject(EcomDataProccess.ObjectSource.Pedido);
+
+    EnProceso = EnProceso.Where(doc => Ecom_Pedido_.IsPedidoCliente(Int32.Parse(string.IsNullOrEmpty(doc.DocNumEcommerce) ? "0" : doc.DocNumEcommerce),Model.Id_cliente)).ToList();
+    Rechazado = Rechazado.Where(doc => Ecom_Pedido_.IsPedidoCliente(Int32.Parse(string.IsNullOrEmpty(doc.DocNumEcommerce) ? "0" : doc.DocNumEcommerce),Model.Id_cliente)).ToList();
+    Historico = Historico.Where(doc => Ecom_Pedido_.IsPedidoCliente(Int32.Parse(string.IsNullOrEmpty(doc.DocNumEcommerce) ? "0" : doc.DocNumEcommerce),Model.Id_cliente)).ToList();
+    
+    List<EcomDataProccess.Ecom_DireccionEnvio> EnvioB2C = new List<EcomDataProccess.Ecom_DireccionEnvio>();
+    List<EcomDataProccess.Ecom_DireccionFacturacion> facturacionB2C = new List<EcomDataProccess.Ecom_DireccionFacturacion>();
+    if(Model.TipoCliente == "B2C")
+    {
+        EcomDataProccess.Ecom_DireccionEnvio Ecom_DireccionEnvio_ = (EcomDataProccess.Ecom_DireccionEnvio)ecomData.GetObject(EcomDataProccess.ObjectSource.DireccionEnvio);
+        EcomDataProccess.Ecom_DireccionFacturacion Ecom_DireccionFacturacion_ = (EcomDataProccess.Ecom_DireccionFacturacion)ecomData.GetObject(EcomDataProccess.ObjectSource.DireccionFacturacion);
+        EnvioB2C = Ecom_DireccionEnvio_.GetCliente(Model.Id_cliente);
+        facturacionB2C = Ecom_DireccionFacturacion_.GetCliente(Model.Id_cliente);
+    }
+    ecomData.Disconect(EcomDataProccess.ServerSource.Ecommerce);
+
+
+    //List<SAPDataProcess.SAP_Address> Envio = new SAPDataProcess.SAP_Address(ecom_SAP.SAP_DBConnection_).GetList(Model.CardCode,"S");
+    //List<SAPDataProcess.SAP_Address> facturacion = new SAPDataProcess.SAP_Address(ecom_SAP.SAP_DBConnection_).GetList(Model.CardCode,"B");
+
+
+}
+<style>
+    .br-section-wrapper {
+        padding: 30px;
+        border-radius: 3px;
+    }
+
+    .br-section-wrapper {
+        padding: 0px !important;
+    }
+
+    .br-section-wrapper {
+        background-color: #fff;
+        padding: 30px 20px;
+        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0);
+    }
+
+    table.dataTable {
+        width: 100%;
+        /* margin: 0 auto; */
+        clear: both;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+</style>
+<div id="app_BussinesPartner">
+    <div class="row">
+        <div class="col-lg-2 mg-t-30 mg-lg-t-0">
+            <div class="card pd-20 pd-xs-30 shadow-base bd-0">
+                <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-25">Información de contacto</h6>
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Folio Ecommerce</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.TipoCliente)-@Model.Id_cliente.ToString().PadLeft(5, '0')</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Cliente</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.Nombre) @Html.DisplayFor(model => model.Apellidos)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Correo de contacto</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.Email)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Correo de facturación</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.Telefono)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Fecha de registro</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.FechaReistro)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Fecha ultimo login</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.LastLogin)</p>
+
+                <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Socio de negocios(SAP)</label>
+                <p class="tx-info mg-b-15">@Html.DisplayFor(model => model.CardCode)</p>
+
+
+            </div><!-- card -->
+        </div>
+        <div class="col-lg-10 mg-t-30 mg-lg-t-0">
+            
+            <div class="row no-gutters widget-1 shadow-base">
+                <div class="col-xl-12 mt-2">
+                    <div class="card bd">
+                        <div class="card-header bd-b">
+                            <ul class="nav nav-outline active-info flex-column flex-md-row">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Dashboard</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Cotizaciones</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#desccipcion" role="tab" aria-controls="contact" aria-selected="false">Pendientes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">En Proceso</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact" aria-selected="false">Rechazados</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact2" role="tab" aria-controls="contact" aria-selected="false">Historico</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact4" role="tab" aria-controls="contact" aria-selected="false">Direcciones de envio</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact5" role="tab" aria-controls="contact" aria-selected="false">Direcciones de facturación</a>
+                                </li>
+                            </ul>
+                        </div><!-- card-header -->
+                        <div class="card-body color-gray-lighter">
+                            <div class="tab-content col-lg-12" id="myTabContent">
+                                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                                </div>
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <div class="">
+                                        <partial name="../Pedido/Cotizacion" model="Cotizaciones" />
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="desccipcion" role="tabpanel" aria-labelledby="contact-tab">
+                                    <partial name="../Pedido/Pendiente" model="Pendientes" />
+                                </div>
+                                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                                    <div class="">
+                                        <partial name="../Pedido/EnProceso" model="EnProceso" />
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="contact1" role="tabpanel" aria-labelledby="contact-tab">
+                                    <partial name="../Pedido/Rechazado" model="Rechazado" />
+                                </div>
+                                <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact-tab">
+                                    <partial name="../Pedido/Historico" model="Historico" />
+                                </div>
+                                <div class="tab-pane fade" id="contact4" role="tabpanel" aria-labelledby="contact-tab">
+                                    @if (Model.TipoCliente == "B2C")
+                                    {
+                                        <table class="table display responsive nowrap" style="width:100% !important;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Dirección</th>
+                                                    <th>CP</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in EnvioB2C)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Ciudad) <br />
+                                                            @Html.DisplayFor(modelItem => item.Calle) No.Ext:  @Html.DisplayFor(modelItem => item.NoExterior) Col:  @Html.DisplayFor(modelItem => item.Colonia)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.CodigoPostal)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <table class="table display responsive nowrap" style="width:100% !important;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Dirección</th>
+                                                    <th>CP</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Envio)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.City) <br />
+                                                            @Html.DisplayFor(modelItem => item.StreetNo) No.Ext:  @Html.DisplayFor(modelItem => item.Street) Col:  @Html.DisplayFor(modelItem => item.Block)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ZipCode)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                </div>
+                                <div class="tab-pane fade" id="contact5" role="tabpanel" aria-labelledby="contact-tab">
+                                    @if (Model.TipoCliente == "B2C")
+                                    {
+                                        <table class="table display responsive nowrap" style="width:100% !important;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Dirección</th>
+                                                    <th>CP</th>
+                                                    <th>RFC</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in facturacionB2C)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Ciudad) <br />
+                                                            @Html.DisplayFor(modelItem => item.Calle) No.Ext:  @Html.DisplayFor(modelItem => item.NoExterior) Col:  @Html.DisplayFor(modelItem => item.Colonia)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.CodigoPostal)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.RFC)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <table class="table display responsive nowrap" style="width:100% !important;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Dirección</th>
+                                                    <th>CP</th>
+                                                    <th>RFC</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in facturacion)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.City) <br />
+                                                            @Html.DisplayFor(modelItem => item.StreetNo) No.Ext:  @Html.DisplayFor(modelItem => item.Street) Col:  @Html.DisplayFor(modelItem => item.Block)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ZipCode)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.FederalTaxID)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                </div>
+                            </div>
+                        </div><!-- card-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_BussinesPartner = new Vue({
+            el: "#app_BussinesPartner",
+            data: {
+            },
+            mounted() {
+                $('.table').DataTable({
+                    "order": []
+                });
+            }
+        });
+    </script>
+}

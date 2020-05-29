@@ -401,6 +401,13 @@ namespace EcommerceAdmin.Controllers
                     UpdateImageName(ItemCode, Filename);
                     return Ok("Archivo cargado");
                 }
+                else if (ImagessType.Trim() == "360")
+                {
+                    ValidAction(49);
+                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/{1}", ItemCode, "360.zip");
+                    Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
+                    return Ok("Archivo Zip contenedor de modelo 360 cargado");
+                }
                 else
                 {
                     return BadRequest("Error de configuración");

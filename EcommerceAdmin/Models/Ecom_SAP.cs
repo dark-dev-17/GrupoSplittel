@@ -16,6 +16,42 @@ namespace EcommerceAdmin.Models
         public SAP_DBConnection SAP_DBConnection_ { get; private set; }
         public Ecom_DBConnection Ecom_DBConnection_ { get; private set; }
         private string Mode;
+
+        public EcomData GetEcomData()
+        {
+            return new EcomData(EcomConnection, SplitConnection);
+        }
+        public void DocumetsSAP_GetCustomerEcom(List<SAP_Document> sAP_Documents)
+        {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
+            ecomData.Connect(ServerSource.Ecommerce);
+            Ecom_Pedido ecom_Pedido = (Ecom_Pedido)ecomData.GetObject(ObjectSource.Pedido);
+            Ecom_Cliente ecom_Cliente = (Ecom_Cliente)ecomData.GetObject(ObjectSource.Cliente);
+            sAP_Documents.ForEach(doc => {
+                if (!string.IsNullOrEmpty(doc.DocNumEcommerce))
+                {
+                    if (ecom_Pedido.GetById(Int32.Parse(doc.DocNumEcommerce)))
+                    {
+                        if (ecom_Cliente.Get(ecom_Pedido.Id_cliente))
+                        {
+                            doc.ObjetoAux = ecom_Cliente;
+                        }
+                        else
+                        {
+                            doc.ObjetoAux = null;
+                        }
+                    }
+                    else
+                    {
+                        doc.ObjetoAux = null;
+                    }
+                }
+                else
+                {
+                    doc.ObjetoAux = null;
+                }
+            });
+        }
         public List<SAPDataProcess.SAP_BussinessPartner> GetBussPartByEmp(int idSplinnet)
         {
             Ecom_DBConnection Ecom_DBConnection_ = null;
@@ -52,7 +88,7 @@ namespace EcommerceAdmin.Models
                 if (Ecom_DBConnection_ != null)
                 {
                     Ecom_DBConnection_.CloseConnection();
-                }
+               }
                 if (SAP_DBConnection_ != null)
                 {
                     SAP_DBConnection_.CloseDataBaseAccess();

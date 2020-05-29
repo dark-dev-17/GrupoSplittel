@@ -1,0 +1,142 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_HomeAnuncio>
+
+<div id="app_orderanuncio">
+    <div class="br-section-wrapper">
+        @if (Model.Count() > 0)
+        {
+            <div class="mt-4">
+                <div class="float-right">
+                    <a v-on:click="GetItemsOrder()" style="color:white;" class="btn btn-success">Guardar cambios</a>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table class="table display responsive nowrap mt4 ml4 js-sortable-table-no-placeholder" id="table_app_blog" style="width: 100%;">
+                    <tbody class="">
+
+                        @foreach (var item in Model)
+                        {
+                            <tr class="border bg-white navy p4 js-sortable-tr" data-id="@item.Id">
+                                <td>
+                                    <div class="alert alert-success alert-bordered pd-y-20" role="alert">
+                                        <div class="d-flex align-items-center justify-content-start">
+                                            <i class="alert-icon tx-52 tx-success mg-r-20"> <img style="height: 70px;" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/slide/img1/{1}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],item.ImgSmall))" alt="Alternate Text" /></i>
+                                            <i class="alert-icon tx-52 tx-success mg-r-20"> <img style="height: 70px;" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/slide/img2/{1}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],item.ImgLarge))" alt="Alternate Text" /></i>
+                                            <div>
+                                                <h5 class="mg-b-2 tx-success">@Html.DisplayFor(modelItem => item.Descipcion)</h5>
+                                                <p class="mg-b-0 tx-gray">
+                                                    <strong>
+                                                        @if (item.ShowBy == "PUBLIC")
+                                                        {
+                                                            <span>Publico</span>
+                                                        }
+                                                        @if (item.ShowBy == "B2C")
+                                                        {
+                                                            <span>Clientes B2C</span>
+                                                        }
+                                                        @if (item.ShowBy == "B2B")
+                                                        {
+                                                            <span>Clientes B2B</span>
+                                                        }
+                                                    </strong>
+                                                </p>
+                                            </div>
+                                        </div><!-- d-flex -->
+                                    </div><!-- alert -->
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+
+            </div>
+        }
+        else
+        {
+                    <div class="alert alert-success alert-bordered pd-y-20" role="alert">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <div>
+                                <h5 class="mg-b-2 tx-success"></h5>
+                                <p class="mg-b-0 tx-gray">
+                                    <strong>
+                                        No hay slides visibles
+                                    </strong>
+                                </p>
+                            </div>
+                        </div><!-- d-flex -->
+                    </div><!-- alert -->
+        }
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/html5sortable.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            sortable('.js-sortable-table-no-placeholder tbody', {
+                items: "tr",
+                forcePlaceholderSize: true,
+                placeholderClass: 'placeholder sort-placeholder',
+            })
+
+        });
+    </script>
+    <script>
+        var app_orderanuncio = new Vue({
+            el: "#app_orderanuncio",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                ListOrder: []
+            },
+            mounted() {
+
+            },
+            methods: {
+                GetItemsOrder: function () {
+                    this.ListOrder = [];
+                    var table = document.getElementById("table_app_blog")
+                    for (var i = 0; i < table.rows.length; i++) {
+                        if (table.rows[i].dataset.id !== undefined) {
+                            let data = {
+                                Id: parseInt(table.rows[i].dataset.id),
+                                Descipcion: "slide",
+                                ImgSmall: "",
+                                ImgLarge: "",
+                                Position: parseInt(i)
+                            }
+                            this.ListOrder.push(data)
+                        }
+                    }
+
+                    axios.post('@Url.Action("EditPositions","HomeAnuncio")', this.ListOrder, { headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data,'success')
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    })
+                },
+                ShowMessageErrorShort: function (text,icon) {
+                        const Toast = Swal.mixin({
+                              toast: true,
+                              position: 'top-end',
+                              showConfirmButton: false,
+                              timer: 4000,
+                              timerProgressBar: true,
+                              onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                              }
+                            })
+
+                            Toast.fire({
+                              icon: icon,
+                              title: text
+                            })
+                    },
+                }
+        });
+
+    </script>
+
+}

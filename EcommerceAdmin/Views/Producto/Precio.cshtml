@@ -22,9 +22,6 @@
                                         <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes2" role="tab" aria-controls="profile" aria-selected="false">Cable de servicio</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes3" role="tab" aria-controls="profile" aria-selected="false">Distribuidor</a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes4" role="tab" aria-controls="profile" aria-selected="false">Jumpers Cable</a>
                                     </li>
                                     <li class="nav-item">
@@ -32,6 +29,9 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes6" role="tab" aria-controls="profile" aria-selected="false">Distribuidor preconectorizado</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes7" role="tab" aria-controls="profile" aria-selected="false">Distribuidor precargados</a>
                                     </li>
                                 </ul>
                             </div>
@@ -117,27 +117,6 @@
                                         </table>
                                         <div v-if="CabServicio.isGetting == true">Obteniendo lista de precios</div>
                                     </div>
-                                    <div class="tab-pane fade show " id="Imagenes3" role="tabpanel" aria-labelledby="home-tab">
-                                        <table class="table display responsive nowrap table-sm" v-if="Distribuidor.isGetting == false">
-                                            <thead>
-                                                <tr>
-                                                    <th>Tipo</th>
-                                                    <th>Componente</th>
-                                                    <th>Precio</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-if="Distribuidor.data.length" v-for="(item, index) in Distribuidor.data">
-                                                    <td>{{ item.tipo }}</td>
-                                                    <td>{{ item.componente }}</td>
-                                                    <td>${{ item.precio }}</td>
-                                                    <td><a href="#" v-on:click="EditarDistribuidor(index)">Ediar precio</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <div v-if="Distribuidor.isGetting == true">Obteniendo lista de precios</div>
-                                    </div>
                                     <div class="tab-pane fade show " id="Imagenes4" role="tabpanel" aria-labelledby="home-tab">
                                         <table class="table display responsive nowrap table-sm" v-if="JumperCable.isGetting == false">
                                             <thead>
@@ -199,13 +178,42 @@
                                                 <tr v-if="DistribuidorPrecon.data.length" v-for="(item, index) in DistribuidorPrecon.data">
                                                     <td>{{ item.tipo }}</td>
                                                     <td>{{ item.componente }}</td>
-                                                    <td>{{ item.cantidad }}</td>
+                                                    <td>
+                                                        <span v-if="item.cantidad == -1">No aplica</span>
+                                                        <span v-if="item.cantidad != -1">{{ item.cantidad }}</span>
+                                                    </td>
                                                     <td>${{ item.precio }}</td>
                                                     <td><a href="#" v-on:click="EditarDistribuidorPrecon(index)">Ediar precio</a></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                         <div v-if="DistribuidorPrecon.isGetting == true">Obteniendo lista de precios</div>
+                                    </div>
+                                    <div class="tab-pane fade show " id="Imagenes7" role="tabpanel" aria-labelledby="home-tab">
+                                        <table class="table display responsive nowrap table-sm" v-if="DistribuidorPrecar.isGetting == false">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Componente</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="DistribuidorPrecar.data.length" v-for="(item, index) in DistribuidorPrecar.data">
+                                                    <td>{{ item.tipo }}</td>
+                                                    <td>{{ item.componente }}</td>
+                                                    <td>
+                                                        <span v-if="item.placas == -1">No aplica</span>
+                                                        <span v-if="item.placas != -1">{{ item.placas }}</span>
+                                                    </td>
+                                                    <td>${{ item.precio }}</td>
+                                                    <td><a href="#" v-on:click="EditarDistribuidorPrecar(index)">Ediar precio</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div v-if="DistribuidorPrecar.isGetting == true">Obteniendo lista de precios</div>
                                     </div>
                                 </div>
                             </div>
@@ -282,6 +290,11 @@
                     data: [],
                     isGetting: false,
                     isProcessing: false
+                },
+                DistribuidorPrecar: {
+                    data: [],
+                    isGetting: false,
+                    isProcessing: false
                 }
             },
             async mounted() {
@@ -289,12 +302,21 @@
                 await this.GetMPO();
                 await this.GetPigtail();
                 await this.GetCabServicio();
-                await this.GetDistribuidor();
+                //await this.GetDistribuidor();
                 await this.GetJumperCable();
                 await this.GetJumperConector();
                 await this.GetDistribuidorPrecon();
+                await this.GetDistribuidorPrecar();
             },
             methods: {
+                EditarDistribuidorPrecar: async function (index) {
+                    var myWindow = window.open('@Url.Action("Edit","ProductoDistribuidorPrecar")' + '/' + this.DistribuidorPrecar.data[index].id, "MsgWindow", "width=800,height=600");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        app_precio.GetDistribuidorPrecar();
+                    }
+                    myWindow.focus();
+                },
                 EditarDistribuidorPrecon: async function (index) {
                     var myWindow = window.open('@Url.Action("Edit","ProductoDistribuidorPrecon")' + '/' + this.DistribuidorPrecon.data[index].id, "MsgWindow", "width=800,height=600");
                     myWindow.onunload = function () {
@@ -304,7 +326,7 @@
                     myWindow.focus();
                 },
                 EditarJumperConector: async function (index) {
-                    var myWindow = window.open('@Url.Action("Edit","ProductoJumperConector")' + '/' + this.JumperCable.data[index].id, "MsgWindow", "width=800,height=600");
+                    var myWindow = window.open('@Url.Action("Edit","ProductoJumperConector")' + '/' + this.JumperConector.data[index].id, "MsgWindow", "width=800,height=600");
                     myWindow.onunload = function () {
                         console.log("se ha cargado la apgina");
                         app_precio.GetJumperConector();
@@ -360,6 +382,14 @@
                      myWindow.focus();
                     @*$("#modal_precio").modal("show")
                     document.getElementById("iframeedit").src = '@Url.Action("Edit","ProductoPatchCord")' + '/' + this.PatchCord.data[index].id;*@
+                },
+                GetDistribuidorPrecar: async function () {
+                    this.DistribuidorPrecar.isGetting = true;
+                    await axios.post('@Url.Action("Dataget","ProductoDistribuidorPrecar")', null, { headers: this.serverToken }).then(response => {
+                        this.DistribuidorPrecar.data = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                    }).finally(() => this.DistribuidorPrecar.isGetting = false)
                 },
                 GetDistribuidorPrecon: async function () {
                     this.DistribuidorPrecon.isGetting = true;

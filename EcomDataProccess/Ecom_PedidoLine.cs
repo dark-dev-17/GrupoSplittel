@@ -21,6 +21,7 @@ namespace EcomDataProccess
         [Display(Name = "Cantidad")]
         public double Quantity { get; set; }
         [Display(Name = "Precio")]
+        [DisplayFormat(DataFormatString = "{0:#.###}")]
         public double Price { get; set; }
         [Display(Name = "Moneda")]
         public string Currency { get; set; }
@@ -29,8 +30,10 @@ namespace EcomDataProccess
         public string Code_confgurable { get; set; }
         public string ImageLink { get { return ConfigurationManager.AppSettings["Ecommerce_Domain"].ToString() + string.Format(@"/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Imageprincipal); } }
         [Display(Name = "Total")]
+        [DisplayFormat(DataFormatString = "{0:#.###}")]
         public double LineTotal { get; set; }
         [Display(Name = "SubTotal")]
+        [DisplayFormat(DataFormatString = "{0:#.###}")]
         public double LineSubTotal { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion

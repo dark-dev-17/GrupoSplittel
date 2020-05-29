@@ -84,14 +84,21 @@
                                 @Html.DisplayFor(modelItem => item.DocCur)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.PorcentDisaccount)
+                                @Html.DisplayFor(modelItem => item.PorcentDisaccount) %
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.DocDate)
                             </td>
 
                             <td>
-                                @Html.DisplayFor(modelItem => item.Id_cliente)
+                                @if (ctrlShowBussines && item.Id_cliente != 0)
+                                {
+                                    @Html.ActionLink((item.Ecom_Cliente_.Nombre + " " + item.Ecom_Cliente_.Apellidos), "Details", "Cliente", new { id = item.Id_cliente }, new { @class = "btn btn-sm btn-outline-success", title = "Ver cliente E-commerce" })
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.Ecom_Cliente_.Nombre) @Html.DisplayFor(modelItem => item.Ecom_Cliente_.Apellidos)
+                                }
                             </td>
 
                         </tr>

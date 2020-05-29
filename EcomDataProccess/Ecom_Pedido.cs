@@ -12,11 +12,15 @@ namespace EcomDataProccess
         [Display(Name = "Fecha")]
         public DateTime DocDate { get; set; }
         [Display(Name = "Total")]
+        [DisplayFormat(DataFormatString = "{0:#.###}")]
         public double DocTotal { get; set; }
         [Display(Name = "SubTotal")]
+        [DisplayFormat(DataFormatString = "{0:#.###}")]
         public double DocSubTotal { get; set; }
         [Display(Name = "Iva")]
+        [DisplayFormat(DataFormatString = "{0:#.###}")]
         public double DocIva { get; set; }
+        [DisplayFormat(DataFormatString = "{0:#.###}")]
         [Display(Name = "TC")]
         public double DocRate { get; set; }
         [Display(Name = "Tipo Cliente")]
@@ -47,6 +51,7 @@ namespace EcomDataProccess
         public bool RequireInvoice { get; private set; }
         [Display(Name = "Requiere costo envio")]
         public int RequireShipCost { get; private set; }
+        [Display(Name = "Cliente E-commerce")]
         public int Id_cliente { get; set; }
         public int TransportationCode { get; set; }
         [Display(Name = "NO.E-commerce")]
@@ -202,8 +207,14 @@ namespace EcomDataProccess
         }
         public List<Ecom_Pedido> GetCliente(int IdCliente)
         {
-            string Statement = string.Format("select * from Admin_pedidosInfo where id_cliente = '{0}' order by fecha desc", CardCode);
+            string Statement = string.Format("select * from Admin_pedidosInfo where id_cliente = '{0}' order by fecha desc", IdCliente);
             return ReadDatReader(Statement);
+        }
+        public bool IsPedidoCliente(int DocNumEcommerce_, int IdCliente)
+        {
+            string Statement = string.Format("select * from Admin_pedidosInfo where id_cliente = '{0}' and  id = '{1}' order by fecha desc", IdCliente, DocNumEcommerce_);
+            bool response = ReadDatReader(Statement).Count == 1 ? true : false;
+            return response;
         }
         public List<Ecom_Pedido> GetByBussinessPartner(string CardCode)
         {
@@ -235,8 +246,13 @@ namespace EcomDataProccess
                     Ecom_Cotizacion_.DocRate = Data.GetDouble(16);
                     Ecom_Cotizacion_.DocCur = "USD";
                     List.Add(Ecom_Cotizacion_);
+
                 }
                 Data.Close();
+                List.ForEach(doc => {
+                    doc.Ecom_Cliente_ = new Ecom_Cliente(Ecom_DBConnection_);
+                    doc.Ecom_Cliente_.Get(doc.Id_cliente);
+                });
                 return List;
             }
             catch (Ecom_Exception ex)
@@ -277,6 +293,10 @@ namespace EcomDataProccess
             {
                 return "Error";
             }
+        }
+        public void SetConnection(Ecom_DBConnection Ecom_DBConnection_)
+        {
+            this.Ecom_DBConnection_ = Ecom_DBConnection_;
         }
         #endregion
     }

@@ -127,6 +127,9 @@ else
                             <li class="nav-item">
                                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Ficha tecnica</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact" aria-selected="false">vista 360</a>
+                            </li>
                         </ul>
                     </div><!-- card-header -->
                     <div class="card-body color-gray-lighter">
@@ -279,28 +282,52 @@ else
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                <nav class="navbar navbar-light bg-light justify-content-between">
-                                    <a class="navbar-brand">Producto: @Model.ItemCode</a>
-                                    @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 3 }))
-                                    {
-                                        <form class="form-inline">
-                                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="VerFichasTecnicas('')">Cambiar ficha técnica</button>
-                                        </form>
-                                    }
-                                </nav>
-                                <h3>Codigo de ficha técnica: @Model.FichaTecnica.Codigo</h3>
-                                @if (Model.FichaTecnica.Ruta.Length == 0)
+                                @if (Model.FichaTecnica == null)
                                 {
-                                    <h3>No cuenta con ficha técnica</h3>
+                                    <nav class="navbar navbar-light bg-light justify-content-between">
+                                        <a class="navbar-brand">Producto: @Model.ItemCode no tiene ficha técnica</a>
+                                    </nav>
                                 }
                                 else
                                 {
-                                    @*@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))*@
-                                    <div class="embed-responsive embed-responsive-16by9">
-                                        <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))" type="application/pdf" allowfullscreen></iframe>
-                                    </div>
+                                    <nav class="navbar navbar-light bg-light justify-content-between">
+                                        <a class="navbar-brand">Producto: @Model.ItemCode</a>
+                                        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 3 }))
+                                        {
+                                            <form class="form-inline">
+                                                <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="VerFichasTecnicas('')">Cambiar ficha técnica</button>
+                                            </form>
+                                        }
+                                    </nav>
+                                    <h3>Codigo de ficha técnica: @Model.FichaTecnica.Codigo</h3>
+                                    @if (Model.FichaTecnica.Ruta.Length == 0)
+                                    {
+                                        <h3>No cuenta con ficha técnica</h3>
+                                    }
+                                    else
+                                    {
+                                        @*@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))*@
+                                        <div class="embed-responsive embed-responsive-16by9">
+                                            <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))" type="application/pdf" allowfullscreen></iframe>
+                                        </div>
+                                    }
                                 }
+                            </div>
+                            <div class="tab-pane fade" id="contact1" role="tabpanel" aria-labelledby="contact-tab">
+                                <nav class="navbar navbar-light bg-light justify-content-between">
+                                    <a class="navbar-brand">Producto: @Model.ItemCode vista 360</a>
+                                    <form class="form-inline">
+                                        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 49 }))
+                                        {
+                                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="Cambiar360()">Cambiar vista 360</button>
+                                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click="Delete360()">Eliminar vista 360</button>
+                                        }
 
+                                    </form>
+                                </nav>
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/productos/{1}/360/{1}.html",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ItemCode))" type="application/pdf" allowfullscreen></iframe>
+                                </div>
                             </div>
                         </div>
                     </div><!-- card-body -->
@@ -428,7 +455,7 @@ else
                         images: [],
                         isGetting: true
                     },
-                    
+
                 },
                 Descripciones: [],
                 FichasTecnicas: [],
@@ -440,7 +467,7 @@ else
                 await this.GetDescripcionImagenes();
                 await this.GetInfoAdicionalImagenes();
                 await this.GetMiniaturaImagenes();
-                 
+
             },
             methods: {
                 SeleccionarFicha: async function (fichaTecnicaCodigo) {
@@ -459,7 +486,7 @@ else
                             params.append('ItemCode', '' + this.item.Code);
                             axios.post('@Url.Action("DataCambiarFichaTecnicaAsync","Producto")', params,{ headers: this.serverToken }).then(response => {
                                 this.ShowMessageErrorShort(response.data, 'success')
-                                location.reload(); 
+                                location.reload();
                             }).catch(error => {
                                 this.ShowMessageErrorShort(error.response.data,'error')
                             }).finally(() => this.images.Producto.isGetting = false)
@@ -787,6 +814,59 @@ else
                         }
                     })
                 },
+                Delete360: async function () {
+                     Swal.fire({
+                        title: "¿Deseas eliminar vista 360?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, eliminalo!'
+                    }).then((result) => {
+                        if (result.value) {
+                            axios.get('@Html.Raw(string.Format("{0}/store/models/PublicApi/UnzipFile.php?ItemCode={1}&Process=delete",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ItemCode))', null,null).then(response => {
+                                this.ShowMessageErrorShort(response.data,'success')
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            }).finally(() => this.images.Producto.isGetting = false)
+                        }
+                    })
+                },
+                Cambiar360: async function () {
+                    Swal.fire({
+                        title: 'Selecciona archivo .zip de tu vista 360',
+                        input: 'file',
+                        inputAttributes: {
+                             'accept': 'zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed',
+                            'aria-label': 'Cambia vista 360'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Ok!',
+                        showLoaderOnConfirm: true,
+                        preConfirm: async (file) => {
+                            if (file) {
+                                let params = new FormData();
+                                    params.append('FormFile', file);
+                                    params.append('ItemCode', "@Model.ItemCode");
+                                    params.append('ImagessType', '360' );
+                                await axios.post('@Url.Action("DataUploadFiles","Producto")', params, { headers: this.serverToken }).then(response => {
+                                    return response.data
+                                }).catch(error => {
+                                    Swal.showValidationMessage(`Error: ${error.response.data}`)
+                                }).finally(() => this.images.Miniatura.isGetting = false)
+                            }
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.value) {
+                            Swal.fire({
+                                title: "Archivo zip cargado",
+                            })
+                            this.UnzipFile()
+                        }
+                    })
+                },
                 UpdateProductoImagenes: async function () {
                     const { value: file } = await Swal.fire({
                         title: 'Select image',
@@ -951,6 +1031,13 @@ else
                     }).catch(error => {
                         this.ShowMessageErrorShort(error.response.data,'error')
                     }).finally(() => this.images.Miniatura.isGetting = false)
+                },
+                UnzipFile: async function () {
+                    axios.get('@Html.Raw(string.Format("{0}/store/models/PublicApi/UnzipFile.php?ItemCode={1}&Process=unzip",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ItemCode))', null,null).then(response => {
+                            this.ShowMessageErrorShort(response.data,'success')
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.images.Producto.isGetting = false)
                 },
                 ShowMessageError: function (text) {
                     Swal.fire({

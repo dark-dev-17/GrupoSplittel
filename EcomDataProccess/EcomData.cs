@@ -13,6 +13,8 @@ namespace EcomDataProccess
         private Ecom_DBConnection Ecom_DBSplittel;
         public Ecom_Email Ecom_Email_;
         private Ecom_Notificacion Ecom_Notificacion_;
+        public Ecom_FilesFtp Ecom_FilesFtp;
+
         #endregion
 
         #region Constructores
@@ -27,6 +29,10 @@ namespace EcomDataProccess
         #endregion
 
         #region Metodos
+        public void StartFTP(string FTP_Server, string FTP_User, string FTP_Password)
+        {
+            Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
+        }
         public bool SendMailNotification(int idProcess,string BodyHTML, string AddressesoT)
         {
             Ecom_ProcesoEmail Ecom_ProcesoEmail_ = new Ecom_ProcesoEmail(Ecom_DBEcommerce);
@@ -42,6 +48,36 @@ namespace EcomDataProccess
                 }
             }
             return Ecom_Email_.SendMailNotification(BodyHTML, Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaTo), Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaCC), Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaBCC));
+        }
+        public List<Ecom_Notificacion> GetNotificacionsEcom(int USR_IdSplinnet, int USR_IdArea)
+        {
+            Ecom_Notificacion_ = new Ecom_Notificacion(Ecom_DBEcommerce);
+            bool AccesMaster = validPermissAction(USR_IdSplinnet, 40);
+            bool AccesArea = validPermissAction(USR_IdSplinnet, 41);
+            bool AccesUser = validPermissAction(USR_IdSplinnet, 42);
+            List<Ecom_Notificacion> Notificaciones = new List<Ecom_Notificacion>();
+            if (AccesMaster)
+            {
+                Notificaciones = Ecom_Notificacion_.GetTipo("info");
+            }
+            if (AccesArea)
+            {
+                Notificaciones = Ecom_Notificacion_.GetArea(USR_IdArea);
+            }
+            if (AccesUser)
+            {
+                Notificaciones = Ecom_Notificacion_.GetUsuario(USR_IdSplinnet);
+            }
+
+            if (Notificaciones.Count > 0)
+            {
+                Notificaciones.ForEach(not => {
+                    EcomDataProccess.Ecom_Usuario Ecom_Usuario = (EcomDataProccess.Ecom_Usuario)GetObject(EcomDataProccess.ObjectSource.Usuario);
+                    Ecom_Usuario.Get(not.Usuario);
+                    not.Ecom_Usuario_ = Ecom_Usuario;
+                });
+            }
+            return Notificaciones;
         }
         public List<Ecom_Notificacion> getNotifications(int USR_IdSplinnet, int USR_IdArea)
         {
@@ -166,12 +202,6 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
-            else if (objectSource == ObjectSource.ProcesoEmail)
-            {
-                Ecom_ProcesoEmail objeto = (Ecom_ProcesoEmail)Modelo;
-                objeto.SetConnection(Ecom_DBEcommerce);
-                return objeto;
-            }
             else if (objectSource == ObjectSource.ProductoDescripcion)
             {
                 Ecom_ProductoDescripcion objeto = (Ecom_ProductoDescripcion)Modelo;
@@ -229,6 +259,30 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.ProductoDistribuidorPrecon)
             {
                 Ecom_ProductoDistribuidorPrecon objeto = (Ecom_ProductoDistribuidorPrecon)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.Cliente)
+            {
+                Ecom_Cliente objeto = (Ecom_Cliente)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.Pedido)
+            {
+                Ecom_Pedido objeto = (Ecom_Pedido)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ProductoDistribuidorPrecar)
+            {
+                Ecom_ProductoDistribuidorPrecar objeto = (Ecom_ProductoDistribuidorPrecar)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.HomeAnuncio)
+            {
+                Ecom_HomeAnuncio objeto = (Ecom_HomeAnuncio)Modelo;
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
@@ -334,6 +388,18 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.ProductoDistribuidorPrecon)
             {
                 return new Ecom_ProductoDistribuidorPrecon(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.Pedido)
+            {
+                return new Ecom_Pedido(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ProductoDistribuidorPrecar)
+            {
+                return new Ecom_ProductoDistribuidorPrecar(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.HomeAnuncio)
+            {
+                return new Ecom_HomeAnuncio(Ecom_DBEcommerce);
             }
             else
             {

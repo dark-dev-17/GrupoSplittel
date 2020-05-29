@@ -1,0 +1,174 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_HomeAnuncio>
+@using Microsoft.AspNetCore.Http;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Slides(Home) ";
+    EcommerceAdmin.Models.Ecommerce ecommerce = new Ecommerce(HttpContextAccessor.HttpContext.Session);
+    ecommerce.StartLib(LibraryEcommerce.Ecommerce);
+    ecommerce.ecomData.Connect(EcomDataProccess.ServerSource.Splitnet);
+    bool CtrlPublic = ecommerce.ValidActionUser(52);
+    bool CtrlDirigidos = ecommerce.ValidActionUser(51);
+    bool CtrlOrder = ecommerce.ValidActionUser(53);
+    ecommerce.ecomData.Disconect(EcomDataProccess.ServerSource.Splitnet);
+}
+<div id="app_orderanuncio">
+    <nav class="navbar navbar-light bg-light justify-content-between">
+        @*
+        *@
+        <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
+
+        </div>
+        <div class="float-right">
+            @if (CtrlOrder)
+            {
+                <a v-on:click="OrderList()" style="color:white;" class="btn btn-sm btn-secondary">Ordenar slides</a>
+            }
+            @if(CtrlPublic || CtrlDirigidos)
+            {
+                <a href="/HomeAnuncio/Create" class="btn btn-sm btn-secondary">Agregar</a>
+            }
+            
+        </div>
+    </nav>
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap " id="table_app_blog" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Descipcion)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ImgSmall_)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ImgLarge_)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ShowBy)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Group)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Categoria)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsActive)
+                        </th>
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.Position)
+                            </th>*@
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Descipcion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ImgSmall)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ImgLarge)
+                            </td>
+                            <td>
+                                @if (item.ShowBy == "PUBLIC")
+                                {
+                                    <span>Publico</span>
+                                }
+                                @if (item.ShowBy == "B2C")
+                                {
+                                    <span>Clientes B2C</span>
+                                }
+                                @if (item.ShowBy == "B2B")
+                                {
+                                    <span>Clientes B2B</span>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Group)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Categoria)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Detalle", "Details", new { id = item.Id }) |
+                                @if (CtrlPublic && item.ShowBy == "PUBLIC" && !CtrlDirigidos || CtrlDirigidos && item.ShowBy != "PUBLIC" && !CtrlPublic || CtrlPublic && CtrlDirigidos)
+
+                                {
+                                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) <span> | </span>
+                                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
+                                }
+
+                            </td>
+                     </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/html5sortable.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            sortable('.js-sortable-table-no-placeholder tbody', {
+                items: "tr",
+                forcePlaceholderSize: true,
+                placeholderClass: 'placeholder sort-placeholder',
+            })
+
+        });
+    </script>
+    <script>
+        var app_orderanuncio = new Vue({
+            el: "#app_orderanuncio",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                ListOrder: []
+            },
+            mounted() {
+
+            },
+            methods: {
+                OrderList: function () {
+                    var myWindow = window.open('@Url.Action("Order","HomeAnuncio")' , "MsgWindow", "width=800,height=900");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                    }
+                    myWindow.focus();
+                },
+                ShowMessageErrorShort: function (text,icon) {
+                        const Toast = Swal.mixin({
+                              toast: true,
+                              position: 'top-end',
+                              showConfirmButton: false,
+                              timer: 4000,
+                              timerProgressBar: true,
+                              onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                              }
+                            })
+
+                            Toast.fire({
+                              icon: icon,
+                              title: text
+                            })
+                    },
+                }
+        });
+
+    </script>
+
+}

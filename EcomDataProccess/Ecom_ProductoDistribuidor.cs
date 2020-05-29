@@ -94,7 +94,7 @@ namespace EcomDataProccess
         }
         public bool Get(int IdElemento)
         {
-            List<Ecom_ProductoDistribuidor> List = ReadDatReader(string.Format("SELECT * FROM t26_precios_distribuidores where id = '{0}'", IdElemento));
+            List<Ecom_ProductoDistribuidor> List = ReadDatReader(string.Format("SELECT * FROM t26_precios_distribuidores where id = '{0}'  order by tipo asc", IdElemento));
             if (List.Count > 0)
             {
                 List.ForEach(item => {
@@ -112,7 +112,7 @@ namespace EcomDataProccess
         }
         public List<Ecom_ProductoDistribuidor> Get()
         {
-            return ReadDatReader(string.Format("SELECT * FROM t26_precios_distribuidores;"));
+            return ReadDatReader(string.Format("SELECT * FROM t26_precios_distribuidores  order by tipo asc;"));
         }
         private List<Ecom_ProductoDistribuidor> ReadDatReader(string Statement)
         {

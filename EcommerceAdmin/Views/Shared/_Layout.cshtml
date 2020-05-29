@@ -38,7 +38,8 @@
         controllerName == "ProductoDistribuidor" ||
         controllerName == "ProductoJumperConector" ||
         controllerName == "ProductoJumperCable" ||
-        controllerName == "ProductoDistribuidorPrecon" 
+        controllerName == "ProductoDistribuidorPrecon" ||
+        controllerName == "ProductoDistribuidorPrecar"  || controllerName == "HomeAnuncio" && controllerAction == "Order"
     )
     {
         @RenderBody()
@@ -69,6 +70,7 @@
                 </div>
             </div>
         </div>
+        
     }
     <environment include="Development">
         <partial name="_Scripts" />
@@ -92,11 +94,38 @@
                 verCliente: function (CardCode) {
                     window.location = '@Url.Action("Show","BussinesPartner")/' + CardCode;
                 },
+                GetNotifications: function () {
+                    document.getElementById("HeaderNotification").innerHTML = '<div class="d-flex bg-gray-200 ht-300 pos-relative align-items-center"><div class="sk-spinner sk-spinner-pulse bg-gray-800"></div></div>'
+                    axios.get('@Url.Action("List","Notificacion")', null, null).then(response => {
+                        document.getElementById("HeaderNotification").innerHTML = '';
+                        document.getElementById("HeaderNotification").innerHTML = response.data;
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                        document.getElementById("HeaderNotification").innerHTML = '';
+                    })
+                },
                 test: function (CardCode) {
                     alert(CardCode)
-                }
-            }
+                },
+                ShowMessageErrorShort: function (text,icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
 
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+            }
         });
 
     </script>

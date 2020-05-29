@@ -94,7 +94,7 @@ namespace EcomDataProccess
         }
         public bool Get(int IdElemento)
         {
-            List<Ecom_ProductoPigtail> List = ReadDatReader(string.Format("SELECT * FROM t18_precios_pigtails where id = '{0}'", IdElemento));
+            List<Ecom_ProductoPigtail> List = ReadDatReader(string.Format("SELECT * FROM t18_precios_pigtails where id = '{0}'  order by tipo asc", IdElemento));
             if (List.Count > 0)
             {
                 List.ForEach(item => {
@@ -112,7 +112,7 @@ namespace EcomDataProccess
         }
         public List<Ecom_ProductoPigtail> Get()
         {
-            return ReadDatReader(string.Format("SELECT * FROM t18_precios_pigtails;"));
+            return ReadDatReader(string.Format("SELECT * FROM t18_precios_pigtails  order by tipo asc;"));
         }
         private List<Ecom_ProductoPigtail> ReadDatReader(string Statement)
         {

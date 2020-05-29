@@ -22,11 +22,11 @@
                             @Html.DisplayNameFor(model => model.DocDate)
                         </th>
                         @*<th>
-                                @Html.DisplayNameFor(model => model.DocTotal)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.DocCur)
-                            </th>*@
+            @Html.DisplayNameFor(model => model.DocTotal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DocCur)
+        </th>*@
                         <th>
                             @Html.DisplayNameFor(model => model.CardCode)
                         </th>
@@ -36,46 +36,54 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Remarks)
                         </th>
-
-                        <th></th>
+                        <th>
+                            Cliente E-commerce
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>
-                                @Html.ActionLink(item.DocNumEcommerce + "", "Detalle", "Pedido", new { id = item.DocNumEcommerce }, new { @class = "btn btn-sm btn-outline-success" })
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DocNum)
-                            </td>
-                            <td>
-                                $@Html.DisplayFor(modelItem => item.DocDate)
-                            </td>
-                            @*<td>
-                                    $@Html.DisplayFor(modelItem => item.DocTotal)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.DocCur)
-                                </td>*@
-                            <td>
-                                @if (ctrlShowBussines)
-                                {
-                                    @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
-                                }
-                                else
-                                {
-                                    @Html.DisplayFor(modelItem => item.CardCode)
-                                }
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Cardname)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Remarks)
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.DocNumEcommerce + "", "Detalle", "Pedido", new { id = item.DocNumEcommerce }, new { @class = "btn btn-sm btn-outline-success" })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DocNum)
+                        </td>
+                        <td>
+                            $@Html.DisplayFor(modelItem => item.DocDate)
+                        </td>
+                        @*<td>
+            $@Html.DisplayFor(modelItem => item.DocTotal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DocCur)
+        </td>*@
+                        <td>
+                            @if (ctrlShowBussines)
+                            {
+                                @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.CardCode)
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cardname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remarks)
+                        </td>
+                        <td>
+                            @if (item.ObjetoAux != null)
+                            {
+                                EcomDataProccess.Ecom_Cliente ecom_Cliente = (EcomDataProccess.Ecom_Cliente)item.ObjetoAux;
+                                @ecom_Cliente.Nombre @ecom_Cliente.Apellidos
+                            }
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>

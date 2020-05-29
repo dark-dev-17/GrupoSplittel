@@ -168,6 +168,17 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
+        public List<Ecom_DireccionFacturacion> GetCliente(int IdCliente_)
+        {
+            try
+            {
+                return ReadDatReader(string.Format("SELECT * FROM datos_facturacion where id_cliente = '{0}'", IdCliente_));
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         private List<Ecom_DireccionFacturacion> ReadDatReader(string Statement)
         {
             List<Ecom_DireccionFacturacion> List = null;

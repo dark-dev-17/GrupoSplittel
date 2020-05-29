@@ -45,7 +45,14 @@
                             <td>
                                 @if (ctrlShowBussines)
                                 {
-                                    @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
+                                    if ("2018-000404" == item.CardCode)
+                                    {
+                                        <button class = "btn btn-sm btn-outline-warning disabled">@item.CardCode</button>
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
+                                    }
                                 }
                                 else
                                 {
@@ -53,10 +60,18 @@
                                 }
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.TipoCliente)
+                                @Html.DisplayFor(modelItem => item.TipoCliente)-@item.Id_cliente.ToString().PadLeft(5, '0')
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Nombre)
+                                @if (ctrlShowBussines)
+                                {
+                                    @Html.ActionLink(item.Nombre, "Details", "Cliente", new { id = item.Id_cliente }, new { @class = "btn btn-sm btn-outline-success", title = "Ver cliente E-commerce" })
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.Nombre)
+                                }
+
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Apellidos)

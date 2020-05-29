@@ -121,6 +121,7 @@ namespace EcomDataProccess
                 }
             }
         }
+
         public bool Get(int IdSplinnet_)
         {
             string Statement = string.Format("SELECT ID,username,email,nombre,apaterno,amaterno,id_area,sociedad,foto,password FROM signup where ID = '{0}';", IdSplinnet_);

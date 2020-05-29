@@ -94,7 +94,7 @@ namespace EcomDataProccess
         {
             try
             {
-                return Ecom_DBConnection_.ExecuteScalarInt("SELECT max(id) FROM t07_precios_patchcord");
+                return Ecom_DBConnection_.ExecuteScalarInt("SELECT max(id) FROM t07_precios_patchcord ");
             }
             catch (Ecom_Exception ex)
             {
@@ -103,7 +103,7 @@ namespace EcomDataProccess
         }
         public bool Get(int IdElemento)
         {
-            List<Ecom_ProductoPatchCord> List = ReadDatReader(string.Format("SELECT * FROM t07_precios_patchcord where id = '{0}'", IdElemento));
+            List<Ecom_ProductoPatchCord> List = ReadDatReader(string.Format("SELECT * FROM t07_precios_patchcord where id = '{0}' order by tipo asc", IdElemento));
             if (List.Count > 0)
             {
                 List.ForEach(item => {
@@ -121,7 +121,7 @@ namespace EcomDataProccess
         }
         public List<Ecom_ProductoPatchCord> Get()
         {
-            return ReadDatReader(string.Format("SELECT * FROM t07_precios_patchcord;"));
+            return ReadDatReader(string.Format("SELECT * FROM t07_precios_patchcord  order by tipo asc;"));
         }
         private List<Ecom_ProductoPatchCord> ReadDatReader(string Statement)
         {

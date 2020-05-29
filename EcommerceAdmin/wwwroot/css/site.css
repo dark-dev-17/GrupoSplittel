@@ -167,3 +167,12 @@
         opacity: 0.9;
     }
 }
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #4abb2a !important;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 5px;
+    margin-top: 5px;
+    padding: 0;
+}

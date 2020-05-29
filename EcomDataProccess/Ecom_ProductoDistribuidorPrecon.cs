@@ -17,7 +17,7 @@ namespace EcomDataProccess
         [Display(Name = "Cantidad")]
         public double Cantidad { get; set; }
         [Display(Name = "Precio")]
-        [RegularExpression(@"^\d+\.\d{0,3}$", ErrorMessage = "Solo se permiten 3 decimales")]
+        //[RegularExpression(@"^\d+\.\d{0,3}$", ErrorMessage = "Solo se permiten 3 decimales")]
         [Required]
         public double Precio { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;

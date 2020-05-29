@@ -1,6 +1,6 @@
 ﻿@model SAPDataProcess.SAP_BussinessPartner
 @{
-    ViewData["Title"] = "Información: " + Model.CardCode;
+    ViewData["Title"] = "Información general del socio de negocios: " + Model.CardCode;
 
     Ecom_SAP ecom_SAP = new Ecom_SAP("Ambas");
     List<EcomDataProccess.Ecom_Pedido> Cotizaciones = ecom_SAP.GetEcom_Pedidos("Cotizacion", Model.CardCode);

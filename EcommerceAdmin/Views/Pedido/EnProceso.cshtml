@@ -5,6 +5,9 @@
     int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
     ViewData["Title"] = "Pedidos en proceso";
     bool ctrlShowBussines = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 18 });
+
+    
+
 }
 <div id="app_enProceso">
     <div class="br-section-wrapper col-lg-12">
@@ -38,6 +41,9 @@
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Status)
+                        </th>
+                        <th>
+                            Cliente E-commerce
                         </th>
                     </tr>
                 </thead>
@@ -78,6 +84,13 @@
                             </td>
                             <td>
                                 @item.GetStatusDescription()
+                            </td>
+                            <td>
+                                @if (item.ObjetoAux != null)
+                                {
+                                    EcomDataProccess.Ecom_Cliente ecom_Cliente = (EcomDataProccess.Ecom_Cliente)item.ObjetoAux;
+                                    @ecom_Cliente.Nombre @ecom_Cliente.Apellidos
+                                }
                             </td>
                         </tr>
                     }

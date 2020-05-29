@@ -195,6 +195,10 @@ namespace EcomDataProccess
                 }
             }
         }
+        public void SetConnection(Ecom_DBConnection Ecom_DBConnection_)
+        {
+            this.Ecom_DBConnection_ = Ecom_DBConnection_;
+        }
         #endregion
     }
 }

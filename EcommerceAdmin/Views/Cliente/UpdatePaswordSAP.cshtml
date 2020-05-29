@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Actualizar contraseña socio de negocios SAP";
+}
+<div id="app_editPasswordSAP" class="container h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-6 mx-auto">
+            <div class="jumbotron  mt-3" style="background-color: #fff">
+                <div class="card text-center">
+                    <div class="card-header">
+                        @ViewData["Title"]
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label">Código cliente</label>
+                                <input v-model="CardCode" name="" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Contraseña</label>
+                                <input v-model="Password" name="" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Sociedad</label>
+                                <select v-model="Sociedad" class="form-control">
+                                    <option value="FIBREMEX">FIBREMEX</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="button" id="closeWindow" value="Cancelar" class="btn btn-default" />
+                                <input type="button" v-on:click="Update()" value="Guardar" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_editPasswordSAP = new Vue({
+            el: "#app_editPasswordSAP",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                CardCode: '',
+                Password: '',
+                Sociedad: 'FIBREMEX',
+            },
+            mounted() {
+                
+            },
+            methods: {
+                Update: async function () {
+                    Swal.fire({
+                        title: "¿Deseas guardar la contraseña?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si actualizalo!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var params = new URLSearchParams();
+                            params.append('CardCode', '' + this.CardCode);
+                            params.append('Password', '' + this.Password);
+                            params.append('Sociedad', '' + this.Sociedad);
+                            axios.post('@Url.Action("DataUpdatePaswordSAP","Cliente")', params,{ headers: this.serverToken }).then(response => {
+                                this.ShowMessageErrorShort(response.data, 'success')
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            }).finally(() => this.images.Producto.isGetting = false)
+                        }
+                    })
+                },
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+                },
+            }
+        });
+    </script>
+}

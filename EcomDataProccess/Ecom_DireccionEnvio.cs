@@ -176,6 +176,17 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
+        public List<Ecom_DireccionEnvio> GetCliente(int IdCliente_)
+        {
+            try
+            {
+                return ReadDatReader(string.Format("SELECT * FROM datos_envio where id_cliente = '{0}'", IdCliente_));
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         private List<Ecom_DireccionEnvio> ReadDatReader(string Statement)
         {
             List<Ecom_DireccionEnvio> List = null;

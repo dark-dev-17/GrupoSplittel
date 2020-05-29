@@ -1,0 +1,29 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_Notificacion>
+        @foreach (var item in Model)
+        {
+            @if (item.Tipo == "info")
+            {
+                <a href="@Url.Action("InfoNotification","Sistema",new {id = item.Id })" title="Ver notificacion:" class="media-list-link @Html.Raw(item.Estatus == "Visto" ? "" : "read")">
+                    <div class="media pd-x-20 pd-y-15">
+                        <img src="https://regalosparabebes.com.uy/wp-content/uploads/2018/08/icono-envios-en-el-dia.png" class="wd-40 rounded-circle" alt="">
+                        <div class="media-body">
+                            <p class="tx-13 mg-b-0 tx-gray-700"><strong class="tx-medium tx-gray-800">@item.Ecom_Usuario_.Nombre @item.Ecom_Usuario_.ApellidoPaterno</strong> @item.Descripcion</p>
+                            <span class="tx-12">@item.Creacion</span>
+                        </div>
+                    </div><!-- media -->
+                </a>
+            }
+            else
+            {
+                <a href="#" title="Ver notificacion:" class="media-list-link @Html.Raw(item.Estatus == "Visto" ? "" : "read")">
+                    <div class="media pd-x-20 pd-y-15">
+                        <img src="https://regalosparabebes.com.uy/wp-content/uploads/2018/08/icono-envios-en-el-dia.png" class="wd-40 rounded-circle" alt="">
+                        <div class="media-body">
+                            <p class="tx-13 mg-b-0 tx-gray-700"><strong class="tx-medium tx-gray-800">@item.Ecom_Usuario_.Nombre @item.Ecom_Usuario_.ApellidoPaterno</strong> @item.Descripcion</p>
+                            <span class="tx-12">@item.Creacion</span>
+                        </div>
+                    </div><!-- media -->
+                </a>
+            }
+        }
+

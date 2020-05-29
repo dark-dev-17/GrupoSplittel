@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text.RegularExpressions;
 
@@ -338,6 +339,10 @@ namespace EcomDataProccess
                     response.Close();
                 }
             }
+        }
+        public bool UnZipFile()
+        {
+            return true;
         }
         #endregion
     }

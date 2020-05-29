@@ -107,7 +107,7 @@ namespace EcomDataProccess
         }
         public List<Ecom_ProductoCabServicio> Get()
         {
-            return ReadDatReader(string.Format("SELECT * FROM t19_precios_cable_servicio;"));
+            return ReadDatReader(string.Format("SELECT * FROM t19_precios_cable_servicio order by componente asc;"));
         }
         private List<Ecom_ProductoCabServicio> ReadDatReader(string Statement)
         {

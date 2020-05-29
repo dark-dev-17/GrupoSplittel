@@ -176,5 +176,65 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+        [AccessView(IdAction = 18)]
+        public IActionResult Details(int id)
+        {
+            EcomData ecomData = new EcomData(EcomConnection, SplitConnection);
+            try
+            {
+                ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_Cliente Ecom_Cliente_ = (Ecom_Cliente)ecomData.GetObject(ObjectSource.Cliente);
+                if (Ecom_Cliente_.Get(id))
+                {
+                    return View(Ecom_Cliente_);
+                }
+                else
+                {
+                    return View("../ErrorPages/Error", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
+                }
+            }
+            catch(Ecom_Exception ex)
+            {
+                return View("../ErrorPages/Error", new { id = ex.Message });
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
+            }
+        }
+        [AccessView(IdAction = 48)]
+        public IActionResult UpdatePaswordSAP()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessData(IdAction = 48)]
+        public IActionResult DataUpdatePaswordSAP(string CardCode,string Password, string Sociedad)
+        {
+            try
+            {
+                ServiceReference1.WS_BussinesPartnerSoapClient.EndpointConfiguration conf = new ServiceReference1.WS_BussinesPartnerSoapClient.EndpointConfiguration();
+                ServiceReference1.WS_BussinesPartnerSoapClient wS_BussinesPartnerSoap = new ServiceReference1.WS_BussinesPartnerSoapClient(conf);
+                ServiceReference1.ResponseString responseString = wS_BussinesPartnerSoap.UpdatePasswordAsync(CardCode, Password, Sociedad).Result;
+                string resultado = responseString.ErrorDescription;
+                if(responseString.ErrorCode == 0)
+                {
+                    return Ok(resultado);
+                }
+                else
+                {
+                    return BadRequest(resultado);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
     }
 }
