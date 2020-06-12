@@ -86,27 +86,39 @@
                                             <input disabled asp-for="IsActive" class="form-control" />
                                             <span asp-validation-for="IsActive" class="text-danger"></span>
                                         </td>
-                                        <td><strong><label asp-for="Categoria" class="control-label"></label></strong></td>
-                                        <td colspan="3" align="left">
-                                            <select disabled asp-for="Categoria" class="form-control">
-                                                <option selected="selected" value="">Sin categoria</option>
-                                                <option value="A">A</option>
-                                                <option value="B">B</option>
-                                                <option value="C">C</option>
-                                                <option value="D">D</option>
-                                                <option value="E">E</option>
-                                            </select>
-                                            <span asp-validation-for="Categoria" class="text-danger"></span>
-                                        </td>
+                                        @if (Model.ShowBy != "PUBLIC")
+                                        {
+                                            <td><strong><label asp-for="Categoria" class="control-label"></label></strong></td>
+                                            <td colspan="3" align="left">
+                                                <select disabled asp-for="Categoria" class="form-control">
+                                                    <option selected="selected" value="">Sin categoria</option>
+                                                    <option value="A">A</option>
+                                                    <option value="B">B</option>
+                                                    <option value="C">C</option>
+                                                    <option value="D">D</option>
+                                                    <option value="E">E</option>
+                                                </select>
+                                                <span asp-validation-for="Categoria" class="text-danger"></span>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td colspan="4"></td>
+                                        }
+
                                     </tr>
-                                    <tr>
-                                        <td><strong><label asp-for="Group" class="control-label"></label></strong></td>
-                                        <td colspan="7">
-                                            @*<input asp-for="GroupoCode" class="form-control" />*@
-                                            <select disabled multiple="multiple" class=" form-control" id="example-getting-started" asp-for="GroupoCode" asp-items="@(new SelectList(List,"GroupCode","GroupName",null))"></select>
-                                            <span asp-validation-for="GroupoCode" class="text-danger"></span>
-                                        </td>
-                                    </tr>
+                                    @if (Model.ShowBy != "PUBLIC")
+                                    {
+                                        <tr>
+                                            <td><strong><label asp-for="Group" class="control-label"></label></strong></td>
+                                            <td colspan="7">
+                                                @*<input asp-for="GroupoCode" class="form-control" />*@
+                                                <select disabled multiple="multiple" class=" form-control" id="example-getting-started" asp-for="GroupoCode" asp-items="@(new SelectList(List,"GroupCode","GroupName",null))"></select>
+                                                <span asp-validation-for="GroupoCode" class="text-danger"></span>
+                                            </td>
+                                        </tr>
+                                    }
+
                                 </table>
                                 <div class="form-group  float-right">
                                     <a asp-action="Index" class="btn btn-secondary">Volver</a>

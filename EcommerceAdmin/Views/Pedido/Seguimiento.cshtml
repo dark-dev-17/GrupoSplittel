@@ -33,7 +33,7 @@
         methods: {
             GetInProcess: async function () {
                 this.getData = true;
-                await axios.post('@Url.Action("ListInProcesss","Pedido")', null, { headers: this.serverToken }).then(response => {
+                await axios.post('@Url.Action("DataGetInProccess","Pedido")', null, { headers: this.serverToken }).then(response => {
                     response.data.forEach((e,i) => {
                         data = {
                             title: "Pedido : " + e.docNumEcommerce,

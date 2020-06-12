@@ -16,6 +16,7 @@ namespace EcomDataProccess
         public string TipoCliente { get; set; }
         public string CardCode { get; set; }
         public string Sociedad { get; set; }
+        public string Password { get; set; }
         public int NoDocs { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
@@ -99,6 +100,23 @@ namespace EcomDataProccess
                 }
             }
         }
+        public Ecom_Cliente Get(string user, string pasword)
+        {
+            string Statement = string.Format("select * from admin_clientes where email = {0} and password = {1} order by last_login desc", user, pasword);
+            List<Ecom_Cliente> lista =  ReadDatReader(Statement);
+            Ecom_Cliente response = null;
+            if (lista.Count == 1)
+            {
+                lista.ForEach(item => {
+                    response = item;
+                });
+                return response;
+            }
+            else
+            {
+                return null;
+            }
+        }
         public List<Ecom_Cliente> Get()
         {
             string Statement = string.Format("select * from admin_clientes order by last_login desc");
@@ -171,7 +189,8 @@ namespace EcomDataProccess
                             LastLogin = Data.IsDBNull(6) ? DateTime.Now : Data.GetDateTime(6),
                             TipoCliente = Data.IsDBNull(7) ? "" : Data.GetString(7),
                             CardCode = Data.IsDBNull(8) ? "" : Data.GetString(8),
-                            Sociedad = Data.IsDBNull(9) ? "" : Data.GetString(9)
+                            Sociedad = Data.IsDBNull(9) ? "" : Data.GetString(9),
+                            Password = Data.IsDBNull(10) ? "" : Data.GetString(10)
                         });
 
                     }

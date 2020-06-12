@@ -33,6 +33,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Interop.SAPbobsCOM">
+      <HintPath>..\..\..\..\..\..\..\Users\Luis Martinez\OneDrive\Documentos\FIBREMEX\workspace\SplittelSendCDFI_v2.BACK\SplittelSendCDFI\obj\Debug\Interop.SAPbobsCOM.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 

@@ -34,7 +34,7 @@ namespace SAPDataProcess
         public string DocNumEcommerce { get; set; }
         public object ObjetoAux { get; set; }
         private SAP_DBConnection SAP_DBConnection_;
-        private SAP_DI_API SAP_DI_API_;
+        //private SAP_DI_API SAP_DI_API_;
         #endregion
 
         #region Constructores
@@ -50,15 +50,15 @@ namespace SAPDataProcess
         {
             this.SAP_DBConnection_ = SAP_DBConnection_;
         }
-        public SAP_Document(SAP_DI_API SAP_DI_API_)
-        {
-            this.SAP_DI_API_ = SAP_DI_API_;
-        }
-        public SAP_Document(SAP_DBConnection SAP_DBConnection_, SAP_DI_API SAP_DI_API_)
-        {
-            this.SAP_DBConnection_ = SAP_DBConnection_;
-            this.SAP_DI_API_ = SAP_DI_API_;
-        }
+        //public SAP_Document(SAP_DI_API SAP_DI_API_)
+        //{
+        //    this.SAP_DI_API_ = SAP_DI_API_;
+        //}
+        //public SAP_Document(SAP_DBConnection SAP_DBConnection_, SAP_DI_API SAP_DI_API_)
+        //{
+        //    this.SAP_DBConnection_ = SAP_DBConnection_;
+        //    this.SAP_DI_API_ = SAP_DI_API_;
+        //}
         #endregion
 
         #region Metodos

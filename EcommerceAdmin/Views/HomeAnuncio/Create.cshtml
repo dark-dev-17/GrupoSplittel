@@ -3,7 +3,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @inject IHttpContextAccessor HttpContextAccessor
 @{
-    ViewData["Title"] = "Crear slide: ";
+    ViewData["Title"] = "Crear slide ";
     EcommerceAdmin.Models.Ecommerce ecommerce = new Ecommerce(HttpContextAccessor.HttpContext.Session);
     ecommerce.StartLib(LibraryEcommerce.SAPBussinessOne);
     ecommerce.sAPData.OpenConnection(SAPDataProcess.ConnectionSAP.Database);
@@ -43,7 +43,7 @@
                                             </td>
                                             <td><strong><label asp-for="ShowBy" class="control-label"></label></strong></td>
                                             <td colspan="3">
-                                                <select asp-for="ShowBy" class="form-control">
+                                                <select asp-for="ShowBy" id="ShowBy" v-on:change="CheckRule()" class="form-control">
                                                     @if (CtrlDirigidos)
                                                     {
                                                         <option value="B2C">Clientes B2C</option>
@@ -104,9 +104,9 @@
                                                 <input asp-for="IsActive" class="form-control" />
                                                 <span asp-validation-for="IsActive" class="text-danger"></span>
                                             </td>
-                                            <td><strong><label asp-for="Categoria" class="control-label"></label></strong></td>
+                                            <td><strong v-if="dirigido == true"><label asp-for="Categoria" class="control-label"></label></strong></td>
                                             <td colspan="3" align="left">
-                                                <select asp-for="Categoria" class="form-control">
+                                                <select v-if="dirigido == true" asp-for="Categoria" class="form-control">
                                                     <option selected="selected" value="">Sin categoria</option>
                                                     <option value="A">A</option>
                                                     <option value="B">B</option>
@@ -118,10 +118,10 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><strong><label asp-for="Group" class="control-label"></label></strong></td>
+                                            <td><strong v-if="dirigido == true"><label asp-for="Group" class="control-label"></label></strong></td>
                                             <td colspan="7">
                                                 @*<input asp-for="GroupoCode" class="form-control" />*@
-                                                <select multiple="multiple" class=" form-control" id="example-getting-started" asp-for="GroupoCode" asp-items="@(new SelectList(List,"GroupCode","GroupName",null))"></select>
+                                                <select v-if="dirigido == true" multiple="multiple" class=" form-control" id="example-getting-started" asp-for="GroupoCode" asp-items="@(new SelectList(List,"GroupCode","GroupName",null))"></select>
                                                 <span asp-validation-for="GroupoCode" class="text-danger"></span>
                                             </td>
                                         </tr>
@@ -156,11 +156,20 @@
             data: {
                 imageData: "",
                 imageData2: "",
+                dirigido: true,
             },
             mounted() {
-
+                this.CheckRule();
             },
             methods: {
+                CheckRule: function () {
+                    var ShowBy = document.getElementById("ShowBy")
+                    if (ShowBy.value == "PUBLIC") {
+                        this.dirigido = false;
+                    } else {
+                        this.dirigido = true;
+                    }
+                },
                 previewImage: function () {
                     // Reference to the DOM input element
                     var input = document.getElementById("ImgSmall_");

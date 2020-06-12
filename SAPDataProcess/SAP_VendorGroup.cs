@@ -12,14 +12,14 @@ namespace SAPDataProcess
         public string GroupName { set; get; }
         
         private SAP_DBConnection SAP_DBConnection_;
-        private SAP_DI_API SAP_DI_API_;
+        //private SAP_DI_API SAP_DI_API_;
         #endregion
 
         #region Constructores
         ~SAP_VendorGroup()
         {
             SAP_DBConnection_ = null;
-            SAP_DI_API_ = null;
+            //SAP_DI_API_ = null;
         }
         public SAP_VendorGroup()
         {
@@ -29,15 +29,15 @@ namespace SAPDataProcess
         {
             this.SAP_DBConnection_ = SAP_DBConnection_;
         }
-        public SAP_VendorGroup(SAP_DI_API SAP_DI_API_)
-        {
-            this.SAP_DI_API_ = SAP_DI_API_;
-        }
-        public SAP_VendorGroup(SAP_DBConnection SAP_DBConnection_,SAP_DI_API SAP_DI_API_)
-        {
-            this.SAP_DBConnection_ = SAP_DBConnection_;
-            this.SAP_DI_API_ = SAP_DI_API_;
-        }
+        //public SAP_VendorGroup(SAP_DI_API SAP_DI_API_)
+        //{
+        //    this.SAP_DI_API_ = SAP_DI_API_;
+        //}
+        //public SAP_VendorGroup(SAP_DBConnection SAP_DBConnection_,SAP_DI_API SAP_DI_API_)
+        //{
+        //    this.SAP_DBConnection_ = SAP_DBConnection_;
+        //    this.SAP_DI_API_ = SAP_DI_API_;
+        //}
         #endregion
 
         #region Metodos

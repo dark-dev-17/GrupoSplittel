@@ -497,8 +497,8 @@ namespace EcommerceAdmin.Controllers
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
         [AccessDataSession]
         public IActionResult DataGetPendientes()
         {
@@ -559,10 +559,10 @@ namespace EcommerceAdmin.Controllers
 
             
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
         [AccessDataSession]
-        public IActionResult ListInProcesss()
+        public ActionResult DataGetInProccess()
         {
             Ecommerce Ecommerce_ = new Ecommerce(HttpContext.Session);
             try
@@ -580,7 +580,8 @@ namespace EcommerceAdmin.Controllers
                     Ecommerce_.sAPData.OpenConnection(SAPDataProcess.ConnectionSAP.Database);
                     SAPDataProcess.SAP_Document sAP_Document = (SAPDataProcess.SAP_Document)Ecommerce_.sAPData.GetObject(SAPDataProcess.SAPDataBaseObj.Document);
                     List<SAPDataProcess.SAP_Document> ecom_Pedidos = sAP_Document.GetInProcess();
-                    ecom_Pedidos.ForEach(doc => {
+                    ecom_Pedidos.ForEach(doc =>
+                    {
                         Ecom_Pedido ecom_Pedido = (Ecom_Pedido)Ecommerce_.ecomData.GetObject(ObjectSource.Pedido);
                         ecom_Pedido.GetById(Int32.Parse(doc.DocNumEcommerce));
                         doc.ObjetoAux = ecom_Pedido;
@@ -595,18 +596,20 @@ namespace EcommerceAdmin.Controllers
                     List<SAPDataProcess.SAP_Document> ecom_Pedidos = new List<SAPDataProcess.SAP_Document>();
 
                     Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
-                    Ecommerce_.GetBussinessPartnerByUser().Where(bp => bp.IsActiveEcomerce && bp.IsActive).ToList().ForEach(bp => {
+                    Ecommerce_.GetBussinessPartnerByUser().Where(bp => bp.IsActiveEcomerce && bp.IsActive).ToList().ForEach(bp =>
+                    {
                         sAP_Document.GetInProcess(bp.CardCode).ForEach(cli =>
                         {
                             ecom_Pedidos.Add(cli);
                         });
                     });
-                    ecom_Pedidos.ForEach(doc => {
+                    ecom_Pedidos.ForEach(doc =>
+                    {
                         Ecom_Pedido ecom_Pedido = (Ecom_Pedido)Ecommerce_.ecomData.GetObject(ObjectSource.Pedido);
                         ecom_Pedido.GetById(Int32.Parse(doc.DocNumEcommerce));
                         doc.ObjetoAux = ecom_Pedido;
                     });
-                    return Ok("");
+                    return Ok(ecom_Pedidos);
                 }
                 else
                     return BadRequest("Error en la configuración de permisos de usuario");
@@ -631,7 +634,7 @@ namespace EcommerceAdmin.Controllers
                     Ecommerce_.sAPData.CloseConnection(SAPDataProcess.ConnectionSAP.Database);
                 }
             }
-            
+
         }
         public IActionResult DataTest()
         {

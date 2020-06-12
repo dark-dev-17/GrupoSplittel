@@ -1,5 +1,4 @@
-﻿using SAPbobsCOM;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -24,7 +23,7 @@ namespace SAPDataProcess
         public string AddressName { get; set; }
         public SAP_ContactPerson ContactPerson { get; set; }
         private SAP_DBConnection SAP_DBConnection_;
-        private SAP_DI_API SAP_DI_API_;
+        //private SAP_DI_API SAP_DI_API_;
         private string Message;
         #endregion
 
@@ -32,7 +31,7 @@ namespace SAPDataProcess
         ~SAP_Address()
         {
             SAP_DBConnection_ = null;
-            SAP_DI_API_ = null;
+            //SAP_DI_API_ = null;
         }
         public SAP_Address()
         {
@@ -42,157 +41,157 @@ namespace SAPDataProcess
         {
             this.SAP_DBConnection_ = SAP_DBConnection_;
         }
-        public SAP_Address(SAP_DI_API SAP_DI_API_)
-        {
-            this.SAP_DI_API_ = SAP_DI_API_;
-        }
-        public SAP_Address(SAP_DBConnection SAP_DBConnection_, SAP_DI_API SAP_DI_API_)
-        {
-            this.SAP_DBConnection_ = SAP_DBConnection_;
-            this.SAP_DI_API_ = SAP_DI_API_;
-        }
+        //public SAP_Address(SAP_DI_API SAP_DI_API_)
+        //{
+        //    this.SAP_DI_API_ = SAP_DI_API_;
+        //}
+        //public SAP_Address(SAP_DBConnection SAP_DBConnection_, SAP_DI_API SAP_DI_API_)
+        //{
+        //    this.SAP_DBConnection_ = SAP_DBConnection_;
+        //    this.SAP_DI_API_ = SAP_DI_API_;
+        //}
         #endregion
 
         #region Metodos
-        public bool Create(string CardCode)
-        {
-            bool Result = false;
-            try
-            {
-                SAP_Tools.ValidTypeAddressLong(AddressType);
-                SAP_Tools.ValidSAPDI_API(SAP_DI_API_);
+        //public bool Create(string CardCode)
+        //{
+        //    bool Result = false;
+        //    try
+        //    {
+        //        SAP_Tools.ValidTypeAddressLong(AddressType);
+        //        SAP_Tools.ValidSAPDI_API(SAP_DI_API_);
 
-                SAPbobsCOM.BusinessPartners oCustomer = new SAP_BussinessPartner(SAP_DI_API_).GetBusinessPartner(CardCode);
-                SAPbobsCOM.BPAddresses ListAddress = oCustomer.Addresses;
+        //        SAPbobsCOM.BusinessPartners oCustomer = new SAP_BussinessPartner(SAP_DI_API_).GetBusinessPartner(CardCode);
+        //        SAPbobsCOM.BPAddresses ListAddress = oCustomer.Addresses;
 
-                BoAddressType boAddressType = AddressType == "BillTo" ? BoAddressType.bo_BillTo : BoAddressType.bo_ShipTo;
-                int NoAddresses = 0;
+        //        BoAddressType boAddressType = AddressType == "BillTo" ? BoAddressType.bo_BillTo : BoAddressType.bo_ShipTo;
+        //        int NoAddresses = 0;
 
-                for (int i = 0; i < ListAddress.Count; i++)
-                {
-                    ListAddress.SetCurrentLine(i);
-                    NoAddresses = i;
-                    if (ListAddress.AddressName == AddressName.Trim() && boAddressType == ListAddress.AddressType)
-                    {
-                        throw new SAP_Excepcion(string.Format("The address '{0}' already exists", AddressName.Trim()));
-                    }
-                }
-                ListAddress.Add();
-                ListAddress.SetCurrentLine(NoAddresses + 1);
-                ListAddress.Street = Street;
-                ListAddress.StreetNo = StreetNo;
-                ListAddress.Block = Block;
-                ListAddress.County = County;
-                ListAddress.ZipCode = ZipCode;
-                ListAddress.State = State;
-                ListAddress.City = City;
-                ListAddress.AddressName = AddressName;
-                ListAddress.AddressType = boAddressType;
+        //        for (int i = 0; i < ListAddress.Count; i++)
+        //        {
+        //            ListAddress.SetCurrentLine(i);
+        //            NoAddresses = i;
+        //            if (ListAddress.AddressName == AddressName.Trim() && boAddressType == ListAddress.AddressType)
+        //            {
+        //                throw new SAP_Excepcion(string.Format("The address '{0}' already exists", AddressName.Trim()));
+        //            }
+        //        }
+        //        ListAddress.Add();
+        //        ListAddress.SetCurrentLine(NoAddresses + 1);
+        //        ListAddress.Street = Street;
+        //        ListAddress.StreetNo = StreetNo;
+        //        ListAddress.Block = Block;
+        //        ListAddress.County = County;
+        //        ListAddress.ZipCode = ZipCode;
+        //        ListAddress.State = State;
+        //        ListAddress.City = City;
+        //        ListAddress.AddressName = AddressName;
+        //        ListAddress.AddressType = boAddressType;
 
-                if (oCustomer.Update() == 0)
-                {
-                    Result = true;
-                }
-                else
-                {
-                    Message = SAP_DI_API_.GetErrorMessage();
-                    Result = false;
-                }
-                return Result;
-            }
-            catch (SAP_Excepcion ex)
-            {
-                throw ex;
-            }
-        }
-        public bool Detele(string CardCode)
-        {
-            bool Result = false;
-            try
-            {
-                SAP_Tools.ValidTypeAddressLong(AddressType);
-                SAP_Tools.ValidSAPDI_API(SAP_DI_API_);
+        //        if (oCustomer.Update() == 0)
+        //        {
+        //            Result = true;
+        //        }
+        //        else
+        //        {
+        //            Message = SAP_DI_API_.GetErrorMessage();
+        //            Result = false;
+        //        }
+        //        return Result;
+        //    }
+        //    catch (SAP_Excepcion ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+        //public bool Detele(string CardCode)
+        //{
+        //    bool Result = false;
+        //    try
+        //    {
+        //        SAP_Tools.ValidTypeAddressLong(AddressType);
+        //        SAP_Tools.ValidSAPDI_API(SAP_DI_API_);
 
-                SAPbobsCOM.BusinessPartners oCustomer = new SAP_BussinessPartner(SAP_DI_API_).GetBusinessPartner(CardCode);
-                SAPbobsCOM.BPAddresses ListAddress = oCustomer.Addresses;
+        //        SAPbobsCOM.BusinessPartners oCustomer = new SAP_BussinessPartner(SAP_DI_API_).GetBusinessPartner(CardCode);
+        //        SAPbobsCOM.BPAddresses ListAddress = oCustomer.Addresses;
 
-                BoAddressType boAddressType = AddressType == "BillTo" ? BoAddressType.bo_BillTo : BoAddressType.bo_ShipTo;
-                for (int i = 0; i < ListAddress.Count; i++)
-                {
-                    ListAddress.SetCurrentLine(i);
-                    if (ListAddress.AddressName == AddressName.Trim() && boAddressType == ListAddress.AddressType)
-                    {
-                        Result = true;
-                        ListAddress.Delete();
-                        break;
-                    }
-                }
+        //        BoAddressType boAddressType = AddressType == "BillTo" ? BoAddressType.bo_BillTo : BoAddressType.bo_ShipTo;
+        //        for (int i = 0; i < ListAddress.Count; i++)
+        //        {
+        //            ListAddress.SetCurrentLine(i);
+        //            if (ListAddress.AddressName == AddressName.Trim() && boAddressType == ListAddress.AddressType)
+        //            {
+        //                Result = true;
+        //                ListAddress.Delete();
+        //                break;
+        //            }
+        //        }
 
-                if (!Result)
-                {
-                    throw new SAP_Excepcion(string.Format("The address '{0}' doesn't exist", AddressName.Trim()));
-                }
-                if (oCustomer.Update() == 0)
-                {
-                    Result = true;
-                }
-                else
-                {
-                    Message = SAP_DI_API_.GetErrorMessage();
-                    Result = false;
-                }
-                return Result;
-            }
-            catch (SAP_Excepcion ex)
-            {
-                throw ex;
-            }
-        }
-        public bool Update(string CardCode)
-        {
+        //        if (!Result)
+        //        {
+        //            throw new SAP_Excepcion(string.Format("The address '{0}' doesn't exist", AddressName.Trim()));
+        //        }
+        //        if (oCustomer.Update() == 0)
+        //        {
+        //            Result = true;
+        //        }
+        //        else
+        //        {
+        //            Message = SAP_DI_API_.GetErrorMessage();
+        //            Result = false;
+        //        }
+        //        return Result;
+        //    }
+        //    catch (SAP_Excepcion ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+        //public bool Update(string CardCode)
+        //{
             
-            bool Result = false;
-            try
-            {
-                SAP_Tools.ValidTypeAddressLong(AddressType);
-                SAP_Tools.ValidSAPDI_API(SAP_DI_API_);
+        //    bool Result = false;
+        //    try
+        //    {
+        //        SAP_Tools.ValidTypeAddressLong(AddressType);
+        //        SAP_Tools.ValidSAPDI_API(SAP_DI_API_);
 
-                SAPbobsCOM.BusinessPartners oCustomer = new SAP_BussinessPartner(SAP_DI_API_).GetBusinessPartner(CardCode);
-                SAPbobsCOM.BPAddresses ListAddress = oCustomer.Addresses;
-                BoAddressType boAddressType = AddressType == "BillTo" ? BoAddressType.bo_BillTo : BoAddressType.bo_ShipTo;
-                for (int i = 0; i < ListAddress.Count; i++)
-                {
-                    ListAddress.SetCurrentLine(i);
-                    if(ListAddress.AddressName == AddressName.Trim() && boAddressType == ListAddress.AddressType)
-                    {
-                        Result = true;
-                        ListAddress.Street = Street;
-                        ListAddress.StreetNo = StreetNo;
-                        ListAddress.Block = Block;
-                        ListAddress.County = County;
-                        ListAddress.ZipCode = ZipCode;
-                        ListAddress.State = State;
-                        ListAddress.City = City;
-                        ListAddress.AddressName = AddressName;
-                        break;
-                    }
-                }
-                if(oCustomer.Update() == 0)
-                {
-                    Result = true;
-                }
-                else
-                {
-                    Message = SAP_DI_API_.GetErrorMessage();
-                    Result = false;
-                }
-                return Result;
-            }
-            catch (SAP_Excepcion ex)
-            {
-                throw ex;
-            }
-        }
+        //        SAPbobsCOM.BusinessPartners oCustomer = new SAP_BussinessPartner(SAP_DI_API_).GetBusinessPartner(CardCode);
+        //        SAPbobsCOM.BPAddresses ListAddress = oCustomer.Addresses;
+        //        BoAddressType boAddressType = AddressType == "BillTo" ? BoAddressType.bo_BillTo : BoAddressType.bo_ShipTo;
+        //        for (int i = 0; i < ListAddress.Count; i++)
+        //        {
+        //            ListAddress.SetCurrentLine(i);
+        //            if(ListAddress.AddressName == AddressName.Trim() && boAddressType == ListAddress.AddressType)
+        //            {
+        //                Result = true;
+        //                ListAddress.Street = Street;
+        //                ListAddress.StreetNo = StreetNo;
+        //                ListAddress.Block = Block;
+        //                ListAddress.County = County;
+        //                ListAddress.ZipCode = ZipCode;
+        //                ListAddress.State = State;
+        //                ListAddress.City = City;
+        //                ListAddress.AddressName = AddressName;
+        //                break;
+        //            }
+        //        }
+        //        if(oCustomer.Update() == 0)
+        //        {
+        //            Result = true;
+        //        }
+        //        else
+        //        {
+        //            Message = SAP_DI_API_.GetErrorMessage();
+        //            Result = false;
+        //        }
+        //        return Result;
+        //    }
+        //    catch (SAP_Excepcion ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
         public bool GetByAddressName(string CardCode, string TypeAddress,string AddressNam_)
         {
             string SqlStatement = string.Format("exec [Eco_GetAddressByCustomerAddresName] @CardCode = '{0}', @AdresType = '{1}', @AddressName = '{2}'", CardCode, TypeAddress, AddressNam_);

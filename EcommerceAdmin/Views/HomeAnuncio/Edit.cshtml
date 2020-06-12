@@ -51,7 +51,7 @@
                                                 </td>
                                                 <td><strong><label asp-for="ShowBy" class="control-label"></label></strong></td>
                                                 <td colspan="3">
-                                                    <select asp-for="ShowBy" class="form-control">
+                                                    <select asp-for="ShowBy" id="ShowBy" v-on:change="CheckRule()" class="form-control">
                                                         @if (CtrlDirigidos)
                                                         {
                                                             <option value="B2C">Clientes B2C</option>
@@ -86,9 +86,9 @@
                                                     <input asp-for="IsActive" class="form-control" />
                                                     <span asp-validation-for="IsActive" class="text-danger"></span>
                                                 </td>
-                                                <td><strong><label asp-for="Categoria" class="control-label"></label></strong></td>
+                                                <td><strong v-if="dirigido == true"><label asp-for="Categoria" class="control-label"></label></strong></td>
                                                 <td colspan="3" align="left">
-                                                    <select asp-for="Categoria" class="form-control">
+                                                    <select v-if="dirigido == true" asp-for="Categoria" class="form-control">
                                                         <option selected="selected" value="">Sin categoria</option>
                                                         <option value="A">A</option>
                                                         <option value="B">B</option>
@@ -100,9 +100,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><strong><label asp-for="Group" class="control-label"></label></strong></td>
+                                                <td><strong v-if="dirigido == true"><label asp-for="Group" class="control-label"></label></strong></td>
                                                 <td colspan="7">
-                                                    <select multiple="multiple" class=" form-control" id="example-getting-started" asp-for="GroupoCode" asp-items="@(new SelectList(List,"GroupCode","GroupName",null))"></select>
+                                                    <select v-if="dirigido == true" multiple="multiple" class=" form-control" id="example-getting-started" asp-for="GroupoCode" asp-items="@(new SelectList(List,"GroupCode","GroupName",null))"></select>
                                                     <span asp-validation-for="GroupoCode" class="text-danger"></span>
                                                 </td>
                                             </tr>
@@ -196,11 +196,20 @@
                 serverToken: {
                     'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
                 },
+                dirigido: true
             },
-            mounted() {
-
+             mounted() {
+                this.CheckRule();
             },
             methods: {
+                CheckRule: function () {
+                    var ShowBy = document.getElementById("ShowBy")
+                    if (ShowBy.value == "PUBLIC") {
+                        this.dirigido = false;
+                    } else {
+                        this.dirigido = true;
+                    }
+                },
                 UploadImage: async function (tipe) {
                     const { value: file } = await Swal.fire({
                             title: 'Select image',

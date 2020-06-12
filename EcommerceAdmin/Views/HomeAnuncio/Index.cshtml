@@ -22,11 +22,11 @@
         <div class="float-right">
             @if (CtrlOrder)
             {
-                <a v-on:click="OrderList()" style="color:white;" class="btn btn-sm btn-secondary">Ordenar slides</a>
+                <a v-on:click="OrderList()" style="color:white;" class="btn btn-sm btn-secondary" title="Ordenar slides">Ordenar slides</a>
             }
             @if(CtrlPublic || CtrlDirigidos)
             {
-                <a href="/HomeAnuncio/Create" class="btn btn-sm btn-secondary">Agregar</a>
+                <a href="/HomeAnuncio/Create" class="btn btn-sm btn-secondary" title="crear nuevo slide">Agregar</a>
             }
             
         </div>
@@ -138,7 +138,9 @@
                 ListOrder: []
             },
             mounted() {
-
+                $('.table').DataTable({
+                    "order": []
+                });
             },
             methods: {
                 OrderList: function () {

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using EcomDataProccess;
+using EcommerceAdmin.Models;
 using EcommerceAdmin.Models.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -123,6 +124,79 @@ namespace EcommerceAdmin.Controllers
             }
         }
 
+        public IActionResult DataGetInProccess()
+        {
+            Ecommerce Ecommerce_ = new Ecommerce(HttpContext.Session);
+            try
+            {
+                Ecommerce_.StartLib(LibraryEcommerce.Ecommerce);
+                Ecommerce_.StartLib(LibraryEcommerce.SAPBussinessOne);
+                Ecommerce_.ecomData.Connect(ServerSource.Splitnet);
+                Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
 
+                bool AccessGeneral = Ecommerce_.ValidActionUser(16);
+                bool AccessSpecial = Ecommerce_.ValidActionUser(15);
+                if (AccessGeneral && !AccessSpecial)
+                {
+                    //documentos generales
+                    Ecommerce_.sAPData.OpenConnection(SAPDataProcess.ConnectionSAP.Database);
+                    SAPDataProcess.SAP_Document sAP_Document = (SAPDataProcess.SAP_Document)Ecommerce_.sAPData.GetObject(SAPDataProcess.SAPDataBaseObj.Document);
+                    List<SAPDataProcess.SAP_Document> ecom_Pedidos = sAP_Document.GetInProcess();
+                    ecom_Pedidos.ForEach(doc =>
+                    {
+                        Ecom_Pedido ecom_Pedido = (Ecom_Pedido)Ecommerce_.ecomData.GetObject(ObjectSource.Pedido);
+                        ecom_Pedido.GetById(Int32.Parse(doc.DocNumEcommerce));
+                        doc.ObjetoAux = ecom_Pedido;
+                    });
+                    return Ok(ecom_Pedidos);
+                }
+                else if (!AccessGeneral && AccessSpecial)
+                {
+                    Ecommerce_.sAPData.OpenConnection(SAPDataProcess.ConnectionSAP.Database);
+                    SAPDataProcess.SAP_Document sAP_Document = (SAPDataProcess.SAP_Document)Ecommerce_.sAPData.GetObject(SAPDataProcess.SAPDataBaseObj.Document);
+
+                    List<SAPDataProcess.SAP_Document> ecom_Pedidos = new List<SAPDataProcess.SAP_Document>();
+
+                    Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
+                    Ecommerce_.GetBussinessPartnerByUser().Where(bp => bp.IsActiveEcomerce && bp.IsActive).ToList().ForEach(bp =>
+                    {
+                        sAP_Document.GetInProcess(bp.CardCode).ForEach(cli =>
+                        {
+                            ecom_Pedidos.Add(cli);
+                        });
+                    });
+                    ecom_Pedidos.ForEach(doc =>
+                    {
+                        Ecom_Pedido ecom_Pedido = (Ecom_Pedido)Ecommerce_.ecomData.GetObject(ObjectSource.Pedido);
+                        ecom_Pedido.GetById(Int32.Parse(doc.DocNumEcommerce));
+                        doc.ObjetoAux = ecom_Pedido;
+                    });
+                    return Ok(ecom_Pedidos);
+                }
+                else
+                    return BadRequest("Error en la configuración de permisos de usuario");
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (SAPDataProcess.SAP_Excepcion ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (Ecommerce_.ecomData != null)
+                {
+                    Ecommerce_.ecomData.Disconect(ServerSource.Ecommerce);
+                    Ecommerce_.ecomData.Disconect(ServerSource.Splitnet);
+                }
+                if (Ecommerce_.sAPData != null)
+                {
+                    Ecommerce_.sAPData.CloseConnection(SAPDataProcess.ConnectionSAP.Database);
+                }
+            }
+
+        }
     }
 }
