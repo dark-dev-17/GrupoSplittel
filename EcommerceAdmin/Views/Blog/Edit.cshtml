@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Editar Blog: " + Model.Title;
 }
+    <link href="https://www.jqueryscript.net/demo/Disqus-Style-Comment-System/css/jquery-comments.css" rel="stylesheet" />
 <div id="app_blog_details">
     <div class="br-section-wrapper">
         <div class="table-wrapper">
@@ -17,6 +18,9 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Imagenes" role="tab" aria-controls="profile" aria-selected="false">Imagenes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#Comentario" role="tab" aria-controls="profile" aria-selected="false">Comentario</a>
                                 </li>
                             </ul>
                         </div>
@@ -136,6 +140,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="tab-pane fade show " id="Comentario" role="tabpanel" aria-labelledby="home-tab">
+                                    <div class="row">
+                                        <div class="col-12" id="comments-container"></div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <div class="float-right">
+                                            <a asp-action="Index" class="btn btn-secondary">Terminar</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -146,6 +160,7 @@
 </div>
 @*app_blog_details*@
 @section Scripts {
+    <script src="https://www.jqueryscript.net/demo/Disqus-Style-Comment-System/js/jquery-comments.js"></script>
     <script>
     var app_blog_details = new Vue({
         el: "#app_blog_details",
@@ -156,15 +171,116 @@
             coverImage: "@Model.ImageCoverPage",
             image: "@Model.ImageBlog",
             Rute: "@Html.Raw(string.Format("{0}/store/public/images/img_spl/blog/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))",
-            newName: ""
+            newName: "",
+            comments: []
         },
-        mounted(){
+        async mounted(){
             $('#summernote').summernote({
                 height: 650
-            })
+            });
+            await this.GetComentarios();
+            this.LoadCommentarios();
         },
         methods: {
-            
+            LoadCommentarios: function () {
+                let ComentariosList = [];
+                this.comments.forEach((e, i) => {
+                    let comentario = {
+                       "id": e.id,
+                       "parent": e.idComentario == 0 ? null : e.idComentario,
+                       "created": e.fecha,
+                       "modified": e.fecha,
+                       "content": e.comentario,
+                       "pings": [],
+                       "creator": e.idCliente,
+                       "fullname": e.nombreCliente,
+                       "profile_picture_url": "https://fibremex.co//store/public/images/Otros/user_.jpg",
+                       "created_by_admin": false,
+                       "created_by_current_user": (e.idCliente == -1) ? true : false,
+                       "upvote_count": 0,
+                       "user_has_upvoted": true,
+                       "is_new": false
+                    }
+                    ComentariosList.push(comentario);
+                    
+                });
+                $('#comments-container').comments({
+                    currentUserIsAdmin: false,
+                    replyText: 'Responder',
+                    sendText: 'Enviar',
+                    editText: 'Editar',
+                    editedText: 'Modificado',
+                    textareaPlaceholderText: 'Nuevo comentario',
+                    attachmentsText: 'Ver adjuntos',
+                    popularText: 'Populares',
+                    oldestText: 'Antiguos',
+                    newestText: 'Recientes',
+                    youText: 'Soporte Fibremex',
+                    enableUpvoting: false,
+                    enableEditing: true,
+                    getComments: function(success, error) {
+                        success(ComentariosList);
+                    },
+                    postComment: this.PostComment,
+                    putComment: this.EditComment,
+                });
+            },
+            EditComment: async function (commentJSON, success, errorr) {
+                console.log(commentJSON)
+                let NewComment = {
+                    Id: commentJSON.id,
+                    IdComentario: commentJSON.parent == null ? 0 : commentJSON.parent ,
+                    Fecha: new Date(),
+                    Comentario: commentJSON.content.replace("\n",""),
+                    IdCliente: -1,
+                    Tipo: commentJSON.parent == null ? "0" : "1",
+                    Idblog: @Model.Id,
+                    Activo: true
+                }
+                await axios.post('@Url.Action("DataUpdate","BlogComentario")', NewComment, {
+                    headers:
+                    {
+                        'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                    } 
+                }).then(response => {
+                    success(commentJSON)
+                }).catch(error => {
+                   this.ShowMessageErrorShort(error.response.data,'error')
+                }).finally(() => this.newName = "")
+            },
+            PostComment: async function (commentJSON, success, errorr) {
+                console.log(commentJSON)
+                let NewComment = {
+                    Id: 0,
+                    IdComentario: commentJSON.parent == null ? 0 : commentJSON.parent ,
+                    Fecha: new Date(),
+                    Comentario: commentJSON.content.replace("\n",""),
+                    IdCliente: -1,
+                    Tipo: commentJSON.parent == null ? "0" : "1",
+                    Idblog: @Model.Id,
+                    Activo: true
+                }
+                await axios.post('@Url.Action("DataCreate","BlogComentario")', NewComment, {
+                    headers:
+                    {
+                        'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                    } 
+                }).then(response => {
+                    commentJSON.id = response.data.id
+                    success(commentJSON)
+                }).catch(error => {
+                   this.ShowMessageErrorShort(error.response.data,'error')
+                }).finally(() => this.newName = "")
+            },
+            GetComentarios: async function () {
+                let params = new FormData();
+                    params.append('IdBlog', @Model.Id);
+                await axios.post('@Url.Action("DataGet","BlogComentario")', params, { headers: this.serverToken }).then(response => {
+                    this.comments = response.data
+                }).catch(error => {
+                    this.ShowMessageErrorShort(error.response.data,'error')
+                }).finally(() => this.newName = "")
+            },
             UploadImage: async function (tipe) {
                 const { value: file } = await Swal.fire({
                         title: 'Select image',

@@ -36,6 +36,7 @@ namespace EcomDataProccess
         public object Descuento { get;  set; }
         public string Valoraciones { get;  set; }
 
+        public Ecom_ProductoDescripcion Ecom_ProductoDescripcion_;
         private Ecom_DBConnection Ecom_DBConnection_;
         private bool RequireShiptCost;
         #endregion
@@ -183,6 +184,9 @@ namespace EcomDataProccess
                         FichaTecnica = item.FichaTecnica;
                         IdDescripcionLarga = item.IdDescripcionLarga;
                         FichaTecnica = new Ecom_ProductoFichaTecnica(Ecom_DBConnection_).GetID(FichaTecnica.Id);
+                        Ecom_ProductoDescripcion_ = new Ecom_ProductoDescripcion(Ecom_DBConnection_);
+                        Ecom_ProductoDescripcion_.Get(IdDescripcionLarga);
+
                     });
                     result = true;
                 }

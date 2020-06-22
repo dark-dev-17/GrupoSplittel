@@ -10,6 +10,13 @@ namespace EcomDataProccess
         #region Propiedades
         [Display(Name = "Id")]
         public int Id { get; set; }
+        public int Idblog { get; set; }
+        public int IdCliente { get; set; }
+        public int IdComentario { get; set; }
+        public string Tipo { get; set; }
+        public string Fecha { get; set; }
+        public bool Activo { get; set; }
+
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
 
@@ -35,6 +42,12 @@ namespace EcomDataProccess
             {
                 Ecom_DBConnection_.StartProcedure("Admin_sp");
                 Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
+                Ecom_DBConnection_.AddParameter(Idblog, "Idblog", "INT");
+                Ecom_DBConnection_.AddParameter(IdCliente, "IdCliente", "INT");
+                Ecom_DBConnection_.AddParameter(IdComentario, "IdComentario", "INT");
+                Ecom_DBConnection_.AddParameter(Tipo, "Tipo", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Fecha, "Fecha", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Activo, "Activo", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(1, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
@@ -58,7 +71,13 @@ namespace EcomDataProccess
 
                 Ecom_DBConnection_.StartProcedure("Admin_sp");
                 Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
-                Ecom_DBConnection_.AddParameter(1, "ModeProcedure", "INT");
+                Ecom_DBConnection_.AddParameter(Idblog, "Idblog", "INT");
+                Ecom_DBConnection_.AddParameter(IdCliente, "IdCliente", "INT");
+                Ecom_DBConnection_.AddParameter(IdComentario, "IdComentario", "INT");
+                Ecom_DBConnection_.AddParameter(Tipo, "Tipo", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Fecha, "Fecha", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Activo, "Activo", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(modeUpdate, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
                 {

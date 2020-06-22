@@ -200,6 +200,77 @@ namespace EcommerceAdmin.Controllers
             }
         }
 
+        // GET: DescripcionesProducto/Edit/5
+        public ActionResult Editt(string id)
+        {
+            try
+            {
+                ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_ProductoDescripcion_ = (Ecom_ProductoDescripcion)ecomData.GetObject(ObjectSource.ProductoDescripcion);
+                bool result = Ecom_ProductoDescripcion_.Get(id);
+                if (result)
+                {
+                    return View(Ecom_ProductoDescripcion_);
+                }
+                else
+                {
+                    throw new Ecom_Exception(ecomData.GetLastMessage(ServerSource.Ecommerce));
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "warning", ex.Message, "", "", "", ex.StackTrace);
+                return View("../ErrorPages/Error", new { id = ex.Message });
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
+            }
+        }
+
+        // POST: DescripcionesProducto/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Editt(Ecom_ProductoDescripcion Ecom_ProductoDescripcion_)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View("Editt", Ecom_ProductoDescripcion_);
+                }
+                else
+                {
+                    ecomData.Connect(ServerSource.Ecommerce);
+                    Ecom_ProductoDescripcion_ = (Ecom_ProductoDescripcion)ecomData.SetObjectConnection(Ecom_ProductoDescripcion_, ObjectSource.ProductoDescripcion);
+                    bool result = Ecom_ProductoDescripcion_.Update(2);
+                    if (result)
+                    {
+                        return View("../ErrorPages/Success", new { id = ecomData.GetLastMessage(ServerSource.Ecommerce) });
+                    }
+                    else
+                    {
+                        throw new Ecom_Exception(ecomData.GetLastMessage(ServerSource.Ecommerce));
+                    }
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, string.Format("{0}", ex.Message));
+                return View(Ecom_ProductoDescripcion_);
+            }
+            finally
+            {
+                if (ecomData != null)
+                {
+                    ecomData.Disconect(ServerSource.Ecommerce);
+                }
+            }
+        }
+
         // GET: DescripcionesProducto/Delete/5
         public ActionResult Delete(int id)
         {

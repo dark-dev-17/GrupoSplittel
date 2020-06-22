@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using EcomDataProccess;
 using EcommerceAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace EcommerceAPI.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class ClienteController : ControllerBase
@@ -32,58 +34,32 @@ namespace EcommerceAPI.Controllers
         // POST: api/Login
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody]UserCredentials Credentials)
+        public IActionResult Login([FromBody]UserCredentials Credentials)
         {
-            var _userInfo = Cliente.Get(Credentials.Email, Credentials.Password);
-            if (_userInfo != null)
+            try
             {
-                return Ok(new { token = GenerarTokenJWT(_userInfo) });
+                if (ModelState.IsValid)
+                {
+                    var _userInfo = Cliente.Get(Credentials.Email, Credentials.Password);
+                    if (_userInfo != null)
+                    {
+                        return Ok(new { token = GenerarTokenJWT(_userInfo) });
+                    }
+                    else
+                    {
+                        return Unauthorized();
+                    }
+                }
+                else
+                {
+                   return BadRequest(ModelState); 
+                }
             }
-            else
+            catch (Ecom_Exception ex)
             {
-                return Unauthorized();
+                return BadRequest(ex.Message);
             }
-        }
-
-        // GENERAMOS EL TOKEN CON LA INFORMACIÓN DEL USUARIO
-        private string GenerarTokenJWT(Ecom_Cliente usuarioInfo)
-        {
-            // CREAMOS EL HEADER //
-            var _symmetricSecurityKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(configuration["JWT:FibremexKey"])
-                );
-            var _signingCredentials = new SigningCredentials(
-                    _symmetricSecurityKey, SecurityAlgorithms.HmacSha256
-                );
-            var _Header = new JwtHeader(_signingCredentials);
-
-            // CREAMOS LOS CLAIMS //
-            var _Claims = new[] {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.NameId, usuarioInfo.Id_cliente.ToString()),
-                new Claim("nombre", usuarioInfo.Nombre),
-                new Claim("apellidos", usuarioInfo.Apellidos),
-                new Claim(JwtRegisteredClaimNames.Email, usuarioInfo.Email),
-                //new Claim(ClaimTypes.Role, usuarioInfo.Rol)
-            };
-
-            // CREAMOS EL PAYLOAD //
-            var _Payload = new JwtPayload(
-                    issuer: configuration["JWT:Issuer"],
-                    audience: configuration["JWT:Audience"],
-                    claims: _Claims,
-                    notBefore: DateTime.UtcNow,
-                    // Exipra a la 24 horas.
-                    expires: DateTime.UtcNow.AddHours(24)
-                );
-
-            // GENERAMOS EL TOKEN //
-            var _Token = new JwtSecurityToken(
-                    _Header,
-                    _Payload
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(_Token);
+            
         }
 
         // GET api/values
@@ -91,7 +67,23 @@ namespace EcommerceAPI.Controllers
         [Authorize]
         public ActionResult<IEnumerable<Ecom_Cliente>> Get()
         {
-            return Ok(Cliente.Get());
+            try
+            {
+                var currentUser = HttpContext.User;
+                if (currentUser.HasClaim(c => c.Type == "rol") && currentUser.Claims.FirstOrDefault(c => c.Type == "rol").Value == "cliente")
+                {
+                    return Unauthorized();
+                }
+                else
+                {
+                    return Ok(Cliente.Get());
+                }
+                    
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // GET api/values/5
@@ -99,19 +91,35 @@ namespace EcommerceAPI.Controllers
         [Authorize]
         public ActionResult<Ecom_Cliente> Get(int id)
         {
-            var Cliente_ = Cliente.Get(id);
-            if(Cliente_ == null)
+            var currentUser = HttpContext.User;
+            if (currentUser.HasClaim(c => c.Type == "rol") && currentUser.Claims.FirstOrDefault(c => c.Type == "rol").Value == "cliente")
             {
-                return BadRequest("No se encontró el cliente");
+                //
+                Ecom_Cliente Cliente_ = Cliente.Get(id);
+                if (Cliente_ == null)
+                {
+                    return BadRequest("No se encontró el cliente");
+                }
+                if (currentUser.HasClaim(c => c.Type == "id") && currentUser.Claims.FirstOrDefault(c => c.Type == "id").Value == Cliente_.Id_cliente + "")
+                {
+                    return Ok(Cliente_);
+                }
+                else
+                {
+                    //return BadRequest("Esta información no te pertenece");
+                    return Unauthorized();
+                }
             }
-            return Ok(Cliente_);
+            //else if(currentUser.HasClaim(c => c.Type == "rol") && currentUser.Claims.FirstOrDefault(c => c.Type == "rol").Value == "administrador")
+            //{
+            //    return Ok(Cliente_);
+            //}
+            else
+            {
+                return Unauthorized();
+            }
+            
         }
-
-        // POST api/values
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
 
         // PUT api/values/5
         [HttpPut("{id}")]
@@ -124,6 +132,67 @@ namespace EcommerceAPI.Controllers
         public void Delete(int id)
         {
 
+        }
+
+        // GENERAMOS EL TOKEN CON LA INFORMACIÓN DEL USUARIO
+        private string GenerarTokenJWT(Ecom_Cliente usuarioInfo)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:FibremexKey"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[] {
+                new Claim(JwtRegisteredClaimNames.NameId, usuarioInfo.Id_cliente.ToString()),
+                new Claim("nombre", usuarioInfo.Nombre),
+                new Claim("apellidos", usuarioInfo.Apellidos),
+                new Claim("rol", "cliente"),
+                new Claim("id", usuarioInfo.Id_cliente.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, usuarioInfo.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var token = new JwtSecurityToken(configuration["Jwt:Issuer"],
+                configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(120),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+            //// CREAMOS EL HEADER //
+            //var _symmetricSecurityKey = new SymmetricSecurityKey(
+            //        Encoding.UTF8.GetBytes(configuration["JWT:FibremexKey"])
+            //    );
+            //var _signingCredentials = new SigningCredentials(
+            //        _symmetricSecurityKey, SecurityAlgorithms.HmacSha256
+            //    );
+            //var _Header = new JwtHeader(_signingCredentials);
+
+            //// CREAMOS LOS CLAIMS //
+            //var _Claims = new[] {
+            //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            //    new Claim(JwtRegisteredClaimNames.NameId, usuarioInfo.Id_cliente.ToString()),
+            //    new Claim("nombre", usuarioInfo.Nombre),
+            //    new Claim("apellidos", usuarioInfo.Apellidos),
+            //    new Claim(JwtRegisteredClaimNames.Email, usuarioInfo.Email),
+            //    //new Claim(ClaimTypes.Role, usuarioInfo.Rol)
+            //};
+
+            //// CREAMOS EL PAYLOAD //
+            //var _Payload = new JwtPayload(
+            //        issuer: configuration["JWT:Issuer"],
+            //        audience: configuration["JWT:Audience"],
+            //        claims: _Claims,
+            //        notBefore: DateTime.UtcNow,
+            //        // Exipra a la 24 horas.
+            //        expires: DateTime.UtcNow.AddHours(24)
+            //    );
+
+            //// GENERAMOS EL TOKEN //
+            //var _Token = new JwtSecurityToken(
+            //        _Header,
+            //        _Payload
+            //    );
+
+            //return new JwtSecurityTokenHandler().WriteToken(_Token);
         }
     }
 }

@@ -1,0 +1,45 @@
+﻿@model EcomDataProccess.Ecom_ProductoDescripcion
+@{
+    ViewData["Title"] = "Editar : " + Model.Codigo;
+}
+<div class="container h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-12 mx-auto">
+            <div class="jumbotron  mt-3" style="background-color: #fff">
+                <div class="card text-center">
+                    <div class="card-header">
+                        @ViewData["Title"]
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info" role="alert">
+                            Editar esta descripción puede afectar varios productos!
+                        </div>
+                        <form asp-action="Editt">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <input type="hidden" asp-for="Id" value="0" class="form-control" />
+                                <label asp-for="Codigo" class="control-label"></label>
+                                <input asp-for="Codigo" class="form-control disabled" readonly />
+                                <span asp-validation-for="Codigo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Descripcion" class="control-label"></label>
+                                <textarea asp-for="Descripcion" rows="4" class="form-control"></textarea>
+                                <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="DescripcionCEO" class="control-label"></label>
+                                <textarea asp-for="DescripcionCEO" rows="7" class="form-control"></textarea>
+                                <span asp-validation-for="DescripcionCEO" class="text-danger"></span>
+                            </div>
+                            <div class="form-group  float-right">
+                                <input type="button" onclick="window.open('', '_self', ''); window.close();" id="closeWindow" value="Cancelar" class="btn btn-default" />
+                                <input type="submit" value="Guardar cambios" class="btn btn-success" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

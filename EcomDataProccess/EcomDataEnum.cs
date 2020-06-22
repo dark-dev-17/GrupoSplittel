@@ -37,6 +37,7 @@ namespace EcomDataProccess
         ProductoDistribuidorPrecon = 23,
         ProductoDistribuidorPrecar = 24,
         HomeAnuncio = 25,
+        BlogComentario = 26,
     }
     public enum FiltroProducto
     {

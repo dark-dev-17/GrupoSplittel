@@ -102,7 +102,7 @@ namespace EcomDataProccess
         }
         public Ecom_Cliente Get(string user, string pasword)
         {
-            string Statement = string.Format("select * from admin_clientes where email = {0} and password = {1} order by last_login desc", user, pasword);
+            string Statement = string.Format("select * from admin_clientes where email = '{0}' and passs = '{1}' order by last_login desc", user, pasword);
             List<Ecom_Cliente> lista =  ReadDatReader(Statement);
             Ecom_Cliente response = null;
             if (lista.Count == 1)

@@ -286,6 +286,12 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.BlogComentario)
+            {
+                Ecom_BlogComentario objeto = (Ecom_BlogComentario)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -400,6 +406,10 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.HomeAnuncio)
             {
                 return new Ecom_HomeAnuncio(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.BlogComentario)
+            {
+                return new Ecom_BlogComentario(Ecom_DBEcommerce);
             }
             else
             {

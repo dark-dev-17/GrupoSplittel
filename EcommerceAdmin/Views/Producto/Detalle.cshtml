@@ -53,7 +53,8 @@ else
                         {
                             <div v-if="controls.EditLargeDescription == false">
                                 {{ item.largeDescription }}
-                                <button class="btn btn-sm btn-secondary" v-on:click="controls.EditLargeDescription = true; item.largeDescription2 = item.largeDescription">Editar</button>
+                                @*<button class="btn btn-sm btn-secondary" v-on:click="controls.EditLargeDescription = true; item.largeDescription2 = item.largeDescription">Editar</button>*@
+                                <button class="btn btn-sm btn-secondary" v-on:click="editDescripcion()">Editar</button>
                                 <button class="btn btn-sm btn-secondary" v-on:click="verdescripciones()">Cambiar por otra</button>
                             </div>
                             <div v-if="controls.EditLargeDescription == true">
@@ -69,6 +70,10 @@ else
                             @Html.DisplayFor(model => model.LargeDescription)
                         }
                     </td>
+                </tr>
+                <tr>
+                    <td><strong>Descripcion CEO</strong></td>
+                    <td colspan="3">@Html.Raw( Model.Ecom_ProductoDescripcion_.DescripcionCEO.Length >= 100 ? Model.Ecom_ProductoDescripcion_.DescripcionCEO.Substring(0,100) : Model.Ecom_ProductoDescripcion_.DescripcionCEO)<span>...</span></td>
                 </tr>
                 <tr>
                     <td><strong>Categoria</strong></td>
@@ -470,6 +475,14 @@ else
 
             },
             methods: {
+                editDescripcion: function () {
+                    var myWindow = window.open('@Url.Action("Editt","DescripcionesProducto")' + '/@Model.IdDescripcionLarga', "MsgWindow", "width=1100,height=900");
+                    myWindow.onunload = function () {
+                        console.log("se ha cargado la apgina");
+                        //app_precio.GetDistribuidorPrecar();
+                    }
+                    myWindow.focus();
+                },
                 SeleccionarFicha: async function (fichaTecnicaCodigo) {
                     Swal.fire({
                         title: "¿Deseas camiar la ficha ténica?",

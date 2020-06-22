@@ -18,6 +18,11 @@
                             <textarea asp-for="Descripcion" class="form-control"></textarea>
                             <span asp-validation-for="Descripcion" class="text-danger"></span>
                         </div>
+                        <div class="form-group">
+                            <label asp-for="DescripcionCEO" class="control-label"></label>
+                            <textarea asp-for="DescripcionCEO" class="form-control"></textarea>
+                            <span asp-validation-for="DescripcionCEO" class="text-danger"></span>
+                        </div>
                         <div class="form-group  float-right">
                             <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
                             <input type="submit" value="Guardar cambios" class="btn btn-success" />

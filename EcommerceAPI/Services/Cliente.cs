@@ -48,7 +48,7 @@ namespace EcommerceAPI.Services
             }
         }
 
-        public List<Ecom_Cliente> Get()
+        public  List<Ecom_Cliente> Get()
         {
             try
             {
@@ -71,7 +71,7 @@ namespace EcommerceAPI.Services
             }
             catch (Ecom_Exception ex)
             {
-                return null;
+                throw ex;
             }
             finally
             {

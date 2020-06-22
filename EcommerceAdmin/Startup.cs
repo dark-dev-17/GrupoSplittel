@@ -76,6 +76,9 @@ namespace EcommerceAdmin
                 routes.MapRoute(
                     name: "FichaTecncia",
                     template: "{controller=FichaTecncia}/{action=Index}/{Folder?}");
+                //routes.MapRoute(
+                //    name: "Producto",
+                //    template: "{controller=Producto}/{action=Detalle}/{id}");
             });
         }
     }

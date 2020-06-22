@@ -15,6 +15,9 @@ namespace EcomDataProccess
         [Display(Name = "Descripción")]
         [Required]
         public string Descripcion { get; set; }
+        [Display(Name = "Copygriting para SEO")]
+        [Required]
+        public string DescripcionCEO { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
 
@@ -41,7 +44,8 @@ namespace EcomDataProccess
                 Ecom_DBConnection_.StartProcedure("Admin_ProductoDescripcion");
                 Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
                 Ecom_DBConnection_.AddParameter(Codigo, "Codigo", "VARCHAR");
-                Ecom_DBConnection_.AddParameter(Descripcion, "Descripcion", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Descripcion, "Descripcion", "TEXT");
+                Ecom_DBConnection_.AddParameter(DescripcionCEO, "DescripcionCEO", "TEXT");
                 Ecom_DBConnection_.AddParameter(1, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
@@ -66,7 +70,8 @@ namespace EcomDataProccess
                 Ecom_DBConnection_.StartProcedure("Admin_ProductoDescripcion");
                 Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
                 Ecom_DBConnection_.AddParameter(Codigo, "Codigo", "VARCHAR");
-                Ecom_DBConnection_.AddParameter(Descripcion, "Descripcion", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Descripcion, "Descripcion", "TEXT");
+                Ecom_DBConnection_.AddParameter(DescripcionCEO, "DescripcionCEO", "TEXT");
                 Ecom_DBConnection_.AddParameter(modeUpdate, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
@@ -92,6 +97,7 @@ namespace EcomDataProccess
                     Id = item.Id;
                     Codigo = item.Codigo;
                     Descripcion = item.Descripcion;
+                    DescripcionCEO = item.DescripcionCEO;
                 });
                 return true;
             }
@@ -122,6 +128,7 @@ namespace EcomDataProccess
                             Id = Data.IsDBNull(0) ? 0 : (int)Data.GetUInt32(0),
                             Codigo = Data.IsDBNull(1) ? "" : Data.GetString(1),
                             Descripcion = Data.IsDBNull(2) ? "" : Data.GetString(2),
+                            DescripcionCEO = Data.IsDBNull(3) ? "" : Data.GetString(3),
                         });
 
                     }
