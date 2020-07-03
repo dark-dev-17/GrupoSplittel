@@ -1,0 +1,126 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_ContentFile>
+@{
+    ViewData["Title"] = "Archivos de secciones ";
+}
+<div id="app_contenidoFile">
+    <nav class="navbar navbar-light bg-light justify-content-between">
+        <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
+
+        </div>
+        <div class="float-right">
+
+            <a v-on:click="OrderList()" style="color:white;" class="btn btn-sm btn-secondary" title="Ordenar slides">Ordenar slides</a>
+            <a href="/ContentFile/Create" class="btn btn-sm btn-secondary" title="crear nuevo slide">Agregar</a>
+        </div>
+    </nav>
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap js-sortable-table-no-placeholder" id="table_app_blog" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdTipoContenido)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PathFile)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DescripcionWeb)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Position)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsVisible)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="border bg-white navy p4 js-sortable-tr" data-id="@item.Id">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdTipoContenido)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PathFile)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DescripcionWeb)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Position)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsVisible)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/html5sortable.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            sortable('.js-sortable-table-no-placeholder tbody', {
+                items: "tr",
+                forcePlaceholderSize: true,
+                placeholderClass: 'placeholder sort-placeholder',
+            })
+
+        });
+    </script>
+    <script>
+        var app_contenidoFile = new Vue({
+            el: "#app_contenidoFile",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                ListOrder: []
+            },
+            mounted() {
+                $('.table').DataTable({
+                    "order": []
+                });
+            },
+            methods: {
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+                },
+            }
+        });
+
+    </script>
+
+}

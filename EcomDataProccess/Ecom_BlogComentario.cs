@@ -58,7 +58,7 @@ namespace EcomDataProccess
                 Ecom_DBConnection_.AddParameter(Comentario, "Comentario_", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(Tipo, "Tipo_", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(Fecha, "Fecha_", "VARCHAR");
-                Ecom_DBConnection_.AddParameter(Activo ? "1" : "0", "Activo", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Activo ? "1" : "0", "Activo_", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(Ecom_BlogComentarioActions.Agregar, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
@@ -88,7 +88,7 @@ namespace EcomDataProccess
                 Ecom_DBConnection_.AddParameter(Comentario, "Comentario_", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(Tipo, "Tipo_", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(Fecha, "Fecha_", "VARCHAR");
-                Ecom_DBConnection_.AddParameter(Activo ? "1" : "0", "Activo", "VARCHAR");
+                Ecom_DBConnection_.AddParameter(Activo ? "1" : "0", "Activo_", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(Action, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
                 if (result == 0)
@@ -182,7 +182,7 @@ namespace EcomDataProccess
                             Comentario = Data.IsDBNull(4) ? "" : Data.GetString(4),
                             Tipo = Data.IsDBNull(5) ? "" : Data.GetString(5),
                             Fecha = Data.IsDBNull(6) ? DateTime.Today : Data.GetDateTime(6),
-                            Activo = Data.IsDBNull(7) ? false : (Data.GetString(7) == "si" ? true : false)
+                            Activo = Data.IsDBNull(7) ? false : (Data.GetString(7) == "1" ? true : false)
                         }); ;
 
                     }

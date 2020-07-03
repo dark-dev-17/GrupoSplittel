@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EcomDataProccess;
 using EcommerceAdmin.Models;
+using EcommerceAdmin.Models.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ namespace EcommerceAdmin.Controllers
         }
 
         // GET: BlogComentario/Create
+        [AccessData(IdAction = 36)]
         public ActionResult DataGet(int IdBlog)
         {
             try
@@ -53,6 +55,7 @@ namespace EcommerceAdmin.Controllers
         // POST: BlogComentario/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessData(IdAction = 37)]
         public ActionResult DataCreate([FromBody]Ecom_BlogComentario Ecom_BlogComentario_)
         {
             try
@@ -101,8 +104,10 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessData(IdAction = 37)]
         public ActionResult DataUpdate([FromBody]Ecom_BlogComentario Ecom_BlogComentario_)
         {
             try
@@ -150,8 +155,10 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessData(IdAction = 37)]
         public ActionResult DataDelete([FromBody]Ecom_BlogComentario Ecom_BlogComentario_)
         {
             try
@@ -199,8 +206,10 @@ namespace EcommerceAdmin.Controllers
                 }
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessData(IdAction = 37)]
         public ActionResult DataUpdateEstatus([FromBody]Ecom_BlogComentario Ecom_BlogComentario_)
         {
             try

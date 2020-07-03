@@ -49,7 +49,7 @@ namespace EcommerceAdmin.Controllers
                     Ecom_Pedido_.GetById(id);
                     string htmls = string.Format("" +
                         "<p align='left'>Se ha asignado el costo de envio a tu pedido : <strong></strong>{0}</strong></strong></p>" +
-                        " Para poder adquirir tu pedido ingresa a <a href='https://fibremex.com/store/views/Home/'> fibremex.com </a> en la sección de mis cotizaciones del apartado de <strong>Mi cuenta</strong> ", id);
+                        " Para poder adquirir tu pedido ingresa a <a href='https://fibremex.com/fibra-optica/views/Home/'> fibremex.com </a> en la sección de mis cotizaciones del apartado de <strong>Mi cuenta</strong> ", id);
 
                     //verificar que exista una proceso de email
 

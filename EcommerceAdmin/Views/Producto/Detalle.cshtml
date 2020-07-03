@@ -311,9 +311,9 @@ else
                                     }
                                     else
                                     {
-                                        @*@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))*@
+                                        @*@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))*@
                                         <div class="embed-responsive embed-responsive-16by9">
-                                            <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))" type="application/pdf" allowfullscreen></iframe>
+                                            <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/{1}.pdf",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.FichaTecnica.Ruta))" type="application/pdf" allowfullscreen></iframe>
                                         </div>
                                     }
                                 }
@@ -331,7 +331,7 @@ else
                                     </form>
                                 </nav>
                                 <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/store/public/images/img_spl/productos/{1}/360/{1}.html",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ItemCode))" type="application/pdf" allowfullscreen></iframe>
+                                    <iframe class="embed-responsive-item" src="@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/productos/{1}/360/{1}.html",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ItemCode))" type="application/pdf" allowfullscreen></iframe>
                                 </div>
                             </div>
                         </div>
@@ -838,7 +838,7 @@ else
                         confirmButtonText: 'Si, eliminalo!'
                     }).then((result) => {
                         if (result.value) {
-                            axios.get('@Html.Raw(string.Format("{0}/store/models/PublicApi/UnzipFile.php?ItemCode={1}&Process=delete",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ItemCode))', null,null).then(response => {
+                            axios.get('@Html.Raw(string.Format("{0}/fibra-optica/models/PublicApi/UnzipFile.php?ItemCode={1}&Process=delete",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ItemCode))', null,null).then(response => {
                                 this.ShowMessageErrorShort(response.data,'success')
                             }).catch(error => {
                                 this.ShowMessageErrorShort(error.response.data,'error')
@@ -1046,7 +1046,7 @@ else
                     }).finally(() => this.images.Miniatura.isGetting = false)
                 },
                 UnzipFile: async function () {
-                    axios.get('@Html.Raw(string.Format("{0}/store/models/PublicApi/UnzipFile.php?ItemCode={1}&Process=unzip",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ItemCode))', null,null).then(response => {
+                    axios.get('@Html.Raw(string.Format("{0}/fibra-optica/models/PublicApi/UnzipFile.php?ItemCode={1}&Process=unzip",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ItemCode))', null,null).then(response => {
                             this.ShowMessageErrorShort(response.data,'success')
                     }).catch(error => {
                         this.ShowMessageErrorShort(error.response.data,'error')

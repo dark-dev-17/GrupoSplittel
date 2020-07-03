@@ -1,0 +1,179 @@
+﻿@model EcomDataProccess.Ecom_ContentFileType
+@{
+    ViewData["Title"] = "Archivos sección: " + Model.Descripcion;
+}
+<div id="app_contenidoFile">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-outline active-info flex-column flex-md-row">
+                                Detalle
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.Descripcion)
+                                            </dt>
+                                            <dd>
+                                                @Html.DisplayFor(model => model.Descripcion)
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-12">
+                                        <nav class="navbar navbar-light bg-light justify-content-between">
+                                            <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
+
+                                            </div>
+                                            <div class="float-right">
+
+                                                <a v-on:click="GetItemsOrder()" style="color:white;" class="btn btn-sm btn-secondary" title="Ordenar slides">Guardar Orden</a>
+                                                <a href="/ContentFile/Create/@Model.Id" class="btn btn-sm btn-secondary" title="crear nuevo slide">Agregar</a>
+                                            </div>
+                                        </nav>
+                                        <table class="table display responsive nowrap mt4 ml4 js-sortable-table-no-placeholder " id="table_app_blog" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        ID
+                                                    </th>
+                                                    <th>
+                                                        PathFile
+                                                    </th>
+                                                    <th>
+                                                        DescripcionWeb
+                                                    </th>
+                                                    <th>
+                                                        Position
+                                                    </th>
+                                                    <th>
+                                                        IsVisible
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.ecom_ContentFiles)
+                                                {
+                                                <tr class="border bg-white navy p4 js-sortable-tr" data-id="@item.Id">
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Id)
+                                                        <img title="arrastra" src="https://img.icons8.com/material-outlined/24/000000/move-grabber.png" />
+                                                    </td>
+                                                    <td>
+                                                        <img height="60" src="@Html.Raw(string.Format("{0}{1}",@System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],item.PathFile))" alt="Alternate Text" />
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.DescripcionWeb)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Position)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.IsVisible)
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("Edit", "Edit", "ContentFile", new { id = item.Id }) |
+                                                        @Html.ActionLink("Details", "Details", "ContentFile", new { id = item.Id }) |
+                                                        @Html.ActionLink("Delete", "Delete", "ContentFile", new { id = item.Id })
+                                                    </td>
+                                                </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group  float-right">
+                                    <a asp-action="Index" class="btn btn-sm btn-secondary">Volver</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/html5sortable.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            sortable('.js-sortable-table-no-placeholder tbody', {
+                items: "tr",
+                forcePlaceholderSize: true,
+                placeholderClass: 'placeholder sort-placeholder',
+            })
+
+        });
+    </script>
+    <script>
+        var app_contenidoFile = new Vue({
+            el: "#app_contenidoFile",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                ListOrder: []
+            },
+            mounted() {
+                //$('.table').DataTable({
+                //    "order": []
+                //});
+            },
+            methods: {
+                 GetItemsOrder: function () {
+                    this.ListOrder = [];
+                    var table = document.getElementById("table_app_blog")
+                    for (var i = 0; i < table.rows.length; i++) {
+                        if (table.rows[i].dataset.id !== undefined) {
+                            let data = {
+                                Id: parseInt(table.rows[i].dataset.id),
+                                IdTipoContenido: @Model.Id,
+                                PathFile: "",
+                                DescripcionWeb: "",
+                                Position: parseInt(i),
+                                IsVisible: false
+                            }
+                            this.ListOrder.push(data)
+                        }
+                    }
+                    axios.post('@Url.Action("DataUpdatePositions","ContentFile")', this.ListOrder, { headers: this.serverToken }).then(response => {
+                        this.ShowMessageErrorShort(response.data,'success')
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    })
+                },
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+                },
+            }
+        });
+
+    </script>
+
+}
+

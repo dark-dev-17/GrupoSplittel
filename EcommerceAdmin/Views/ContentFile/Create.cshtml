@@ -1,0 +1,72 @@
+﻿@model EcomDataProccess.Ecom_ContentFile
+@{
+    ViewData["Title"] = "Nuevo archivo ";
+}
+<div id="app_anuncioCreate">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-outline active-info flex-column flex-md-row">
+                                Agregar nuevo archivo
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <form asp-action="Create" enctype="multipart/form-data">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <table class="table  table-sm">
+                                        <tr>
+                                            <td><strong><label asp-for="DescripcionWeb" class="control-label"></label></strong></td>
+                                            <td>
+                                                <input asp-for="IdTipoContenido" type="hidden" class="form-control" />
+
+                                                <input asp-for="DescripcionWeb" class="form-control" />
+                                                <span asp-validation-for="DescripcionWeb" class="text-danger"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><label asp-for="Url" class="control-label"></label></strong></td>
+                                            <td>
+                                                <input asp-for="Url" class="form-control" />
+                                                <span asp-validation-for="Url" class="text-danger"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><label asp-for="Imagen" class="control-label"></label></strong></td>
+                                            <td>
+                                                <input asp-for="Imagen" type="file" class="form-control" />
+                                                <span asp-validation-for="Imagen" class="text-danger"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input asp-for="IsVisible" /> @Html.DisplayNameFor(model => model.IsVisible)
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input asp-for="OpenNewTab" /> @Html.DisplayNameFor(model => model.OpenNewTab)
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="form-group  float-right">
+                                        <a href="@Url.Action("Files","ContentFileType", new { id = Model.IdTipoContenido })" class="btn btn-secondary">Cancelar</a>
+                                        <input type="submit" value="Guardar cambios" class="btn btn-success" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -189,8 +189,8 @@
         var app_anuncioEdit = new Vue({
             el: "#app_anuncioEdit",
             data: {
-                imageData: "@Html.Raw(string.Format("{0}/store/public/images/img_spl/slide/img1/{1}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ImgSmall))",
-                imageData2: "@Html.Raw(string.Format("{0}/store/public/images/img_spl/slide/img2/{1}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ImgLarge))",
+                imageData: "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img1/{1}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ImgSmall))",
+                imageData2: "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img2/{1}",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"],Model.ImgLarge))",
                 imgLeft: "@Model.ImgSmall",
                 imgRight: "@Model.ImgLarge",
                 serverToken: {
@@ -227,11 +227,11 @@
                             await axios.post('@Url.Action("EditChangeImg","HomeAnuncio")', params, { headers: this.serverToken }).then(response => {
                                 this.ShowMessageErrorShort(response.data, 'success')
                                 if (tipe == "left") {
-                                   this.imageData = "@Html.Raw(string.Format("{0}/store/public/images/img_spl/slide/img1/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + file.name
+                                   this.imageData = "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img1/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + file.name
                                     this.imgLeft = file.name
                                 }
                                 if (tipe == "right") {
-                                     this.imageData2 = "@Html.Raw(string.Format("{0}/store/public/images/img_spl/slide/img2/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + file.name
+                                     this.imageData2 = "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img2/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + file.name
                                      this.imgRight = file.name
                                 };
                                 const reader = new FileReader()
@@ -274,11 +274,11 @@
                         }).then((result) => {
                             if (result.value) {
                                 if (tipe == "left") {
-                                    this.imageData = "@Html.Raw(string.Format("{0}/store/public/images/img_spl/slide/img1/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + this.newName + "." + this.imgLeft.split(".")[1]
+                                    this.imageData = "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img1/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + this.newName + "." + this.imgLeft.split(".")[1]
                                     this.imgLeft = this.newName + "." + this.imgLeft.split(".")[1]
                                 }
                                 if (tipe == "right") {
-                                    this.imageData2 = "@Html.Raw(string.Format("{0}/store/public/images/img_spl/slide/img2/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + this.newName + "." + this.imgLeft.split(".")[1]
+                                    this.imageData2 = "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img2/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + this.newName + "." + this.imgLeft.split(".")[1]
                                      this.imgRight = this.newName + "." + this.imgLeft.split(".")[1]
                                 }
                                 this.ShowMessageErrorShort(result.value,'success')

@@ -30,7 +30,7 @@ namespace EcommerceAdmin.Controllers
             {
                 if (string.IsNullOrEmpty(Folder) || string.IsNullOrWhiteSpace(Folder))
                 {
-                    Folder = @"public_html/store/public/images/img_spl/FICHAS TÉCNICAS/";
+                    Folder = @"public_html/fibra-optica/public/images/img_spl/FICHAS TÉCNICAS/";
                 }
                 Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
                 List<Ecom_Archivos> List = Ecom_FilesFtp.ListDirectory(Folder);
@@ -84,7 +84,7 @@ namespace EcommerceAdmin.Controllers
             {
                 if (string.IsNullOrEmpty(Folder) || string.IsNullOrWhiteSpace(Folder))
                 {
-                    Folder = @"public_html/store/public/images/img_spl/FICHAS TÉCNICAS/";
+                    Folder = @"public_html/fibra-optica/public/images/img_spl/FICHAS TÉCNICAS/";
                 }
                 Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
                 List<Ecom_Archivos> List = Ecom_FilesFtp.ListDirectory(Folder);
@@ -135,7 +135,7 @@ namespace EcommerceAdmin.Controllers
             {
                 if (string.IsNullOrEmpty(Folder) || string.IsNullOrWhiteSpace(Folder))
                 {
-                    Folder = @"public_html/store/public/images/img_spl/FICHAS TÉCNICAS/";
+                    Folder = @"public_html/fibra-optica/public/images/img_spl/FICHAS TÉCNICAS/";
                 }
                 Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
                 return Ok(Ecom_FilesFtp.ListDirectoryDetails(Folder));

@@ -160,7 +160,7 @@
 </div>
 @*app_blog_details*@
 @section Scripts {
-    <script src="https://www.jqueryscript.net/demo/Disqus-Style-Comment-System/js/jquery-comments.js"></script>
+    <script src="~/js/jquery-comments.js"></script>
     <script>
     var app_blog_details = new Vue({
         el: "#app_blog_details",
@@ -170,7 +170,7 @@
             },
             coverImage: "@Model.ImageCoverPage",
             image: "@Model.ImageBlog",
-            Rute: "@Html.Raw(string.Format("{0}/store/public/images/img_spl/blog/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))",
+            Rute: "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/blog/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))",
             newName: "",
             comments: []
         },
@@ -194,15 +194,14 @@
                        "pings": [],
                        "creator": e.idCliente,
                        "fullname": e.nombreCliente,
-                       "profile_picture_url": "https://fibremex.co//store/public/images/Otros/user_.jpg",
+                       "profile_picture_url": "https://fibremex.co//fibra-optica/public/images/Otros/user_.jpg",
                        "created_by_admin": false,
                        "created_by_current_user": (e.idCliente == -1) ? true : false,
-                       "upvote_count": 0,
-                       "user_has_upvoted": true,
+                       "upvote_count": "",
+                       "user_has_upvoted": e.activo,
                        "is_new": false
                     }
                     ComentariosList.push(comentario);
-                    
                 });
                 $('#comments-container').comments({
                     currentUserIsAdmin: false,
@@ -210,19 +209,23 @@
                     sendText: 'Enviar',
                     editText: 'Editar',
                     editedText: 'Modificado',
+                    deleteText: 'Eliminar',
                     textareaPlaceholderText: 'Nuevo comentario',
                     attachmentsText: 'Ver adjuntos',
                     popularText: 'Populares',
                     oldestText: 'Antiguos',
                     newestText: 'Recientes',
                     youText: 'Soporte Fibremex',
-                    enableUpvoting: false,
+                    enableUpvoting: true,
                     enableEditing: true,
+                    enableDeletingCommentWithReplies: false,
                     getComments: function(success, error) {
                         success(ComentariosList);
                     },
                     postComment: this.PostComment,
                     putComment: this.EditComment,
+                    deleteComment: this.DeleteComment,
+                    upvoteComment: this.UpvoteComment
                 });
             },
             EditComment: async function (commentJSON, success, errorr) {
@@ -238,6 +241,52 @@
                     Activo: true
                 }
                 await axios.post('@Url.Action("DataUpdate","BlogComentario")', NewComment, {
+                    headers:
+                    {
+                        'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                    } 
+                }).then(response => {
+                    success(commentJSON)
+                }).catch(error => {
+                   this.ShowMessageErrorShort(error.response.data,'error')
+                }).finally(() => this.newName = "")
+            },
+            DeleteComment: async function (commentJSON, success, errorr) {
+                console.log(commentJSON)
+                let NewComment = {
+                    Id: commentJSON.id,
+                    IdComentario: commentJSON.parent == null ? 0 : commentJSON.parent ,
+                    Fecha: new Date(),
+                    Comentario: commentJSON.content.replace("\n",""),
+                    IdCliente: -1,
+                    Tipo: commentJSON.parent == null ? "0" : "1",
+                    Idblog: @Model.Id,
+                    Activo: true
+                }
+                await axios.post('@Url.Action("DataDelete","BlogComentario")', NewComment, {
+                    headers:
+                    {
+                        'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                    } 
+                }).then(response => {
+                    success()
+                }).catch(error => {
+                   this.ShowMessageErrorShort(error.response.data,'error')
+                }).finally(() => this.newName = "")
+            },
+            UpvoteComment: async function (commentJSON, success, errorr) {
+                console.log(commentJSON)
+                let NewComment = {
+                    Id: commentJSON.id,
+                    IdComentario: commentJSON.parent == null ? 0 : commentJSON.parent ,
+                    Fecha: new Date(),
+                    Comentario: commentJSON.content.replace("\n",""),
+                    IdCliente: -1,
+                    Tipo: commentJSON.parent == null ? "0" : "1",
+                    Idblog: @Model.Id,
+                    Activo: commentJSON.user_has_upvoted
+                }
+                await axios.post('@Url.Action("DataUpdateEstatus","BlogComentario")', NewComment, {
                     headers:
                     {
                         'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value

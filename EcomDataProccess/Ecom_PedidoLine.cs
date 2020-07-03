@@ -28,7 +28,7 @@ namespace EcomDataProccess
         public string Imageprincipal { get; set; }
         [Display(Name = "Configurable class")]
         public string Code_confgurable { get; set; }
-        public string ImageLink { get { return ConfigurationManager.AppSettings["Ecommerce_Domain"].ToString() + string.Format(@"/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Imageprincipal); } }
+        public string ImageLink { get { return ConfigurationManager.AppSettings["Ecommerce_Domain"].ToString() + string.Format(@"/fibra-optica/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Imageprincipal); } }
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:#.###}")]
         public double LineTotal { get; set; }

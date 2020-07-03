@@ -121,10 +121,10 @@ namespace EcommerceAdmin.Controllers
                         {
                             throw new Ecom_Exception("Los archivos no pueden tener el mismo nombre");
                         }
-                        string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", FilenameBlogImage);
+                        string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/blog/{0}", FilenameBlogImage);
                         Ecom_FilesFtp.UpdateFile(PathItem, Ecom_Blog_.BlogImage);
 
-                        PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", FilenameBlogCover);
+                        PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/blog/{0}", FilenameBlogCover);
                         Ecom_FilesFtp.UpdateFile(PathItem, Ecom_Blog_.BlogCover);
 
                         Ecom_Blog_.ImageCoverPage = FilenameBlogCover;
@@ -267,7 +267,7 @@ namespace EcommerceAdmin.Controllers
                 {
                     // borrar archivo
                     Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", NameFile);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/blog/{0}", NameFile);
                     Ecom_FilesFtp.DeleteFile(PathItem);
                     UpdateImages(id, "", TypeFile);
                     ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha eliminado la imagen "+ TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Details", "" + Ecom_Blog_.Id, "");
@@ -303,10 +303,10 @@ namespace EcommerceAdmin.Controllers
                 {
                     Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
                     var Filename = FormFile.FileName;
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/*.jpg");
-                    string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/blog/", Ecommerce_Domain);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/blog/*.jpg");
+                    string PathPublicItem = string.Format(@"{0}/fibra-optica/public/images/img_spl/blog/", Ecommerce_Domain);
 
-                    PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/{0}", Filename);
+                    PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/blog/{0}", Filename);
                     Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
                     UpdateImages(id, Filename, TypeFile);
                     ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha cargado nueva imagen " + TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Details", "" + Ecom_Blog_.Id, "");
@@ -341,7 +341,7 @@ namespace EcommerceAdmin.Controllers
                 if (Ecom_Blog_.Get(id))
                 {
                     Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/blog/");
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/blog/");
                     Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
                     UpdateImages(id, Newname + ".jpg", TypeFile);
                     ecomData.SaveNotification((int)HttpContext.Session.GetInt32("USR_IdSplinnet"), (int)HttpContext.Session.GetInt32("USR_IdArea"), "info", "Ha renombrado la imagen " + TypeFile + " del blog " + Ecom_Blog_.Title.Substring(0, 15), "Blog", "Details", "" + Ecom_Blog_.Id, "");

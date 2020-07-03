@@ -1,0 +1,113 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_ContentFileType>
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Secciones ";
+    Ecommerce ecommerce = new Ecommerce(HttpContextAccessor.HttpContext.Session);
+    ecommerce.StartLib(LibraryEcommerce.Ecommerce);
+    ecommerce.ecomData.Connect(EcomDataProccess.ServerSource.Splitnet);
+    bool CtrlAcces = ecommerce.ValidActionUser(54);
+    bool CtrlAccesSub = ecommerce.ValidActionUser(55);
+    ecommerce.ecomData.Disconect(EcomDataProccess.ServerSource.Splitnet);
+    ecommerce = null;
+}
+<div id="app_contenidoFile">
+    <nav class="navbar navbar-light bg-light justify-content-between">
+        <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
+
+        </div>
+        <div class="float-right">
+            @if (CtrlAcces)
+            {
+                <a asp-action="Create" class="btn btn-sm btn-secondary" title="crear nuevo slide">Agregar</a>
+            }
+
+        </div>
+    </nav>
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap " id="table_app_blog" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Descripcion)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RuteEcommerce)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Descripcion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RuteEcommerce)
+                            </td>
+                            <td>
+                                @if (CtrlAcces)
+                                {
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span>|</span>
+                                }
+                                @if (CtrlAccesSub)
+                                {
+                                    @Html.ActionLink("Archivos", "Files", new { id = item.Id })
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_contenidoFile = new Vue({
+            el: "#app_contenidoFile",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                ListOrder: []
+            },
+            mounted() {
+                $('.table').DataTable({
+                    "order": []
+                });
+            },
+            methods: {
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+                },
+            }
+        });
+
+    </script>
+
+}

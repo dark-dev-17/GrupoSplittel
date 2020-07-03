@@ -292,6 +292,18 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.ContentFile)
+            {
+                Ecom_ContentFile objeto = (Ecom_ContentFile)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.ContentFileType)
+            {
+                Ecom_ContentFileType objeto = (Ecom_ContentFileType)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -410,6 +422,14 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.BlogComentario)
             {
                 return new Ecom_BlogComentario(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ContentFile)
+            {
+                return new Ecom_ContentFile(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.ContentFileType)
+            {
+                return new Ecom_ContentFileType(Ecom_DBEcommerce);
             }
             else
             {

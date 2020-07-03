@@ -278,26 +278,26 @@ namespace EcommerceAdmin.Controllers
                 Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server,FTP_User, FTP_Password);
                 if (ImagessType.Trim() == "Producto")
                 {
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/*.jpg", ItemCode);
-                    string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/productos/{1}/", Ecommerce_Domain,ItemCode);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/*.jpg", ItemCode);
+                    string PathPublicItem = string.Format(@"{0}/fibra-optica/public/images/img_spl/productos/{1}/", Ecommerce_Domain,ItemCode);
                     return Ok(Ecom_FilesFtp.Getfiles(PathItem, PathPublicItem));
                 }
                 else if (ImagessType.Trim() == "Descripcion")
                 {
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/descripcion/*.jpg", ItemCode);
-                    string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/productos/{1}/descripcion/", Ecommerce_Domain, ItemCode);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/descripcion/*.jpg", ItemCode);
+                    string PathPublicItem = string.Format(@"{0}/fibra-optica/public/images/img_spl/productos/{1}/descripcion/", Ecommerce_Domain, ItemCode);
                     return Ok(Ecom_FilesFtp.Getfiles(PathItem, PathPublicItem)); 
                 }
                 else if (ImagessType.Trim() == "InfoAdicional")
                 {
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/adicional/*.jpg", ItemCode);
-                    string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/productos/{1}/adicional/", Ecommerce_Domain, ItemCode);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/adicional/*.jpg", ItemCode);
+                    string PathPublicItem = string.Format(@"{0}/fibra-optica/public/images/img_spl/productos/{1}/adicional/", Ecommerce_Domain, ItemCode);
                     return Ok(Ecom_FilesFtp.Getfiles(PathItem, PathPublicItem));
                 }
                 else if (ImagessType.Trim() == "Miniatura")
                 {
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/*.jpg", ItemCode);
-                    string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/productos/{1}/thumbnail/", Ecommerce_Domain, ItemCode);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/thumbnail/*.jpg", ItemCode);
+                    string PathPublicItem = string.Format(@"{0}/fibra-optica/public/images/img_spl/productos/{1}/thumbnail/", Ecommerce_Domain, ItemCode);
                     return Ok(Ecom_FilesFtp.Getfiles(PathItem, PathPublicItem));
                 }
                 else
@@ -321,28 +321,28 @@ namespace EcommerceAdmin.Controllers
                 if (ImagessType.Trim() == "Producto")
                 {
                     ValidAction(7);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/{1}", ItemCode, Filename);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.DeleteFile(PathItem);
                     return Ok("Archivo eliminado");
                 }
                 else if (ImagessType.Trim() == "Descripcion")
                 {
                     ValidAction(6);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/descripcion/{1}", ItemCode, Filename);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/descripcion/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.DeleteFile(PathItem);
                     return Ok("Archivo eliminado");
                 }
                 else if (ImagessType.Trim() == "InfoAdicional")
                 {
                     ValidAction(5);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/adicional/{1}", ItemCode, Filename);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/adicional/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.DeleteFile(PathItem);
                     return Ok("Archivo eliminado");
                 }
                 else if (ImagessType.Trim() == "Miniatura")
                 {
                     ValidAction(26);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Filename);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.DeleteFile(PathItem);
                     UpdateImageName(ItemCode, "");
                     return Ok("Archivo eliminado");
@@ -369,34 +369,34 @@ namespace EcommerceAdmin.Controllers
                 if (ImagessType.Trim() == "Producto")
                 {
                     ValidAction(7);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/{1}", ItemCode, Filename);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
                     return Ok("Archivo cargado");
                 }
                 else if (ImagessType.Trim() == "Descripcion")
                 {
                     ValidAction(6);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/descripcion/{1}", ItemCode, Filename);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/descripcion/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
                     return Ok("Archivo cargado");
                 }
                 else if (ImagessType.Trim() == "InfoAdicional")
                 {
                     ValidAction(5);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/adicional/{1}", ItemCode, Filename);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/adicional/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
                     return Ok("Archivo cargado");
                 }
                 else if (ImagessType.Trim() == "Miniatura")
                 {
                     ValidAction(26);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/*.jpg", ItemCode);
-                    string PathPublicItem = string.Format(@"{0}/store/public/images/img_spl/productos/{1}/thumbnail/", Ecommerce_Domain, ItemCode);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/thumbnail/*.jpg", ItemCode);
+                    string PathPublicItem = string.Format(@"{0}/fibra-optica/public/images/img_spl/productos/{1}/thumbnail/", Ecommerce_Domain, ItemCode);
                     if(Ecom_FilesFtp.Getfiles(PathItem, PathPublicItem).Count > 0)
                     {
                         return BadRequest("ya existe una imagen como miniatura predeterminada");
                     }
-                    PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Filename);
+                    PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/thumbnail/{1}", ItemCode, Filename);
                     Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
                     UpdateImageName(ItemCode, Filename);
                     return Ok("Archivo cargado");
@@ -404,7 +404,7 @@ namespace EcommerceAdmin.Controllers
                 else if (ImagessType.Trim() == "360")
                 {
                     ValidAction(49);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/{1}", ItemCode, "360.zip");
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/{1}", ItemCode, "360.zip");
                     Ecom_FilesFtp.UpdateFile(PathItem, FormFile);
                     return Ok("Archivo Zip contenedor de modelo 360 cargado");
                 }
@@ -429,28 +429,28 @@ namespace EcommerceAdmin.Controllers
                 if (ImagessType.Trim() == "Producto")
                 {
                     ValidAction(7);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/", ItemCode);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/", ItemCode);
                     Ecom_FilesFtp.Rename(PathItem, Filename, Newname+".jpg");
                     return Ok("Archivo renombrado");
                 }
                 else if (ImagessType.Trim() == "Descripcion")
                 {
                     ValidAction(6);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/descripcion/", ItemCode);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/descripcion/", ItemCode);
                     Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
                     return Ok("Archivo renombrado");
                 }
                 else if (ImagessType.Trim() == "InfoAdicional")
                 {
                     ValidAction(5);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/adicional/", ItemCode);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/adicional/", ItemCode);
                     Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
                     return Ok("Archivo renombrado");
                 }
                 else if (ImagessType.Trim() == "Miniatura")
                 {
                     ValidAction(26);
-                    string PathItem = string.Format(@"public_html/store/public/images/img_spl/productos/{0}/thumbnail/", ItemCode);
+                    string PathItem = string.Format(@"public_html/fibra-optica/public/images/img_spl/productos/{0}/thumbnail/", ItemCode);
                     Ecom_FilesFtp.Rename(PathItem, Filename, Newname + ".jpg");
                     UpdateImageName(ItemCode, Newname + ".jpg");
                     return Ok("Archivo renombrado");
