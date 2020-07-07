@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Configurables.Configurador.Conf_Files>
+
+@{
+    ViewData["Title"] = "Index";
+}
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th width="250">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th width="150">
+                    @Html.DisplayNameFor(model => model.Created)
+                </th>
+                <th width="150">
+                    @Html.DisplayNameFor(model => model.Updated)
+                </th>
+                <th width="150">
+                    @Html.DisplayNameFor(model => model.Path)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Updated)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Path)
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Name }, new { @class = "btn btn-sm btn-secondary" })
+                            <div class="btn-group" role="group">
+                                <div class="dropdown">
+                                    <a class="btn btn-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Copy to new
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <form class="px-4 py-3" asp-action="Create">
+                                            <div class="form-group">
+                                                <label for="exampleDropdownFormEmail1">Nombre</label>
+                                                <input type="text" name="NewName" class="form-control form-control-sm" placeholder="">
+                                                <input type="hidden" name="File" value="@item.Name" class="form-control form-control-sm" placeholder="">
+                                            </div>
+                                            <button type="submit" class="btn btn-block btn-primary">Crear</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            @Html.ActionLink("Make", "Make", new { id = item.Name }, new { @class = "btn btn-sm btn-secondary" })
+                            @Html.ActionLink("Download", "Download", new { id = item.Name }, new { @class = "btn btn-sm btn-secondary" })
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

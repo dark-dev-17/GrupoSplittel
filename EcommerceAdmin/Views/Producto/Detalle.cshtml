@@ -73,7 +73,13 @@ else
                 </tr>
                 <tr>
                     <td><strong>Descripcion CEO</strong></td>
-                    <td colspan="3">@Html.Raw( Model.Ecom_ProductoDescripcion_.DescripcionCEO.Length >= 100 ? Model.Ecom_ProductoDescripcion_.DescripcionCEO.Substring(0,100) : Model.Ecom_ProductoDescripcion_.DescripcionCEO)<span>...</span></td>
+                    <td colspan="3">
+                        @if (Model.Ecom_ProductoDescripcion_ != null && Model.Ecom_ProductoDescripcion_.DescripcionCEO != null)
+                        {
+                            @Html.Raw(Model.Ecom_ProductoDescripcion_.DescripcionCEO.Length >= 100 ? Model.Ecom_ProductoDescripcion_.DescripcionCEO.Substring(0, 100) : Model.Ecom_ProductoDescripcion_.DescripcionCEO)<span>...</span>
+                        }
+
+                    </td>
                 </tr>
                 <tr>
                     <td><strong>Categoria</strong></td>

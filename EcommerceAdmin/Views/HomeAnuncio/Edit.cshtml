@@ -142,7 +142,7 @@
                                                     <nav class="navbar navbar-light bg-light justify-content-between">
                                                         <a class="navbar-brand"><label asp-for="ImgLarge_" class="control-label"></label></a>
                                                         <form class="form-inline">
-                                                            <button type="button" v-on:click="UploadImage('left')" class="btn btn-outline-success my-2 my-sm-0">Subir imagen</button>
+                                                            <button type="button" v-on:click="UploadImage('right')" class="btn btn-outline-success my-2 my-sm-0">Subir imagen</button>
                                                         </form>
                                                     </nav>
                                                 </div>
@@ -227,12 +227,12 @@
                             await axios.post('@Url.Action("EditChangeImg","HomeAnuncio")', params, { headers: this.serverToken }).then(response => {
                                 this.ShowMessageErrorShort(response.data, 'success')
                                 if (tipe == "left") {
-                                   this.imageData = "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img1/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + file.name
-                                    this.imgLeft = file.name
+                                   this.imageData = "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img1/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + this.imgLeft.split(".")[0]+"."+file.name.split(".")[1]
+                                    this.imgLeft = this.imgLeft.split(".")[0]+"."+file.name.split(".")[1]
                                 }
                                 if (tipe == "right") {
-                                     this.imageData2 = "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img2/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + file.name
-                                     this.imgRight = file.name
+                                     this.imageData2 = "@Html.Raw(string.Format("{0}/fibra-optica/public/images/img_spl/slide/img2/",System.Configuration.ConfigurationManager.AppSettings["Ecommerce_Domain"]))" + this.imgRight.split(".")[0]+"."+file.name.split(".")[1]
+                                     this.imgRight = this.imgRight.split(".")[0]+"."+file.name.split(".")[1]
                                 };
                                 const reader = new FileReader()
                                 reader.onload = (e) => {
@@ -244,6 +244,7 @@
                                 }
                                 reader.readAsDataURL(file)
                             }).catch(error => {
+                                console.log(error)
                                 this.ShowMessageErrorShort(error.response.data,'error')
                             }).finally(() => this.newName = "")
                         }

@@ -1,0 +1,860 @@
+﻿@model Configurables.Configurador.Conf_Files
+@{
+    ViewData["Title"] = "Edit: " + Model.Name;
+}
+    <div id="App_configurador" class="mt-2">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Detalle</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Elementos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Restricciones</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact" aria-selected="false">Usuario</a>
+            </li>
+        </ul>
+        <div class="tab-content mt-5" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <table class="table table-sm">
+                    <tr>
+                        <th>ItemCode example</th>
+                        <td><input type="text" name="name" v-model="model.itemCodeexample" class="form-control form-control-sm" /></td>
+                        <td><button class="btn btn-sm btn-primary" v-on:click="UpdateCode()">Update</button></td>
+                    </tr>
+                    <tr>
+                        <th>Expression</th>
+                        <td> {{ model.expresion}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="row">
+                    <div class="col-7">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th style="width: 150px;">Clave</th>
+                                    <th>Descripción</th>
+                                    <th>Fija</th>
+                                    <th>Opcional</th>
+                                    <th>Usuario</th>
+                                    <th style="width: 70px;">Valor Fijo</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td><input type="text" id="ElementoForm" name="name" v-model="Elemento.Key" class="form-control form-control-sm" /></td>
+                                    <td><input type="text" name="name" v-model="Elemento.Block" class="form-control form-control-sm" /></td>
+                                    <td><input type="checkbox" name="name" v-model="Elemento.IsFixed" class="form-control form-control-sm" /></td>
+                                    <td><input type="checkbox" name="name" v-model="Elemento.IsOptional" class="form-control form-control-sm" /></td>
+                                    <td><input type="checkbox" name="name" v-model="Elemento.IsOpenUser" class="form-control form-control-sm" /></td>
+                                    <td><input type="text" name="name" v-model="Elemento.FixedValue" class="form-control form-control-sm" /></td>
+                                    <td><a href="#" v-on:click="AddConfiguracion()">Agregar</a></td>
+                                </tr>
+                                <tr v-if="model.blocks.length > 0" v-for="(item,index) in model.blocks">
+                                    <td>
+                                        <button v-if="!item.isOpenUser && item.options.length == 0" type="button" class="btn btn-secondary btn-sm" data-container="body" data-toggle="popover" data-placement="top" data-content="No cuenta con valores opcionales">
+                                            OP
+                                        </button>
+                                    </td>
+                                    <td><input type="text" name="name" value="" v-model="item.key" class="form-control form-control-sm" disabled /></td>
+                                    <td><input type="text" name="name" value="" v-model="item.block" class="form-control form-control-sm" /></td>
+                                    <td><input type="checkbox" name="name" value="" v-model="item.isFixed" class="form-control form-control-sm" /></td>
+                                    <td><input type="checkbox" name="name" value="" v-model="item.isOptional" class="form-control form-control-sm" /></td>
+                                    <td><input type="checkbox" name="name" value="" v-model="item.isOpenUser" class="form-control form-control-sm" /></td>
+                                    <td><input type="text" name="name" value="" v-model="item.fixedValue" class="form-control form-control-sm" /></td>
+                                    <td>
+                                        <a href="#elementos" v-on:click="UpdateConfiguracion(index)"><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
+                                        <a href="#elementos" v-on:click="DeleteConfiguracion(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
+                                        <a href="#elementos" v-on:click="modelselected = index"><img src="https://img.icons8.com/color/48/000000/multi-edit.png" style="width: 29px;" /></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-5">
+                        <span v-if="modelselected != null && model.blocks[modelselected].isOpenUser == false">Aplicativos para  {{ model.blocks[modelselected].block }}</span>
+                        <table v-if="modelselected != null && model.blocks[modelselected].isOpenUser == false" class="table  table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Clave</th>
+                                    <th>Descripción</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" id="ValorForm" name="name" v-model="Valor.Key" class="form-control form-control-sm" /></td>
+                                    <td><input type="text" name="name" v-model="Valor.Option" class="form-control form-control-sm" /></td>
+                                    <td><a href="#" v-on:click="AddValor()">Agregar</a></td>
+                                </tr>
+                                <tr v-if="model.blocks[modelselected].options.length > 0" v-for="(item,index) in model.blocks[modelselected].options">
+                                    <td><input type="text" name="name" value="" v-model="item.key" class="form-control form-control-sm" /></td>
+                                    <td><input type="text" name="name" value="" v-model="item.option" class="form-control form-control-sm" /></td>
+                                    <td>
+                                        <a href="#" v-on:click="UpdateValor(index)"><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
+                                        <a href="#" v-on:click="DeleteValor(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table  table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Restriccion</th>
+                                    <th>Bloque</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" id="RestricitionForm" name="name" v-model="Restriccion.Restriccion" class="form-control form-control-sm" /></td>
+                                    <td>
+                                        <select v-model="Restriccion.Block" class="form-control form-control-sm">
+                                            <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
+                                                {{ option.block }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td><a href="#" v-on:click="AddRestriccion()">Agregar</a></td>
+                                </tr>
+                                <tr v-if="model.rectrictions.length > 0" v-for="(item,index) in model.rectrictions">
+                                    <td>
+                                        <input type="text" name="name" value="" v-model="item.restriccion" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <select v-model="item.block" class="form-control form-control-sm" disabled>
+                                            <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
+                                                {{ option.block }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a href="#reglaFormadd" v-on:click=""><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
+                                        <a href="#reglaFormadd" v-on:click="DeleteRestriccion(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
+                                        <a href="#reglaFormadd" v-on:click="Restrictionselected = index"><img src="https://img.icons8.com/color/48/000000/multi-edit.png" style="width: 29px;" /></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-7">
+                        <table class="table  table-sm" v-if="Restrictionselected != null">
+                            <thead>
+                                <tr>
+                                    <th colspan="5">{{ model.rectrictions[Restrictionselected].restriccion }}</th>
+                                </tr>
+                                <tr>
+                                    <th>detonante</th>
+                                    <th>Tipo</th>
+                                    <th>Aplica para</th>
+                                    <th>valores aceptados</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <input id="reglaFormadd" type="text" class="form-control form-control-sm" v-model="Regla.BlockValues" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
+                                            <div class="input-group-append">
+                                                <button data-toggle="modal" v-on:click="GetElement('RestrictionFrom',0)" data-target="#exampleModal3" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select v-model="Regla.Type" class="form-control form-control-sm">
+                                            <option value="HabilitarElementos" > HabilitarElementos </option>
+                                            <option value="RemoveElements" selected> Remover elementos </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select v-model="Regla.BlockApply" class="form-control form-control-sm">
+                                            <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
+                                                {{ option.block }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="input-group" v-if="Regla.BlockApply != ''">
+                                            <input type="text" class="form-control form-control-sm" v-model="Regla.ValuesAcepted" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
+                                            <div class="input-group-append">
+                                                <button data-toggle="modal" v-on:click="GetElement('RestrictionAdd',0)" data-target="#exampleModal4" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><a href="#" v-on:click="AddRegla()">Agregar</a></td>
+                                </tr>
+                                <tr v-if="model.rectrictions[Restrictionselected].rules.length > 0" v-for="(item,index) in model.rectrictions[Restrictionselected].rules">
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" v-model="item.blockValues" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
+                                            <div class="input-group-append">
+                                                <button data-toggle="modal" v-on:click="GetElement('RestrictionFrom',index)" data-target="#exampleModal" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select v-model="item.type" class="form-control form-control-sm">
+                                            <option value="HabilitarElementos" >HabilitarElementos </option>
+                                            <option value="RemoveElements" selected> Remover elementos </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select v-model="item.blockApply" class="form-control form-control-sm" disabled>
+                                            <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
+                                                {{ option.block }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" v-model="item.valuesAcepted" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
+                                            <div class="input-group-append">
+                                                <button data-toggle="modal" v-on:click="GetElement('RestrictionTo',index)" data-target="#exampleModal2" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="#reglaFormadd" v-on:click="UpdateElement(index)"><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
+                                        <a href="#reglaFormadd" v-on:click="DeleteElement(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="contact1" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table  table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Elemento</th>
+                                    <th>Tipo</th>
+                                    <th>Rango</th>
+                                    <th>De</th>
+                                    <th>A</th>
+                                    <th>Mascara</th>
+                                    <th>Numeros</th>
+                                    <th>Unidad</th>
+                                    <th>Numero Mult</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select v-model="CampoUser.BlockKey" id="addFreeRestriction" class="form-control form-control-sm">
+                                            <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser">
+                                                {{ option.block }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select v-model="CampoUser.Type" class="form-control form-control-sm">
+                                            <option value="number" selected>Numero</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="name" v-model="CampoUser.IsRange" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="name" v-model="CampoUser.RangeFrom" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="name" v-model="CampoUser.RangeTo" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="name" v-model="CampoUser.HasCerosMask" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="name" v-model="CampoUser.NumberCeros" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="text" name="name" v-model="CampoUser.UnitMesureUser" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="name" v-model="CampoUser.NumeroMult" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <a href="#CamposUUsuaruo" v-on:click="AddRestriccionFree()">Agregar</a>
+                                    </td>
+                                </tr>
+                                <tr v-if="model.fieldsFree.length > 0" v-for="(item, index) in model.fieldsFree">
+                                    <td>
+                                        <select v-model="item.blockKey" id="addFreeRestriction" class="form-control form-control-sm">
+                                            <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser">
+                                                {{ option.block }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select v-model="item.type" class="form-control form-control-sm">
+                                            <option value="number" selected>Numero</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="name" v-model="item.isRange" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="name" v-model="item.rangeFrom" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="name" v-model="item.rangeTo" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="name" v-model="item.hasCerosMask" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="name" v-model="item.numberCeros" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="text" name="name" v-model="item.unitMesureUser" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="name" v-model="item.numeroMult" class="form-control form-control-sm" />
+                                    </td>
+                                    <td>
+                                        <a href="#addFreeRestriction" v-on:click="DeleteFreeRestriction(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2>Descripcion del codigo</h2>
+                <div class="row">
+                    <div class="col-lg-3 border" v-for="(item,index)  in model.blocks">
+                        <label class="control-label">{{ item.block }}</label><small>({{ item.key }})</small>
+                        <input v-on:keyup="" type="text" v-if="item.isOpenUser" class="form-control form-control-sm form-group-sm" />
+                        <br />
+                        <div class="btn-group btn-group-sm mr-2 " role="group" aria-label="First group">
+                            <div v-if="!item.isOpenUser" v-for="option in item.options">
+                                <button type="button" class="btn btn-sm btn-secondary">{{ option.option }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Valores detonantes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" v-if="Element.data != null && RestrictionRuleselected != null && model.rectrictions[Restrictionselected].rules.length > 0">
+                        <table class="table  table-sm">
+                            <tr>
+                                <th>Elemento</th>
+                                <td>{{ Element.data.block }}</td>
+                            </tr>
+                        </table>
+                        <div class="form-check" v-for="(item, index) in Element.data.options">
+                            <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="model.rectrictions[Restrictionselected].rules[RestrictionRuleselected].blockValues">
+                            <label class="form-check-label" for="defaultCheck1">
+                                {{ item.option }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" v-on:click="GetConfiguracion()" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" v-on:click="UpdateElement(RestrictionRuleselected)">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Valores aceptados</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" v-if="Element.data != null  && RestrictionRuleselected != null && model.rectrictions[Restrictionselected].rules.length > 0">
+                        <table class="table  table-sm">
+                            <tr>
+                                <th>Elemento</th>
+                                <td>{{ Element.data.block }}</td>
+                            </tr>
+                        </table>
+                        <div class="form-check" v-for="(item, index) in Element.data.options">
+                            <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="model.rectrictions[Restrictionselected].rules[RestrictionRuleselected].valuesAcepted">
+                            <label class="form-check-label" for="defaultCheck1">
+                                {{ item.option }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" v-on:click="GetConfiguracion()" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" v-on:click="UpdateElement(RestrictionRuleselected)">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*modales para regla a crear*@
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Valores detonantes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" v-if="Element.data != null">
+                        <table class="table  table-sm">
+                            <tr>
+                                <th>Elemento</th>
+                                <td>{{ Element.data.block }}</td>
+                            </tr>
+                        </table>
+                        <div class="form-check" v-for="(item, index) in Element.data.options">
+                            <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="Regla.BlockValues">
+                            <label class="form-check-label" for="defaultCheck1">
+                                {{ item.option }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Valores aceptados</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" v-if="Element.data != null">
+                        <table class="table  table-sm">
+                            <tr>
+                                <th>Elemento</th>
+                                <td>{{ Element.data.block }}</td>
+                            </tr>
+                        </table>
+                        <div class="form-check" v-for="(item, index) in Element.data.options">
+                            <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="Regla.ValuesAcepted">
+                            <label class="form-check-label" for="defaultCheck1">
+                                {{ item.option }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var App_configurador = new Vue({
+            el: "#App_configurador",
+            data: {
+                model: [],
+                Configuracion: "@Model.Name",
+                Elemento: {
+                    Block: "",
+                    Key: "",
+                    IsFixed: true,
+                    IsOptional: false,
+                    IsOpenUser: false,
+                    Type:"",
+                    FixedValue: "",
+                    Options: []
+                },
+                Valor: {
+                    Option: "",
+                    Key: ""
+                },
+                Restriccion: {
+                    Restriccion: "",
+                    Block: "",
+                    Rules: [],
+                },
+                Regla: {
+                    BlockValues: [],
+                    Type: "",
+                    BlockApply: "",
+                    ValuesAcepted: []
+                },
+                Element: {
+                    data: null,
+                    Option: ""
+                },
+                CampoUser: {
+                    BlockKey: "",
+                    Type: "",
+                    IsRange: false,
+                    RangeFrom: 0,
+                    RangeTo: 0,
+                    HasCerosMask: false,
+                    NumberCeros: 0,
+                    UnitMesureUser: "",
+                    NumeroMult: 0
+                },
+                modelselected: null,
+                Restrictionselected: null,
+                RestrictionRuleselected: null,
+                ActivePanelDetale: false
+            },
+            mounted() {
+                this.GetConfiguracion();
+                  $('.example-popover').popover({
+                        container: 'body'
+                  })
+            },
+            methods: {
+                UpdateCode: async function () {
+                    let object = {
+                        Nombre: this.Configuracion,
+                        Codigo: this.model.itemCodeexample
+                    }
+                    await axios.post('@Url.Action("UpdateCode","EditorConfigurable")',object, null).then(response => {
+                        this.Element.data = response.data
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                AddRestriccionFree: async function () {
+                    let object = {
+                        restriccionCampoUsuario: this.CampoUser,
+                        Nombre: this.Configuracion
+                    }
+                    await axios.post('@Url.Action("AddRestriccionFree","EditorConfigurable")',object, null).then(response => {
+                        this.model = response.data
+                        this.CampoUser = {
+                            BlockKey: "",
+                            Type: "",
+                            IsRange: false,
+                            RangeFrom: 0,
+                            RangeTo: 0,
+                            HasCerosMask: false,
+                            NumberCeros: 0,
+                            UnitMesureUser: "",
+                            NumeroMult: 0
+                        }
+                        document.getElementById("addFreeRestriction").focus()
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                DeleteFreeRestriction: async function (index) {
+                    let object = {
+                        restriccionCampoUsuario: this.model.fieldsFree[index],
+                        Nombre: this.Configuracion
+                    }
+                    var r = confirm("¿Deseas eliminar este elemento?");
+                    if (r == true) {
+                        await axios.post('@Url.Action("DeletedRestriccionFree","EditorConfigurable")',object, null).then(response => {
+                            this.model = response.data
+                            this.ShowMessageErrorShort("Cambio guardado",'success')
+                        }).catch(error => {
+                            console.log(error)
+                           alert(error.response.data)
+                        }).finally(() => console.log("creadted"))
+                    }
+                },
+                DeleteElement: async function (index) {
+                    let object = {
+                        regla: this.model.rectrictions[this.Restrictionselected].rules[index],
+                        IndexRestriccion: this.Restrictionselected,
+                        Nombre: this.Configuracion,
+                    }
+                    var r = confirm("¿Deseas eliminar este elemento?");
+                    if (r == true) {
+                        await axios.post('@Url.Action("DeleteRegla","EditorConfigurable")',object, null).then(response => {
+                            this.model = response.data
+                            this.ShowMessageErrorShort("Cambio guardado",'success')
+                        }).catch(error => {
+                            console.log(error)
+                            alert(error.response.data)
+                        }).finally(() => console.log("creadted"))
+                    }
+                },
+                UpdateElement: async function (index) {
+                    let object = {
+                        regla: this.model.rectrictions[this.Restrictionselected].rules[index],
+                        IndexRestriccion: this.Restrictionselected,
+                        Nombre: this.Configuracion,
+                        IndexRelga: index
+                    }
+                    await axios.post('@Url.Action("UpdateRegla","EditorConfigurable")',object, null).then(response => {
+                        this.model = response.data
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                        alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                GetElement: async function (Option, index) {
+                    this.RestrictionRuleselected = index;
+                    this.Element.Option = Option;
+                    var params = new URLSearchParams();
+
+                    params.append('Nombre', this.Configuracion);
+                    if (this.Element.Option == "RestrictionFrom") {
+                        params.append('id', this.model.rectrictions[this.Restrictionselected].block);
+                    } else if (this.Element.Option == "RestrictionTo") {
+                        params.append('id', this.model.rectrictions[this.Restrictionselected].rules[index].blockApply);
+                    } else {
+                        params.append('id', this.Regla.BlockApply);
+                    }
+
+                    await axios.post('@Url.Action("GetElementoCodigoValueId","EditorConfigurable")',params, null).then(response => {
+                        this.Element.data = response.data
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                AddRegla: async function () {
+                    let object = {
+                        regla: this.Regla,
+                        IndexRestriccion: this.Restrictionselected,
+                        Nombre: this.Configuracion
+                    }
+                    await axios.post('@Url.Action("AddReg","EditorConfigurable")',object, null).then(response => {
+                        this.model = response.data
+                        this.Regla = {
+                            BlockValues: [],
+                            Type: "",
+                            BlockApply: "",
+                            ValuesAcepted: []
+                        }
+                        document.getElementById("reglaFormadd").focus()
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                DeleteRestriccion: async function (index) {
+                    let object = {
+                        restriccionElemento: this.model.rectrictions[index],
+                        Nombre: this.Configuracion
+                    }
+                    var r = confirm("¿Deseas eliminar este elemento?");
+                    if (r == true) {
+                        await axios.post('@Url.Action("DeleteRestrcition","EditorConfigurable")',object, null).then(response => {
+                            this.model = response.data
+                            this.ShowMessageErrorShort("Cambio guardado",'success')
+                        }).catch(error => {
+                            console.log(error)
+                            alert(error.response.data)
+                        }).finally(() => console.log("creadted"))
+                    }
+
+                },
+                AddRestriccion: async function () {
+                    let object = {
+                        restriccionElemento: this.Restriccion,
+                        Nombre: this.Configuracion
+                    }
+                    await axios.post('@Url.Action("AddRestrcition","EditorConfigurable")',object, null).then(response => {
+                        this.model = response.data
+                        this.Restriccion = {
+                            Restriccion: "",
+                            Block: "",
+                            Rules: [],
+                        }
+                        document.getElementById("RestricitionForm").focus()
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                DeleteValor: async function (Index) {
+                    let object = {
+                        opcionesSelect: this.model.blocks[this.modelselected].options[Index],
+                        IndexPartCodigo: this.modelselected,
+                        Nombre: this.Configuracion
+                    }
+                    var r = confirm("¿Deseas eliminar este elemento?");
+                    if (r == true) {
+                        await axios.post('@Url.Action("DeleteElementoCodigoValue","EditorConfigurable")',object, null).then(response => {
+                            this.model = response.data
+                            this.Valor = {
+                                Option: "",
+                                Key: ""
+                            }
+                            document.getElementById("ValorForm").focus()
+                            this.ShowMessageErrorShort("Cambio guardado",'success')
+                        }).catch(error => {
+                            console.log(error)
+                           alert(error.response.data)
+                        }).finally(() => console.log("creadted"))
+                    }
+
+                },
+                UpdateValor: async function (Index) {
+                    let object = {
+                        opcionesSelect: this.model.blocks[this.modelselected].options[Index],
+                        IndexPartCodigo: this.modelselected,
+                        IndexValue: Index,
+                        Nombre: this.Configuracion
+                    }
+                    await axios.post('@Url.Action("UpdateElementoCodigoValue","EditorConfigurable")',object, null).then(response => {
+                        this.model = response.data
+                        this.Valor = {
+                            Option: "",
+                            Key: ""
+                        }
+                        document.getElementById("ValorForm").focus()
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                AddValor: async function () {
+                    let object = {
+                        opcionesSelect: this.Valor,
+                        IndexPartCodigo: this.modelselected,
+                        Nombre: this.Configuracion
+                    }
+                    await axios.post('@Url.Action("AddElementoCodigoValue","EditorConfigurable")',object, null).then(response => {
+                        this.model = response.data
+                        this.Valor = {
+                            Option: "",
+                            Key: ""
+                        }
+                        document.getElementById("ValorForm").focus()
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                DeleteConfiguracion: async function (index) {
+                    var r = confirm("¿Deseas eliminar este elemento?");
+                    let object = {
+                        Nombre: this.Configuracion,
+                        element: this.model.blocks[index]
+                    }
+                    if (r == true) {
+
+                        await axios.post('@Url.Action("DeleteElementoCodigo","EditorConfigurable")',object, null).then(response => {
+                            this.model = response.data
+                            this.ShowMessageErrorShort("Cambio guardado",'success')
+                        }).catch(error => {
+                            console.log(error)
+                           alert(error.response.data)
+                        }).finally(() => console.log("creadted"))
+                    }
+                },
+                UpdateConfiguracion: async function (index) {
+                    let object = {
+                        element: this.model.blocks[index],
+                        Nombre: this.Configuracion,
+                        elementCode: index
+                    }
+                    await axios.post('@Url.Action("UpdateElementoCodigo","EditorConfigurable")',object, null).then(response => {
+                        this.model = response.data
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                AddConfiguracion: async function () {
+                    let object = {
+                        element: this.Elemento,
+                        Nombre: this.Configuracion
+                    }
+                    await axios.post('@Url.Action("AddElementoCodigo","EditorConfigurable")',object, null).then(response => {
+                        this.model = response.data
+                        this.Elemento = {
+                            Block: "",
+                            Key: "",
+                            IsFixed: true,
+                            IsOptional: false,
+                            IsOpenUser: false,
+                            Type:"",
+                            FixedValue: "",
+                            Options: []
+                        }
+                        document.getElementById("ElementoForm").focus()
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                GetConfiguracion: async function () {
+                    var params = new URLSearchParams();
+                            params.append('id', this.Configuracion);
+                    await axios.post('@Url.Action("GetConfigurable","EditorConfigurable")',params  , null).then(response => {
+                        this.model = response.data
+                        this.ShowMessageErrorShort("Cambio guardado",'success')
+                    }).catch(error => {
+                        console.log(error)
+                       alert(error.response.data)
+                    }).finally(() => console.log("creadted"))
+                },
+                ShowMessageErrorShort: function (text,icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+            }
+        });
+    </script>
+
+}
+

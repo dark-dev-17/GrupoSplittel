@@ -474,7 +474,7 @@ namespace EcommerceAdmin.Controllers
                     ValidPermis(Ecom_HomeAnuncio_2);
                     if (type.Trim() == "left")
                     {
-                        if (Ecom_HomeAnuncio_2.ImgSmall.Contains("jpg") || Ecom_HomeAnuncio_2.ImgSmall.Contains("JPG") || Ecom_HomeAnuncio_2.ImgSmall.Contains("png") || Ecom_HomeAnuncio_2.ImgSmall.Contains("PNG"))
+                        if (Ecommerce_.ecomData.Ecom_FilesFtp.ExistsFile(string.Format(@"public_html/fibra-optica/public/images/img_spl/slide/img1/{0}", Ecom_HomeAnuncio_2.ImgSmall)))
                         {
                             string Small_ = string.Format(@"public_html/fibra-optica/public/images/img_spl/slide/img1/{0}", Ecom_HomeAnuncio_2.ImgSmall);
                             Ecommerce_.ecomData.Ecom_FilesFtp.DeleteFile(Small_);
@@ -496,7 +496,7 @@ namespace EcommerceAdmin.Controllers
                     }
                     else if(type.Trim() == "right")
                     {
-                        if (Ecom_HomeAnuncio_2.ImgLarge.Contains("jpg") || Ecom_HomeAnuncio_2.ImgLarge.Contains("JPG") || Ecom_HomeAnuncio_2.ImgLarge.Contains("png") || Ecom_HomeAnuncio_2.ImgLarge.Contains("PNG"))
+                        if (Ecommerce_.ecomData.Ecom_FilesFtp.ExistsFile(string.Format(@"public_html/fibra-optica/public/images/img_spl/slide/img2/{0}", Ecom_HomeAnuncio_2.ImgLarge)))
                         {
                             string ImgLarge = string.Format(@"public_html/fibra-optica/public/images/img_spl/slide/img2/{0}", Ecom_HomeAnuncio_2.ImgLarge);
                             Ecommerce_.ecomData.Ecom_FilesFtp.DeleteFile(ImgLarge);
@@ -574,7 +574,7 @@ namespace EcommerceAdmin.Controllers
                     ValidPermis(Ecom_HomeAnuncio_2);
                     if (type.Trim() == "left")
                     {
-                        if (Ecom_HomeAnuncio_2.ImgSmall.Contains("jpg") || Ecom_HomeAnuncio_2.ImgSmall.Contains("JPG") || Ecom_HomeAnuncio_2.ImgSmall.Contains("png") || Ecom_HomeAnuncio_2.ImgSmall.Contains("PNG"))
+                        if (Ecommerce_.ecomData.Ecom_FilesFtp.ExistsFile(string.Format("public_html/fibra-optica/public/images/img_spl/slide/img1/{0}", Ecom_HomeAnuncio_2.ImgSmall)))
                         {
                             Ecommerce_.ecomData.Ecom_FilesFtp.Rename("public_html/fibra-optica/public/images/img_spl/slide/img1/", Ecom_HomeAnuncio_2.ImgSmall, NewName +"." + Ecom_HomeAnuncio_2.ImgSmall.Split('.')[1]);
                         }
@@ -591,7 +591,7 @@ namespace EcommerceAdmin.Controllers
                     }
                     else if (type.Trim() == "right")
                     {
-                        if (Ecom_HomeAnuncio_2.ImgLarge.Contains("jpg") || Ecom_HomeAnuncio_2.ImgLarge.Contains("JPG") || Ecom_HomeAnuncio_2.ImgLarge.Contains("png") || Ecom_HomeAnuncio_2.ImgLarge.Contains("PNG"))
+                        if (Ecommerce_.ecomData.Ecom_FilesFtp.ExistsFile(string.Format("public_html/fibra-optica/public/images/img_spl/slide/img2/{0}", Ecom_HomeAnuncio_2.ImgLarge)))
                         {
                             Ecommerce_.ecomData.Ecom_FilesFtp.Rename("public_html/fibra-optica/public/images/img_spl/slide/img2/", Ecom_HomeAnuncio_2.ImgLarge, NewName + "." + Ecom_HomeAnuncio_2.ImgLarge.Split('.')[1]);
                         }
