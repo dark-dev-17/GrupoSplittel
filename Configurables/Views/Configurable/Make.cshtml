@@ -101,7 +101,7 @@
                         configurationUser: this.model,
                         Nombre: this.configuracion
                     }
-                    await axios.post('@Url.Action("DataMake","Configurable")', object, null).then(response => {
+                    await axios.post('@Url.Action("DattaMaker","Configurable")', object, null).then(response => {
                         this.model = response.data
                     }).catch(error => {
                         console.log(error)
@@ -115,7 +115,7 @@
                         configurationUser: this.model,
                         Nombre: this.configuracion
                     }
-                    await axios.post('@Url.Action("DataMake","Configurable")', object, null).then(response => {
+                    await axios.post('@Url.Action("DattaMaker","Configurable")', object, null).then(response => {
                         this.model = response.data
                     }).catch(error => {
                         console.log(error)
@@ -130,7 +130,7 @@
                         configurationUser: this.model,
                         Nombre: this.configuracion
                     }
-                    await axios.post('@Url.Action("DataMake","Configurable")', object, null).then(response => {
+                    await axios.post('@Url.Action("DattaMaker","Configurable")', object, null).then(response => {
                         this.model = response.data
                     }).catch(error => {
                         console.log(error)

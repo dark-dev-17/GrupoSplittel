@@ -48,6 +48,13 @@ namespace Configurables.Controllers
             Conf_Files conf_Files1 = conf_Files.Get().Find(a => a.Name == id);
             return View(conf_Files1);
         }
+        public ActionResult Configurar(string id)
+        {
+            Conf_Files conf_Files1 = conf_Files.Get().Find(a => a.Name == id);
+            return View(conf_Files1);
+        }
+
+
 
         public FileResult Download(string id)
         {
@@ -82,6 +89,29 @@ namespace Configurables.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost]
+        public IActionResult DattaMaker([FromBody]ConfigurationUserRe ConfigurationUserRe)
+        {
+            try
+            {
+                GetData(ConfigurationUserRe.Nombre);
+                if (ConfigurationUserRe.configurationUser == null || ConfigurationUserRe.configurationUser.Blocks == null)
+                {
+                    Maker maker = new Maker(Data);
+                    return Ok(maker.GetConfigurationUser());
+                }
+                else
+                {
+                    Maker maker = new Maker(Data, ConfigurationUserRe.configurationUser);
+                    return Ok(maker.GetConfigurationUser());
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
