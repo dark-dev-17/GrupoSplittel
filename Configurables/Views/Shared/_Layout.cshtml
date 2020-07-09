@@ -42,26 +42,36 @@
             <div class="col-lg-10">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="float-left"><h3>@ViewData["Title"]</h3></div>
-                        <div class="float-right mt-1">
-                            <div class="dropdown">
-                                <a class="btn btn-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Add new
-                                </a>
-                                <div class="dropdown-menu">
-                                    <form class="px-4 py-3">
-                                        <div class="form-group">
-                                            <label for="exampleDropdownFormEmail1">Crear nuevo</label>
-                                            <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
-                                        </div>
-                                        <button type="submit" class="btn btn-block btn-primary">Crear</button>
-                                    </form>
+                        <div class="d-flex align-items-center p-3 my-3  bg-white rounded box-shadow ">
+                            <img class="mr-3" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRv-SOlOGkirRWUK8gW6jS0M1gRC0vXbnKRLQ&usqp=CAU" alt="" width="48" height="48">
+                            <div class="lh-100">
+                                <h4 class="text-danger mb-0lh-100">Optronics configurables</h4>
+                                <small>@ViewData["Title"]</small>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <div class="dropdown">
+                                    <a class="btn btn-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Add new
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <form class="px-4 py-3">
+                                            <div class="form-group">
+                                                <label for="exampleDropdownFormEmail1">Crear nuevo</label>
+                                                <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
+                                            </div>
+                                            <button type="submit" class="btn btn-block btn-primary">Crear</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
-                @RenderBody()
+                <div class="row">
+                    @RenderBody()
+                </div>
+               
             </div>
             <div class="col-lg-1"></div>
         </div>

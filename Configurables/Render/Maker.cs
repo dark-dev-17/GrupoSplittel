@@ -26,7 +26,7 @@ namespace Configurables.Render
             this.Configuracion = Configuracion;
             this.Render = Render;
             renderData = RenderData.Alter;
-            ValidateEnters();
+            ValidateEntersModificating();
             GenerarteCOde();
         }
 
@@ -90,6 +90,48 @@ namespace Configurables.Render
                     //extraer restricciones
                     RestriccionElemento conf_restriccion = Configuracion.Rectrictions.Find(rest => rest.Block == user_elemento.BlockKey);
                     ProccesElementsOptional(user_elemento,conf_restriccion);
+                }
+            });
+        }
+
+        private void ValidateEntersModificating()
+        {
+            Render.Blocks.Where(user_Render => user_Render.IsModificating).ToList().ForEach(user_elemento => {
+                //extraer informacion de configuracion
+                ElementCode conf_elemento = Configuracion.Blocks.Find(el => el.Key == user_elemento.BlockKey);
+
+                if (conf_elemento == null)
+                    throw new Exception(string.Format("No existe una configuración para el campo: {0}", user_elemento.BlockKey));
+
+                if (conf_elemento.IsFixed && !conf_elemento.IsOpenUser)
+                {
+                    List<string> Values = new List<string>();
+                    Values.Add(conf_elemento.FixedValue);
+                    user_elemento.FormOption.ForEach(user_opcion => {
+                        if (Values.Contains(user_opcion.Key))
+                        {
+                            user_opcion.Active = true;
+                        }
+                        else
+                        {
+                            user_opcion.Active = false;
+                        }
+                    });
+                }
+                //extraer restricciones de campo de usario
+                if (!conf_elemento.IsFixed && conf_elemento.IsOpenUser)
+                {
+                    //extraer restricciones a campo(reglas)
+                    RestriccionCampoUsuario conf_restriccionUsuario = Configuracion.FieldsFree.Find(FreeUser => FreeUser.BlockKey == conf_elemento.Key);
+                    //procesar elemento
+                    ProcessFieldUser(user_elemento, conf_restriccionUsuario);
+
+                }
+                if (!conf_elemento.IsFixed && !conf_elemento.IsOpenUser)
+                {
+                    //extraer restricciones
+                    RestriccionElemento conf_restriccion = Configuracion.Rectrictions.Find(rest => rest.Block == user_elemento.BlockKey);
+                    ProccesElementsOptional(user_elemento, conf_restriccion);
                 }
             });
         }

@@ -40,7 +40,7 @@ namespace Configurables.Controllers
             Data.Configurable = NewName;
             conf_Files.Name = NewName;
             conf_Files.Create(json);
-            return RedirectToAction("Edit", new { id= Data.Configurable + ".json" });
+            return RedirectToAction("Configurar", new { id= Data.Configurable + ".json" });
         }
 
         public ActionResult Make(string id)

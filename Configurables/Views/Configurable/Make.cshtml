@@ -5,74 +5,53 @@
 <div id="App_makeCode">
 
     <div v-if="model != null">
-        <div class="card mt-4">
-            <div class="card-header">
-                Detalle configuración
-            </div>
-            <div class="card-body">
-                <div class="col-md-12">
-                    <table class="table table-condensed">
-                        <tr>
-                            <td><label class="control-label">Configuración</label></td>
-                            <td>{{ model.configurable }}</td>
-                            <td><label class="control-label">Codigo Ejemplo</label></td>
-                            <td>{{ model.itemCodeexample }}</td>
-                            <td><label class="control-label">Codigo</label></td>
-                            <td>{{ model.itemCode }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
         <div class="row mt-3">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        Bloques
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-6" v-for="(item,index)  in model.blocks">
-                                <label class="control-label">{{ item.blockName }}</label><small>({{ item.blockKey }} - {{ item.keySelected }})</small>
-                                <input v-on:keyup="GetModelAction(index)" type="text" v-if="item.isOpenUser" v-model="item.keySelectedUser" class="form-control form-control-sm form-group-sm" />
-                                <br  v-if="!item.isOpenUser" />
-                                <div class="btn-group btn-group-sm mr-2 " v-if="!item.isOpenUser" role="group" aria-label="First group">
-                                    <div v-if="!item.isOpenUser" v-for="option in item.formOption">
-                                        <button type="button" v-on:click="GetModelAction2(index,option.key)" v-if="option.active && option.key == item.keySelected" class="btn btn-sm btn-danger">{{ option.option }}</button>
-                                        <button type="button" v-on:click="GetModelAction2(index,option.key)" v-if="option.active && option.key != item.keySelected" class="btn btn-sm btn-secondary">{{ option.option }}</button>
-                                        <button type="button" disabled v-if="option.active == false" class="btn btn-sm btn-default">{{ option.option }}</button>
-                                    </div>
-
+                <div class="col-12 bg-white rounded box-shadow mt-2">
+                    <h4 class="border-bottom border-gray pb-2 mb-0 text-danger">Formulario</h4>
+                    <div class="row">
+                        <div class="col-lg-6" v-for="(item,index)  in model.blocks">
+                            <label class="control-label">{{ item.blockName }}</label><small>({{ item.blockKey }} - {{ item.keySelected }})</small>
+                            <input v-on:keyup="GetModelAction(index)" type="text" v-if="item.isOpenUser" v-model="item.keySelectedUser" class="form-control form-control-sm form-group-sm" />
+                            <br v-if="!item.isOpenUser" />
+                            <div class="btn-group btn-group-sm mr-2 " v-if="!item.isOpenUser" role="group" aria-label="First group">
+                                <div v-if="!item.isOpenUser" v-for="option in item.formOption">
+                                    <button type="button" v-on:click="GetModelAction2(index,option.key)" v-if="option.active && option.key == item.keySelected" class="btn btn-sm btn-danger">{{ option.option }}</button>
+                                    <button type="button" v-on:click="GetModelAction2(index,option.key)" v-if="option.active && option.key != item.keySelected" class="btn btn-sm btn-secondary">{{ option.option }}</button>
+                                    <button type="button" disabled v-if="option.active == false" class="btn btn-sm btn-default">{{ option.option }}</button>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="col-3">
-                <div class="card">
-                    <div class="card-header">
-                        Detalle codigo
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-condensed table-striped table-hover table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Parte</th>
-                                    <td>Descripcion</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="item in model.description">
-                                    <th>{{item.bloque }}</th>
-                                    <td>{{item.selected }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="col-12 bg-white rounded box-shadow mt-2">
+                    <h4 class="border-bottom border-gray pb-2 mb-0 text-danger">Descripción codigo</h4>
+                    <table class="table table-condensed table-striped table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>Parte</th>
+                                <td>Descripcion</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Codigo ejemplo</th>
+                                <td>{{ model.itemCodeexample }}</td>
+                            </tr>
+                            <tr>
+                                <th>Codigo </th>
+                                <td>{{ model.itemCode }}</td>
+                            </tr>
+                            <tr v-for="item in model.description">
+                                <th>{{item.bloque }}</th>
+                                <td>{{item.selected }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
         </div>
     </div>

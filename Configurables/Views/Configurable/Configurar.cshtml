@@ -1,144 +1,99 @@
 ﻿@model Configurables.Configurador.Conf_Files
 @{
-    ViewData["Title"] = "Edit: " + Model.Name;
+    ViewData["Title"] = "Configurar: " + Model.Name;
 }
-<div id="App_configurador" class="mt-2">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Detalle</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Elementos</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Restricciones</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact" aria-selected="false">Usuario</a>
-        </li>
-    </ul>
-    <div class="tab-content mt-5" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <table class="table table-sm">
-                <tr>
-                    <th>ItemCode example</th>
-                    <td><input type="text" name="name" v-model="model.itemCodeexample" class="form-control form-control-sm" /></td>
-                    <td><button class="btn btn-sm btn-primary" v-on:click="UpdateCode()">Update</button></td>
-                </tr>
-                <tr>
-                    <th>Expression</th>
-                    <td> {{ model.expresion}}</td>
-                </tr>
-            </table>
-        </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            <div class="row">
-                <div class="col-12">
-                    <ul class="nav nav-tabs" id="myTab" role="tablist" >
-                        <li class="nav-item" v-if="model.blocks.length > 0" v-for="(item,index) in model.blocks">
-                            <a v-bind:class="'nav-link ' + (index == 0 ? 'active' : '')" id="home-tab" data-toggle="tab" v-bind:href="'#elemento'+item.key" role="tab" aria-controls="home" aria-selected="true">{{ item.block }}</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        <div v-bind:class="'tab-pane fade show ' + (index == 0 ? 'active' : '')" id="home" role="tabpanel" aria-labelledby="home-tab" v-if="model.blocks.length > 0" v-for="(item,index) in model.blocks" v-bind:id="'elemento'+item.key">
-                            
-                            <div class="card col-8">
-                                <div class="card-header">
-                                    Featured
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-hover table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th style="width: 150px;">Clave</th>
-                                                <th>Descripción</th>
-                                                <th>Fija</th>
-                                                <th>Opcional</th>
-                                                <th>Usuario</th>
-                                                <th style="width: 70px;">Valor Fijo</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <button v-if="!item.isOpenUser && item.options.length == 0" type="button" class="btn btn-secondary btn-sm" data-container="body" data-toggle="popover" data-placement="top" data-content="No cuenta con valores opcionales">
-                                                        OP
-                                                    </button>
-                                                </td>
-                                                <td><input type="text" name="name" value="" v-model="item.key" class="form-control form-control-sm" disabled /></td>
-                                                <td><input type="text" name="name" value="" v-model="item.block" class="form-control form-control-sm" /></td>
-                                                <td><input type="checkbox" name="name" value="" v-model="item.isFixed" class="form-control form-control-sm" /></td>
-                                                <td><input type="checkbox" name="name" value="" v-model="item.isOptional" class="form-control form-control-sm" /></td>
-                                                <td><input type="checkbox" name="name" value="" v-model="item.isOpenUser" class="form-control form-control-sm" /></td>
-                                                <td><input type="text" name="name" value="" v-model="item.fixedValue" class="form-control form-control-sm" /></td>
-                                                <td>
-                                                    <a href="#elementos" v-on:click="UpdateConfiguracion(index)"><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
-                                                    <a href="#elementos" v-on:click="DeleteConfiguracion(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
-                                                    <a href="#elementos" v-on:click="modelselected = index"><img src="https://img.icons8.com/color/48/000000/multi-edit.png" style="width: 29px;" /></a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="card col-4" v-if="item.isOpenUser == false">
-                                <div class="card-header">
-                                    Aplicativos para  {{ item.block }}
-                                </div>
-                                <div class="card-body">
-                                    <table v-if="item.isOpenUser == false" class="table  table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Clave</th>
-                                                <th>Descripción</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><input type="text" id="ValorForm" name="name" v-model="Valor.Key" class="form-control form-control-sm" /></td>
-                                                <td><input type="text" name="name" v-model="Valor.Option" class="form-control form-control-sm" /></td>
-                                                <td><a href="#" v-on:click="AddValor()">Agregar</a></td>
-                                            </tr>
-                                            <tr v-if="item.options.length > 0" v-for="(item2,index2) in item.options">
-                                                <td><input type="text" name="name" value="" v-model="item2.key" class="form-control form-control-sm" /></td>
-                                                <td><input type="text" name="name" value="" v-model="item2.option" class="form-control form-control-sm" /></td>
-                                                <td>
-                                                    <a href="#" v-on:click="UpdateValor(index2)"><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
-                                                    <a href="#" v-on:click="DeleteValor(index2)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+    <div id="App_configurador" class="mt-2 col-lg-12 row">
+        <div class="col-2 bg-white rounded box-shadow">
+            <ul class="list-group mb-1">
+                <li v-bind:class="'list-group-item d-flex justify-content-between lh-condensed ' + ((modelselected == index) ? 'bg-light text-danger' : '')" v-for="(item,index) in model.blocks">
+                    <div>
+                        <h6 class="my-0">{{ item.block }}</h6>
+                        <small class="text-muted">{{ item.key }}</small>
+                    </div>
+                    <span class="text-muted"><a href="#elementos" v-on:click="modelselected = index"><img src="https://img.icons8.com/color/64/000000/gear.png" style="width: 29px;" /></a></span>
+                </li>
+            </ul>
+            <form class="card p-2">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Promo code">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-secondary">Redeem</button>
                     </div>
                 </div>
-                <div class="col-7">
-                   
-                </div>
-                <div class="col-5">
-                    
-                </div>
-            </div>
+            </form>
         </div>
-        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-            <div class="row">
-                <div class="col-12">
-                    <table class="table  table-sm">
+        <div class="col-10 " v-if="modelselected != null">
+            <div class="row ml-1">
+                <div class="col-12 bg-white rounded box-shadow mt-2" v-if="modelselected != null && model.blocks[modelselected]">
+                    <h4 class="border-bottom border-gray pb-2 mb-0 text-danger">Descripcion elemento</h4>
+                    <table class="table table-condensed">
                         <thead>
                             <tr>
+                                <th style="width: 150px;">Clave</th>
+                                <th>Descripción</th>
+                                <th>Fija</th>
+                                <th>Opcional</th>
+                                <th>Usuario</th>
+                                <th style="width: 70px;">Valor Fijo</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" name="name" value="" v-model="model.blocks[modelselected].key" class="form-control form-control-sm" disabled /></td>
+                                <td><input type="text" name="name" value="" v-model="model.blocks[modelselected].block" class="form-control form-control-sm" /></td>
+                                <td><input type="checkbox" name="name" value="" v-model="model.blocks[modelselected].isFixed" class="form-control form-control-sm" /></td>
+                                <td><input type="checkbox" name="name" value="" v-model="model.blocks[modelselected].isOptional" class="form-control form-control-sm" /></td>
+                                <td><input type="checkbox" name="name" value="" v-model="model.blocks[modelselected].isOpenUser" class="form-control form-control-sm" /></td>
+                                <td><input type="text" name="name" value="" v-model="model.blocks[modelselected].fixedValue" class="form-control form-control-sm" /></td>
+                                <td>
+                                    <a href="#elementos" v-on:click="UpdateConfiguracion(modelselected)"><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
+                                    <a href="#elementos" v-on:click="DeleteConfiguracion(modelselected)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-12 bg-white rounded box-shadow mt-2" v-if="model.blocks[modelselected].isOpenUser == false && modelselected != null">
+                    <h4 class="border-bottom border-gray pb-2 mb-0 text-danger">Valores</h4>
+                    <table v-if="modelselected != null && model.blocks[modelselected].isOpenUser == false" class="table  table-sm">
+                        <thead>
+                            <tr>
+                                <th>Clave</th>
+                                <th>Descripción</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" id="ValorForm" name="name" v-model="Valor.Key" class="form-control form-control-sm" /></td>
+                                <td><input type="text" name="name" v-model="Valor.Option" class="form-control form-control-sm" /></td>
+                                <td><a href="#" v-on:click="AddValor()">Agregar</a></td>
+                            </tr>
+                            <tr v-if="model.blocks[modelselected].options.length > 0" v-for="(item,index) in model.blocks[modelselected].options">
+                                <td><input type="text" name="name" value="" v-model="item.key" class="form-control form-control-sm" /></td>
+                                <td><input type="text" name="name" value="" v-model="item.option" class="form-control form-control-sm" /></td>
+                                <td>
+                                    <a href="#" v-on:click="UpdateValor(index)"><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
+                                    <a href="#" v-on:click="DeleteValor(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="col-12 bg-white rounded box-shadow mt-2" v-if="model.blocks[modelselected].isOpenUser == false && modelselected != null && model.blocks[modelselected].isFixed == false">
+                    <h4 class="border-bottom border-gray pb-2 mb-0 text-danger">Restricciones</h4>
+                    <table class="table  table-sm">
+                        <thead>
+                            <tr v-if="HasRestricions(model.blocks[modelselected].key) == false">
                                 <th>Restriccion</th>
                                 <th>Bloque</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr v-if="HasRestricions(model.blocks[modelselected].key) == false">
                                 <td><input type="text" id="RestricitionForm" name="name" v-model="Restriccion.Restriccion" class="form-control form-control-sm" /></td>
                                 <td>
                                     <select v-model="Restriccion.Block" class="form-control form-control-sm">
@@ -149,119 +104,130 @@
                                 </td>
                                 <td><a href="#" v-on:click="AddRestriccion()">Agregar</a></td>
                             </tr>
-                            <tr v-if="model.rectrictions.length > 0" v-for="(item,index) in model.rectrictions">
-                                <td>
-                                    <input type="text" name="name" value="" v-model="item.restriccion" class="form-control form-control-sm" />
-                                </td>
-                                <td>
-                                    <select v-model="item.block" class="form-control form-control-sm" disabled>
-                                        <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
-                                            {{ option.block }}
-                                        </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <a href="#reglaFormadd" v-on:click=""><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
-                                    <a href="#reglaFormadd" v-on:click="DeleteRestriccion(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
-                                    <a href="#reglaFormadd" v-on:click="Restrictionselected = index"><img src="https://img.icons8.com/color/48/000000/multi-edit.png" style="width: 29px;" /></a>
-                                </td>
+                            <tr v-if="model.rectrictions.length > 0 && item.block == model.blocks[modelselected].key" v-for="(item,index) in model.rectrictions">
+                                <td colspan="4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="list-group" id="list-tab" role="tablist">
+                                                <a class="list-group-item list-group-item-action active" v-bind:id="'#pesta-regla' + item.block" data-toggle="list" v-bind:href="'#list-regla' + item.block" role="tab" aria-controls="home">{{ item.restriccion }}</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="tab-content" id="nav-tabContent">
+                                                <div class="tab-pane fade show active" v-bind:id="'list-regla' + item.block" role="tabpanel" aria-labelledby="list-home-list">
+                                                    <table class="table  table-sm">
+                                                        <tr>
+                                                            <th>Descripcion</th>
+                                                            <td><input type="text" id="RestricitionForm" name="name" v-model="item.restriccion" class="form-control form-control-sm" /></td>
+                                                            <td>
+                                                                <a href="#reglaFormadd" v-on:click=""><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
+                                                                <a href="#reglaFormadd" v-on:click="DeleteRestriccion(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                <table class="table  table-sm">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>detonante</th>
+                                                                            <th>Tipo</th>
+                                                                            <th>Aplica para</th>
+                                                                            <th>valores aceptados</th>
+                                                                            <th></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input id="reglaFormadd" type="text" class="form-control form-control-sm" v-model="Regla.BlockValues" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
+                                                                                    <div class="input-group-append">
+                                                                                        <button data-toggle="modal" v-on:click="GetElement('RestrictionFrom',0,index)" data-target="#exampleModal3" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select v-model="Regla.Type" class="form-control form-control-sm">
+                                                                                    <option value="HabilitarElementos"> HabilitarElementos </option>
+                                                                                    <option value="RemoveElements" selected> Remover elementos </option>
+                                                                                    <option value="Active_Acepted_Inactive_NoAcepted">Habilitar y remover</option>
+                                                                                    <option value="Active_NoAcepted_Inactive_Acepted">remover y habilitar</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select v-model="Regla.BlockApply" class="form-control form-control-sm">
+                                                                                    <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
+                                                                                        {{ option.block }}
+                                                                                    </option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group" v-if="Regla.BlockApply != ''">
+                                                                                    <input type="text" class="form-control form-control-sm" v-model="Regla.ValuesAcepted" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
+                                                                                    <div class="input-group-append">
+                                                                                        <button data-toggle="modal" v-on:click="GetElement('RestrictionAdd',0,index)" data-target="#exampleModal4" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td><a href="#" v-on:click="AddRegla()">Agregar</a></td>
+                                                                        </tr>
+                                                                        <tr v-if="item.rules.length > 0" v-for="(item2,index2) in item.rules">
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control form-control-sm" v-model="item2.blockValues" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
+                                                                                    <div class="input-group-append">
+                                                                                        <button data-toggle="modal" v-on:click="GetElement('RestrictionFrom',index2,index)" data-target="#exampleModal" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select v-model="item2.type" class="form-control form-control-sm">
+                                                                                    <option value="HabilitarElementos">Habilitar Elementos </option>
+                                                                                    <option value="RemoveElements" selected> Remover elementos </option>
+                                                                                    <option value="Active_Acepted_Inactive_NoAcepted">Habilitar y remover</option>
+                                                                                    <option value="Active_NoAcepted_Inactive_Acepted">remover y habilitar</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select v-model="item2.blockApply" class="form-control form-control-sm" disabled>
+                                                                                    <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
+                                                                                        {{ option.block }}
+                                                                                    </option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control form-control-sm" v-model="item2.valuesAcepted" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
+                                                                                    <div class="input-group-append">
+                                                                                        <button data-toggle="modal" v-on:click="GetElement('RestrictionTo',index2,index)" data-target="#exampleModal2" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <a href="#reglaFormadd" v-on:click="UpdateElement(index2)"><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
+                                                                                <a href="#reglaFormadd" v-on:click="DeleteElement(index2)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>  
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="col-7">
-                    <table class="table  table-sm" v-if="Restrictionselected != null">
-                        <thead>
-                            <tr>
-                                <th colspan="5">{{ model.rectrictions[Restrictionselected].restriccion }}</th>
-                            </tr>
-                            <tr>
-                                <th>detonante</th>
-                                <th>Tipo</th>
-                                <th>Aplica para</th>
-                                <th>valores aceptados</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="input-group">
-                                        <input id="reglaFormadd" type="text" class="form-control form-control-sm" v-model="Regla.BlockValues" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
-                                        <div class="input-group-append">
-                                            <button data-toggle="modal" v-on:click="GetElement('RestrictionFrom',0)" data-target="#exampleModal3" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <select v-model="Regla.Type" class="form-control form-control-sm">
-                                        <option value="HabilitarElementos"> HabilitarElementos </option>
-                                        <option value="RemoveElements" selected> Remover elementos </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select v-model="Regla.BlockApply" class="form-control form-control-sm">
-                                        <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
-                                            {{ option.block }}
-                                        </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="input-group" v-if="Regla.BlockApply != ''">
-                                        <input type="text" class="form-control form-control-sm" v-model="Regla.ValuesAcepted" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
-                                        <div class="input-group-append">
-                                            <button data-toggle="modal" v-on:click="GetElement('RestrictionAdd',0)" data-target="#exampleModal4" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><a href="#" v-on:click="AddRegla()">Agregar</a></td>
-                            </tr>
-                            <tr v-if="model.rectrictions[Restrictionselected].rules.length > 0" v-for="(item,index) in model.rectrictions[Restrictionselected].rules">
-                                <td>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control form-control-sm" v-model="item.blockValues" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
-                                        <div class="input-group-append">
-                                            <button data-toggle="modal" v-on:click="GetElement('RestrictionFrom',index)" data-target="#exampleModal" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <select v-model="item.type" class="form-control form-control-sm">
-                                        <option value="HabilitarElementos">HabilitarElementos </option>
-                                        <option value="RemoveElements" selected> Remover elementos </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select v-model="item.blockApply" class="form-control form-control-sm" disabled>
-                                        <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
-                                            {{ option.block }}
-                                        </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control form-control-sm" v-model="item.valuesAcepted" placeholder="Valores" aria-label="Valores" aria-describedby="basic-addon2" disabled>
-                                        <div class="input-group-append">
-                                            <button data-toggle="modal" v-on:click="GetElement('RestrictionTo',index)" data-target="#exampleModal2" class="btn btn-outline-secondary btn-sm" type="button">Selected</button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a href="#reglaFormadd" v-on:click="UpdateElement(index)"><img src="https://img.icons8.com/color/48/000000/save.png" style="width: 29px;"></a>
-                                    <a href="#reglaFormadd" v-on:click="DeleteElement(index)"><img src="https://img.icons8.com/color/48/000000/delete.png" style="width: 29px;" /></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="contact1" role="tabpanel" aria-labelledby="contact-tab">
-            <div class="row">
-                <div class="col-12">
+                <div class="col-12 bg-white rounded box-shadow mt-2" v-if="model.blocks[modelselected].isOpenUser == true && modelselected != null">
+                    <h4 class="border-bottom border-gray pb-2 mb-0 text-danger">Restricciones usuario</h4>
                     <table class="table  table-sm">
                         <thead>
-                            <tr>
+                            <tr v-if="HasRestricionsUser(model.blocks[modelselected].key) == false">
                                 <th>Elemento</th>
                                 <th>Tipo</th>
                                 <th>Rango</th>
@@ -275,7 +241,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr v-if="HasRestricionsUser(model.blocks[modelselected].key) == fals">
                                 <td>
                                     <select v-model="CampoUser.BlockKey" id="addFreeRestriction" class="form-control form-control-sm">
                                         <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser">
@@ -313,9 +279,9 @@
                                     <a href="#CamposUUsuaruo" v-on:click="AddRestriccionFree()">Agregar</a>
                                 </td>
                             </tr>
-                            <tr v-if="model.fieldsFree.length > 0" v-for="(item, index) in model.fieldsFree">
+                            <tr v-if="model.fieldsFree.length > 0 &&  item.blockKey == model.blocks[modelselected].key" v-for="(item, index) in model.fieldsFree">
                                 <td>
-                                    <select v-model="item.blockKey" id="addFreeRestriction" class="form-control form-control-sm">
+                                    <select v-model="item.blockKey" id="addFreeRestriction" class="form-control form-control-sm" disabled>
                                         <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser">
                                             {{ option.block }}
                                         </option>
@@ -355,149 +321,132 @@
                     </table>
                 </div>
             </div>
-        </div>
-    </div>
 
-    @*<div class="row mt-4">
-        <div class="col-12">
-            <h2>Descripcion del codigo</h2>
-            <div class="row">
-                <div class="col-lg-3 border" v-for="(item,index)  in model.blocks">
-                    <label class="control-label">{{ item.block }}</label><small>({{ item.key }})</small>
-                    <input v-on:keyup="" type="text" v-if="item.isOpenUser" class="form-control form-control-sm form-group-sm" />
-                    <br />
-                    <div class="btn-group btn-group-sm mr-2 " role="group" aria-label="First group">
-                        <div v-if="!item.isOpenUser" v-for="option in item.options">
-                            <button type="button" class="btn btn-sm btn-secondary">{{ option.option }}</button>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Valores detonantes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" v-if="Element.data != null && RestrictionRuleselected != null && model.rectrictions[Restrictionselected].rules.length > 0">
+                        <table class="table  table-sm">
+                            <tr>
+                                <th>Elemento</th>
+                                <td>{{ Element.data.block }}</td>
+                            </tr>
+                        </table>
+                        <div class="form-check" v-for="(item, index) in Element.data.options">
+                            <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="model.rectrictions[Restrictionselected].rules[RestrictionRuleselected].blockValues">
+                            <label class="form-check-label" for="defaultCheck1">
+                                {{ item.option }}
+                            </label>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" v-on:click="GetConfiguracion()" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" v-on:click="UpdateElement(RestrictionRuleselected)">Save changes</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>*@
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Valores detonantes</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" v-if="Element.data != null && RestrictionRuleselected != null && model.rectrictions[Restrictionselected].rules.length > 0">
-                    <table class="table  table-sm">
-                        <tr>
-                            <th>Elemento</th>
-                            <td>{{ Element.data.block }}</td>
-                        </tr>
-                    </table>
-                    <div class="form-check" v-for="(item, index) in Element.data.options">
-                        <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="model.rectrictions[Restrictionselected].rules[RestrictionRuleselected].blockValues">
-                        <label class="form-check-label" for="defaultCheck1">
-                            {{ item.option }}
-                        </label>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Valores aceptados</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" v-if="Element.data != null  && RestrictionRuleselected != null && model.rectrictions[Restrictionselected].rules.length > 0">
+                        <table class="table  table-sm">
+                            <tr>
+                                <th>Elemento</th>
+                                <td>{{ Element.data.block }}</td>
+                            </tr>
+                        </table>
+                        <div class="form-check" v-for="(item, index) in Element.data.options">
+                            <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="model.rectrictions[Restrictionselected].rules[RestrictionRuleselected].valuesAcepted">
+                            <label class="form-check-label" for="defaultCheck1">
+                                {{ item.option }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" v-on:click="GetConfiguracion()" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" v-on:click="UpdateElement(RestrictionRuleselected)">Save changes</button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" v-on:click="GetConfiguracion()" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" v-on:click="UpdateElement(RestrictionRuleselected)">Save changes</button>
+            </div>
+        </div>
+        @*modales para regla a crear*@
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Valores detonantes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" v-if="Element.data != null">
+                        <table class="table  table-sm">
+                            <tr>
+                                <th>Elemento</th>
+                                <td>{{ Element.data.block }}</td>
+                            </tr>
+                        </table>
+                        <div class="form-check" v-for="(item, index) in Element.data.options">
+                            <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="Regla.BlockValues">
+                            <label class="form-check-label" for="defaultCheck1">
+                                {{ item.option }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Valores aceptados</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" v-if="Element.data != null">
+                        <table class="table  table-sm">
+                            <tr>
+                                <th>Elemento</th>
+                                <td>{{ Element.data.block }}</td>
+                            </tr>
+                        </table>
+                        <div class="form-check" v-for="(item, index) in Element.data.options">
+                            <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="Regla.ValuesAcepted">
+                            <label class="form-check-label" for="defaultCheck1">
+                                {{ item.option }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Valores aceptados</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" v-if="Element.data != null  && RestrictionRuleselected != null && model.rectrictions[Restrictionselected].rules.length > 0">
-                    <table class="table  table-sm">
-                        <tr>
-                            <th>Elemento</th>
-                            <td>{{ Element.data.block }}</td>
-                        </tr>
-                    </table>
-                    <div class="form-check" v-for="(item, index) in Element.data.options">
-                        <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="model.rectrictions[Restrictionselected].rules[RestrictionRuleselected].valuesAcepted">
-                        <label class="form-check-label" for="defaultCheck1">
-                            {{ item.option }}
-                        </label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" v-on:click="GetConfiguracion()" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" v-on:click="UpdateElement(RestrictionRuleselected)">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    @*modales para regla a crear*@
-    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Valores detonantes</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" v-if="Element.data != null">
-                    <table class="table  table-sm">
-                        <tr>
-                            <th>Elemento</th>
-                            <td>{{ Element.data.block }}</td>
-                        </tr>
-                    </table>
-                    <div class="form-check" v-for="(item, index) in Element.data.options">
-                        <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="Regla.BlockValues">
-                        <label class="form-check-label" for="defaultCheck1">
-                            {{ item.option }}
-                        </label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Valores aceptados</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" v-if="Element.data != null">
-                    <table class="table  table-sm">
-                        <tr>
-                            <th>Elemento</th>
-                            <td>{{ Element.data.block }}</td>
-                        </tr>
-                    </table>
-                    <div class="form-check" v-for="(item, index) in Element.data.options">
-                        <input class="form-check-input" type="checkbox" v-bind:value="item.key" id="defaultCheck1" v-model="Regla.ValuesAcepted">
-                        <label class="form-check-label" for="defaultCheck1">
-                            {{ item.option }}
-                        </label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
@@ -558,6 +507,26 @@
                   })
             },
             methods: {
+                HasRestricions: function (Key) {
+                    let existe = false;
+                    this.model.rectrictions.forEach((e, i) => {
+                        console.log(e.block)
+                        if (e.block == Key) {
+                            existe = true;
+                        }
+                    });
+                    return existe;
+                },
+                 HasRestricionsUser: function (Key) {
+                    let existe = false;
+                    this.model.fieldsFree.forEach((e, i) => {
+                        console.log(e.block)
+                        if (e.blockKey == Key) {
+                            existe = true;
+                        }
+                    });
+                    return existe;
+                },
                 UpdateCode: async function () {
                     let object = {
                         Nombre: this.Configuracion,
@@ -644,16 +613,17 @@
                         alert(error.response.data)
                     }).finally(() => console.log("creadted"))
                 },
-                GetElement: async function (Option, index) {
+                GetElement: async function (Option, index,Restrictionselected) {
                     this.RestrictionRuleselected = index;
+                    this.Restrictionselected = Restrictionselected
                     this.Element.Option = Option;
                     var params = new URLSearchParams();
 
                     params.append('Nombre', this.Configuracion);
                     if (this.Element.Option == "RestrictionFrom") {
-                        params.append('id', this.model.rectrictions[this.Restrictionselected].block);
+                        params.append('id', this.model.rectrictions[Restrictionselected].block);
                     } else if (this.Element.Option == "RestrictionTo") {
-                        params.append('id', this.model.rectrictions[this.Restrictionselected].rules[index].blockApply);
+                        params.append('id', this.model.rectrictions[Restrictionselected].rules[index].blockApply);
                     } else {
                         params.append('id', this.Regla.BlockApply);
                     }
@@ -795,6 +765,7 @@
 
                         await axios.post('@Url.Action("DeleteElementoCodigo","EditorConfigurable")',object, null).then(response => {
                             this.model = response.data
+                            this.modelselected = null;
                             this.ShowMessageErrorShort("Cambio guardado",'success')
                         }).catch(error => {
                             console.log(error)
