@@ -10,12 +10,12 @@ namespace Configurables.Configurador
         public string Configurable { get; set; }
         public string ItemCodeexample { get; set; }
         public string ItemCode { get; set; }
-        public string Expresion { get { return GetExpressionRegular(); } }
+        public string Expresion { get; set; }
         public List<ElementCode> Blocks { get; set; }
         public List<RestriccionElemento> Rectrictions { get; set; }
         public List<RestriccionCampoUsuario> FieldsFree { get; set; }
 
-        public string GetExpressionRegular()
+        public void GetExpressionRegular()
         {
             string Expression = "";
             int index = 0;
@@ -24,13 +24,18 @@ namespace Configurables.Configurador
                 Elemento.Options.ForEach(val => {
                     Valores += val.Key + "|";
                 });
+
                 if (Elemento.IsFixed)
                 {
                     Expression += "(?<" + Elemento.Key + ">" + Elemento.FixedValue + "){0,1}";
                     //Expression += "(?<" + Elemento.Key + ">" + Valores.Substring(0, Valores.Length-1) + "){0,1}";
                 }
-                if (Elemento.IsOpenUser == false && Elemento.IsFixed == false)
+                if (Elemento.IsOpenUser == false && Elemento.IsFixed == false )
                 {
+                    if(Elemento.Options.Count == 0)
+                    {
+                        Valores = "MissingDataa";
+                    }
                     Expression += "(?<" + Elemento.Key + ">" + Valores.Substring(0, Valores.Length - 1) + "){0,1}";
                 }
 
@@ -48,7 +53,7 @@ namespace Configurables.Configurador
                     
                 }
             });
-            return string.Format("^{0}$", Expression);
+            Expresion = string.Format("^{0}$", Expression);
         }
     }
 }

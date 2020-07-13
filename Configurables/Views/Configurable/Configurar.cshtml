@@ -4,25 +4,54 @@
 }
     <div id="App_configurador" class="mt-2 col-lg-12 row">
         <div class="col-2 bg-white rounded box-shadow">
+            <div class="form-group">
+                <label>Codigo Ejemplo</label>
+                <input type="text" name="name" v-model="model.itemCodeexample" class="form-control form-control-sm" />
+                <button class="btn btn-block btn-sm btn-default" v-on:click="UpdateCode()">Update</button>
+            </div>
+            
+            <hr />
+            <button type="submit" v-on:click="ActiveAddElement = true" class="btn btn-block btn-sm btn-danger">Nuevo elemento</button>
             <ul class="list-group mb-1">
                 <li v-bind:class="'list-group-item d-flex justify-content-between lh-condensed ' + ((modelselected == index) ? 'bg-light text-danger' : '')" v-for="(item,index) in model.blocks">
-                    <div>
+                    <div v-on:click="modelselected = index; ActiveAddElement = false">
                         <h6 class="my-0">{{ item.block }}</h6>
                         <small class="text-muted">{{ item.key }}</small>
                     </div>
-                    <span class="text-muted"><a href="#elementos" v-on:click="modelselected = index"><img src="https://img.icons8.com/color/64/000000/gear.png" style="width: 29px;" /></a></span>
+                    <span class="text-muted"><a href="#elementos" v-on:click="modelselected = index; ActiveAddElement = false"><img src="https://img.icons8.com/color/64/000000/gear.png" style="width: 29px;" /></a></span>
                 </li>
             </ul>
-            <form class="card p-2">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Promo code">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-secondary">Redeem</button>
-                    </div>
-                </div>
-            </form>
+
         </div>
-        <div class="col-10 " v-if="modelselected != null">
+        <div class="col-10" v-if="ActiveAddElement == true">
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th style="width: 150px;">Clave</th>
+                        <th>Descripción</th>
+                        <th>Fija</th>
+                        <th>Opcional</th>
+                        <th>Usuario</th>
+                        <th style="width: 70px;">Valor Fijo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td><input type="text" id="ElementoForm" name="name" v-model="Elemento.Key" class="form-control form-control-sm" /></td>
+                        <td><input type="text" name="name" v-model="Elemento.Block" class="form-control form-control-sm" /></td>
+                        <td><input type="checkbox" name="name" v-model="Elemento.IsFixed" class="form-control form-control-sm" /></td>
+                        <td><input type="checkbox" name="name" v-model="Elemento.IsOptional" class="form-control form-control-sm" /></td>
+                        <td><input type="checkbox" name="name" v-model="Elemento.IsOpenUser" class="form-control form-control-sm" /></td>
+                        <td><input type="text" name="name" v-model="Elemento.FixedValue" class="form-control form-control-sm" /></td>
+                        <td><a href="#" v-on:click="AddConfiguracion()">Agregar</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-10 " v-if="modelselected != null && ActiveAddElement == false">
             <div class="row ml-1">
                 <div class="col-12 bg-white rounded box-shadow mt-2" v-if="modelselected != null && model.blocks[modelselected]">
                     <h4 class="border-bottom border-gray pb-2 mb-0 text-danger">Descripcion elemento</h4>
@@ -96,7 +125,7 @@
                             <tr v-if="HasRestricions(model.blocks[modelselected].key) == false">
                                 <td><input type="text" id="RestricitionForm" name="name" v-model="Restriccion.Restriccion" class="form-control form-control-sm" /></td>
                                 <td>
-                                    <select v-model="Restriccion.Block" class="form-control form-control-sm">
+                                    <select v-model="Restriccion.Block = model.blocks[modelselected].key" class="form-control form-control-sm" disabled>
                                         <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser ==false">
                                             {{ option.block }}
                                         </option>
@@ -241,9 +270,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="HasRestricionsUser(model.blocks[modelselected].key) == fals">
+                            <tr v-if="HasRestricionsUser(model.blocks[modelselected].key) == false">
                                 <td>
-                                    <select v-model="CampoUser.BlockKey" id="addFreeRestriction" class="form-control form-control-sm">
+                                    <select v-model="CampoUser.BlockKey = model.blocks[modelselected].key" disabled id="addFreeRestriction" class="form-control form-control-sm">
                                         <option v-for="option in model.blocks" v-bind:value="option.key" v-if="option.isOpenUser">
                                             {{ option.block }}
                                         </option>
@@ -498,7 +527,7 @@
                 modelselected: null,
                 Restrictionselected: null,
                 RestrictionRuleselected: null,
-                ActivePanelDetale: false
+                ActiveAddElement: false
             },
             mounted() {
                 this.GetConfiguracion();

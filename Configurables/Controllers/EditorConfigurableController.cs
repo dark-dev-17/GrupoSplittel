@@ -402,6 +402,7 @@ namespace Configurables.Controllers
                 ConfiguracionOp.Blocks = new List<ElementCode>();
                 ConfiguracionOp.Rectrictions = new List<RestriccionElemento>();
                 ConfiguracionOp.FieldsFree = new List<RestriccionCampoUsuario>();
+                ConfiguracionOp.GetExpressionRegular();
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(ConfiguracionOp);
                 conf_Files.Create(json);
                 return Ok(ConfiguracionOp.Configurable + ".json");
@@ -421,10 +422,12 @@ namespace Configurables.Controllers
             string Name = conf_Files.Get().Find(fil => fil.Name == id).Name;
             conf_Files.Name = Name;
             Data = JsonConvert.DeserializeObject<ConfigurableConf>(conf_Files.Open());
+            Data.GetExpressionRegular();
             Editor = new EditorConfigurable(Data);
         }
         private void SaveChanges()
         {
+            Editor.ConfigurableConf.GetExpressionRegular();
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(Editor.ConfigurableConf);
             conf_Files.SaveChanges(json);
         }

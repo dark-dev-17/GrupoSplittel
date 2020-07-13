@@ -34,7 +34,7 @@
             </form>
         </div>
     </nav>
-    <partial name="_CookieConsentPartial" />
+
 
     <div class="container-fluid body-content">
         <div class="row mt-3">
@@ -54,10 +54,10 @@
                                         Add new
                                     </a>
                                     <div class="dropdown-menu">
-                                        <form class="px-4 py-3">
+                                        <form class="px-4 py-3" asp-action="CreateNew">
                                             <div class="form-group">
-                                                <label for="exampleDropdownFormEmail1">Crear nuevo</label>
-                                                <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
+                                                <label for="exampleDropdownFormEmail1">Nombre</label>
+                                                <input type="text" name="NewName" class="form-control form-control-sm" placeholder="">
                                             </div>
                                             <button type="submit" class="btn btn-block btn-primary">Crear</button>
                                         </form>
@@ -65,19 +65,19 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
                 <div class="row">
                     @RenderBody()
                 </div>
-               
+
             </div>
             <div class="col-lg-1"></div>
         </div>
 
     </div>
-
+    <partial name="_CookieConsentPartial" />
     <environment include="Development">
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

@@ -39,7 +39,7 @@
                     </td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                            @Html.ActionLink("Edit", "Edit", new { id = item.Name }, new { @class = "btn btn-sm btn-secondary" })
+                            @Html.ActionLink("Configurar", "Configurar", new { id = item.Name }, new { @class = "btn btn-sm btn-secondary" })
                             <div class="btn-group" role="group">
                                 <div class="dropdown">
                                     <a class="btn btn-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -57,9 +57,8 @@
                                     </div>
                                 </div>
                             </div>
-                            @Html.ActionLink("Make", "Make", new { id = item.Name }, new { @class = "btn btn-sm btn-secondary" })
+                            @Html.ActionLink("Testear", "Make", new { id = item.Name }, new { @class = "btn btn-sm btn-secondary" })
                             @Html.ActionLink("Download", "Download", new { id = item.Name }, new { @class = "btn btn-sm btn-secondary" })
-                            @Html.ActionLink("Configurar", "Configurar", new { id = item.Name }, new { @class = "btn btn-sm btn-secondary" })
                         </div>
                     </td>
                 </tr>

@@ -26,7 +26,11 @@ namespace Configurables.Controllers
         {
             return View(conf_Files.Get().OrderBy(a => a.Updated));
         }
-
+        [HttpGet]
+        public ActionResult GetConfig()
+        {
+            return Ok(conf_Files.Get().OrderBy(a => a.Updated));
+        }
         public ActionResult Edit(string id)
         {
             Conf_Files conf_Files1 = conf_Files.Get().Find(a => a.Name == id);
@@ -40,7 +44,22 @@ namespace Configurables.Controllers
             Data.Configurable = NewName;
             conf_Files.Name = NewName;
             conf_Files.Create(json);
-            return RedirectToAction("Configurar", new { id= Data.Configurable + ".json" });
+            return RedirectToAction("Configurar", new { id = Data.Configurable + ".json" });
+        }
+        public ActionResult CreateNew(string NewName)
+        {
+            Data = new ConfigurableConf();
+            Data.Configurable = NewName;
+            Data.Expresion = "";
+            Data.ItemCode = "";
+            Data.ItemCodeexample = "";
+            Data.Blocks = new List<ElementCode>();
+            Data.Rectrictions = new List<RestriccionElemento>();
+            Data.FieldsFree = new List<RestriccionCampoUsuario>();
+            conf_Files.Name = NewName;
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(Data);
+            conf_Files.Create(json);
+            return RedirectToAction("Configurar", new { id = Data.Configurable + ".json" });
         }
 
         public ActionResult Make(string id)
@@ -48,13 +67,12 @@ namespace Configurables.Controllers
             Conf_Files conf_Files1 = conf_Files.Get().Find(a => a.Name == id);
             return View(conf_Files1);
         }
+
         public ActionResult Configurar(string id)
         {
             Conf_Files conf_Files1 = conf_Files.Get().Find(a => a.Name == id);
             return View(conf_Files1);
         }
-
-
 
         public FileResult Download(string id)
         {
@@ -97,6 +115,10 @@ namespace Configurables.Controllers
                 GetData(ConfigurationUserRe.Nombre);
                 if (ConfigurationUserRe.configurationUser == null || ConfigurationUserRe.configurationUser.Blocks == null)
                 {
+                    if (string.IsNullOrEmpty(Data.ItemCodeexample))
+                    {
+                        throw new Exception("Está configuración no puede ser usada, dato faltante 'ItemCodeexample'");
+                    }
                     Maker maker = new Maker(Data);
                     return Ok(maker.GetConfigurationUser());
                 }
