@@ -1,12 +1,13 @@
-﻿using System;
+﻿using GPDataInformation.Models;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Configuration;
 
 namespace GPDataInformation
 {
     public class GestionPersonal
     {
         private DBConnection DBConnection { get; set; }
-        private Correo Correo { get; set; }
-        private PersonaInfo personaInfo { get; set; }
         public string StringConnectionDb { get; set; }
         public string Server { get; set; }
         public string From { get; set; }
@@ -14,9 +15,17 @@ namespace GPDataInformation
         public string User { get; set; }
         public string Password { get; set; }
         public bool UserSSL { get; set; }
+        public GestionPersonal()
+        {
+
+        }
         public GestionPersonal(string StringConnectionDb, int idUser)
         {
             this.StringConnectionDb = StringConnectionDb;
+        }
+        public GestionPersonal(IConfiguration Configuration)
+        {
+            this.StringConnectionDb = Configuration.GetConnectionString("Default");
         }
 
         public void OpenConnection()
@@ -28,7 +37,7 @@ namespace GPDataInformation
         {
             if(DBConnection != null)
             {
-                DBConnection.CloseConnection();
+                DBConnection.CloseDataBaseAccess();
             }
         }
         public dynamic GetObject(ObjectsCompany objectsCompany)

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,6 +31,17 @@ namespace GestionPersonal
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            //services.AddDbContext<GPS_Logic.Data.DireccionContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("Default")); });
+            //services.AddDbContext<GPS_Logic.Data.SociedadContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("Default")); });
+            //services.AddTransient
+
+            //services.Configure<GPDataInformation.GestionPersonal>(options => {
+            //    options.StringConnectionDb = Configuration.GetConnectionString("Default");
+
+            //});
+
+            services.AddSingleton<IConfiguration>(Configuration);
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

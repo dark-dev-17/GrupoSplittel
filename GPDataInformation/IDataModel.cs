@@ -9,7 +9,7 @@ namespace GPDataInformation
         bool Update();
         bool Delete();
         int GetLastId();
-        bool Get(int id);
+        T Get(int id);
         IEnumerable<T> Get();
         void SetConnection(DBConnection dBConnection);
     }

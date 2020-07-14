@@ -1,0 +1,68 @@
+/*
+
+	INSTRUCTIONS ---------------------------------------------------------------------------------
+  
+  1. link this stylesheet in the head of your HTML
+  	 <link href="YOUR PATH/datedropperAzul.css" rel="stylesheet" type="text/css" />
+     
+  2. Set the file name as data-theme attribute on your input
+  	 <input data-theme="datedropperAzul" />
+     
+  3. That's it!
+  
+  When you run script the style will be automatically applied.
+
+*/
+div.datedropper.datedropperAzul {
+  border-radius: 8px;
+  width: 183px;
+}
+div.datedropper.datedropperAzul .picker {
+  border-radius: 8px;
+  box-shadow: 0 0 32px 0px rgba(0, 0, 0, 0.1);
+}
+div.datedropper.datedropperAzul .pick-l {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+div.datedropper.datedropperAzul:before,
+div.datedropper.datedropperAzul .pick-submit,
+div.datedropper.datedropperAzul .pick-lg-b .pick-sl:before,
+div.datedropper.datedropperAzul .pick-m,
+div.datedropper.datedropperAzul .pick-lg-h {
+  background-color: #1565c0;
+}
+div.datedropper.datedropperAzul .pick-y.pick-jump,
+div.datedropper.datedropperAzul .pick li span,
+div.datedropper.datedropperAzul .pick-lg-b .pick-wke,
+div.datedropper.datedropperAzul .pick-btn {
+  color: #1565c0;
+}
+div.datedropper.datedropperAzul .picker,
+div.datedropper.datedropperAzul .pick-l {
+  background-color: #FFF;
+}
+div.datedropper.datedropperAzul .picker,
+div.datedropper.datedropperAzul .pick-arw,
+div.datedropper.datedropperAzul .pick-l {
+  color: #4D4D4D;
+}
+div.datedropper.datedropperAzul .pick-m,
+div.datedropper.datedropperAzul .pick-m .pick-arw,
+div.datedropper.datedropperAzul .pick-lg-h,
+div.datedropper.datedropperAzul .pick-lg-b .pick-sl,
+div.datedropper.datedropperAzul .pick-submit {
+  color: #FFF;
+}
+div.datedropper.datedropperAzul.picker-tiny:before,
+div.datedropper.datedropperAzul.picker-tiny .pick-m {
+  background-color: #FFF;
+}
+div.datedropper.datedropperAzul.picker-tiny .pick-m,
+div.datedropper.datedropperAzul.picker-tiny .pick-m .pick-arw {
+  color: #4D4D4D;
+}
+div.datedropper.datedropperAzul.picker-lkd .pick-submit {
+  background-color: #FFF;
+  color: #4D4D4D;
+}

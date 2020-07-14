@@ -1,0 +1,68 @@
+/*
+
+	INSTRUCTIONS ---------------------------------------------------------------------------------
+  
+  1. link this stylesheet in the head of your HTML
+  	 <link href="YOUR PATH/theme-green-dateDropper.css" rel="stylesheet" type="text/css" />
+     
+  2. Set the file name as data-theme attribute on your input
+  	 <input data-theme="theme-green-dateDropper" />
+     
+  3. That's it!
+  
+  When you run script the style will be automatically applied.
+
+*/
+div.datedropper.theme-green-dateDropper {
+  border-radius: 8px;
+  width: 180px;
+}
+div.datedropper.theme-green-dateDropper .picker {
+  border-radius: 8px;
+  box-shadow: 0 0 32px 0px rgba(0, 0, 0, 0.1);
+}
+div.datedropper.theme-green-dateDropper .pick-l {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+div.datedropper.theme-green-dateDropper:before,
+div.datedropper.theme-green-dateDropper .pick-submit,
+div.datedropper.theme-green-dateDropper .pick-lg-b .pick-sl:before,
+div.datedropper.theme-green-dateDropper .pick-m,
+div.datedropper.theme-green-dateDropper .pick-lg-h {
+  background-color: #37BC9B;
+}
+div.datedropper.theme-green-dateDropper .pick-y.pick-jump,
+div.datedropper.theme-green-dateDropper .pick li span,
+div.datedropper.theme-green-dateDropper .pick-lg-b .pick-wke,
+div.datedropper.theme-green-dateDropper .pick-btn {
+  color: #37BC9B;
+}
+div.datedropper.theme-green-dateDropper .picker,
+div.datedropper.theme-green-dateDropper .pick-l {
+  background-color: #FFF;
+}
+div.datedropper.theme-green-dateDropper .picker,
+div.datedropper.theme-green-dateDropper .pick-arw,
+div.datedropper.theme-green-dateDropper .pick-l {
+  color: #4D4D4D;
+}
+div.datedropper.theme-green-dateDropper .pick-m,
+div.datedropper.theme-green-dateDropper .pick-m .pick-arw,
+div.datedropper.theme-green-dateDropper .pick-lg-h,
+div.datedropper.theme-green-dateDropper .pick-lg-b .pick-sl,
+div.datedropper.theme-green-dateDropper .pick-submit {
+  color: #FFF;
+}
+div.datedropper.theme-green-dateDropper.picker-tiny:before,
+div.datedropper.theme-green-dateDropper.picker-tiny .pick-m {
+  background-color: #FFF;
+}
+div.datedropper.theme-green-dateDropper.picker-tiny .pick-m,
+div.datedropper.theme-green-dateDropper.picker-tiny .pick-m .pick-arw {
+  color: #4D4D4D;
+}
+div.datedropper.theme-green-dateDropper.picker-lkd .pick-submit {
+  background-color: #FFF;
+  color: #4D4D4D;
+}

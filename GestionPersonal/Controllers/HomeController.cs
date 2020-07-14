@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GestionPersonal.Models;
-using GPS_Logic.Data;
 
 namespace GestionPersonal.Controllers
 {
@@ -13,8 +12,6 @@ namespace GestionPersonal.Controllers
     {
         public IActionResult Index()
         {
-            var contect = new GestionPersonalContext();
-            var data = contect.Sociedad.OrderBy(a => a.Descripcion);
             return View();
         }
 
