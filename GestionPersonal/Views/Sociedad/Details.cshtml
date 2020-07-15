@@ -4,33 +4,44 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <h4 class="panel-title pull-left" style="padding-top: 7.5px;">  @ViewData["Title"]</h4>
+        <div class="btn-group pull-right">
 
-<div>
-    <h4>Sociedad</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.IdSociedad)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.IdSociedad)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Direccion)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Direccion)
-        </dd>
-    </dl>
+        </div>
+    </div>
+    <div class="panel-body" id="list_departammets">
+        <div class="panel-body" style="min-height: 214px;">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.IdSociedad)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.IdSociedad)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Descripcion)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Direccion)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Direccion)
+                </dd>
+            </dl>
+            <div class="form-group" style="margin-bottom:0">
+                <div class="col-sm-offset-2 col-sm-10 text-right">
+                    <a asp-action="Index" class="btn btn-default" title="Cancelar">Regresar</a>
+                    @Html.ActionLink("Editar", "Edit", new { id = Model.IdSociedad }, new { @class="btn btn-primary" }) 
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+

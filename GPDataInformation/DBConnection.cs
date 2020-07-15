@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -10,9 +11,10 @@ namespace GPDataInformation
         #region Propiedades
         private string ConnectionString;
         private DataTable DataTable;
-        public SqlConnection SqlConnection;
-        private string mensaje;
-        private int ErrorCode;
+        private SqlConnection SqlConnection;
+        private SqlCommand Command;
+        public string mensaje;
+        public int ErrorCode;
         #endregion
 
         #region Constructores
@@ -27,6 +29,39 @@ namespace GPDataInformation
         #endregion
 
         #region Metodos
+        public void StartProcedure(string ProcedureName, List<ProcedureModel> DataModel)
+        {
+            Command = new SqlCommand(ProcedureName, SqlConnection);
+            Command.CommandType = CommandType.StoredProcedure;
+
+            if(DataModel == null)
+            {
+                throw new GpExceptions("Sin parametros SP");
+            }
+            try
+            {
+                DataModel.ForEach(param => {
+                    SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                    sqlParameter.Direction = ParameterDirection.Input;
+                    Command.Parameters.Add(sqlParameter);
+                });
+
+                var MessageCode = Command.Parameters.Add("@MessageCode", SqlDbType.Int);
+                MessageCode.Direction = ParameterDirection.Output;
+                var MessageValue = Command.Parameters.Add("@MessageValue", SqlDbType.NVarChar, 200);
+                MessageValue.Direction = ParameterDirection.Output;
+                Command.ExecuteNonQuery();
+
+                ErrorCode = (int)Command.Parameters["@MessageCode"].Value;
+                mensaje = (string)Command.Parameters["@MessageValue"].Value;
+            }
+            catch (SqlException ex)
+            {
+                throw new GpExceptions(string.Format("SqlException - {0}", ex.Message));
+            }
+            
+
+        }
         public DataTable GetData(string sqlStatement)
         {
             try
@@ -218,5 +253,11 @@ namespace GPDataInformation
             return mensaje;
         }
         #endregion
+    }
+
+    public class ProcedureModel
+    {
+        public string Namefield { get; set; }
+        public object value { get; set; }
     }
 }

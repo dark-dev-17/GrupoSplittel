@@ -4,3 +4,10 @@
     vertical-align: top;
     border-top: 1px solid #ddd;
 }
+.panel-default {
+    border: 1px solid #ccc;
+    border-top-color: rgb(204, 204, 204);
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top: 5px solid gray;
+}

@@ -5,12 +5,13 @@ namespace GPDataInformation
 {
     public interface IDataModel<T>
     {
+
         bool Add();
         bool Update();
         bool Delete();
         int GetLastId();
-        T Get(int id);
-        IEnumerable<T> Get();
+        T Get(int? id);
+        List<T> Get();
         void SetConnection(DBConnection dBConnection);
     }
 

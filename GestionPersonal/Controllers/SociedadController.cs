@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using GPDataInformation.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,8 +22,8 @@ namespace GestionPersonal.Controllers
         public ActionResult Index()
         {
             gestionPersonal.OpenConnection();
-            GPDataInformation.Models.Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad);
-            IEnumerable<GPDataInformation.Models.Sociedad> sociedads = sociedad.Get();
+            Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad,null);
+            IEnumerable<Sociedad> sociedads = sociedad.Get();
             gestionPersonal.CloseConnection();
             return View(sociedads);
         }
@@ -31,7 +32,7 @@ namespace GestionPersonal.Controllers
         public ActionResult Details(int id)
         {
             gestionPersonal.OpenConnection();
-            GPDataInformation.Models.Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad);
+            Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad, null);
             var result = sociedad.Get(id);
             gestionPersonal.CloseConnection();
             if (result == null)
@@ -50,17 +51,40 @@ namespace GestionPersonal.Controllers
         // POST: Sociedad/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Sociedad Sociedad)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    gestionPersonal.OpenConnection();
+                    Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad, Sociedad);
+                    bool result = sociedad.Add();
+                    gestionPersonal.CloseConnection();
+                    if (result)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", gestionPersonal.GetLastMessage());
+                        return View(Sociedad);
+                    }
+                }
+                else
+                {
+                    return View(Sociedad);
+                }
             }
-            catch
+            catch (GPDataInformation.GpExceptions ex)
             {
-                return View();
+                if(gestionPersonal != null)
+                {
+                    gestionPersonal.CloseConnection();
+                    gestionPersonal = null;
+                }
+                ModelState.AddModelError("", ex.Message);
+                return View(Sociedad);
             }
         }
 
@@ -68,7 +92,7 @@ namespace GestionPersonal.Controllers
         public ActionResult Edit(int id)
         {
             gestionPersonal.OpenConnection();
-            GPDataInformation.Models.Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad);
+            Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad, null);
             var result = sociedad.Get(id);
             gestionPersonal.CloseConnection();
             if (result == null)
@@ -81,17 +105,40 @@ namespace GestionPersonal.Controllers
         // POST: Sociedad/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Sociedad Sociedad)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    gestionPersonal.OpenConnection();
+                    Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad, Sociedad);
+                    bool result = sociedad.Update();
+                    gestionPersonal.CloseConnection();
+                    if (result)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", gestionPersonal.GetLastMessage());
+                        return View(Sociedad);
+                    }
+                }
+                else
+                {
+                    return View(Sociedad);
+                }
             }
-            catch
+            catch (GPDataInformation.GpExceptions ex)
             {
-                return View();
+                if (gestionPersonal != null)
+                {
+                    gestionPersonal.CloseConnection();
+                    gestionPersonal = null;
+                }
+                ModelState.AddModelError("", ex.Message);
+                return View(Sociedad);
             }
         }
 
@@ -99,7 +146,7 @@ namespace GestionPersonal.Controllers
         public ActionResult Delete(int id)
         {
             gestionPersonal.OpenConnection();
-            GPDataInformation.Models.Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad);
+            Sociedad sociedad = gestionPersonal.GetObject(GPDataInformation.ObjectsCompany.Sociedad, null);
             var result = sociedad.Get(id);
             gestionPersonal.CloseConnection();
             if (result == null)

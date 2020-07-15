@@ -13,27 +13,49 @@ namespace GPDataInformation.Models
         public string Descripcion { get; set; }
         [Required]
         public string Direccion { get; set; }
-        //public ICollection<Direccion> Direcciones { get; set; }
-
         private DBConnection dBConnection;
+        public Sociedad()
+        {
 
+        }
+        public Sociedad(DBConnection dBConnection)
+        {
+            this.dBConnection = dBConnection;
+        }
         public bool Add()
         {
-            throw new NotImplementedException();
+            return ActionsObject(SociedadActions.Add);
         }
         public bool Delete()
         {
-            throw new NotImplementedException();
+            return ActionsObject(SociedadActions.Delete);
         }
         public bool Update()
         {
-            throw new NotImplementedException();
+            return ActionsObject(SociedadActions.Edit);
+        }
+        private bool ActionsObject(SociedadActions actions)
+        {
+            List<ProcedureModel> procedureModels = new List<ProcedureModel>();
+            procedureModels.Add(new ProcedureModel { Namefield = "IdSociedad", value = IdSociedad });
+            procedureModels.Add(new ProcedureModel { Namefield = "Descripcion", value = Descripcion });
+            procedureModels.Add(new ProcedureModel { Namefield = "Direccion", value = Direccion });
+            procedureModels.Add(new ProcedureModel { Namefield = "ModeProcedure", value = actions });
+            dBConnection.StartProcedure("Gps_Sociedad", procedureModels);
+            if(dBConnection.ErrorCode == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         public  Sociedad Get(int id)
         {
             return DataReader(string.Format("select * from sociedad where IdSociedad = '{0}'", id)).ElementAt(0);
         }
-        public IEnumerable<Sociedad> Get()
+        public List<Sociedad> Get()
         {
             return DataReader(string.Format("select * from sociedad"));
         }
@@ -57,7 +79,14 @@ namespace GPDataInformation.Models
                 sociedad.Direccion = Data.IsDBNull(2) ? "" : Data.GetString(2);
                 Response.Add(sociedad);
             }
+            Data.Close();
             return Response;
         }
+    }
+    public enum SociedadActions
+    {
+        Add = 1,
+        Edit = 2,
+        Delete = 3
     }
 }
