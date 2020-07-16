@@ -62,7 +62,6 @@ namespace GPDataInformation
                 {
                     objto = Modelo;
                 }
-                //dbSetGps.Add();
                 objto.SetConnection(DBConnection);
                 return objto;
             }
@@ -73,7 +72,75 @@ namespace GPDataInformation
                 {
                     objto = Modelo;
                 }
-                //dbSetGps.Add();
+                objto.SetConnection(DBConnection);
+                return objto;
+            }
+            if (objectsCompany == ObjectsCompany.Puesto)
+            {
+                Puesto objto = new Puesto();
+                if (Modelo != null)
+                {
+                    objto = Modelo;
+                }
+                objto.SetConnection(DBConnection);
+                return objto;
+            }
+            if (objectsCompany == ObjectsCompany.CatalogoOpciones)
+            {
+                CatalogoOpciones objto = new CatalogoOpciones();
+                if (Modelo != null)
+                {
+                    objto = Modelo;
+                }
+                objto.SetConnection(DBConnection);
+                return objto;
+            }
+            if (objectsCompany == ObjectsCompany.Persona)
+            {
+                Persona objto = new Persona();
+                if (Modelo != null)
+                {
+                    objto = Modelo;
+                }
+                objto.SetConnection(DBConnection);
+                return objto;
+            }
+            if (objectsCompany == ObjectsCompany.Empleado)
+            {
+                Empleado objto = new Empleado();
+                if (Modelo != null)
+                {
+                    objto = Modelo;
+                }
+                objto.SetConnection(DBConnection);
+                return objto;
+            }
+            if (objectsCompany == ObjectsCompany.PersonaContacto)
+            {
+                PersonaContacto objto = new PersonaContacto();
+                if (Modelo != null)
+                {
+                    objto = Modelo;
+                }
+                objto.SetConnection(DBConnection);
+                return objto;
+            }
+            if (objectsCompany == ObjectsCompany.InformacionMedica)
+            {
+                InformacionMedica objto = new InformacionMedica();
+                if (Modelo != null)
+                {
+                    objto = Modelo;
+                }
+                objto.SetConnection(DBConnection);
+                return objto;
+            }if (objectsCompany == ObjectsCompany.SplittelEmpleado)
+            {
+                SplittelEmpleado objto = new SplittelEmpleado();
+                if (Modelo != null)
+                {
+                    objto = Modelo;
+                }
                 objto.SetConnection(DBConnection);
                 return objto;
             }
@@ -81,54 +148,6 @@ namespace GPDataInformation
             {
                 throw new GpExceptions("GpExceptions - Objeto no valido");
             }
-            
-        }
-
-        public virtual DbSetGps<DireccionOrganizacional> dbSetGps { get; set; }
-
-    }
-    public class DbSetGps<T> 
-    {
-        private T Local;
-
-        DbSetGps()
-        {
-
-        }
-
-        public bool Add()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Delete()
-        {
-            throw new NotImplementedException();
-        }
-
-        public GPDataInformation.DbSetGps<T> Get(int? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public System.Collections.Generic.List<GPDataInformation.DbSetGps<T>> Get()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetLastId()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetConnection(DBConnection dBConnection)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Update()
-        {
-            throw new NotImplementedException();
         }
     }
     public enum ObjectsCompany
@@ -136,7 +155,13 @@ namespace GPDataInformation
         Sociedad = 1,
         DireccionOrganizacional = 2,
         Area = 3,
-        Puestos = 4,
-        Departamento = 5
+        Puesto = 4,
+        Departamento = 5,
+        CatalogoOpciones = 6,
+        Persona = 7,
+        Empleado = 8,
+        PersonaContacto = 9,
+        InformacionMedica = 10,
+        SplittelEmpleado = 11,
     }
 }

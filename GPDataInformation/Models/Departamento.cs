@@ -14,7 +14,7 @@ namespace GPDataInformation.Models
         [Required]
         public int IdDireccion { get; set; }
         public DireccionOrganizacional Direccion { get; set; }
-
+        
         private DBConnection dBConnection;
         public Departamento()
         {

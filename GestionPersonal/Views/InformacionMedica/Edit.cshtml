@@ -1,0 +1,70 @@
+﻿@model GPDataInformation.Models.InformacionMedica
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>InformacionMedica</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdInformacionMedica" class="control-label"></label>
+                <input asp-for="IdInformacionMedica" class="form-control" />
+                <span asp-validation-for="IdInformacionMedica" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdPersona" class="control-label"></label>
+                <input asp-for="IdPersona" class="form-control" />
+                <span asp-validation-for="IdPersona" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoSangre" class="control-label"></label>
+                <input asp-for="TipoSangre" class="form-control" />
+                <span asp-validation-for="TipoSangre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Alergias" class="control-label"></label>
+                <input asp-for="Alergias" class="form-control" />
+                <span asp-validation-for="Alergias" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Altura" class="control-label"></label>
+                <input asp-for="Altura" class="form-control" />
+                <span asp-validation-for="Altura" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Peso" class="control-label"></label>
+                <input asp-for="Peso" class="form-control" />
+                <span asp-validation-for="Peso" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Talla" class="control-label"></label>
+                <input asp-for="Talla" class="form-control" />
+                <span asp-validation-for="Talla" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IMC" class="control-label"></label>
+                <input asp-for="IMC" class="form-control" />
+                <span asp-validation-for="IMC" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comentarios" class="control-label"></label>
+                <input asp-for="Comentarios" class="form-control" />
+                <span asp-validation-for="Comentarios" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -1,0 +1,117 @@
+﻿@model GPDataInformation.Models.Persona
+
+@{
+    ViewData["Title"] = "Create";
+}
+    <form asp-action="CreatePersona" class="form-horizontal">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="form-group col-lg-6 col-lg-6">
+                <label asp-for="Nombre" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    @*<input asp-for="IdPersona" type="hidden" class="form-control" />*@
+                    <input asp-for="Nombre" class="form-control form-control-sm" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-lg-6">
+                <label asp-for="ApellidoPaterno" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="ApellidoPaterno" class="form-control form-control-sm" />
+                    <span asp-validation-for="ApellidoPaterno" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-lg-6">
+                <label asp-for="ApellidoMaterno" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="ApellidoMaterno" class="form-control form-control-sm" />
+                    <span asp-validation-for="ApellidoMaterno" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-lg-6">
+                <label asp-for="Nacimiento" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="Nacimiento" type="datetime" class="form-control form-control-sm" />
+                    <span asp-validation-for="Nacimiento" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="IdGenero" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <select asp-for="IdGenero" asp-items="ViewBag.Generos" class="form-control">
+                        <option value="0">Selecciona un genero</option>
+                    </select>
+                    <span asp-validation-for="IdGenero" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="IdEstadoCivil" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <select asp-for="IdEstadoCivil" asp-items="ViewBag.EstadosCiviles" class="form-control">
+                        <option value="0">Selecciona un estado civil</option>
+                    </select>
+                    <span asp-validation-for="IdEstadoCivil" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="RFC" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="RFC" class="form-control form-control-sm" />
+                    <span asp-validation-for="RFC" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="CURP" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="CURP" class="form-control form-control-sm" />
+                    <span asp-validation-for="CURP" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="Email" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="Email" class="form-control form-control-sm" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="TelefonoPersonal" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="TelefonoPersonal" class="form-control form-control-sm" />
+                    <span asp-validation-for="TelefonoPersonal" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="TelefonoFijo" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="TelefonoFijo" class="form-control form-control-sm" />
+                    <span asp-validation-for="TelefonoFijo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="CodigoPostal" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="CodigoPostal" class="form-control form-control-sm" />
+                    <span asp-validation-for="CodigoPostal" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="Colonia" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="Colonia" class="form-control form-control-sm" />
+                    <span asp-validation-for="Colonia" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="Calle" class="control-label col-sm-3"></label>
+                <div class="col-sm-9">
+                    <input asp-for="Calle" class="form-control form-control-sm" />
+                    <span asp-validation-for="Calle" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group col-lg-6">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </form>
