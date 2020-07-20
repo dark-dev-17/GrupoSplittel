@@ -7,14 +7,22 @@ namespace GPDataInformation
 {
     public class GestionPersonal
     {
-        private DBConnection DBConnection { get; set; }
-        public string StringConnectionDb { get; set; }
-        public string Server { get; set; }
-        public string From { get; set; }
-        public int Port { get; set; }
-        public string User { get; set; }
-        public string Password { get; set; }
-        public bool UserSSL { get; set; }
+        #region Atributos de configuracion
+        protected DBConnection DBConnection { get; set; }
+        protected DBConnection dBConnection { get; set; }
+        protected string StringConnectionDb { get; set; }
+        protected string Server { get; set; }
+        protected string From { get; set; }
+        protected int Port { get; set; }
+        protected string User { get; set; }
+        protected string Password { get; set; }
+        protected bool UserSSL { get; set; }
+        #endregion
+
+        public CatalogoOpciones CatalogoOpciones { get; private set; }
+        public virtual DbManager<CatalogoOpciones> ctOpciones { get;  set; }
+
+        #region Constructores
         public GestionPersonal()
         {
 
@@ -27,6 +35,9 @@ namespace GPDataInformation
         {
             this.StringConnectionDb = Configuration.GetConnectionString("Default");
         }
+        #endregion
+
+        #region Base de datos
         public string GetLastMessage()
         {
             return DBConnection.mensaje;
@@ -35,14 +46,19 @@ namespace GPDataInformation
         {
             DBConnection = new DBConnection(this.StringConnectionDb);
             DBConnection.OpenConnection();
+
+            CatalogoOpciones = new CatalogoOpciones(DBConnection);
         }
         public void CloseConnection()
         {
-            if(DBConnection != null)
+            if (DBConnection != null)
             {
                 DBConnection.CloseDataBaseAccess();
             }
         }
+        #endregion
+
+        #region Render de objetos con connection
         public dynamic GetObject(ObjectsCompany objectsCompany, dynamic Modelo)
         {
             if (objectsCompany == ObjectsCompany.Sociedad)
@@ -134,14 +150,15 @@ namespace GPDataInformation
                 }
                 objto.SetConnection(DBConnection);
                 return objto;
-            }if (objectsCompany == ObjectsCompany.SplittelEmpleado)
+            }
+            if (objectsCompany == ObjectsCompany.SplittelEmpleado)
             {
                 SplittelEmpleado objto = new SplittelEmpleado();
                 if (Modelo != null)
                 {
                     objto = Modelo;
                 }
-                objto.SetConnection(DBConnection);
+                //objto.SetConnection(DBConnection);
                 return objto;
             }
             else
@@ -149,6 +166,8 @@ namespace GPDataInformation
                 throw new GpExceptions("GpExceptions - Objeto no valido");
             }
         }
+        #endregion
+
     }
     public enum ObjectsCompany
     {
@@ -164,4 +183,8 @@ namespace GPDataInformation
         InformacionMedica = 10,
         SplittelEmpleado = 11,
     }
+
+    
+
+
 }

@@ -30,21 +30,30 @@
             <div class="form-group">
                 <label asp-for="TipoNomina" class="control-label"></label>
                 <input asp-for="TipoNomina" class="form-control" />
+                <select asp-for="TipoNomina" asp-items="ViewBag.TipoNomina" class="form-control">
+                    <option value="0">Selecciona una TipoNomina</option>
+                </select>
                 <span asp-validation-for="TipoNomina" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IdSociedad" class="control-label"></label>
-                <input asp-for="IdSociedad" class="form-control" />
+                <select asp-for="IdSociedad" asp-items="ViewBag.Sociedades" class="form-control">
+                    <option value="0">Selecciona una Sociedad</option>
+                </select>
                 <span asp-validation-for="IdSociedad" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IdDepartamento" class="control-label"></label>
-                <input asp-for="IdDepartamento" class="form-control" />
+                <select asp-for="IdDepartamento" asp-items="ViewBag.Departamentos" class="form-control">
+                    <option value="0">Selecciona una Departamentos</option>
+                </select>
                 <span asp-validation-for="IdDepartamento" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IdPuesto" class="control-label"></label>
-                <input asp-for="IdPuesto" class="form-control" />
+                <select asp-for="IdPuesto" asp-items="ViewBag.Puestos" class="form-control">
+                    <option value="0">Selecciona una puesto</option>
+                </select>
                 <span asp-validation-for="IdPuesto" class="text-danger"></span>
             </div>
             <div class="form-group">
