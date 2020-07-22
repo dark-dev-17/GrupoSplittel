@@ -40,6 +40,10 @@ namespace GestionPersonal
             //    options.StringConnectionDb = Configuration.GetConnectionString("Default");
 
             //});
+            services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:89").AllowAnyMethod().AllowAnyHeader();
+            }));
 
             services.AddSingleton<IConfiguration>(Configuration);
 
@@ -63,7 +67,11 @@ namespace GestionPersonal
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+                    app.UseCors(builder => builder
+             .AllowAnyOrigin()
+             .AllowAnyMethod()
+             .AllowAnyHeader());
+            app.UseCors("ApiCorsPolicy");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
