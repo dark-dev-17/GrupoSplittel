@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GPDataInformation\GPDataInformation.csproj" />
+    <ProjectReference Include="..\GPSInformation\GPSInformation.csproj" />
   </ItemGroup>
 
 </Project>

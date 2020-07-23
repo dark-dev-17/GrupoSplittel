@@ -13,25 +13,20 @@
 
     <link href="~/css/site.css" rel="stylesheet" />
 </head>
-<body class="cm-no-transition cm-1-navbar">
-    <div id="cm-menu">
-        <nav class="cm-navbar cm-navbar-primary">
-            <div class="cm-flex"><a href="index.html" class="cm-logo"></a></div>
-            <div class="btn btn-primary md-menu-white" data-toggle="cm-menu"></div>
-        </nav>
-        <partial name="_Slide" />
-    </div>
+<body class="pos-relative" data-spy="scroll" data-target="#navSection" data-offset="120">
     <partial name="_NavBar" />
-    <div id="global">
+    <partial name="_Slide" />
+    <div class="content content-components">
         <div class="container-fluid">
-            <div class="row cm-fix-height">
-                <div class="col-sm-12">
-                    @RenderBody()
-                </div>
-            </div>
+            @*<ol class="breadcrumb df-breadcrumbs mg-b-10">
+                <li class="breadcrumb-item"><a href="#">Components</a></li>
+                <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Form Elements</li>
+            </ol>*@
+            @RenderBody()
         </div>
     </div>
-    
+
     <environment include="Development">
         <partial name="_Scripts" />
     </environment>

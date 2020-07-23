@@ -1,63 +1,47 @@
 ﻿
-    <div id="cm-menu-content">
-        <div id="cm-menu-items-wrapper">
-            <div id="cm-menu-scroller">
-                <ul class="cm-menu-items">
-
-                    <li>
-                        <!-- <a href="#" class="sf-perfill " style="height: 150px;">$_SESSION[""]</a> -->
-                        <img class="img-center" style="margin-left: 51px; margin-top: 5px; width:96px; height: 96px;" src="../../public/Files/Perfil/1024/Captura.PNG">
-                        <h5 class="" style="margin-left: 51px; color: #c12035;">JESUS HERRERA</h5>
-                        <small style="margin-left: 51px; color:#a5a7aa;">Desarrollador</small>
-                        <hr>
-                    </li>
-                    <li class="active" style="border-top: 1px;"><a href="../Dashboard/" class="sf-dashboard">Dashboard</a></li>
-
-                    <li class="cm-submenu  ">
-                        <a class="sf-puzzle">Organigrama<span class="caret"></span></a>
-                        <ul>
-                            <li class=""><a href="@Url.Action("Index","Sociedad")">Sociedades</a></li>
-                            <li class=""><a href="@Url.Action("Index","DireccionOrganizacional")">Direcciones</a></li>
-                            <li class=""><a href="@Url.Action("Index","Departamento")">Departamentos</a></li>
-                            <li class=""><a href="@Url.Action("Index","Puesto")">Puestos</a></li>
-                            <li class=""><a href="../Organigrama/">Organigrama</a></li>
-                            
-                        </ul>
-                    </li>
-
-                    <li class="cm-submenu  ">
-                        <a class="sf-monitor">Encuestas<span class="caret"></span></a>
-                        <ul>
-                            <!-- Si es usuario administrador o Gestión personal -->
-                            <li class=""><a href="../Encuestas">Evaluación Reacción</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="cm-submenu ">
-                        <a class="sf-user-male">Empleados<span class="caret"></span></a>
-                        <ul>
-                            <!-- Si es usuario administrador o Gestión personal -->
-                            <li class=""><a href="../Empleados/">Empleados</a></li>
-                            <li class=""><a href="../Prospectos/">Prospectos</a></li>
-                            <li class=""><a href="../Prenomina/">Prenomina</a></li>
-                            <li class=""><a href="../RequisicionPersonal/">Requisición de personal</a></li>
-                        </ul>
-                    </li>
-
-
-                    <li class="cm-submenu ">
-                        <a class="sf-notepad">Incidencias <span class="caret"></span></a>
-                        <ul>
-                            <!-- Si es usuario administrador o Gestión personal -->
-                            <li class=""><a href="../Incidencias/Periodos.php">Periodos Vacaciones</a></li>
-                            <li class=""><a href="../Incidencias/MisSolicitudes.php">Mis Solicitudes</a></li>
-                            <li class=""><a href="../Incidencias/Solicitudes.php">Solicitudes por aprobar</a></li>
-                        </ul>
-                    </li>
-                    <li class=""><a href="../Salas/" class=" sf-calendar ">Salas</a></li>
-                    <!-- Si es usuario administrador o Gestión personal -->
-                    <li class=""><a href="../Configuracion/" class="sf-cog">Configuración</a></li>
-                </ul>
-            </div>
-        </div>
+    <div id="sidebarMenu" class="sidebar sidebar-fixed sidebar-components ps">
+        <div class="sidebar-header">
+            <a href="" id="mainMenuOpen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></a>
+            <h5>Components</h5>
+            <a href="" id="sidebarMenuClose"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
+        </div><!-- sidebar-header -->
+        <div class="sidebar-body">
+            <ul class="sidebar-nav">
+                <li class="nav-label mg-b-15">Browse Components</li>
+                <li class="nav-item">   
+                    <a href="index.html" class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                    </svg>Home</a></li>
+                <li class="nav-item">
+                    <a href="" class="nav-link with-sub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>Organigrama</a>
+                    <nav class="nav">
+                        <a href="@Url.Action("Index","Sociedad")">Sociedades</a>
+                        <a href="@Url.Action("Index","DireccionOrganizacional")">Direcciones</a>
+                        <a href="@Url.Action("Index","Departamento")">Departamentos</a>
+                        <a href="@Url.Action("Index","Puesto")">Puestos</a>
+                    </nav>
+                </li>
+          
+                <li class="nav-item show">
+                    <a href="" class="nav-link with-sub active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-inbox">
+                            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                        </svg> Forms</a>
+                    <nav class="nav">
+                        <a href="form-elements.html" class="active">Form Elements</a>
+                        <a href="form-input-group.html">Input Group</a>
+                    </nav>
+                </li>
+            </ul>
+        </div><!-- sidebar-body -->
+        <div class="ps__rail-x" style="left: 0px; top: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
     </div>
