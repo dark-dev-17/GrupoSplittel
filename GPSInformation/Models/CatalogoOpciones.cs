@@ -7,13 +7,13 @@ using System.Text;
 
 namespace GPSInformation.Models
 {
-    [TableDB(Name = "CatalogoOpciones", IsMappedByLabels = true)]
+    [TableDB(Name = "CatalogoOpciones", IsMappedByLabels = true,IsStoreProcedure = false)]
     public class CatalogoOpciones
     {
-        [ColumnDB(Name = "IdCatalogoOpciones")]
+        [ColumnDB(Name = "IdCatalogoOpciones", IsMapped = true,IsKey =true)]
         public int IdCatalogoOpciones { get; set; }
         [Required]
-        [ColumnDB(Name = "Descripcion")]
+        [ColumnDB(Name = "Descripcion", IsMapped = true, IsKey = false)]
         public string Descripcion { get; set; }
     }
 }

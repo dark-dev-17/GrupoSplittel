@@ -10,5 +10,6 @@ namespace GPSInformation.Attributes
     {
         public string Name { get; set; }
         public bool IsMappedByLabels { get; set; }
+        public bool IsStoreProcedure { get; set; }
     }
 }

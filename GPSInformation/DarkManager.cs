@@ -20,6 +20,7 @@ namespace GPSInformation
 
         #region Variables de acceso
         public virtual DarkAttributes<CatalogoOpciones> CatalogoOpciones { get; set; }
+        public virtual DarkAttributes<CatalogoOpcionesValores> CatalogoOpcionesValores { get; set; }
         #endregion
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
@@ -39,6 +40,10 @@ namespace GPSInformation
             if (gpsManagerObjects == GpsManagerObjects.CatalogoOpciones)
             {
                 CatalogoOpciones = new DarkAttributes<CatalogoOpciones>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.CatalogoOpcionesValores)
+            {
+                CatalogoOpcionesValores = new DarkAttributes<CatalogoOpcionesValores>(dBConnection);
             }
         }
 
@@ -60,7 +65,8 @@ namespace GPSInformation
 
     public enum GpsManagerObjects
     {
-        CatalogoOpciones = 1
+        CatalogoOpciones = 1,
+        CatalogoOpcionesValores = 2
     }
 
 }

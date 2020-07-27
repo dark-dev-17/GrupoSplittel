@@ -16,6 +16,7 @@ namespace GestionPersonal.Models
         public string Folio { get; set; }
         public DateTime FechaInicialPago { get; set; }
         public DateTime FechaFinalPago { get; set; }
+        public DateTime FechaPago { get; set; }
         public int NumeroNomina { get; set; }
         public bool AceptadoEmpleado { get; set; }
         public string Comentarios { get; set; }
@@ -44,10 +45,11 @@ namespace GestionPersonal.Models
                 dB_Connection.AddParameter(Folio, "Folio", "VARCHAR");
                 dB_Connection.AddParameter(FechaInicialPago, "FechaInicialPago", "DATETIME");
                 dB_Connection.AddParameter(FechaFinalPago, "FechaFinalPago", "DATETIME");
+                dB_Connection.AddParameter(FechaPago, "FechaPago", "DATETIME");
                 dB_Connection.AddParameter(NumeroNomina, "NumeroNomina", "INT");
                 dB_Connection.AddParameter(Comentarios, "Comentarios", "VARCHAR");
                 dB_Connection.AddParameter(NombreArchivo, "NombreArchivo", "VARCHAR");
-                dB_Connection.AddParameter(TotalNeto, "TotalNeto", "DOUBLE");
+                dB_Connection.AddParameter(TotalNeto, "TotalPercepciones", "DOUBLE");
                 dB_Connection.AddParameter((AceptadoEmpleado ? "1" : "0"), "AceptadoEmpleado", "INT");
                 dB_Connection.AddParameter(1, "ModeProcedure", "INT");
                 int result = dB_Connection.ExecProcedure();
@@ -112,6 +114,7 @@ namespace GestionPersonal.Models
                             Comentarios = Data.IsDBNull(9) ? "" : Data.GetString(9),
                             NombreArchivo = Data.IsDBNull(10) ? "" : Data.GetString(10),
                             TotalNeto = Data.IsDBNull(11) ? 0 : Data.GetDouble(11),
+                            FechaPago = Data.IsDBNull(12) ? DateTime.Now : Data.GetDateTime(12),
                         });
                     }
                     Data.Close();

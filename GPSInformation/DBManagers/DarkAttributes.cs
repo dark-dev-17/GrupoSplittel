@@ -41,12 +41,29 @@ namespace GPSInformation.DBManagers
         }
         public bool Add()
         {
-            return ActionsObject(DbManagerTypes.Add);
+            TableDB tableDefinifiton = GetClassAttribute();
+            if (tableDefinifiton.IsStoreProcedure)
+            {
+                return ActionsObject(DbManagerTypes.Add);
+            }
+            else
+            {
+                return ActionsObjectCode(DbManagerTypes.Add, tableDefinifiton);
+            }
+            
         }
 
         public bool Update()
         {
-            return ActionsObject(DbManagerTypes.Update);
+            TableDB tableDefinifiton = GetClassAttribute();
+            if (tableDefinifiton.IsStoreProcedure)
+            {
+                return ActionsObject(DbManagerTypes.Update);
+            }
+            else
+            {
+                return ActionsObjectCode(DbManagerTypes.Update, tableDefinifiton);
+            }
         }
 
         public bool Delete()
@@ -60,7 +77,7 @@ namespace GPSInformation.DBManagers
 
         public T Get(int? id)
         {
-            List<T> Lista = DataReader(string.Format("select * from {0} where Id{0} = '{1}'", Nametable, id));
+            List<T> Lista = DataReader(string.Format("select * from {0} where {1} = '{2}'", Nametable, KeyCol(), id));
             if (Lista.Count == 0)
             {
                 return default(T);
@@ -91,6 +108,41 @@ namespace GPSInformation.DBManagers
         public List<T> Get()
         {
             return DataReader(string.Format("select * from {0}", Nametable));
+        }
+
+        private string KeyCol()
+        {
+            string columna = "";
+            if (GetClassAttribute().IsMappedByLabels)
+            {
+                object exFormAsObj = Activator.CreateInstance(typeof(T));
+                foreach (var prop in typeof(T).GetProperties())
+                {
+                    PropertyInfo propertyInfo = exFormAsObj.GetType().GetProperty(prop.Name);
+                    ColumnDB hiddenAttribute = (ColumnDB)propertyInfo.GetCustomAttribute(typeof(ColumnDB));
+
+                    if (hiddenAttribute.IsKey)
+                    {
+                        columna = hiddenAttribute.Name;
+                    }
+                }
+            }
+            else
+            {
+                object exFormAsObj = Activator.CreateInstance(typeof(T));
+                foreach (var prop in typeof(T).GetProperties())
+                {
+                    PropertyInfo propertyInfo = exFormAsObj.GetType().GetProperty(prop.Name);
+                    ColumnDB hiddenAttribute = (ColumnDB)propertyInfo.GetCustomAttribute(typeof(ColumnDB));
+
+                    if (hiddenAttribute.IsKey)
+                    {
+                        columna = prop.Name;
+                    }
+                }
+            }
+
+            return columna;
         }
 
         private List<T> DataReader(string SqlStatements)
@@ -200,6 +252,103 @@ namespace GPSInformation.DBManagers
             {
                 return false;
             }
+        }
+        private bool ActionsObjectCode(DbManagerTypes dbManagerTypes, TableDB tableDefinifiton)
+        {
+            //TableDB tableDefinifiton = GetClassAttribute();
+            bool result = false;
+            //mapeo de tabla con los nombres de los campos ya existentes
+            string sentencia = "";
+            string sentenciaVariables = "";
+            foreach (var prop in typeof(T).GetProperties())
+            {
+                PropertyInfo propertyInfo = Element.GetType().GetProperty(prop.Name);
+                ColumnDB hiddenAttribute = (ColumnDB)propertyInfo.GetCustomAttribute(typeof(ColumnDB));
+
+                if (hiddenAttribute == null)
+                {
+                    throw new Exceptions.GpExceptions(string.Format("The attribute was not found in the attribute '{0}', if you don´t want to use mapTable, please set IsMappedByLabels = false", prop.Name));
+                }
+                if (tableDefinifiton.IsMappedByLabels)
+                {
+                    if (string.IsNullOrEmpty(hiddenAttribute.Name))
+                    {
+                        throw new Exceptions.GpExceptions(string.Format("The attribute {0} was setting like mapping column, the name is missing", prop.Name));
+                    }
+                }
+                else
+                {
+                    hiddenAttribute.Name = prop.Name;
+                }
+
+
+                if (dbManagerTypes == DbManagerTypes.Add)
+                {
+                    if (!hiddenAttribute.IsKey && hiddenAttribute.IsMapped)
+                    {
+                        sentencia += hiddenAttribute.Name + ",";
+                        sentenciaVariables += "@" + hiddenAttribute.Name + ",";
+                    }
+                }
+                else if (dbManagerTypes == DbManagerTypes.Update)
+                {
+                    if (!hiddenAttribute.IsKey)
+                    {
+                        sentencia += hiddenAttribute.Name + " = @" + hiddenAttribute.Name + ",";
+                    }
+                    else
+                    {
+                        sentenciaVariables = hiddenAttribute.Name + " = @" + hiddenAttribute.Name + "";
+                    }
+                }
+                else
+                {
+                    throw new Exceptions.GpExceptions(string.Format("Delete action is not active"));
+                }
+            }
+
+            if (dbManagerTypes == DbManagerTypes.Add)
+            {
+                string Statement = string.Format("INSERT INTO {0}({1}) VALUES({2})", tableDefinifiton.Name, sentencia.Substring(0, sentencia.Length - 1), sentenciaVariables.Substring(0, sentenciaVariables.Length - 1));
+                List<ProcedureModel> procedureModels = new List<ProcedureModel>();
+                foreach (var prop in typeof(T).GetProperties())
+                {
+                    PropertyInfo propertyInfo = Element.GetType().GetProperty(prop.Name);
+                    ColumnDB hiddenAttribute = (ColumnDB)propertyInfo.GetCustomAttribute(typeof(ColumnDB));
+
+                    if (!hiddenAttribute.IsKey && hiddenAttribute.IsMapped)
+                    {
+                        procedureModels.Add(new ProcedureModel { Namefield = hiddenAttribute.Name, value = propertyInfo.GetValue(Element) });
+                    }
+                }
+
+                dBConnection.StartInsert(Statement, procedureModels);
+                result = true;
+            }
+            else if (dbManagerTypes == DbManagerTypes.Update)
+            {
+                string Statement = string.Format("UPDATE {0} SET {1} WHERE {2} ", tableDefinifiton.Name, sentencia.Substring(0, sentencia.Length - 1), sentenciaVariables);
+                List<ProcedureModel> procedureModels = new List<ProcedureModel>();
+                foreach (var prop in typeof(T).GetProperties())
+                {
+                    PropertyInfo propertyInfo = Element.GetType().GetProperty(prop.Name);
+                    ColumnDB hiddenAttribute = (ColumnDB)propertyInfo.GetCustomAttribute(typeof(ColumnDB));
+
+                    if (hiddenAttribute.IsMapped)
+                    {
+                        procedureModels.Add(new ProcedureModel { Namefield = hiddenAttribute.Name, value = propertyInfo.GetValue(Element) });
+                    }
+                }
+
+                dBConnection.StartUpdate(Statement, procedureModels);
+                result = true;
+            }
+            else
+            {
+                throw new Exceptions.GpExceptions(string.Format("Delete action is not active"));
+            }
+
+            return result;
         }
         private TableDB GetClassAttribute()
         {
