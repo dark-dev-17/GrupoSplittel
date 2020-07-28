@@ -1,0 +1,39 @@
+﻿@model IEnumerable<GPSInformation.Models.CatalogoOpcionesValores>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdCatalogoOpciones)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdCatalogoOpciones)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditValue", new { id=item.IdCatalogoOpcionesValores }) |
+                    <form asp-action="DeleteValue">
+                        <input type="hidden" name="id" value="@item.IdCatalogoOpcionesValores" class="form-control" placeholder="descripción">
+                        <button type="submit" class="">Delete</button>
+                    </form>
+
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

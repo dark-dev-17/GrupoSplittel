@@ -201,6 +201,44 @@ namespace EcommerceAdmin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessData(IdAction = 4)]
+        public ActionResult DataChangeDescriptionShortp(string ItemCode, string Description)
+        {
+            Ecom_DBConnection Ecom_DBConnection_ = null;
+            try
+            {
+                Ecom_Tools.ValidStringParameter(ItemCode, "ItemCode");
+                Ecom_Tools.ValidStringParameter(Description, "Description");
+                Ecom_DBConnection_ = new Ecom_DBConnection(EcomConnection);
+                Ecom_DBConnection_.OpenConnection();
+                Ecom_Producto Ecom_Producto_ = new Ecom_Producto(Ecom_DBConnection_);
+                Ecom_Producto_.ItemCode = ItemCode;
+                Ecom_Producto_.Description = Description;
+                bool result = Ecom_Producto_.Update(3);
+                Ecom_DBConnection_.CloseConnection();
+                if (result)
+                {
+                    return Ok(Ecom_DBConnection_.Message);
+                }
+                else
+                {
+                    return BadRequest(Ecom_DBConnection_.Message);
+                }
+            }
+            catch (Ecom_Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                if (Ecom_DBConnection_ != null)
+                {
+                    Ecom_DBConnection_.CloseConnection();
+                }
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessData(IdAction = 4)]
         public ActionResult DataChangeLargeDescr(string ItemCode, string LargeDescription)
         {
             Ecom_DBConnection Ecom_DBConnection_ = null;

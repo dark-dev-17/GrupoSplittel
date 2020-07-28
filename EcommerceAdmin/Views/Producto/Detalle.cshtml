@@ -42,7 +42,13 @@ else
                     <td><strong>Codigo</strong></td>
                     <td colspan="1">@Html.DisplayFor(model => model.ItemCode)</td>
                     <td><strong>Nombre</strong></td>
-                    <td colspan="1">@Html.DisplayFor(model => model.Description)</td>
+                    <td colspan="1">
+                        @Html.DisplayFor(model => model.Description)
+                        @if (new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 4 }))
+                        {
+                            <button class="btn btn-sm btn-secondary" v-on:click="editDescripcionShrtp()">Editar</button>
+                        }
+                    </td>
                 </tr>
                 <tr>
                     <td><strong>Descripcion</strong></td>
@@ -628,6 +634,37 @@ else
                             return axios.post('@Url.Action("DataRenameFiles","Producto")', params,{ headers: this.serverToken }).then(response => {
                                 this.images.Producto.images[index].ruta = this.images.Producto.images[index].ruta.replace(this.images.Producto.images[index].name,login + ".jpg");
                                 this.images.Producto.images[index].name = login + ".jpg";
+                                return response.data;
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            })
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.value) {
+                            this.ShowMessageErrorShort(result.value,'success')
+                        }
+                        console.log(result)
+                    })
+                },
+                editDescripcionShrtp: async function () {
+                    Swal.fire({
+                        title: 'Nuevo nombre del producto',
+                        input: 'text',
+                        inputValue: '@Html.Raw(Model.Description )',
+                        inputAttributes: {
+                            autocapitalize: 'off'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Renombrar',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (login) => {
+                            var params = new URLSearchParams();
+                            params.append('Description', '' + login);
+                            params.append('ItemCode', '' + this.item.Code);
+                            return axios.post('@Url.Action("DataChangeDescriptionShortp","Producto")', params,{ headers: this.serverToken }).then(response => {
+                                this.ShowMessageErrorShort(response.data, 'success')
+                                location.reload();
                                 return response.data;
                             }).catch(error => {
                                 this.ShowMessageErrorShort(error.response.data,'error')

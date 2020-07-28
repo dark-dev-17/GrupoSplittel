@@ -65,7 +65,7 @@ namespace GestionPersonal.Controllers
         public IActionResult Edit(int id)
         {
             var List = darkManager.CatalogoOpciones.Get(id);
-            
+            ViewData["Valores"] = darkManager.CatalogoOpcionesValores.Get(id+"", "IdCatalogoOpciones");
             return View(List);
         }
 
@@ -95,6 +95,19 @@ namespace GestionPersonal.Controllers
         #endregion
 
         #region CatalogoOpcionesValores
+        public IActionResult CreateValue(int id)
+        {
+            var OpcionesCatalogos = darkManager.CatalogoOpciones.Get().OrderBy(a => a.Descripcion);
+            ViewData["OpcionesCatalogos"] = new SelectList(OpcionesCatalogos, "IdCatalogoOpciones", "Descripcion", id);
+            return View(new CatalogoOpcionesValores { IdCatalogoOpciones = id  });
+        }
+        public IActionResult EditValue(int id)
+        {
+            var OpcionesCatalogos = darkManager.CatalogoOpciones.Get().OrderBy(a => a.Descripcion);
+            var valorCatalogo = darkManager.CatalogoOpcionesValores.Get(id);
+            ViewData["OpcionesCatalogos"] = new SelectList(OpcionesCatalogos, "IdCatalogoOpciones", "Descripcion", valorCatalogo.IdCatalogoOpciones);
+            return View(valorCatalogo);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CreateValue(CatalogoOpcionesValores CatalogoOpcionesValores)
@@ -103,33 +116,7 @@ namespace GestionPersonal.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(CatalogoOpcionesValores);
-                }
-
-                darkManager.CatalogoOpcionesValores.Element = CatalogoOpcionesValores;
-                var result = darkManager.CatalogoOpciones.Add();
-                if (result)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    ModelState.AddModelError("", "error al insertar");
-                    return View(CatalogoOpcionesValores);
-                }
-            }
-            catch (GPSInformation.Exceptions.GpExceptions ex)
-            {
-                ModelState.AddModelError("", "error al insertar");
-                return View(CatalogoOpcionesValores);
-            }
-        }
-        public IActionResult EditValue(CatalogoOpcionesValores CatalogoOpcionesValores)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
+                    ViewData["OpcionesCatalogos"] = new SelectList(darkManager.CatalogoOpciones.Get().OrderBy(a => a.Descripcion), "IdCatalogoOpciones", "Descripcion", CatalogoOpcionesValores.IdCatalogoOpciones);
                     return View(CatalogoOpcionesValores);
                 }
 
@@ -137,20 +124,81 @@ namespace GestionPersonal.Controllers
                 var result = darkManager.CatalogoOpcionesValores.Add();
                 if (result)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Edit), new { id = CatalogoOpcionesValores.IdCatalogoOpciones});
                 }
                 else
                 {
                     ModelState.AddModelError("", "error al insertar");
+                    ViewData["OpcionesCatalogos"] = new SelectList(darkManager.CatalogoOpciones.Get().OrderBy(a => a.Descripcion), "IdCatalogoOpciones", "Descripcion", CatalogoOpcionesValores.IdCatalogoOpciones);
                     return View(CatalogoOpcionesValores);
                 }
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                ModelState.AddModelError("", "error al insertar");
+                ModelState.AddModelError("", ex.Message);
+                ViewData["OpcionesCatalogos"] = new SelectList(darkManager.CatalogoOpciones.Get().OrderBy(a => a.Descripcion), "IdCatalogoOpciones", "Descripcion", CatalogoOpcionesValores.IdCatalogoOpciones);
                 return View(CatalogoOpcionesValores);
             }
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditValue(CatalogoOpcionesValores CatalogoOpcionesValores)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ViewData["OpcionesCatalogos"] = new SelectList(darkManager.CatalogoOpciones.Get().OrderBy(a => a.Descripcion), "IdCatalogoOpciones", "Descripcion", CatalogoOpcionesValores.IdCatalogoOpciones);
+                    return View(CatalogoOpcionesValores);
+                }
+
+                darkManager.CatalogoOpcionesValores.Element = CatalogoOpcionesValores;
+                var result = darkManager.CatalogoOpcionesValores.Update();
+                if (result)
+                {
+                    return RedirectToAction(nameof(Edit), new { id = CatalogoOpcionesValores.IdCatalogoOpciones });
+                }
+                else
+                {
+                    ModelState.AddModelError("", "error al insertar");
+                    ViewData["OpcionesCatalogos"] = new SelectList(darkManager.CatalogoOpciones.Get().OrderBy(a => a.Descripcion), "IdCatalogoOpciones", "Descripcion", CatalogoOpcionesValores.IdCatalogoOpciones);
+                    return View(CatalogoOpcionesValores);
+                }
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                ViewData["OpcionesCatalogos"] = new SelectList(darkManager.CatalogoOpciones.Get().OrderBy(a => a.Descripcion), "IdCatalogoOpciones", "Descripcion", CatalogoOpcionesValores.IdCatalogoOpciones);
+                return View(CatalogoOpcionesValores);
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteValue(int id)
+        {
+            try
+            {
+                var objeto = darkManager.CatalogoOpcionesValores.Get(id);
+                if (objeto == null)
+                {
+                    return NotFound();
+                }
+                darkManager.CatalogoOpcionesValores.Element = new CatalogoOpcionesValores { IdCatalogoOpcionesValores = id };
+                if (darkManager.CatalogoOpcionesValores.Delete())
+                {
+                    return RedirectToAction(nameof(Edit), new { id = objeto.IdCatalogoOpciones });
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound();
+            }
+        }
+        
         #endregion
     }
 }

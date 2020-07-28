@@ -21,11 +21,17 @@ namespace GPSInformation
         #region Variables de acceso
         public virtual DarkAttributes<CatalogoOpciones> CatalogoOpciones { get; set; }
         public virtual DarkAttributes<CatalogoOpcionesValores> CatalogoOpcionesValores { get; set; }
+        public virtual DarkAttributes<Sociedad> Sociedad { get; set; }
+        public virtual DarkAttributes<Direccion> Direccion { get; set; }
         #endregion
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
         {
             this.StringConnectionDb = Configuration.GetConnectionString("Default");
+        }
+        ~DarkManager()
+        {
+
         }
         #endregion
 
@@ -45,6 +51,14 @@ namespace GPSInformation
             {
                 CatalogoOpcionesValores = new DarkAttributes<CatalogoOpcionesValores>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.Sociedad)
+            {
+                Sociedad = new DarkAttributes<Sociedad>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.Direccion)
+            {
+                Direccion = new DarkAttributes<Direccion>(dBConnection);
+            }
         }
 
         public void OpenConnection()
@@ -60,13 +74,16 @@ namespace GPSInformation
                 dBConnection.CloseDataBaseAccess();
             }
         }
+        
         #endregion
     }
 
     public enum GpsManagerObjects
     {
         CatalogoOpciones = 1,
-        CatalogoOpcionesValores = 2
+        CatalogoOpcionesValores = 2,
+        Sociedad = 3,
+        Direccion = 4,
     }
 
 }

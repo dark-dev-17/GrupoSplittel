@@ -35,7 +35,7 @@ namespace GPSInformation.DBManagers
             }
             else
             {
-                Nombre = Nametable;
+                Nombre = typeof(T).Name;
             }
             return Nombre;
         }
@@ -68,7 +68,15 @@ namespace GPSInformation.DBManagers
 
         public bool Delete()
         {
-            return ActionsObject(DbManagerTypes.Delete);
+            TableDB tableDefinifiton = GetClassAttribute();
+            if (tableDefinifiton.IsStoreProcedure)
+            {
+                return ActionsObject(DbManagerTypes.Delete);
+            }
+            else
+            {
+                return ActionsObjectCode(DbManagerTypes.Delete, tableDefinifiton);
+            }
         }
         public int GetLastId()
         {
@@ -151,25 +159,31 @@ namespace GPSInformation.DBManagers
 
             System.Data.SqlClient.SqlDataReader Data = dBConnection.GetDataReader(SqlStatements);
             List<T> Response = new List<T>();
-
-            //mapeo de tabla con los nombres de los campos ya existentes
-            if (tableDefinifiton.IsMappedByLabels)
+            while (Data.Read())
             {
-                while (Data.Read())
+                object exFormAsObj = Activator.CreateInstance(typeof(T));
+                foreach (var prop in typeof(T).GetProperties())
                 {
-                    object exFormAsObj = Activator.CreateInstance(typeof(T));
-                    foreach (var prop in typeof(T).GetProperties())
+                    PropertyInfo propertyInfo = exFormAsObj.GetType().GetProperty(prop.Name);
+                    ColumnDB hiddenAttribute = (ColumnDB)propertyInfo.GetCustomAttribute(typeof(ColumnDB));
+
+                    if (hiddenAttribute == null)
                     {
-                        PropertyInfo propertyInfo = exFormAsObj.GetType().GetProperty(prop.Name);
-                        ColumnDB hiddenAttribute = (ColumnDB)propertyInfo.GetCustomAttribute(typeof(ColumnDB));
+                        throw new Exceptions.GpExceptions(string.Format("The attribute was not found in the attribute '{0}', if you don´t want to use mapTable, please set IsMappedByLabels = false", prop.Name));
+                    }
 
-                        if (hiddenAttribute == null)
+                    if (hiddenAttribute.IsMapped)
+                    {
+                        string NombrePropiedad = "";
+                        if (tableDefinifiton.IsMappedByLabels)
                         {
-                            throw new Exceptions.GpExceptions(string.Format("The attribute was not found in the attribute '{0}', if you don´t want to use mapTable, please set IsMappedByLabels = false", prop.Name));
+                            NombrePropiedad = hiddenAttribute.Name.Trim();
                         }
-
-                        var value = Data.GetValue(Data.GetOrdinal(hiddenAttribute.Name.Trim()));
-
+                        else
+                        {
+                            NombrePropiedad = prop.Name;
+                        }
+                        var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad));
                         if (prop.PropertyType.Equals(typeof(DateTime)))
                         {
                             propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.DateTime), null);
@@ -191,44 +205,11 @@ namespace GPSInformation.DBManagers
                             propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, propertyInfo.PropertyType), null);
                         }
                     }
-                    Response.Add((T)exFormAsObj);
                 }
-                Data.Close();
+                Response.Add((T)exFormAsObj);
             }
-            else
-            {
-                while (Data.Read())
-                {
-                    object exFormAsObj = Activator.CreateInstance(typeof(T));
-                    foreach (var prop in typeof(T).GetProperties())
-                    {
-                        var value = Data.GetValue(Data.GetOrdinal(prop.Name));
-                        PropertyInfo propertyInfo = exFormAsObj.GetType().GetProperty(prop.Name);
-                        if (prop.PropertyType.Equals(typeof(DateTime)))
-                        {
-                            propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.DateTime), null);
-                        }
-                        if (prop.PropertyType.Equals(typeof(TimeSpan)))
-                        {
-                            propertyInfo.SetValue(exFormAsObj, value, null);
-                        }
-                        if (prop.PropertyType.Equals(typeof(double)))
-                        {
-                            propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.Double), null);
-                        }
-                        if (prop.PropertyType.Equals(typeof(string)))
-                        {
-                            propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.String), null);
-                        }
-                        if (prop.PropertyType.Equals(typeof(int)))
-                        {
-                            propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, propertyInfo.PropertyType), null);
-                        }
-                    }
-                    Response.Add((T)exFormAsObj);
-                }
-                Data.Close();
-            }
+            Data.Close();
+            
             return Response;
         }
         private bool ActionsObject(DbManagerTypes dbManagerTypes)
@@ -301,6 +282,13 @@ namespace GPSInformation.DBManagers
                         sentenciaVariables = hiddenAttribute.Name + " = @" + hiddenAttribute.Name + "";
                     }
                 }
+                else if (dbManagerTypes == DbManagerTypes.Delete)
+                {
+                    if (hiddenAttribute.IsKey)
+                    {
+                        sentenciaVariables = hiddenAttribute.Name + " = @" + hiddenAttribute.Name + "";
+                    }
+                }
                 else
                 {
                     throw new Exceptions.GpExceptions(string.Format("Delete action is not active"));
@@ -343,6 +331,24 @@ namespace GPSInformation.DBManagers
                 dBConnection.StartUpdate(Statement, procedureModels);
                 result = true;
             }
+            else if (dbManagerTypes == DbManagerTypes.Delete)
+            {
+                string Statement = string.Format("DELETE FROM  {0} WHERE {1} ", tableDefinifiton.Name, sentenciaVariables);
+                List<ProcedureModel> procedureModels = new List<ProcedureModel>();
+                foreach (var prop in typeof(T).GetProperties())
+                {
+                    PropertyInfo propertyInfo = Element.GetType().GetProperty(prop.Name);
+                    ColumnDB hiddenAttribute = (ColumnDB)propertyInfo.GetCustomAttribute(typeof(ColumnDB));
+
+                    if (hiddenAttribute.IsMapped && hiddenAttribute.IsKey)
+                    {
+                        procedureModels.Add(new ProcedureModel { Namefield = hiddenAttribute.Name, value = propertyInfo.GetValue(Element) });
+                    }
+                }
+
+                dBConnection.StartDelete(Statement, procedureModels);
+                result = true;
+            }
             else
             {
                 throw new Exceptions.GpExceptions(string.Format("Delete action is not active"));
@@ -356,7 +362,7 @@ namespace GPSInformation.DBManagers
 
             if (tableDefinifiton == null)
             {
-                throw new Exceptions.GpExceptions(string.Format("The attribute was not found in the class '{0}'.", Nametable));
+                throw new Exceptions.GpExceptions(string.Format("The attribute was not found in the class '{0}'.", typeof(T).Name));
             }
             return tableDefinifiton;
         }

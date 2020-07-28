@@ -79,6 +79,31 @@ namespace GPSInformation
                 throw new GpExceptions(string.Format("SqlException - {0}", ex.Message));
             }
         }
+        public void StartDelete(string statement, List<ProcedureModel> DataModel)
+        {
+            try
+            {
+                if (DataModel == null)
+                {
+                    throw new GpExceptions("Sin parametros SP");
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter();
+                Command = new SqlCommand(statement, SqlConnection);
+                DataModel.ForEach(param => {
+                    SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                    sqlParameter.Direction = ParameterDirection.Input;
+                    Command.Parameters.Add(sqlParameter);
+                });
+
+                adapter.DeleteCommand = Command;
+                adapter.DeleteCommand.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                throw new GpExceptions(string.Format("SqlException - {0}", ex.Message));
+            }
+        }
         public void StartProcedure(string ProcedureName, List<ProcedureModel> DataModel)
         {
             Command = new SqlCommand(ProcedureName, SqlConnection);
