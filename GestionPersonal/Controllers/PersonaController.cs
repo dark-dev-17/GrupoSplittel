@@ -11,44 +11,44 @@ using Microsoft.Extensions.Configuration;
 
 namespace GestionPersonal.Controllers
 {
-    public class DireccionController : Controller
+    public class PersonaController : Controller
     {
         private DarkManager darkManager;
-        private SelectList sociedads;
-        private SelectList Direcciones;
+        private SelectList Generos;
+        private SelectList EstadosCiviles;
 
 
-        public DireccionController(IConfiguration configuration)
+
+        public PersonaController(IConfiguration configuration)
         {
             darkManager = new DarkManager(configuration);
             darkManager.OpenConnection();
-            darkManager.LoadObject(GpsManagerObjects.Direccion);
-            darkManager.LoadObject(GpsManagerObjects.Sociedad);
+            darkManager.LoadObject(GpsManagerObjects.Persona);
+            darkManager.LoadObject(GpsManagerObjects.CatalogoOpcionesValores);
 
-            sociedads = new SelectList(darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList(), "IdSociedad", "Descripcion");
-            Direcciones = new SelectList(darkManager.Direccion.Get().OrderBy(a => a.Nombre).ToList(), "IdDireccion", "Nombre");
+            Generos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 2, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            EstadosCiviles = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 3, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
         }
 
-        ~DireccionController()
+        ~PersonaController()
         {
 
         }
 
-        // GET: Direccion
+        // GET: Persona
         public ActionResult Index()
         {
-            var result = darkManager.Direccion.Get().OrderBy(a => a.Nombre).ToList();
-            result.ForEach(a => {
-                a.Sociedad = darkManager.Sociedad.Get(a.IdSociedad);
-                a.DireccionPa = darkManager.Direccion.Get(a.DireccionParent);
-            });
+            var result = darkManager.Persona.Get().OrderBy(a => a.Nombre).ToList();
+            //result.ForEach(a => {
+            //    a.Departamento = darkManager.Departamento.Get(a.IdDepartamento);
+            //});
             return View(result);
         }
 
-        // GET: Direccion/Details/5
+        // GET: Persona/Details/5
         public ActionResult Details(int id)
         {
-            var result = darkManager.Direccion.Get(id);
+            var result = darkManager.Persona.Get(id);
 
             if(result == null)
             {
@@ -57,59 +57,59 @@ namespace GestionPersonal.Controllers
             return View(result);
         }
 
-        // GET: Direccion/Create
+        // GET: Persona/Create
         public ActionResult Create()
         {
-            ViewData["Sociedades"] = sociedads;
-            ViewData["Direcciones"] = Direcciones;
+            ViewData["Generos"] = Generos;
+            ViewData["EstadosCiviles"] = EstadosCiviles;
             return View();
         }
 
-        // POST: Direccion/Create
+        // POST: Persona/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Direccion Direccion)
+        public ActionResult Create(Persona Persona)
         {
             try
             {
 
                 if (!ModelState.IsValid)
                 {
-                    ViewData["Sociedades"] = sociedads;
-                    ViewData["Direcciones"] = Direcciones;
-                    return View(Direccion);
+                    ViewData["Generos"] = Generos;
+                    ViewData["EstadosCiviles"] = EstadosCiviles;
+                    return View(Persona);
                 }
 
-                darkManager.Direccion.Element = Direccion;
-                bool result = darkManager.Direccion.Add();
+                darkManager.Persona.Element = Persona;
+                bool result = darkManager.Persona.Add();
                 if (result)
                 {
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    ViewData["Sociedades"] = sociedads;
-                    ViewData["Direcciones"] = Direcciones;
+                    ViewData["Generos"] = Generos;
+                    ViewData["EstadosCiviles"] = EstadosCiviles;
                     ModelState.AddModelError("", darkManager.GetLastMessage());
-                    return View(Direccion);
+                    return View(Persona);
                 }
                 
             }
             catch(GPSInformation.Exceptions.GpExceptions ex)
             {
-                ViewData["Sociedades"] = sociedads;
-                ViewData["Direcciones"] = Direcciones;
+                ViewData["Generos"] = Generos;
+                ViewData["EstadosCiviles"] = EstadosCiviles;
                 ModelState.AddModelError("", ex.Message);
-                return View(Direccion);
+                return View(Persona);
             }
         }
 
-        // GET: Direccion/Edit/5
+        // GET: Persona/Edit/5
         public ActionResult Edit(int id)
         {
-            ViewData["Sociedades"] = sociedads;
-            ViewData["Direcciones"] = Direcciones;
-            var result = darkManager.Direccion.Get(id);
+            ViewData["Generos"] = Generos;
+            ViewData["EstadosCiviles"] = EstadosCiviles;
+            var result = darkManager.Persona.Get(id);
             if (result == null)
             {
                 return NotFound();
@@ -117,52 +117,52 @@ namespace GestionPersonal.Controllers
             return View(result);
         }
 
-        // POST: Direccion/Edit/5
+        // POST: Persona/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Direccion Direccion)
+        public ActionResult Edit(Persona Persona)
         {
             try
             {
 
                 if (!ModelState.IsValid)
                 {
-                    ViewData["Sociedades"] = sociedads;
-                    ViewData["Direcciones"] = Direcciones;
-                    return View(Direccion);
+                    ViewData["Generos"] = Generos;
+                    ViewData["EstadosCiviles"] = EstadosCiviles;
+                    return View(Persona);
                 }
 
-                darkManager.Direccion.Element = Direccion;
-                bool result = darkManager.Direccion.Update();
+                darkManager.Persona.Element = Persona;
+                bool result = darkManager.Persona.Update();
                 if (result)
                 {
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    ViewData["Sociedades"] = sociedads;
-                    ViewData["Direcciones"] = Direcciones;
+                    ViewData["Generos"] = Generos;
+                    ViewData["EstadosCiviles"] = EstadosCiviles;
                     ModelState.AddModelError("", darkManager.GetLastMessage());
-                    return View(Direccion);
+                    return View(Persona);
                 }
 
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                ViewData["Sociedades"] = sociedads;
-                ViewData["Direcciones"] = Direcciones;
+                ViewData["Generos"] = Generos;
+                ViewData["EstadosCiviles"] = EstadosCiviles;
                 ModelState.AddModelError("", ex.Message);
-                return View(Direccion);
+                return View(Persona);
             }
         }
 
-        // GET: Direccion/Delete/5
+        // GET: Persona/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Direccion/Delete/5
+        // POST: Persona/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

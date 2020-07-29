@@ -4,42 +4,41 @@
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
 
-<h4>Direccion</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdDireccion" class="control-label"></label>
-                <input asp-for="IdDireccion" class="form-control" />
-                <span asp-validation-for="IdDireccion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
+<div data-label="Informacion" class="df-example demo-forms">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <label asp-for="Nombre" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input type="hidden" asp-for="IdDireccion" class="form-control" />
+                <input asp-for="Nombre" placeholder="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IdSociedad" class="control-label"></label>
-                <input asp-for="IdSociedad" class="form-control" />
+        </div>
+        <div class="form-group row">
+            <label asp-for="IdSociedad" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <select asp-for="IdSociedad" asp-items="ViewBag.Sociedades" class="custom-select">
+                    <option value="0">Selecciona una opción</option>
+                </select>
                 <span asp-validation-for="IdSociedad" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DireccionParent" class="control-label"></label>
-                <input asp-for="DireccionParent" class="form-control" />
+        </div>
+        <div class="form-group row">
+            <label asp-for="DireccionParent" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <select asp-for="DireccionParent" asp-items="ViewBag.Direcciones" class="custom-select">
+                    <option value="0">Direccion raiz</option>
+                </select>
                 <span asp-validation-for="DireccionParent" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+        <div class="form-group row mg-b-0">
+            <div class="col-sm-12 text-right">
+                <a href="@Url.Action("Index","Direccion")" class="btn btn-sm btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

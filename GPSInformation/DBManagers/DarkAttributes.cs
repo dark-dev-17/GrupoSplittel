@@ -183,27 +183,33 @@ namespace GPSInformation.DBManagers
                         {
                             NombrePropiedad = prop.Name;
                         }
-                        var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad));
+                        
                         if (prop.PropertyType.Equals(typeof(DateTime)))
                         {
+                            var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? DateTime.Now : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
                             propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.DateTime), null);
                         }
                         if (prop.PropertyType.Equals(typeof(TimeSpan)))
                         {
+                            var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? null : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
                             propertyInfo.SetValue(exFormAsObj, value, null);
                         }
                         if (prop.PropertyType.Equals(typeof(double)))
                         {
+                            var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? 0 : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
                             propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.Double), null);
                         }
                         if (prop.PropertyType.Equals(typeof(string)))
                         {
+                            var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? "" : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
                             propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.String), null);
                         }
                         if (prop.PropertyType.Equals(typeof(int)))
                         {
+                            var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? 0 : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
                             propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, propertyInfo.PropertyType), null);
                         }
+                        
                     }
                 }
                 Response.Add((T)exFormAsObj);

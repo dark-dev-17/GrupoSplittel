@@ -34,5 +34,10 @@
         <partial name="_Scripts" />
     </environment>
     @RenderSection("Scripts", required: false)
+    <script>
+        $(document).ready(function() {
+            $('.table').DataTable();
+        });
+</script>
 </body>
 </html>

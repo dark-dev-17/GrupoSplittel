@@ -1,0 +1,38 @@
+﻿@model GPSInformation.Models.Departamento
+
+
+@{
+    ViewData["Title"] = "Editar departamento";
+}
+<h4>@ViewData["Title"]</h4>
+<br />
+<div data-label="Informacion" class="df-example demo-forms">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <label asp-for="Nombre" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input type="hidden" asp-for="IdDepartamento" class="form-control" />
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="IdDireccion" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <select asp-for="IdDireccion" asp-items="ViewBag.Direcciones" class="custom-select">
+                    <option value="0">Selecciona una dirección</option>
+                </select>
+                <span asp-validation-for="IdDireccion" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mg-b-0">
+            <div class="col-sm-12 text-right">
+                <a asp-action="Index" class="btn btn-sm btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+            </div>
+        </div>
+    </form>
+</div>
+

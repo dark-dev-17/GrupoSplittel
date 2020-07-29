@@ -23,6 +23,9 @@ namespace GPSInformation
         public virtual DarkAttributes<CatalogoOpcionesValores> CatalogoOpcionesValores { get; set; }
         public virtual DarkAttributes<Sociedad> Sociedad { get; set; }
         public virtual DarkAttributes<Direccion> Direccion { get; set; }
+        public virtual DarkAttributes<Departamento> Departamento { get; set; }
+        public virtual DarkAttributes<Puesto> Puesto { get; set; }
+        public virtual DarkAttributes<Persona> Persona { get; set; }
         #endregion
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
@@ -59,6 +62,18 @@ namespace GPSInformation
             {
                 Direccion = new DarkAttributes<Direccion>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.Departamento)
+            {
+                Departamento = new DarkAttributes<Departamento>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.Puesto)
+            {
+                Puesto = new DarkAttributes<Puesto>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.Persona)
+            {
+                Persona = new DarkAttributes<Persona>(dBConnection);
+            }
         }
 
         public void OpenConnection()
@@ -84,6 +99,9 @@ namespace GPSInformation
         CatalogoOpcionesValores = 2,
         Sociedad = 3,
         Direccion = 4,
+        Departamento = 5,
+        Puesto = 6,
+        Persona = 7,
     }
 
 }

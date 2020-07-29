@@ -37,15 +37,20 @@
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdSociedad)
+                @Html.DisplayFor(modelItem => item.Sociedad.Descripcion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DireccionParent)
+                @if (item.DireccionPa != null)
+                {
+                    @Html.DisplayFor(modelItem => item.DireccionPa.Nombre)
+                }
+                else
+                {
+                    <span>Direccion Raíz</span>
+                }
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit", "Edit", new { id=item.IdDireccion }) 
             </td>
         </tr>
 }
