@@ -2,104 +2,172 @@
 
 @{
     ViewData["Title"] = "Edit";
+
+    GPSInformation.Models.InformacionMedica informacionMedica = new GPSInformation.Models.InformacionMedica() { IdPersona = Model.IdPersona };
+    GPSInformation.Models.Empleado EmpleadoEmpleado = new GPSInformation.Models.Empleado() { IdPersona = Model.IdPersona, Ingreso = DateTime.Now };
 }
-
-<h2>Edit</h2>
-
-<h4>Persona</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdPersona" class="control-label"></label>
-                <input asp-for="IdPersona" class="form-control" />
-                <span asp-validation-for="IdPersona" class="text-danger"></span>
+<h4>@ViewData["Title"]</h4>
+<br />
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Información personal</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link " id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Información medica</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link " id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Información del empleado</a>
+    </li>
+</ul>
+<div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="App_editEmpleado">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <partial name="../Persona/Edit" model="Model" />
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        @if (ViewBag.InfoMedica == null)
+        {
+            <form v-on:submit.prevent="CreateInformacionMedica" id="CreateInformacionMedica">
+                <partial name="../InformacionMedica/Create" model="informacionMedica"/>
+            </form>
+        }
+        else
+        {
+            <form v-on:submit.prevent="EditInformacionMedica" id="EditInformacionMedica">
+                <partial name="../InformacionMedica/Edit" model="ViewBag.InfoMedica" />
+            </form>
+        }
+    </div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        @if (ViewBag.InfoEmpleado == null)
+        {
+            <div id="CreateInfoEmpleado">
+                <partial name="../SplittelEmpleado/Create" model="EmpleadoEmpleado" />
             </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ApellidoPaterno" class="control-label"></label>
-                <input asp-for="ApellidoPaterno" class="form-control" />
-                <span asp-validation-for="ApellidoPaterno" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ApellidoMaterno" class="control-label"></label>
-                <input asp-for="ApellidoMaterno" class="form-control" />
-                <span asp-validation-for="ApellidoMaterno" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nacimiento" class="control-label"></label>
-                <input asp-for="Nacimiento" class="form-control" />
-                <span asp-validation-for="Nacimiento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdGenero" class="control-label"></label>
-                <input asp-for="IdGenero" class="form-control" />
-                <span asp-validation-for="IdGenero" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdEstadoCivil" class="control-label"></label>
-                <input asp-for="IdEstadoCivil" class="form-control" />
-                <span asp-validation-for="IdEstadoCivil" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RFC" class="control-label"></label>
-                <input asp-for="RFC" class="form-control" />
-                <span asp-validation-for="RFC" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CURP" class="control-label"></label>
-                <input asp-for="CURP" class="form-control" />
-                <span asp-validation-for="CURP" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TelefonoPersonal" class="control-label"></label>
-                <input asp-for="TelefonoPersonal" class="form-control" />
-                <span asp-validation-for="TelefonoPersonal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TelefonoFijo" class="control-label"></label>
-                <input asp-for="TelefonoFijo" class="form-control" />
-                <span asp-validation-for="TelefonoFijo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CodigoPostal" class="control-label"></label>
-                <input asp-for="CodigoPostal" class="form-control" />
-                <span asp-validation-for="CodigoPostal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Colonia" class="control-label"></label>
-                <input asp-for="Colonia" class="form-control" />
-                <span asp-validation-for="Colonia" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Calle" class="control-label"></label>
-                <input asp-for="Calle" class="form-control" />
-                <span asp-validation-for="Calle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Empleado" class="control-label"></label>
-                <input asp-for="Empleado" class="form-control" />
-                <span asp-validation-for="Empleado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+        }
+        else
+        {
+            <form v-on:submit.prevent="EditInfoEmpleado" id="EditInfoEmpleado">
+                <partial name="../SplittelEmpleado/Edit" model="ViewBag.InfoEmpleado" />
+            </form>
+        }
     </div>
 </div>
+@Html.AntiForgeryToken()
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    <script>
+        var App_editEmpleado = new Vue({
+            el: "#App_editEmpleado",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+            },
+            mounted() {
+            },
+            methods: {
+                createSplittelEmpleado: function () {
+                    Swal.fire({
+                        title: "¿Deseas guardar los cambios?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then((result) => {
+                        if (result.value) {
+                           
+                            axios.post('@Url.Action("Create","SplittelEmpleado")', $('#createSplittelEmpleado').serialize(), null).then(response => {
+                                document.getElementById("CreateInfoEmpleado").innerHTML = "";
+                                document.getElementById("CreateInfoEmpleado").innerHTML = response.data;
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        document.getElementById("CreateInfoEmpleado").innerHTML = "";
+                                        document.getElementById("CreateInfoEmpleado").innerHTML = response.data;
+                                    }
+                                }
+                            }).finally()
+                        }
+                    })
+                },
+                CreateInformacionMedica: function (event) {
+                    event.preventDefault()
+                    Swal.fire({
+                        title: "¿Deseas guardar los cambios?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then((result) => {
+                        if (result.value) {
+                            let data = {
+                                InformacionMedica: this.getFormData($('#CreateInformacionMedica'))
+                            }
+                            axios.post('@Url.Action("Create","InformacionMedica")', $('#CreateInformacionMedica').serialize(), null).then(response => {
+                                document.getElementById("CreateInformacionMedica").innerHTML = "";
+                                document.getElementById("CreateInformacionMedica").innerHTML = response.data;
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        document.getElementById("CreateInformacionMedica").innerHTML = "";
+                                        document.getElementById("CreateInformacionMedica").innerHTML = response.data;
+                                    }
+                                }
+                            }).finally()
+                        }
+                    })
+                },
+                EditInformacionMedica: function (event ) {
+                    event.preventDefault()
+                    Swal.fire({
+                        title: "¿Deseas guardar los cambios?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then((result) => {
+                        if (result.value) {
+                            let data = {
+                                InformacionMedica: this.getFormData($('#EditInformacionMedica'))
+                            }
+                            axios.post('@Url.Action("Edit","InformacionMedica")', $('#EditInformacionMedica').serialize(), null).then(response => {
+                                document.getElementById("EditInformacionMedica").innerHTML = "";
+                                document.getElementById("EditInformacionMedica").innerHTML = response.data;
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        document.getElementById("EditInformacionMedica").innerHTML = "";
+                                        document.getElementById("EditInformacionMedica").innerHTML = response.data;
+                                    }
+                                }
+                            }).finally()
+                        }
+                    })
+                },
+                getFormData: function($form){
+                    var unindexed_array = $form.serializeArray();
+                    var indexed_array = {};
 
+                    $.map(unindexed_array, function(n, i){
+                        indexed_array[n['name']] = n['value'];
+                    });
+
+                    return indexed_array;
+                },
+                ProcessBadRequest: function (data) {
+                    console.log(data)
+                    console.log(typeof(data))
+                    data.forEach(([key, value]) => {
+                        console.log(`${key} ${value}`);
+                    });
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,64 @@
+﻿@model GPSInformation.Models.InformacionMedica
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div data-label="Informacion" class="df-example demo-forms">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row form-group">
+        <label asp-for="Alergias" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4">
+            <input type="hidden" asp-for="IdPersona" class="form-control" />
+            @*<input type="hidden" asp-for="IdInformacionMedica" class="form-control" />*@
+            <select asp-for="Alergias" asp-items="ViewBag.Alergias" class="custom-select">
+                <option value="0">Selecciona una opcion</option>
+            </select>
+            <span asp-validation-for="Alergias" class="text-danger"></span>
+        </div>
+        <label asp-for="TipoSangre" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4">
+            <select asp-for="TipoSangre" asp-items="ViewBag.TiposSangre" class="custom-select">
+                <option value="0">Selecciona un tipo de sangre</option>
+            </select>
+            <span asp-validation-for="TipoSangre" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label asp-for="Altura" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4">
+            <input type="number" asp-for="Altura" class="form-control" />
+            <span asp-validation-for="Altura" class="text-danger"></span>
+        </div>
+        <label asp-for="Peso" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4">
+            <input type="number" asp-for="Peso" class="form-control" />
+            <span asp-validation-for="Peso" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label asp-for="Talla" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4">
+            <input type="number" asp-for="Talla" class="form-control" />
+            <span asp-validation-for="Talla" class="text-danger"></span>
+        </div>
+        <label asp-for="IMC" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4">
+            <input type="number" asp-for="IMC" class="form-control" />
+            <span asp-validation-for="IMC" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label asp-for="Comentarios" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <textarea asp-for="Comentarios" class="form-control"></textarea>
+            <span asp-validation-for="Comentarios" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row mg-b-0">
+        <div class="col-sm-12 text-right">
+            <button type="reset" class="btn btn-sm btn-secondary">Cancelar</button>
+            <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+        </div>
+    </div>
+</div>
+

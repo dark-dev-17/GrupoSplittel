@@ -2,349 +2,137 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GPDataInformation;
-using GPDataInformation.Models;
+using GPSInformation;
+using GPSInformation.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
+using static Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary;
 
-namespace GestionPersonal.Controllers
+namespace GestionEmpleadol.Controllers
 {
     public class SplittelEmpleadoController : Controller
     {
-        private GPDataInformation.GpsManager GpsManager;
+        private DarkManager darkManager;
+        private SelectList TipoNomina;
+        private SelectList EstatusEmpleado;
+        private SelectList Puestos;
+        private SelectList Sociedades;
+        private SelectList Departamentos;
 
-        private List<CatalogoOpcionesValores> Generos;
-        private List<CatalogoOpcionesValores> EstadosCiviles;
-        private List<CatalogoOpcionesValores> TipoSangre;
-        private List<CatalogoOpcionesValores> Alergia;
-        private List<CatalogoOpcionesValores> TipoNomina;
-        private List<Sociedad> Sociedades;
-        private List<Departamento> Departamentos;
-        private List<Puesto> Puestos;
+
 
         public SplittelEmpleadoController(IConfiguration configuration)
         {
-            GpsManager = new GPDataInformation.GpsManager(configuration);
-            GpsManager.OpenConnection();
-            GpsManager.LoadObject(GPDataInformation.GpsManagerObjects.Persona);
-            GpsManager.LoadObject(GPDataInformation.GpsManagerObjects.InformacionMedica);
-            GpsManager.LoadObject(GPDataInformation.GpsManagerObjects.Empleado);
-            GpsManager.LoadObject(GPDataInformation.GpsManagerObjects.PersonaContacto);
-            GpsManager.LoadObject(GPDataInformation.GpsManagerObjects.Sociedad);
-            GpsManager.LoadObject(GPDataInformation.GpsManagerObjects.Departamento);
-            GpsManager.LoadObject(GPDataInformation.GpsManagerObjects.Puesto);
-
-            Generos = GpsManager.CatalogoOpcionesValores.Get(a => a.IdCatalogoOpciones == 2);
-            EstadosCiviles = GpsManager.CatalogoOpcionesValores.Get(a => a.IdCatalogoOpciones == 3);
-            TipoSangre = GpsManager.CatalogoOpcionesValores.Get(a => a.IdCatalogoOpciones == 4);
-            Alergia = GpsManager.CatalogoOpcionesValores.Get(a => a.IdCatalogoOpciones == 5);
-            TipoNomina = GpsManager.CatalogoOpcionesValores.Get(a => a.IdCatalogoOpciones == 6);
-
-            Sociedades = GpsManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList();
-            Departamentos = GpsManager.Departamento.Get().OrderBy(a => a.Nombre).ToList();
-            Puestos = GpsManager.Puesto.Get().OrderBy(a => a.Nombre).ToList();
-
+            darkManager = new DarkManager(configuration);
+            darkManager.OpenConnection();
+            darkManager.LoadObject(GpsManagerObjects.Empleado);
+            darkManager.LoadObject(GpsManagerObjects.CatalogoOpcionesValores);
+            darkManager.LoadObject(GpsManagerObjects.Puesto);
+            darkManager.LoadObject(GpsManagerObjects.Sociedad);
+            darkManager.LoadObject(GpsManagerObjects.Departamento);
         }
+
         ~SplittelEmpleadoController()
         {
-            SomeMethod();
+
         }
 
-        // GET: SplittelEmpleado
-        public ActionResult Index()
+        public ActionResult Get(int id)
         {
-            return View(GpsManager.Persona.Get().OrderBy(a => a.ApellidoPaterno));
+            var result = darkManager.Empleado.Get(id);
+            if (result == null)
+                return BadRequest("No se encontro");
+            return Ok(result);
         }
 
-        public ActionResult Chech()
+       // POST: Empleado/Create
+       [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult Create(Empleado Empleado)
         {
-            return Ok(GpsManager.CatalogoOpciones.Get());
-        }
+            TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            EstatusEmpleado = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 7, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
 
-        // GET: SplittelEmpleado/Create
-        public ActionResult Create()
-        {
-            ViewData["Generos"] = new SelectList(Generos, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["EstadosCiviles"] = new SelectList(EstadosCiviles, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TipoSangre"] = new SelectList(TipoSangre, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Alergia"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-            return View(new SplittelEmpleado());
-        }
+            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre");
+            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre");
+            Sociedades = new SelectList(darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList(), "IdSociedad", "Descripcion");
+            ViewData["TipoNomina"] = TipoNomina;
+            ViewData["EstatusEmpleado"] = EstatusEmpleado;
+            ViewData["Departamentos"] = Departamentos;
+            ViewData["Puestos"] = Puestos;
+            ViewData["Sociedades"] = Sociedades;
 
-        // GET: SplittelEmpleado/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            ViewData["Generos"] = new SelectList(Generos, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["EstadosCiviles"] = new SelectList(EstadosCiviles, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TipoSangre"] = new SelectList(TipoSangre, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Alergia"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-
-            ViewData["TipoNomina"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Sociedades"] = new SelectList(Sociedades, "IdSociedad", "Descripcion");
-            ViewData["Departamentos"] = new SelectList(Departamentos, "IdDepartamento", "Nombre");
-            ViewData["Puestos"] = new SelectList(Puestos, "IdPuesto", "Nombre");
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var respuesta = GpsManager.Persona.Get(id);
-            if(respuesta == null)
-            {
-                return NotFound();
-            }
-            SplittelEmpleado splittelEmpleado = new SplittelEmpleado();
-            splittelEmpleado.persona = respuesta;
-            var respuestaMed = GpsManager.InformacionMedica.GetByColumn(respuesta.IdPersona+"", "IdPersona");
-            splittelEmpleado.informacionMedica = (respuestaMed == null) ? new InformacionMedica() { IdPersona = respuesta.IdPersona } : respuestaMed;
-            var respuestaEmp = GpsManager.Empleado.GetByColumn(respuesta.IdPersona + "", "IdPersona");
-            splittelEmpleado.empleado = (respuestaEmp == null) ? new Empleado() { IdPersona = respuesta.IdPersona } : respuestaEmp;
-            var respuestaPersonas = GpsManager.PersonaContacto.Get(respuesta.IdPersona + "", "IdPersona");
-            splittelEmpleado.PersonaContacto = (respuestaPersonas == null) ? new List<PersonaContacto>() : respuestaPersonas;
-            return View(splittelEmpleado);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreatePersona(Persona Persona)
-        {
-            ViewData["Generos"] = new SelectList(Generos, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["EstadosCiviles"] = new SelectList(EstadosCiviles, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TipoSangre"] = new SelectList(TipoSangre, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Alergia"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-
-            ViewData["TipoNomina"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Sociedades"] = new SelectList(Sociedades, "IdSociedad", "Descripcion");
-            ViewData["Departamentos"] = new SelectList(Departamentos, "IdDepartamento", "Nombre");
-            ViewData["Puestos"] = new SelectList(Puestos, "IdPuesto", "Nombre");
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    GpsManager.Persona.Element = Persona;
-                    var result = GpsManager.Persona.Add();
-                    if(result == false)
-                    {
-                        ModelState.AddModelError("", GpsManager.GetLastMessage());
-                        return View("Create", new SplittelEmpleado { persona = Persona });
-                    }
-                    return RedirectToAction(nameof(Index));
+                    return PartialView(Empleado);
+                }
+
+                darkManager.Empleado.Element = Empleado;
+                darkManager.Empleado.Element.Egreso = DateTime.Now;
+
+                bool result = darkManager.Empleado.Add();
+                if (result)
+                {
+                    return PartialView("Edit",Empleado);
                 }
                 else
                 {
-                    return View("Create", new SplittelEmpleado { persona = Persona });
+                    return PartialView(Empleado);
                 }
             }
-            catch (GpExceptions ex)
+            catch(GPSInformation.Exceptions.GpExceptions ex)
             {
-                ModelState.AddModelError("", ex.Message);
-                return View("Create", new SplittelEmpleado { persona = Persona });
+                ModelState.AddModelError("Error", ex.Message);
+                return PartialView(Empleado);
             }
         }
 
+        // POST: Empleado/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditPersona(Persona Persona)
+        //[ValidateAntiForgeryToken]
+        public ActionResult Edit(Empleado Empleado)
         {
-            ViewData["Generos"] = new SelectList(Generos, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["EstadosCiviles"] = new SelectList(EstadosCiviles, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TipoSangre"] = new SelectList(TipoSangre, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Alergia"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
+            TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            EstatusEmpleado = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 7, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
 
-            ViewData["TipoNomina"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Sociedades"] = new SelectList(Sociedades, "IdSociedad", "Descripcion");
-            ViewData["Departamentos"] = new SelectList(Departamentos, "IdDepartamento", "Nombre");
-            ViewData["Puestos"] = new SelectList(Puestos, "IdPuesto", "Nombre");
+            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre");
+            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre");
+            Sociedades = new SelectList(darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList(), "IdSociedad", "Descripcion");
+            ViewData["TipoNomina"] = TipoNomina;
+            ViewData["EstatusEmpleado"] = EstatusEmpleado;
+            ViewData["Departamentos"] = Departamentos;
+            ViewData["Puestos"] = Puestos;
+            ViewData["Sociedades"] = Sociedades;
+
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    GpsManager.Persona.Element = Persona;
-                    var result = GpsManager.Persona.Update();
-                    if (result == false)
-                    {
-                        ModelState.AddModelError("", GpsManager.GetLastMessage());
-                        return View("Edit", new SplittelEmpleado { persona = Persona });
-                    }
-                    return RedirectToAction(nameof(Edit), new { id = Persona.IdPersona });
+                    return PartialView(Empleado);
+                }
+
+                darkManager.Empleado.Element = Empleado;
+                bool result = darkManager.Empleado.Update();
+                if (result)
+                {
+                    return PartialView(Empleado);
                 }
                 else
                 {
-                    return View("Edit", new SplittelEmpleado { persona = Persona });
+                    return PartialView(Empleado);
                 }
             }
-            catch (GpExceptions ex)
+            catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                ModelState.AddModelError("", ex.Message);
-                return View("Edit", new SplittelEmpleado { persona = Persona });
-            }
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateInformacionMedica(InformacionMedica InformacionMedica)
-        {
-            ViewData["Generos"] = new SelectList(Generos, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["EstadosCiviles"] = new SelectList(EstadosCiviles, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TipoSangre"] = new SelectList(TipoSangre, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Alergia"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-
-
-            ViewData["TipoNomina"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Sociedades"] = new SelectList(Sociedades, "IdSociedad", "Descripcion");
-            ViewData["Departamentos"] = new SelectList(Departamentos, "IdDepartamento", "Nombre");
-            ViewData["Puestos"] = new SelectList(Puestos, "IdPuesto", "Nombre");
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    GpsManager.InformacionMedica.Element = InformacionMedica;
-                    var result = GpsManager.InformacionMedica.Add();
-                    if (result == false)
-                    {
-                        ModelState.AddModelError("", GpsManager.GetLastMessage());
-                        return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(InformacionMedica.IdPersona), informacionMedica = InformacionMedica });
-                    }
-                    return RedirectToAction(nameof(Edit), new { id = InformacionMedica.IdPersona });
-                }
-                else
-                {
-                    return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(InformacionMedica.IdPersona), informacionMedica = InformacionMedica });
-                }
-            }
-            catch (GpExceptions ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return View("Create", new SplittelEmpleado { persona = GpsManager.Persona.Get(InformacionMedica.IdPersona), informacionMedica = InformacionMedica });
+                ModelState.AddModelError("Error", ex.Message);
+                return PartialView(Empleado);
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditInformacionMedica(InformacionMedica InformacionMedica)
-        {
-            ViewData["Generos"] = new SelectList(Generos, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["EstadosCiviles"] = new SelectList(EstadosCiviles, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TipoSangre"] = new SelectList(TipoSangre, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Alergia"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-
-            ViewData["TipoNomina"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Sociedades"] = new SelectList(Sociedades, "IdSociedad", "Descripcion");
-            ViewData["Departamentos"] = new SelectList(Departamentos, "IdDepartamento", "Nombre");
-            ViewData["Puestos"] = new SelectList(Puestos, "IdPuesto", "Nombre");
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    GpsManager.InformacionMedica.Element = InformacionMedica;
-                    var result = GpsManager.InformacionMedica.Update();
-                    if (result == false)
-                    {
-                        ModelState.AddModelError("", GpsManager.GetLastMessage());
-                        return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(InformacionMedica.IdPersona), informacionMedica = InformacionMedica });
-                    }
-                    return RedirectToAction(nameof(Edit), new {  id = InformacionMedica.IdPersona });
-                }
-                else
-                {
-                    return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(InformacionMedica.IdPersona), informacionMedica = InformacionMedica });
-                }
-            }
-            catch (GpExceptions ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(InformacionMedica.IdPersona), informacionMedica = InformacionMedica });
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditEmpleado(Empleado Empleado)
-        {
-            ViewData["Generos"] = new SelectList(Generos, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["EstadosCiviles"] = new SelectList(EstadosCiviles, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TipoSangre"] = new SelectList(TipoSangre, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Alergia"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-
-            ViewData["TipoNomina"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Sociedades"] = new SelectList(Sociedades, "IdSociedad", "Descripcion");
-            ViewData["Departamentos"] = new SelectList(Departamentos, "IdDepartamento", "Nombre");
-            ViewData["Puestos"] = new SelectList(Puestos, "IdPuesto", "Nombre");
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    GpsManager.Empleado.Element = Empleado;
-                    var result = GpsManager.InformacionMedica.Update();
-                    if (result == false)
-                    {
-                        ModelState.AddModelError("", GpsManager.GetLastMessage());
-                        return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(Empleado.IdPersona), empleado = Empleado });
-                    }
-                    return RedirectToAction(nameof(Edit), new { id = Empleado.IdPersona });
-                }
-                else
-                {
-                    return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(Empleado.IdPersona), empleado = Empleado });
-                }
-            }
-            catch (GpExceptions ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(Empleado.IdPersona), empleado = Empleado });
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateEmpleado(Empleado Empleado)
-        {
-            ViewData["Generos"] = new SelectList(Generos, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["EstadosCiviles"] = new SelectList(EstadosCiviles, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TipoSangre"] = new SelectList(TipoSangre, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Alergia"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-
-            ViewData["TipoNomina"] = new SelectList(Alergia, "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Sociedades"] = new SelectList(Sociedades, "IdSociedad", "Descripcion");
-            ViewData["Departamentos"] = new SelectList(Departamentos, "IdDepartamento", "Nombre");
-            ViewData["Puestos"] = new SelectList(Puestos, "IdPuesto", "Nombre");
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    GpsManager.Empleado.Element = Empleado;
-                    var result = GpsManager.InformacionMedica.Add();
-                    if (result == false)
-                    {
-                        ModelState.AddModelError("", GpsManager.GetLastMessage());
-                        return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(Empleado.IdPersona), empleado = Empleado });
-                    }
-                    return RedirectToAction(nameof(Edit), new { id = Empleado.IdPersona });
-                }
-                else
-                {
-                    return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(Empleado.IdPersona), empleado = Empleado });
-                }
-            }
-            catch (GpExceptions ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return View("Edit", new SplittelEmpleado { persona = GpsManager.Persona.Get(Empleado.IdPersona), empleado = Empleado });
-            }
-        }
-
-        public void SomeMethod()
-        {
-            Console.WriteLine("Begin SomeMethod");
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Console.WriteLine("End SomeMethod");
-        }
-    }
-
-
-    class Chuchin
-    {
-        public string Edad { get; set; }
     }
 }

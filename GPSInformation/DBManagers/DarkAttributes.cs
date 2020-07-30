@@ -312,7 +312,7 @@ namespace GPSInformation.DBManagers
 
                     if (!hiddenAttribute.IsKey && hiddenAttribute.IsMapped)
                     {
-                        procedureModels.Add(new ProcedureModel { Namefield = hiddenAttribute.Name, value = propertyInfo.GetValue(Element) });
+                        procedureModels.Add(new ProcedureModel { Namefield = tableDefinifiton.IsMappedByLabels ? hiddenAttribute.Name : prop.Name, value = propertyInfo.GetValue(Element) });
                     }
                 }
 
@@ -330,7 +330,7 @@ namespace GPSInformation.DBManagers
 
                     if (hiddenAttribute.IsMapped)
                     {
-                        procedureModels.Add(new ProcedureModel { Namefield = hiddenAttribute.Name, value = propertyInfo.GetValue(Element) });
+                        procedureModels.Add(new ProcedureModel { Namefield = tableDefinifiton.IsMappedByLabels ? hiddenAttribute.Name : prop.Name, value = propertyInfo.GetValue(Element) });
                     }
                 }
 

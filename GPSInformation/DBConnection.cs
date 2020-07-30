@@ -48,6 +48,7 @@ namespace GPSInformation
 
                 adapter.InsertCommand = Command;
                 adapter.InsertCommand.ExecuteNonQuery();
+                mensaje = "Registro guardado";
             }
             catch (SqlException ex)
             {
@@ -73,6 +74,7 @@ namespace GPSInformation
 
                 adapter.UpdateCommand = Command;
                 adapter.UpdateCommand.ExecuteNonQuery();
+                mensaje = "Registro actualizado";
             }
             catch (SqlException ex)
             {
@@ -98,6 +100,7 @@ namespace GPSInformation
 
                 adapter.DeleteCommand = Command;
                 adapter.DeleteCommand.ExecuteNonQuery();
+                mensaje = "Registro eliminado";
             }
             catch (SqlException ex)
             {

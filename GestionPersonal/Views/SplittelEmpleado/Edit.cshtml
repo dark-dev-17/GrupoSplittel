@@ -1,39 +1,90 @@
-﻿@model GPDataInformation.Models.SplittelEmpleado
+﻿@model GPSInformation.Models.Empleado
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<div class="panel panel-default">
-    <div class="panel-heading clearfix">
-        <h4 class="panel-title pull-left" style="padding-top: 7.5px;">  @ViewData["Title"]</h4>
-        <div class="btn-group pull-right">
+<h2>Edit</h2>
 
-        </div>
-    </div>
-    <div class="panel-body" id="list_departammets">
-        <div class="panel-body" style="min-height: 214px;">
-            <ul id="myTab" class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Información</a></li>
-                <li role="presentation" class=""><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">Profile</a></li>
-                <li role="presentation" class=""><a href="#empleado" role="tab" id="profile-tab" data-toggle="tab" aria-controls="empleado" aria-expanded="false">empleado</a></li>
-            </ul>
-            <br>
-            <div id="myTabContent" class="tab-content">
-                <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
-                    <partial name="../Persona/Edit" model="Model.persona" />
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
-                    <partial name="../InformacionMedica/Create" model="Model.informacionMedica" />
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="empleado" aria-labelledby="empleado-tab">
-                    <partial name="../Empleado/Edit" model="Model.empleado" />
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="dropdown2" aria-labelledby="dropdown2-tab">
-                    <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan, sartorial keffiyeh echo park vegan.</p>
-                </div>
+<h4>Empleado</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdEmpleado" class="control-label"></label>
+                <input asp-for="IdEmpleado" class="form-control" />
+                <span asp-validation-for="IdEmpleado" class="text-danger"></span>
             </div>
-        </div>
+            <div class="form-group">
+                <label asp-for="IdPersona" class="control-label"></label>
+                <input asp-for="IdPersona" class="form-control" />
+                <span asp-validation-for="IdPersona" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumeroNomina" class="control-label"></label>
+                <input asp-for="NumeroNomina" class="form-control" />
+                <span asp-validation-for="NumeroNomina" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoNomina" class="control-label"></label>
+                <input asp-for="TipoNomina" class="form-control" />
+                <span asp-validation-for="TipoNomina" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdSociedad" class="control-label"></label>
+                <input asp-for="IdSociedad" class="form-control" />
+                <span asp-validation-for="IdSociedad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdDepartamento" class="control-label"></label>
+                <input asp-for="IdDepartamento" class="form-control" />
+                <span asp-validation-for="IdDepartamento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdPuesto" class="control-label"></label>
+                <input asp-for="IdPuesto" class="form-control" />
+                <span asp-validation-for="IdPuesto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ingreso" class="control-label"></label>
+                <input asp-for="Ingreso" class="form-control" />
+                <span asp-validation-for="Ingreso" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Egreso" class="control-label"></label>
+                <input asp-for="Egreso" class="form-control" />
+                <span asp-validation-for="Egreso" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Extension" class="control-label"></label>
+                <input asp-for="Extension" class="form-control" />
+                <span asp-validation-for="Extension" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salario" class="control-label"></label>
+                <input asp-for="Salario" class="form-control" />
+                <span asp-validation-for="Salario" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdEstatus" class="control-label"></label>
+                <input asp-for="IdEstatus" class="form-control" />
+                <span asp-validation-for="IdEstatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
     </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
 </div>
 
