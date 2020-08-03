@@ -23,6 +23,7 @@ namespace GestionPersonal.Controllers
         private SelectList Puestos;
         private SelectList Sociedades;
         private SelectList Departamentos;
+        private SelectList Parentezcos;
 
         public EmpleadoController(IConfiguration configuration)
         {
@@ -35,16 +36,10 @@ namespace GestionPersonal.Controllers
             darkManager.LoadObject(GpsManagerObjects.Sociedad);
             darkManager.LoadObject(GpsManagerObjects.Departamento);
             darkManager.LoadObject(GpsManagerObjects.Empleado);
+            darkManager.LoadObject(GpsManagerObjects.PersonaContacto);
 
-            Generos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 2, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            EstadosCiviles = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 3, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            Alergias = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 5, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            TiposSangre = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 4, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            EstatusEmpleado = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 7, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre");
-            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre");
-            Sociedades = new SelectList(darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList(), "IdSociedad", "Descripcion");
+           
+            
         }
 
         ~EmpleadoController()
@@ -56,12 +51,15 @@ namespace GestionPersonal.Controllers
         public ActionResult Index()
         {
             var result = darkManager.Persona.Get().OrderBy(a => a.Nombre).ToList();
+            ViewData["Puestos"] = darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList();
+            ViewData["Empleados"] = darkManager.Empleado.Get().OrderBy(a => a.NumeroNomina).ToList();
             return View(result);
         }
 
         // GET: Empleado/Create
         public ActionResult Create()
         {
+            GetSelects();
             ViewData["Generos"] = Generos;
             ViewData["EstadosCiviles"] = EstadosCiviles;
             ViewData["Alergias"] = Alergias;
@@ -71,6 +69,7 @@ namespace GestionPersonal.Controllers
             ViewData["Departamentos"] = Departamentos;
             ViewData["Puestos"] = Puestos;
             ViewData["Sociedades"] = Sociedades;
+            ViewData["Parentezcos"] = Parentezcos;
             return View();
         }
         // POST: Persona/Create
@@ -78,8 +77,10 @@ namespace GestionPersonal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Persona Persona)
         {
+            GetSelects();
             try
             {
+
                 if (!ModelState.IsValid)
                 {
                     ViewData["Generos"] = Generos;
@@ -113,6 +114,7 @@ namespace GestionPersonal.Controllers
         // GET: Empleado/Edit
         public ActionResult Edit(int id)
         {
+            GetSelects();
             var result = darkManager.Persona.Get(id);
             if (result == null)
                 return NotFound();
@@ -125,14 +127,30 @@ namespace GestionPersonal.Controllers
             ViewData["Departamentos"] = Departamentos;
             ViewData["Puestos"] = Puestos;
             ViewData["Sociedades"] = Sociedades;
-
+            ViewData["Parentezcos"] = Parentezcos;
             var InforMedica = darkManager.InformacionMedica.GetByColumn("" + result.IdPersona, "IdPersona");
             ViewData["InfoMedica"] = InforMedica;
 
             var InforEmpleado = darkManager.Empleado.GetByColumn("" + result.IdPersona, "IdPersona");
             ViewData["InforEmpleado"] = InforEmpleado;
 
+            var PersonaContacto = darkManager.PersonaContacto.Get("" + result.IdPersona, "IdPersona");
+            ViewData["PersonaContacto"] = PersonaContacto;
+
             return View(result);
+        }
+        private void GetSelects()
+        {
+            Generos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 2, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            EstadosCiviles = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 3, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            Alergias = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 5, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            TiposSangre = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 4, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            EstatusEmpleado = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 7, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre");
+            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre");
+            Sociedades = new SelectList(darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList(), "IdSociedad", "Descripcion");
+            Parentezcos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 9, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
         }
     }
 }

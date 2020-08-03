@@ -189,8 +189,7 @@ namespace EcomDataProccess
                             LastLogin = Data.IsDBNull(6) ? DateTime.Now : Data.GetDateTime(6),
                             TipoCliente = Data.IsDBNull(7) ? "" : Data.GetString(7),
                             CardCode = Data.IsDBNull(8) ? "" : Data.GetString(8),
-                            Sociedad = Data.IsDBNull(9) ? "" : Data.GetString(9),
-                            Password = Data.IsDBNull(10) ? "" : Data.GetString(10)
+                            Sociedad = Data.IsDBNull(9) ? "" : Data.GetString(9)
                         });
 
                     }

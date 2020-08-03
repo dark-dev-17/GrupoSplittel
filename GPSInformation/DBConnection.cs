@@ -41,9 +41,29 @@ namespace GPSInformation
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 Command = new SqlCommand(statement, SqlConnection);
                 DataModel.ForEach(param => {
-                    SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
-                    sqlParameter.Direction = ParameterDirection.Input;
-                    Command.Parameters.Add(sqlParameter);
+
+                    if(typeof(int) == param.value.GetType())
+                    {
+                        if ((int)param.value == 0)
+                        {
+                            SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, DBNull.Value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Command.Parameters.Add(sqlParameter);
+                        }
+                        else
+                        {
+                            SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Command.Parameters.Add(sqlParameter);
+                        }
+                    }
+                    else
+                    {
+                        SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                        sqlParameter.Direction = ParameterDirection.Input;
+                        Command.Parameters.Add(sqlParameter);
+                    }
+                    
                 });
 
                 adapter.InsertCommand = Command;
@@ -67,9 +87,27 @@ namespace GPSInformation
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 Command = new SqlCommand(statement, SqlConnection);
                 DataModel.ForEach(param => {
-                    SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
-                    sqlParameter.Direction = ParameterDirection.Input;
-                    Command.Parameters.Add(sqlParameter);
+                    if (typeof(int) == param.value.GetType())
+                    {
+                        if ((int)param.value == 0)
+                        {
+                            SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, DBNull.Value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Command.Parameters.Add(sqlParameter);
+                        }
+                        else
+                        {
+                            SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Command.Parameters.Add(sqlParameter);
+                        }
+                    }
+                    else
+                    {
+                        SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                        sqlParameter.Direction = ParameterDirection.Input;
+                        Command.Parameters.Add(sqlParameter);
+                    }
                 });
 
                 adapter.UpdateCommand = Command;
@@ -93,9 +131,27 @@ namespace GPSInformation
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 Command = new SqlCommand(statement, SqlConnection);
                 DataModel.ForEach(param => {
-                    SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
-                    sqlParameter.Direction = ParameterDirection.Input;
-                    Command.Parameters.Add(sqlParameter);
+                    if (typeof(int) == param.value.GetType())
+                    {
+                        if ((int)param.value == 0)
+                        {
+                            SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, DBNull.Value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Command.Parameters.Add(sqlParameter);
+                        }
+                        else
+                        {
+                            SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Command.Parameters.Add(sqlParameter);
+                        }
+                    }
+                    else
+                    {
+                        SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                        sqlParameter.Direction = ParameterDirection.Input;
+                        Command.Parameters.Add(sqlParameter);
+                    }
                 });
 
                 adapter.DeleteCommand = Command;

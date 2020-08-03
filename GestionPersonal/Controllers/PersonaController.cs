@@ -24,10 +24,9 @@ namespace GestionPersonal.Controllers
             darkManager = new DarkManager(configuration);
             darkManager.OpenConnection();
             darkManager.LoadObject(GpsManagerObjects.Persona);
-            //darkManager.LoadObject(GpsManagerObjects.CatalogoOpcionesValores);
+            darkManager.LoadObject(GpsManagerObjects.CatalogoOpcionesValores);
 
-            //Generos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 2, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            //EstadosCiviles = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 3, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+
         }
 
         ~PersonaController()
@@ -37,7 +36,6 @@ namespace GestionPersonal.Controllers
 
         // POST: Persona/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult CreateData(Persona Persona)
         {
             try
@@ -58,9 +56,9 @@ namespace GestionPersonal.Controllers
                 {
                     return BadRequest(darkManager.GetLastMessage());
                 }
-                
+
             }
-            catch(GPSInformation.Exceptions.GpExceptions ex)
+            catch (GPSInformation.Exceptions.GpExceptions ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -68,32 +66,42 @@ namespace GestionPersonal.Controllers
 
         // POST: Persona/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Edit(Persona Persona)
         {
             try
             {
+                Generos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 2, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion", Persona.IdGenero);
+                EstadosCiviles = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 3, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion", Persona.IdEstadoCivil);
 
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    ViewData["Generos"] = Generos;
+                    ViewData["EstadosCiviles"] = EstadosCiviles;
+                    return PartialView(Persona);
                 }
 
                 darkManager.Persona.Element = Persona;
                 bool result = darkManager.Persona.Update();
                 if (result)
                 {
-                    return Ok(darkManager.GetLastMessage());
+                    ViewData["Generos"] = Generos;
+                    ViewData["EstadosCiviles"] = EstadosCiviles;
+                    return PartialView(Persona);
                 }
                 else
                 {
-                    return BadRequest(darkManager.GetLastMessage());
+                    ViewData["Generos"] = Generos;
+                    ViewData["EstadosCiviles"] = EstadosCiviles;
+                    return PartialView(Persona);
                 }
 
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                return BadRequest(ex.Message);
+                ViewData["Generos"] = Generos;
+                ViewData["EstadosCiviles"] = EstadosCiviles;
+                ModelState.AddModelError("Error", ex.Message);
+                return PartialView(Persona);
             }
         }
     }

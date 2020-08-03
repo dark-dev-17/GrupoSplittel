@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<GPSInformation.Models.Persona>
 
 @{
+    List<GPSInformation.Models.Puesto> puestos = ViewBag.Puestos;
+    List<GPSInformation.Models.Empleado> empleados = ViewBag.Empleados;
     ViewData["Title"] = "Index";
 }
 
@@ -12,6 +14,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>No.Nomina</th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
@@ -21,14 +24,19 @@
             <th>
                 @Html.DisplayNameFor(model => model.ApellidoMaterno)
             </th>
+            <th>Puesto</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
+            GPSInformation.Models.Empleado empleado = empleados.Find(a => a.IdPersona == item.IdPersona);
+
+            GPSInformation.Models.Puesto puesto = puestos.Find(a => a.IdPuesto == empleado.IdPuesto);
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.IdPersona)
+                @Html.DisplayFor(modelItem => empleado.NumeroNomina)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
@@ -40,9 +48,12 @@
                 @Html.DisplayFor(modelItem => item.ApellidoMaterno)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.IdPersona })
+                @Html.DisplayFor(modelItem => puesto.Nombre)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.IdPersona })
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>

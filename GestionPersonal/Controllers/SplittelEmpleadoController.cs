@@ -78,7 +78,7 @@ namespace GestionEmpleadol.Controllers
                 bool result = darkManager.Empleado.Add();
                 if (result)
                 {
-                    return PartialView("Edit",Empleado);
+                    return PartialView("Edit", darkManager.Empleado.Get(darkManager.Empleado.GetLastId()));
                 }
                 else
                 {
@@ -117,6 +117,7 @@ namespace GestionEmpleadol.Controllers
                 }
 
                 darkManager.Empleado.Element = Empleado;
+                darkManager.Empleado.Element.Egreso = DateTime.Now;
                 bool result = darkManager.Empleado.Update();
                 if (result)
                 {

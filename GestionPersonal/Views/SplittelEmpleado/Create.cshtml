@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Create";
 }
-    <form id="createSplittelEmpleado" >
+    <form id="createSplittelEmpleadoForm" >
         <div data-label="Informacion" class="df-example demo-forms">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row form-group">
@@ -16,7 +16,7 @@
                 </div>
                 <label asp-for="TipoNomina" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <select asp-for="TipoNomina" asp-items="ViewBag.TipoNomina" class="custom-select">
+                    <select asp-for="TipoNomina" asp-items="ViewBag.TipoNomina" class="form-control select2">
                         <option value="0">Selecciona un tipo de sangre</option>
                     </select>
                     <span asp-validation-for="TipoNomina" class="text-danger"></span>
@@ -25,14 +25,14 @@
             <div class="row form-group">
                 <label asp-for="IdSociedad" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <select asp-for="IdSociedad" asp-items="ViewBag.Sociedades" class="custom-select">
+                    <select asp-for="IdSociedad" asp-items="ViewBag.Sociedades" class="form-control select2">
                         <option value="0">Selecciona un tipo de sangre</option>
                     </select>
                     <span asp-validation-for="IdSociedad" class="text-danger"></span>
                 </div>
                 <label asp-for="IdDepartamento" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <select asp-for="IdDepartamento" asp-items="ViewBag.Departamentos" class="custom-select">
+                    <select asp-for="IdDepartamento" asp-items="ViewBag.Departamentos" class="form-control select2">
                         <option value="0">Selecciona un tipo de sangre</option>
                     </select>
                     <span asp-validation-for="IdDepartamento" class="text-danger"></span>
@@ -41,7 +41,7 @@
             <div class="row form-group">
                 <label asp-for="IdPuesto" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <select asp-for="IdPuesto" asp-items="ViewBag.Puestos" class="custom-select">
+                    <select asp-for="IdPuesto" asp-items="ViewBag.Puestos" class="form-control select2">
                         <option value="0">Selecciona un tipo de sangre</option>
                     </select>
                     <span asp-validation-for="IdPuesto" class="text-danger"></span>
@@ -72,7 +72,7 @@
                 </div>
                 <label asp-for="IdEstatus" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <select asp-for="IdEstatus" asp-items="ViewBag.Puestos" class="custom-select">
+                    <select asp-for="IdEstatus" asp-items="ViewBag.Puestos" class="form-control select2">
                         <option value="0">Selecciona un tipo de sangre</option>
                     </select>
                     <span asp-validation-for="IdEstatus" class="text-danger"></span>
@@ -81,7 +81,7 @@
             <div class="form-group row mg-b-0">
                 <div class="col-sm-12 text-right">
                     <button type="reset" class="btn btn-sm btn-secondary">Cancelar</button>
-                    <button type="button" onclick="App_editEmpleado.createSplittelEmpleado()" class="btn btn-sm btn-primary">Guardar</button>
+                    <button type="button" onclick="App_editEmpleado.createSplittelEmpleado()" class="btn btn-sm btn-primary">Guardar información</button>
                 </div>
             </div>
         </div>

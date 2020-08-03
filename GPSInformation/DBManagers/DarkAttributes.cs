@@ -303,7 +303,7 @@ namespace GPSInformation.DBManagers
 
             if (dbManagerTypes == DbManagerTypes.Add)
             {
-                string Statement = string.Format("INSERT INTO {0}({1}) VALUES({2})", tableDefinifiton.Name, sentencia.Substring(0, sentencia.Length - 1), sentenciaVariables.Substring(0, sentenciaVariables.Length - 1));
+                string Statement = string.Format("INSERT INTO {0}({1}) VALUES({2})", Nametable, sentencia.Substring(0, sentencia.Length - 1), sentenciaVariables.Substring(0, sentenciaVariables.Length - 1));
                 List<ProcedureModel> procedureModels = new List<ProcedureModel>();
                 foreach (var prop in typeof(T).GetProperties())
                 {
@@ -321,7 +321,7 @@ namespace GPSInformation.DBManagers
             }
             else if (dbManagerTypes == DbManagerTypes.Update)
             {
-                string Statement = string.Format("UPDATE {0} SET {1} WHERE {2} ", tableDefinifiton.Name, sentencia.Substring(0, sentencia.Length - 1), sentenciaVariables);
+                string Statement = string.Format("UPDATE {0} SET {1} WHERE {2} ", Nametable, sentencia.Substring(0, sentencia.Length - 1), sentenciaVariables);
                 List<ProcedureModel> procedureModels = new List<ProcedureModel>();
                 foreach (var prop in typeof(T).GetProperties())
                 {
@@ -339,7 +339,7 @@ namespace GPSInformation.DBManagers
             }
             else if (dbManagerTypes == DbManagerTypes.Delete)
             {
-                string Statement = string.Format("DELETE FROM  {0} WHERE {1} ", tableDefinifiton.Name, sentenciaVariables);
+                string Statement = string.Format("DELETE FROM  {0} WHERE {1} ", Nametable, sentenciaVariables);
                 List<ProcedureModel> procedureModels = new List<ProcedureModel>();
                 foreach (var prop in typeof(T).GetProperties())
                 {

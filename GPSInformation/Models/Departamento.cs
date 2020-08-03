@@ -19,5 +19,7 @@ namespace GPSInformation.Models
         public int IdDireccion { get; set; }
         [ColumnDB(Name = "Direccion", IsMapped = false, IsKey = false)]
         public Direccion Direccion { get; set; }
+        [ColumnDB(Name = "ClaveDPU", IsMapped = true, IsKey = false)]
+        public string ClaveDPU { get; set; }
     }
 }

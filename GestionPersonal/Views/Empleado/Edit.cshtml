@@ -1,11 +1,14 @@
 ﻿@model GPSInformation.Models.Persona
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar empleado";
 
     GPSInformation.Models.InformacionMedica informacionMedica = new GPSInformation.Models.InformacionMedica() { IdPersona = Model.IdPersona };
     GPSInformation.Models.Empleado EmpleadoEmpleado = new GPSInformation.Models.Empleado() { IdPersona = Model.IdPersona, Ingreso = DateTime.Now };
+    GPSInformation.Models.PersonaContacto PersonaContacto = new GPSInformation.Models.PersonaContacto() { IdPersona = Model.IdPersona };
 }
+<link href="~/template/lib/select2/css/select2.min.css" rel="stylesheet" />
+
 <h4>@ViewData["Title"]</h4>
 <br />
 <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -18,43 +21,84 @@
     <li class="nav-item">
         <a class="nav-link " id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Información del empleado</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link " id="tab_personacontacto-tab" data-toggle="tab" href="#tab_personacontacto" role="tab" aria-controls="tab_personacontacto" aria-selected="false">Persona de contacto</a>
+    </li>
 </ul>
 <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="App_editEmpleado">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <partial name="../Persona/Edit" model="Model" />
+        <div id="PersonaEdit">
+            <partial name="../Persona/Edit" model="Model" />
+        </div>
     </div>
     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         @if (ViewBag.InfoMedica == null)
         {
-            <form v-on:submit.prevent="CreateInformacionMedica" id="CreateInformacionMedica">
-                <partial name="../InformacionMedica/Create" model="informacionMedica"/>
-            </form>
+            <div class="alert alert-primary mg-b-0" role="alert">
+                Sin información medica
+            </div>
+            <div id="CreateInformacionMedicaContent">
+                <partial name="../InformacionMedica/Create" model="informacionMedica" />
+            </div>
         }
         else
         {
-            <form v-on:submit.prevent="EditInformacionMedica" id="EditInformacionMedica">
+            <div id="CreateInformacionMedicaContent">
                 <partial name="../InformacionMedica/Edit" model="ViewBag.InfoMedica" />
-            </form>
+            </div>
         }
     </div>
     <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-        @if (ViewBag.InfoEmpleado == null)
+        @if (ViewBag.InforEmpleado == null)
         {
-            <div id="CreateInfoEmpleado">
+            <div class="alert alert-primary mg-b-0" role="alert">
+                Sin datos
+            </div>
+            <div id="CreateInfoEmpleadoContent">
                 <partial name="../SplittelEmpleado/Create" model="EmpleadoEmpleado" />
             </div>
         }
         else
         {
-            <form v-on:submit.prevent="EditInfoEmpleado" id="EditInfoEmpleado">
-                <partial name="../SplittelEmpleado/Edit" model="ViewBag.InfoEmpleado" />
-            </form>
+            <div id="CreateInfoEmpleadoContent">
+                <partial name="../SplittelEmpleado/Edit" model="ViewBag.InforEmpleado" />
+            </div>
         }
+    </div>
+    <div class="tab-pane fade" id="tab_personacontacto" role="tabpanel" aria-labelledby="contact-tab">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Agregar persona de contacto</a>
+            </li>
+        </ul>
+        <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="collapse mg-t-5" id="collapseExample">
+                    <partial name="../PersonaContacto/Create" model="PersonaContacto" />
+                </div>
+            </div>
+        </div>
+        <form id="formGetContacts">
+            <input type="hidden" name="id" value="@Model.IdPersona" />
+        </form>
+        <h4>Lista de contactos</h4>
+        <div id="ListPersonasContacto">
+            <partial name="../PersonaContacto/List" model="ViewBag.PersonaContacto" />
+        </div>
     </div>
 </div>
 @Html.AntiForgeryToken()
 
 @section Scripts {
+    <script src="~/template/lib/select2/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: 'Choose one',
+                searchInputPlaceholder: 'Search options'
+            });
+        });
+    </script>
     <script>
         var App_editEmpleado = new Vue({
             el: "#App_editEmpleado",
@@ -64,8 +108,76 @@
                 },
             },
             mounted() {
+                
             },
             methods: {
+                ListContacto: function () {
+                    axios.post('@Url.Action("List","PersonaContacto")', $('#formGetContacts').serialize(), null).then(response => {
+                        document.getElementById("ListPersonasContacto").innerHTML = "";
+                        document.getElementById("ListPersonasContacto").innerHTML = response.data;
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                document.getElementById("ListPersonasContacto").innerHTML = "";
+                                document.getElementById("ListPersonasContacto").innerHTML = response.data;
+                            }
+                        }
+                    }).finally()
+                },
+                createContacto: function () {
+                    Swal.fire({
+                        title: "¿Deseas guardar los cambios?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then((result) => {
+                        if (result.value) {
+                            axios.post('@Url.Action("Create","PersonaContacto")', $('#create_personaContacto').serialize(), null).then(response => {
+                                document.getElementById("collapseExample").innerHTML = "";
+                                document.getElementById("collapseExample").innerHTML = response.data;
+                                this.ListContacto();
+                                document.getElementById("create_personaContacto").reset();
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        document.getElementById("collapseExample").innerHTML = "";
+                                        document.getElementById("collapseExample").innerHTML = response.data;
+                                    }
+                                }
+                            }).finally()
+                        }
+                    })
+                },
+                EditContacto: function (id) {
+                    Swal.fire({
+                        title: "¿Deseas guardar los cambios?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then((result) => {
+                        if (result.value) {
+
+                            axios.post('@Url.Action("Edit","PersonaContacto")', $('#Fedit_personaContacto_'+id).serialize(), null).then(response => {
+                                document.getElementById("EditPersonaContacto_"+id).innerHTML = "";
+                                document.getElementById("EditPersonaContacto_" + id).innerHTML = response.data;
+                                this.ListContacto();
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        document.getElementById("EditPersonaContacto_"+id).innerHTML = "";
+                                        document.getElementById("EditPersonaContacto_"+id).innerHTML = response.data;
+                                    }
+                                }
+                            }).finally()
+                        }
+                    })
+                },
                 createSplittelEmpleado: function () {
                     Swal.fire({
                         title: "¿Deseas guardar los cambios?",
@@ -77,23 +189,22 @@
                         confirmButtonText: 'Si!'
                     }).then((result) => {
                         if (result.value) {
-                           
-                            axios.post('@Url.Action("Create","SplittelEmpleado")', $('#createSplittelEmpleado').serialize(), null).then(response => {
-                                document.getElementById("CreateInfoEmpleado").innerHTML = "";
-                                document.getElementById("CreateInfoEmpleado").innerHTML = response.data;
+
+                            axios.post('@Url.Action("Create","SplittelEmpleado")', $('#createSplittelEmpleadoForm').serialize(), null).then(response => {
+                                document.getElementById("CreateInfoEmpleadoContent").innerHTML = "";
+                                document.getElementById("CreateInfoEmpleadoContent").innerHTML = response.data;
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
-                                        document.getElementById("CreateInfoEmpleado").innerHTML = "";
-                                        document.getElementById("CreateInfoEmpleado").innerHTML = response.data;
+                                        document.getElementById("CreateInfoEmpleadoContent").innerHTML = "";
+                                        document.getElementById("CreateInfoEmpleadoContent").innerHTML = response.data;
                                     }
                                 }
                             }).finally()
                         }
                     })
                 },
-                CreateInformacionMedica: function (event) {
-                    event.preventDefault()
+                EditSplittelEmpleado: function () {
                     Swal.fire({
                         title: "¿Deseas guardar los cambios?",
                         text: "",
@@ -104,25 +215,47 @@
                         confirmButtonText: 'Si!'
                     }).then((result) => {
                         if (result.value) {
-                            let data = {
-                                InformacionMedica: this.getFormData($('#CreateInformacionMedica'))
-                            }
-                            axios.post('@Url.Action("Create","InformacionMedica")', $('#CreateInformacionMedica').serialize(), null).then(response => {
-                                document.getElementById("CreateInformacionMedica").innerHTML = "";
-                                document.getElementById("CreateInformacionMedica").innerHTML = response.data;
+
+                            axios.post('@Url.Action("Edit","SplittelEmpleado")', $('#EditSplittelEmpleadoForm').serialize(), null).then(response => {
+                                document.getElementById("CreateInfoEmpleadoContent").innerHTML = "";
+                                document.getElementById("CreateInfoEmpleadoContent").innerHTML = response.data;
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
-                                        document.getElementById("CreateInformacionMedica").innerHTML = "";
-                                        document.getElementById("CreateInformacionMedica").innerHTML = response.data;
+                                        document.getElementById("CreateInfoEmpleadoContent").innerHTML = "";
+                                        document.getElementById("CreateInfoEmpleadoContent").innerHTML = response.data;
                                     }
                                 }
                             }).finally()
                         }
                     })
                 },
-                EditInformacionMedica: function (event ) {
-                    event.preventDefault()
+                CreateInformacionMedica: function () {
+                    Swal.fire({
+                        title: "¿Deseas guardar los cambios?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then((result) => {
+                        if (result.value) {
+                            axios.post('@Url.Action("Create","InformacionMedica")', $('#CreateInformacionMedicaForm').serialize(), null).then(response => {
+                                document.getElementById("CreateInformacionMedicaContent").innerHTML = "";
+                                document.getElementById("CreateInformacionMedicaContent").innerHTML = response.data;
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        document.getElementById("CreateInformacionMedicaContent").innerHTML = "";
+                                        document.getElementById("CreateInformacionMedicaContent").innerHTML = response.data;
+                                    }
+                                }
+                            }).finally()
+                        }
+                    })
+                },
+                EditInformacionMedica: function ( ) {
                     Swal.fire({
                         title: "¿Deseas guardar los cambios?",
                         text: "",
@@ -136,14 +269,39 @@
                             let data = {
                                 InformacionMedica: this.getFormData($('#EditInformacionMedica'))
                             }
-                            axios.post('@Url.Action("Edit","InformacionMedica")', $('#EditInformacionMedica').serialize(), null).then(response => {
-                                document.getElementById("EditInformacionMedica").innerHTML = "";
-                                document.getElementById("EditInformacionMedica").innerHTML = response.data;
+                            axios.post('@Url.Action("Edit","InformacionMedica")', $('#EditInformacionMedicaForm').serialize(), null).then(response => {
+                                document.getElementById("CreateInformacionMedicaContent").innerHTML = "";
+                                document.getElementById("CreateInformacionMedicaContent").innerHTML = response.data;
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
-                                        document.getElementById("EditInformacionMedica").innerHTML = "";
-                                        document.getElementById("EditInformacionMedica").innerHTML = response.data;
+                                        document.getElementById("CreateInformacionMedicaContent").innerHTML = "";
+                                        document.getElementById("CreateInformacionMedicaContent").innerHTML = response.data;
+                                    }
+                                }
+                            }).finally()
+                        }
+                    })
+                },
+                EditInformacionPersonal: function ( ) {
+                    Swal.fire({
+                        title: "¿Deseas guardar los cambios?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then((result) => {
+                        if (result.value) {
+                            axios.post('@Url.Action("Edit","Persona")', $('#EditInformacionPersonal').serialize(), null).then(response => {
+                                document.getElementById("PersonaEdit").innerHTML = "";
+                                document.getElementById("PersonaEdit").innerHTML = response.data;
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        document.getElementById("PersonaEdit").innerHTML = "";
+                                        document.getElementById("PersonaEdit").innerHTML = response.data;
                                     }
                                 }
                             }).finally()

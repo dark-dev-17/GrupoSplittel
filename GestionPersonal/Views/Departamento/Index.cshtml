@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.IdDireccion)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClaveDPU)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -37,7 +40,10 @@
                 @Html.DisplayFor(modelItem => item.Direccion.Nombre)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.IdDepartamento }) 
+                @Html.DisplayFor(modelItem => item.ClaveDPU)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.IdDepartamento })
             </td>
         </tr>
 }

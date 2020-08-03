@@ -15,6 +15,7 @@ namespace GPSInformation.Models
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public int IdPersona { get; set; }
         [Required]
+        [DisplayFormat(DataFormatString = "{0:000000}", ApplyFormatInEditMode = true)]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public int NumeroNomina { get; set; }
         [Required]
@@ -35,10 +36,8 @@ namespace GPSInformation.Models
         [Required]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public DateTime Egreso { get; set; }
-        [Required]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public string Email { get; set; }
-        [Required]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public string Extension { get; set; }
         [Required]

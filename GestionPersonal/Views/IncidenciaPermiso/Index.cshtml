@@ -1,0 +1,72 @@
+﻿@model IEnumerable<GPSInformation.Models.IncidenciaPermiso>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@if (Model.Count() == 0)
+{
+    <div class="alert alert-primary mg-b-0" role="alert">
+        Sin solicitudes de permisos <a href="#" class="alert-link">an example link</a>.
+    </div>
+}
+else
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdIncidenciaPermiso)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdPersona)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inicio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Fin)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdAsunto)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdIncidenciaPermiso)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmpleadoNombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fecha)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Inicio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DEscripcionTipo)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details","IncidenciaPermiso", new { id=item.IdIncidenciaPermiso}) |
+                        @Html.ActionLink("Cancelar", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+

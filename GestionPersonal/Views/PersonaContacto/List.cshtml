@@ -1,0 +1,18 @@
+﻿@model IEnumerable<GPSInformation.Models.PersonaContacto>
+
+@{
+    ViewData["Title"] = "List";
+}
+@if (Model.Count() == 0)
+{
+    <div class="alert alert-primary mg-b-0" role="alert">
+        Sin contactos de emergencia, por favor da clic en  <a href="#" class="alert-link">Agregar persona de contacto</a>.
+    </div>
+}
+
+@foreach (var item in Model)
+{
+    <div id="EditPersonaContacto_@item.IdPersonaContacto">
+        <partial name="../PersonaContacto/Edit" model="item" />
+    </div>
+}

@@ -1,0 +1,54 @@
+﻿@model GPSInformation.Models.PersonaContacto
+
+@{
+    ViewData["Title"] = "Create";
+}
+<h4>@ViewData["Title"]</h4>
+<br />
+<div data-label="Crear Nuevo" class="df-example demo-forms">
+    <form id="create_personaContacto">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <label asp-for="NombreCompleto" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                @*<input type="hidden" asp-for="IdPersona" class="form-control" />*@
+                <input type="hidden" asp-for="IdPersona" class="form-control" />
+                <input asp-for="NombreCompleto" class="form-control" />
+                <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+            </div>
+            <label asp-for="Telefono" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="CodigoPostal" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input asp-for="CodigoPostal" class="form-control" />
+                <span asp-validation-for="CodigoPostal" class="text-danger"></span>
+            </div>
+            <label asp-for="IdParentezco" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <select asp-for="IdParentezco" asp-items="ViewBag.Parentezcos" class="form-control select2">
+                    <option value="0">Selecciona una dirección</option>
+                </select>
+                <span asp-validation-for="IdParentezco" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="Direccion" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <textarea asp-for="Direccion" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mg-b-0">
+            <div class="col-sm-12 text-right">
+                <button type="reset" class="btn btn-sm btn-secondary">Cancelar</button>
+                <button type="button" onclick="App_editEmpleado.createContacto()" class="btn btn-sm btn-primary">Guardar</button>
+            </div>
+        </div>
+    </form>
+</div>

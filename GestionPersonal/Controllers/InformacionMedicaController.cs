@@ -66,7 +66,7 @@ namespace GestionInformacionMedical.Controllers
                 {
                     ViewData["Alergias"] = Alergias;
                     ViewData["TiposSangre"] = TiposSangre;
-                    return PartialView("Edit",InformacionMedica);
+                    return PartialView("Edit", darkManager.InformacionMedica.Get(darkManager.InformacionMedica.GetLastId()));
                 }
                 else
                 {

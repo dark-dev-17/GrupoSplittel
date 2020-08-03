@@ -8,20 +8,23 @@
         <div class="sidebar-body">
             <ul class="sidebar-nav">
                 <li class="nav-label mg-b-15">Browse Components</li>
-                <li class="nav-item">   
+                <li class="nav-item">
                     <a href="index.html" class="nav-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="9" x2="21" y2="9"></line>
-                        <line x1="9" y1="21" x2="9" y2="9"></line>
-                    </svg>Home</a></li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>Home
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="" class="nav-link with-sub">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers">
                             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                             <polyline points="2 17 12 22 22 17"></polyline>
                             <polyline points="2 12 12 17 22 12"></polyline>
-                        </svg>Organigrama</a>
+                        </svg>Organigrama
+                    </a>
                     <nav class="nav">
                         <a href="@Url.Action("Index","Sociedad")">Sociedades</a>
                         <a href="@Url.Action("Index","Direccion")">Direcciones</a>
@@ -29,16 +32,29 @@
                         <a href="@Url.Action("Index","Puesto")">Puestos</a>
                     </nav>
                 </li>
-          
+
                 <li class="nav-item show">
                     <a href="" class="nav-link with-sub active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-inbox">
                             <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
                             <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-                        </svg> Empleados</a>
+                        </svg> Empleados
+                    </a>
                     <nav class="nav">
                         <a href="form-elements.html" class="active">Mis Nominas</a>
                         <a href="@Url.Action("Index","Empleado")">Empleados</a>
+                    </nav>
+                </li>
+
+                <li class="nav-item show">
+                    <a href="" class="nav-link with-sub active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-inbox">
+                            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                        </svg> Incidencias
+                    </a>
+                    <nav class="nav">
+                        <a href="@Url.Action("Index","Incidencia",new { id = 106})">Mis solicitudes</a>
                     </nav>
                 </li>
             </ul>
