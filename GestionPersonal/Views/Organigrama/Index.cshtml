@@ -1,0 +1,78 @@
+﻿@model IEnumerable<GPSInformation.Models.OrganigramaVersion>
+@{
+    ViewData["Title"] = "Index";
+}
+    <div id="app_organigrama">
+        @if (Model.Where(a => a.Autirizada == 2).ToList().Count <= 0)
+        {
+            <div class="alert alert-warning " role="alert">
+                <h4 class="alert-heading">Advertencia!</h4>
+                <p>Gestión de personal necesita un tener un organigrama autorizado para poder funcionar correctamente, de ello depende que los empleados puedan generar sus solicitudes de vaciones y permisos</p>
+                <hr>
+                <p class="mb-0">Por favor crea un organigrama o autoriza alguno!</p>
+            </div>
+        }
+
+        <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
+            <div class="d-flex align-items-center justify-content-between mg-b-30">
+                <h4 class="tx-15 mg-b-0">Lista de versiones</h4>
+                <form asp-action="CreateNewVersion">
+                    <button type="submit" class="btn btn-sm btn-white d-flex align-items-center">Agregar nueva</button>
+                </form>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdOrganigramaVersion)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaCreacion)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaActualizacion)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Autirizada)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdOrganigramaVersion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaCreacion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaActualizacion)
+                        </td>
+                        <td>
+                            @if (item.Autirizada == 2)
+                            {
+                                <span class="badge badge-pill badge-primary">Antorizado</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-pill badge-light">No Antorizado</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id=item.IdOrganigramaVersion }) 
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+@section Scripts {
+
+}
+
+

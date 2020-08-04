@@ -31,6 +31,8 @@ namespace GPSInformation
         public virtual DarkAttributes<PersonaContacto> PersonaContacto { get; set; }
         public virtual DarkAttributes<IncidenciaPermiso> IncidenciaPermiso { get; set; }
         public virtual DarkAttributes<IncidenciaPermisoProcess> IncidenciaPermisoProcess { get; set; }
+        public virtual DarkAttributes<OrganigramaVersion> OrganigramaVersion { get; set; }
+        public virtual DarkAttributes<OrganigramaStructura> OrganigramaStructura { get; set; }
         #endregion
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
@@ -99,6 +101,14 @@ namespace GPSInformation
             {
                 IncidenciaPermisoProcess = new DarkAttributes<IncidenciaPermisoProcess>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.OrganigramaVersion)
+            {
+                OrganigramaVersion = new DarkAttributes<OrganigramaVersion>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.OrganigramaStructura)
+            {
+                OrganigramaStructura = new DarkAttributes<OrganigramaStructura>(dBConnection);
+            }
         }
 
         public void OpenConnection()
@@ -132,6 +142,8 @@ namespace GPSInformation
         PersonaContacto = 10,
         IncidenciaPermiso = 11,
         IncidenciaPermisoProcess = 12,
+        OrganigramaVersion = 13,
+        OrganigramaStructura = 14,
     }
 
 }
