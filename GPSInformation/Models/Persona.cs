@@ -55,5 +55,8 @@ namespace GPSInformation.Models
         public string Calle { get; set; }
         [ColumnDB(Name = "Empleado", IsMapped = true, IsKey = false)]
         public int Empleado { get; set; }
+
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public string NombreCompelto { get { return string.Format("{0} {1} {2}",Nombre,ApellidoPaterno,ApellidoMaterno); } }
     }
 }

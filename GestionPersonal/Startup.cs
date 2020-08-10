@@ -40,10 +40,20 @@ namespace GestionPersonal
             //    options.StringConnectionDb = Configuration.GetConnectionString("Default");
 
             //});
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
             {
                 builder.WithOrigins("http://localhost:89").AllowAnyMethod().AllowAnyHeader();
             }));
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(3600);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+
+            });
 
             services.AddSingleton<IConfiguration>(Configuration);
 
@@ -72,11 +82,12 @@ namespace GestionPersonal
              .AllowAnyMethod()
              .AllowAnyHeader());
             app.UseCors("ApiCorsPolicy");
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Login}/{action=DoLogin}/{id?}");
             });
         }
     }

@@ -1,0 +1,363 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+<link href="~/template/lib/fullcalendar/fullcalendar.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/template/assets/css/dashforge.calendar.css">
+<link rel="stylesheet" href="~/template/assets/css/dashforge.contacts.css">
+<style>
+</style>
+<div class="calendar-wrapper" id="App_calendar">
+    <div class="calendar-sidebar">
+        <div class="calendar-sidebar-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <div class="search-form">
+                <input type="search" class="form-control" placeholder="Search calendar">
+            </div>
+            <a href="#modalCreateEvent" data-toggle="modal" class="btn btn-sm btn-primary btn-icon calendar-add">
+                <div data-toggle="tooltip" title="" data-original-title="Create New Event"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+            </a><!-- calendar-add -->
+        </div><!-- calendar-sidebar-header -->
+        <div id="calendarSidebarBody" class="calendar-sidebar-body ps">
+            <div class="pd-y-20 pd-x-15">
+                <button class="btn btn-primary btn-block" title="agregar nueva sala">Nueva sala</button>
+            </div>
+            <div class="pd-y-20 pd-x-15">
+                <label class="tx-uppercase tx-sans tx-10 tx-medium tx-spacing-1 tx-color-03 pd-l-10 mg-b-10">Mis Salas</label>
+
+                <nav class="calendar-nav" v-if="Salas.length" v-for="(item, index) in Salas">
+                    <div class="pd-y-20 pd-x-10 contact-list">
+                        <label id="contactA" class="contact-list-divider">Lista de salas</label>
+                        <div class="media active">
+                            <div class="media-body mg-l-10">
+                                <h6 class="tx-13 mg-b-3">{{ item.nombre }}</h6>
+                            </div><!-- media-body -->
+                            <nav>
+                                <a href="#" title="Desactivar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></a>
+                                <a href="#modalCreateSala" v-on:click="salaselected = index" data-toggle="modal" title="Editar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg></a>
+                            </nav>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="pd-20 mg-b-20">
+                <label class="tx-uppercase tx-sans tx-10 tx-medium tx-spacing-1 tx-color-03 mg-b-15">Reservaciones para hoy</label>
+                <div class="schedule-group">
+                    <a href="#" class="schedule-item bd-l bd-2 bd-danger">
+                        <h6>Company Standup Meeting</h6>
+                        <span>8:00am - 9:00am, Engineering Room</span>
+                    </a><!-- schedule-item -->
+                </div><!-- schedule-group -->
+            </div>
+            <div class="ps__rail-x" style="left: 0px; top: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
+        </div><!-- calendar-sidebar-body -->
+    </div><!-- calendar-sidebar -->
+    <div class="calendar-content">
+        <div id="calendar" class="calendar-content-body"></div>
+    </div><!-- calendar-content -->
+
+    <div class="modal calendar-modal-create fade effect-scale" id="modalCreateEvent" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Crear nueva resevación</h5>
+
+                    <form id="formCalendar" method="post" action="app-calendar.html">
+                        <div class="form-group">
+                            <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Titulo</label>
+                            <input type="text" class="form-control" id="Motivo" placeholder="Agregar titulo">
+                        </div><!-- form-group -->
+                        <div class="form-group mg-t-30">
+                            <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Fecha</label>
+                            <input type="date" class="form-control" id="FechaInicio" placeholder="Fecha">
+                        </div><!-- form-group -->
+                        <div class="form-group">
+                            <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Inicio y fin </label>
+                            <div class="row row-xs">
+                                <div class="col-6">
+                                    <input type="time" id="HoraIncio" value="" class="form-control" placeholder="Select date">
+                                </div><!-- col-7 -->
+                                <div class="col-6">
+                                    <input id="HolaFin" type="time" value="" class="form-control" placeholder="Select date">
+                                </div><!-- col-5 -->
+                            </div><!-- row -->
+                        </div><!-- form-group -->
+                        <div class="form-group mg-t-30">
+                            <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Sala</label>
+                            <select class="form-control" id="IdSala">
+                                <option v-for="option in Salas" v-if="Salas.length" v-bind:value="option.idSala">
+                                    {{ option.nombre }}
+                                </option>
+                            </select>
+                        </div><!-- form-group -->
+                        <div class="form-group mg-t-30">
+                            <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Sala</label>
+                            <textarea class="form-control" id="Comentarios"></textarea>
+                        </div><!-- form-group -->
+                    </form>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <a href="" class="btn btn-secondary" data-dismiss="modal">Cancelar</a>
+                    <button type="button" class="btn btn-primary mg-r-5" v-on:click="AddReservacion()">Agregar</button>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+    <div class="modal calendar-modal-create fade effect-scale" id="modalCreateSala" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Crear nueva resevación</h5>
+
+                    <form id="formCalendar" method="post" action="app-calendar.html" v-if="Salas[salaselected] != null && salaselected != null">
+                        <div class="form-group">
+                            <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Nombre</label>
+                            <input type="text" class="form-control" v-model="Salas[salaselected].nombre"  placeholder="Agregar titulo">
+                        </div><!-- form-group -->
+                        <div class="form-group mg-t-30">
+                            <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Cantidad</label>
+                            <input type="number" class="form-control" v-model="Salas[salaselected].capacidad"  placeholder="Fecha">
+                            
+                        </div><!-- form-group -->
+                        <div class="form-group mg-t-30">
+                            <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Sala</label>
+                            <input type="checkbox" class="form-control" v-model="Salas[salaselected].activa" placeholder="Fecha">
+                        </div><!-- form-group -->
+                    </form>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <a href="" class="btn btn-secondary" data-dismiss="modal">Cancelar</a>
+                    <button type="button" class="btn btn-primary mg-r-5" v-on:click="AddReservacion()">Agregar</button>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+</div>
+
+@section Scripts {
+
+    <script src="~/template/lib/moment/min/moment.min.js"></script>
+    <script src="~/template/lib/fullcalendar/fullcalendar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+    <script src="~/template/assets/js/calendar-events.js"></script>
+    <script>
+        var App_calendar = new Vue({
+            el: "#App_calendar",
+            data: {
+                Reservaciones: [],
+                Salas: [],
+                salaselected : null
+            },
+            async mounted () {
+                await this.GetSalas();
+                await this.GetReservaciones();
+                this.StartCalendar();
+            },
+            methods: {
+                AddReservacion: async function () {
+                    var elemento = {
+                        IdSala: document.getElementById("IdSala").value,
+                        Motivo: document.getElementById("Motivo").value,
+                        FechaInicio: document.getElementById("FechaInicio").value,
+                        HoraIncio: document.getElementById("HoraIncio").value,
+                        HolaFin: document.getElementById("HolaFin").value,
+                        Comentarios: document.getElementById("Comentarios").value,
+                    }
+                    await axios.post('@Url.Action("CreateReservacion","Sala")', elemento, null).then(response => {
+                        ShowMessageErrorShort("Reservación registrada", "success")
+                        //this.GetReservaciones();
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data,"error")
+                            }
+                        }
+                    }).finally()
+                    await this.GetReservaciones();
+                    this.StartCalendar();
+
+                },
+                GetSalas: async function () {
+                    await axios.post('@Url.Action("GetList","Sala")', null, null).then(response => {
+                        ShowMessageErrorShort("Salas obtenidas, procesando...", "success")
+                        this.Salas = response.data;
+                        console.log(response.data)
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data,"error")
+                            }
+                        }
+                    }).finally()
+                },
+                GetReservaciones: async function () {
+                    await axios.post('@Url.Action("GetListReservacion","Sala")', null, null).then(response => {
+                        ShowMessageErrorShort("Eventos obtenidos, procesando...", "success")
+                        this.Reservaciones = {
+                            id: 1,
+                            backgroundColor: 'rgba(1,104,250, .15)',
+                            borderColor: '#0168fa',
+                            events: []
+                        }
+                        response.data.forEach((e, i) => {
+                            var reservacion = {
+                                id: e.idSalaReservacion,
+                                start: e.fechaInicio.substring(0,10)+"T"+e.horaIncio,
+                                end: e.fechaInicio.substring(0,10)+"T"+e.horaFin,
+                                title: e.motivo,
+                                description: e.comentarios
+                            }
+                            this.Reservaciones.events.push(reservacion);
+                        })
+                        console.log(response.data)
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data,"error")
+                            }
+                        }
+                    }).finally()
+                },
+                StartCalendar: function () {
+                    $('#calendar').fullCalendar('destroy');
+                    $('#calendar').fullCalendar('render');
+                    $('#calendar').fullCalendar({
+                        header: {
+                          left: 'prev,next today',
+                          center: 'title',
+                          right: 'month,agendaWeek,agendaDay,listWeek'
+                        },
+                        navLinks: true,
+                        selectable: true,
+                        selectLongPressDelay: 100,
+                        editable: true,
+                        nowIndicator: true,
+                        defaultView: 'listMonth',
+                        views: {
+                          agenda: {
+                            columnHeaderHtml: function(mom) {
+                              return '<span>' + mom.format('ddd') + '</span>' +
+                                     '<span>' + mom.format('DD') + '</span>';
+                            }
+                          },
+                          day: { columnHeader: false },
+                          listMonth: {
+                            listDayFormat: 'ddd DD',
+                            listDayAltFormat: false
+                          },
+                          listWeek: {
+                            listDayFormat: 'ddd DD',
+                            listDayAltFormat: false
+                          },
+                          agendaThreeDay: {
+                            type: 'agenda',
+                            duration: { days: 3 },
+                            titleFormat: 'MMMM YYYY'
+                          }
+                        },
+
+                        eventSources: [this.Reservaciones],
+                        eventAfterAllRender: function(view) {
+                          if(view.name === 'listMonth' || view.name === 'listWeek') {
+                            var dates = view.el.find('.fc-list-heading-main');
+                            dates.each(function(){
+                              var text = $(this).text().split(' ');
+                              var now = moment().format('DD');
+
+                              $(this).html(text[0]+'<span>'+text[1]+'</span>');
+                              if(now === text[1]) { $(this).addClass('now'); }
+                            });
+                          }
+
+                          //console.log(view.el);
+                        },
+                        eventRender: function(event, element) {
+
+                          if(event.description) {
+                            element.find('.fc-list-item-title').append('<span class="fc-desc">' + event.description + '</span>');
+                            element.find('.fc-content').append('<span class="fc-desc">' + event.description + '</span>');
+                          }
+
+                          var eBorderColor = (event.source.borderColor)? event.source.borderColor : event.borderColor;
+                          element.find('.fc-list-item-time').css({
+                            color: eBorderColor,
+                            borderColor: eBorderColor
+                          });
+
+                          element.find('.fc-list-item-title').css({
+                            borderColor: eBorderColor
+                          });
+
+                          element.css('borderLeftColor', eBorderColor);
+                        },
+                    });
+                    var calendar = $('#calendar').fullCalendar('getCalendar');
+
+                    // change view to week when in tablet
+                    if(window.matchMedia('(min-width: 576px)').matches) {
+                        calendar.changeView('agendaWeek');
+                    }
+
+                    // change view to month when in desktop
+                    if(window.matchMedia('(min-width: 992px)').matches) {
+                        calendar.changeView('month');
+                    }
+
+                    // change view based in viewport width when resize is detected
+                    calendar.option('windowResize', function(view) {
+                        if(view.name === 'listWeek') {
+                            if(window.matchMedia('(min-width: 992px)').matches) {
+                            calendar.changeView('month');
+                            } else {
+                            calendar.changeView('listWeek');
+                            }
+                        }
+                    });
+                    // Display calendar event modal
+                    calendar.on('eventClick', function(calEvent, jsEvent, view){
+
+                        //var modal = $('#modalCalendarEvent');
+
+                        //modal.modal('show');
+                        //modal.find('.event-title').text(calEvent.title);
+
+                        //if(calEvent.description) {
+                        //  modal.find('.event-desc').text(calEvent.description);
+                        //  modal.find('.event-desc').prev().removeClass('d-none');
+                        //} else {
+                        //  modal.find('.event-desc').text('');
+                        //  modal.find('.event-desc').prev().addClass('d-none');
+                        //}
+
+                        //modal.find('.event-start-date').text(moment(calEvent.start).format('LLL'));
+                        //modal.find('.event-end-date').text(moment(calEvent.end).format('LLL'));
+
+                        ////styling
+                        //modal.find('.modal-header').css('backgroundColor', (calEvent.source.borderColor)? calEvent.source.borderColor : calEvent.borderColor);
+                        console.log(calEvent);
+                    });
+
+                    //this.StartCalendar();
+                    //$('#calendar').fullCalendar({ events: this.Reservaciones    });
+                    //$('#calendar').fullCalendar('rerenderEvents');
+                }
+
+
+            }
+        });
+
+
+    </script>
+
+
+}
+

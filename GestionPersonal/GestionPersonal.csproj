@@ -15,8 +15,4 @@
     <ProjectReference Include="..\GPSInformation\GPSInformation.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\NewFolder\" />
-  </ItemGroup>
-
 </Project>

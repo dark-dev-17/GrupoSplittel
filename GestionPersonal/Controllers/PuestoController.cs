@@ -86,6 +86,7 @@ namespace GestionPersonal.Controllers
                 }
 
                 darkManager.Puesto.Element = Puesto;
+                darkManager.Puesto.Element.RequisicionPersonal = 1;
                 bool result = darkManager.Puesto.Add();
                 if (result)
                 {

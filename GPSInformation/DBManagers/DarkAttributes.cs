@@ -39,6 +39,7 @@ namespace GPSInformation.DBManagers
             }
             return Nombre;
         }
+
         public bool Add()
         {
             TableDB tableDefinifiton = GetClassAttribute();
@@ -78,6 +79,7 @@ namespace GPSInformation.DBManagers
                 return ActionsObjectCode(DbManagerTypes.Delete, tableDefinifiton);
             }
         }
+
         public int GetLastId()
         {
             return dBConnection.GetIntegerValue(string.Format("select max(Id{0}) from {0}", Nametable));
@@ -189,6 +191,11 @@ namespace GPSInformation.DBManagers
                             var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? DateTime.Now : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
                             propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.DateTime), null);
                         }
+                        if (prop.PropertyType.Equals(typeof(DateTime?)))
+                        {
+                            var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? null : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
+                            propertyInfo.SetValue(exFormAsObj, value, null);
+                        }
                         if (prop.PropertyType.Equals(typeof(TimeSpan)))
                         {
                             var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? null : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
@@ -204,6 +211,11 @@ namespace GPSInformation.DBManagers
                             var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? "" : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
                             propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.String), null);
                         }
+                        if (prop.PropertyType.Equals(typeof(bool)))
+                        {
+                            var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? false : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
+                            propertyInfo.SetValue(exFormAsObj, Convert.ChangeType(value, TypeCode.Boolean), null);
+                        }
                         if (prop.PropertyType.Equals(typeof(int)))
                         {
                             var value = Data.GetValue(Data.GetOrdinal(NombrePropiedad)) is System.DBNull ? 0 : Data.GetValue(Data.GetOrdinal(NombrePropiedad));
@@ -218,12 +230,18 @@ namespace GPSInformation.DBManagers
             
             return Response;
         }
+
         private bool ActionsObject(DbManagerTypes dbManagerTypes)
         {
             List<ProcedureModel> procedureModels = new List<ProcedureModel>();
             foreach (var prop in typeof(T).GetProperties())
             {
                 if (prop.PropertyType.Equals(typeof(int)) || prop.PropertyType.Equals(typeof(string)) || prop.PropertyType.Equals(typeof(double)) || prop.PropertyType.Equals(typeof(TimeSpan)) || prop.PropertyType.Equals(typeof(DateTime)))
+                {
+                    PropertyInfo propertyInfo = Element.GetType().GetProperty(prop.Name);
+                    procedureModels.Add(new ProcedureModel { Namefield = prop.Name, value = propertyInfo.GetValue(Element) });
+                }
+                if (prop.PropertyType.Equals(typeof(DateTime?)))
                 {
                     PropertyInfo propertyInfo = Element.GetType().GetProperty(prop.Name);
                     procedureModels.Add(new ProcedureModel { Namefield = prop.Name, value = propertyInfo.GetValue(Element) });
@@ -240,6 +258,7 @@ namespace GPSInformation.DBManagers
                 return false;
             }
         }
+
         private bool ActionsObjectCode(DbManagerTypes dbManagerTypes, TableDB tableDefinifiton)
         {
             //TableDB tableDefinifiton = GetClassAttribute();
@@ -362,6 +381,7 @@ namespace GPSInformation.DBManagers
 
             return result;
         }
+
         private TableDB GetClassAttribute()
         {
             TableDB tableDefinifiton = (TableDB)Attribute.GetCustomAttribute(typeof(T), typeof(TableDB));

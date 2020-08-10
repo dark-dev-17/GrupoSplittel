@@ -33,6 +33,10 @@ namespace GPSInformation
         public virtual DarkAttributes<IncidenciaPermisoProcess> IncidenciaPermisoProcess { get; set; }
         public virtual DarkAttributes<OrganigramaVersion> OrganigramaVersion { get; set; }
         public virtual DarkAttributes<OrganigramaStructura> OrganigramaStructura { get; set; }
+        public virtual DarkAttributes<Sala> Sala { get; set; }
+        public virtual DarkAttributes<SalaReservacion> SalaReservacion { get; set; }
+        public virtual DarkAttributes<Usuario> Usuario { get; set; }
+        public virtual DarkAttributes<RequisicionPersonal> RequisicionPersonal { get; set; }
         #endregion
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
@@ -109,6 +113,22 @@ namespace GPSInformation
             {
                 OrganigramaStructura = new DarkAttributes<OrganigramaStructura>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.Usuario)
+            {
+                Usuario = new DarkAttributes<Usuario>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.Sala)
+            {
+                Sala = new DarkAttributes<Sala>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.SalaReservacion)
+            {
+                SalaReservacion = new DarkAttributes<SalaReservacion>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.RequisicionPersonal)
+            {
+                RequisicionPersonal = new DarkAttributes<RequisicionPersonal>(dBConnection);
+            }
         }
 
         public void OpenConnection()
@@ -144,6 +164,10 @@ namespace GPSInformation
         IncidenciaPermisoProcess = 12,
         OrganigramaVersion = 13,
         OrganigramaStructura = 14,
+        Usuario = 15,
+        Sala = 16,
+        SalaReservacion = 17,
+        RequisicionPersonal = 19,
     }
 
 }

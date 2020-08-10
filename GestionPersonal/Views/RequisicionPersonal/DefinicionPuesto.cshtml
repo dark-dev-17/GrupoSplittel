@@ -1,0 +1,81 @@
+﻿@model GPSInformation.Models.Puesto
+
+@{
+    ViewData["Title"] = "DefinicionPuesto";
+}
+
+<h2>DefinicionPuesto</h2>
+
+<h4>Puesto</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="DefinicionPuesto">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdPuesto" class="control-label"></label>
+                <input asp-for="IdPuesto" class="form-control" />
+                <span asp-validation-for="IdPuesto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DPU" class="control-label"></label>
+                <input asp-for="DPU" class="form-control" />
+                <span asp-validation-for="DPU" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DescripcionPuesto" class="control-label"></label>
+                <input asp-for="DescripcionPuesto" class="form-control" />
+                <span asp-validation-for="DescripcionPuesto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdDepartamento" class="control-label"></label>
+                <input asp-for="IdDepartamento" class="form-control" />
+                <span asp-validation-for="IdDepartamento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SalarioMin" class="control-label"></label>
+                <input asp-for="SalarioMin" class="form-control" />
+                <span asp-validation-for="SalarioMin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SalarioMax" class="control-label"></label>
+                <input asp-for="SalarioMax" class="form-control" />
+                <span asp-validation-for="SalarioMax" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HoraEntrada" class="control-label"></label>
+                <input asp-for="HoraEntrada" class="form-control" />
+                <span asp-validation-for="HoraEntrada" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HoraSalida" class="control-label"></label>
+                <input asp-for="HoraSalida" class="form-control" />
+                <span asp-validation-for="HoraSalida" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdUbicacion" class="control-label"></label>
+                <input asp-for="IdUbicacion" class="form-control" />
+                <span asp-validation-for="IdUbicacion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdPuestoParent" class="control-label"></label>
+                <input asp-for="IdPuestoParent" class="form-control" />
+                <span asp-validation-for="IdPuestoParent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

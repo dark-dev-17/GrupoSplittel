@@ -31,6 +31,7 @@ namespace GPSInformation
         #region Metodos
         public void StartInsert(string statement, List<ProcedureModel> DataModel)
         {
+            string Evaluando = "";
             try
             {
                 if (DataModel == null)
@@ -41,10 +42,25 @@ namespace GPSInformation
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 Command = new SqlCommand(statement, SqlConnection);
                 DataModel.ForEach(param => {
-
-                    if(typeof(int) == param.value.GetType())
+                    Evaluando = param.Namefield;
+                    if(param.value != null)
                     {
-                        if ((int)param.value == 0)
+                        if (typeof(int) == param.value.GetType())
+                        {
+                            if ((int)param.value == 0)
+                            {
+                                SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, DBNull.Value);
+                                sqlParameter.Direction = ParameterDirection.Input;
+                                Command.Parameters.Add(sqlParameter);
+                            }
+                            else
+                            {
+                                SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                                sqlParameter.Direction = ParameterDirection.Input;
+                                Command.Parameters.Add(sqlParameter);
+                            }
+                        }
+                        else if (typeof(DateTime?) == param.value.GetType())
                         {
                             SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, DBNull.Value);
                             sqlParameter.Direction = ParameterDirection.Input;
@@ -59,11 +75,10 @@ namespace GPSInformation
                     }
                     else
                     {
-                        SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                        SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, DBNull.Value);
                         sqlParameter.Direction = ParameterDirection.Input;
                         Command.Parameters.Add(sqlParameter);
                     }
-                    
                 });
 
                 adapter.InsertCommand = Command;
@@ -74,9 +89,15 @@ namespace GPSInformation
             {
                 throw new GpExceptions(string.Format("SqlException - {0}", ex.Message));
             }
+            catch (Exception ex)
+            {
+                throw new GpExceptions(string.Format("SqlException - {0} - {1}", Evaluando, ex.Message));
+            }
         }
         public void StartUpdate(string statement, List<ProcedureModel> DataModel)
         {
+
+            string Evaluando = "";
             try
             {
                 if (DataModel == null)
@@ -87,9 +108,25 @@ namespace GPSInformation
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 Command = new SqlCommand(statement, SqlConnection);
                 DataModel.ForEach(param => {
-                    if (typeof(int) == param.value.GetType())
+                    Evaluando = param.Namefield;
+                    if (param.value != null)
                     {
-                        if ((int)param.value == 0)
+                        if (typeof(int) == param.value.GetType())
+                        {
+                            if ((int)param.value == 0)
+                            {
+                                SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, DBNull.Value);
+                                sqlParameter.Direction = ParameterDirection.Input;
+                                Command.Parameters.Add(sqlParameter);
+                            }
+                            else
+                            {
+                                SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                                sqlParameter.Direction = ParameterDirection.Input;
+                                Command.Parameters.Add(sqlParameter);
+                            }
+                        }
+                        else if (typeof(DateTime?) == param.value.GetType())
                         {
                             SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, DBNull.Value);
                             sqlParameter.Direction = ParameterDirection.Input;
@@ -104,7 +141,7 @@ namespace GPSInformation
                     }
                     else
                     {
-                        SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, param.value);
+                        SqlParameter sqlParameter = new SqlParameter("@" + param.Namefield, DBNull.Value);
                         sqlParameter.Direction = ParameterDirection.Input;
                         Command.Parameters.Add(sqlParameter);
                     }
@@ -117,6 +154,10 @@ namespace GPSInformation
             catch (SqlException ex)
             {
                 throw new GpExceptions(string.Format("SqlException - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new GpExceptions(string.Format("SqlException - {0} - {1}", Evaluando, ex.Message));
             }
         }
         public void StartDelete(string statement, List<ProcedureModel> DataModel)

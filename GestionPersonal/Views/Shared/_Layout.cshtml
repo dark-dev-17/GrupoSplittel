@@ -5,27 +5,42 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title | Gestión de personal</title>
     <environment include="Development">
-        <partial name="_Styles" />
+        <partial name="_Styles"/>
     </environment>
     <environment exclude="Development">
-        <partial name="_Styles" />
+        <partial name="./_Styles" />
     </environment>
 
     <link href="~/css/site.css" rel="stylesheet" />
 </head>
 <body class="pos-relative" data-spy="scroll" data-target="#navSection" data-offset="120">
-    <partial name="_NavBar" />
-    <partial name="_Slide" />
-    <div class="content content-components">
-        <div class="container-fluid">
-            @*<ol class="breadcrumb df-breadcrumbs mg-b-10">
-                <li class="breadcrumb-item"><a href="#">Components</a></li>
-                <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Form Elements</li>
-            </ol>*@
-            @RenderBody()
+    @{
+        var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+        var controllerAction = this.ViewContext.RouteData.Values["action"].ToString();
+    }
+    @if (controllerName == "Login")
+    {
+        @RenderBody()
+    }
+    else
+    {
+        <partial name="_NavBar" />
+        @if (controllerName != "Sala")
+        {
+            <partial name="_Slide" />
+        }
+        <div class="content content-components">
+            <div class="container-fluid">
+                @*<ol class="breadcrumb df-breadcrumbs mg-b-10">
+                        <li class="breadcrumb-item"><a href="#">Components</a></li>
+                        <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Form Elements</li>
+                    </ol>*@
+                @RenderBody()
+            </div>
         </div>
-    </div>
+    }
+
 
     <environment include="Development">
         <partial name="_Scripts" />
@@ -35,15 +50,19 @@
     </environment>
     @RenderSection("Scripts", required: false)
     <script>
-        //$(document).ready(function() {
-        //    $('.table').DataTable({
-        //          language: {
-        //            searchPlaceholder: 'Search...',
-        //            sSearch: '',
-        //            lengthMenu: '_MENU_ items/page',
-        //          }
-        //    });
-        //});
-</script>
+                        $(document).ready(function() {
+                            $('.table').DataTable({
+                                  language: {
+                                    searchPlaceholder: 'Search...',
+                                    sSearch: '',
+                                    lengthMenu: '_MENU_ items/page',
+                                  }
+                            });
+                            //$('.select2').select2({
+                            //    placeholder: 'Choose one',
+                            //    searchInputPlaceholder: 'Search options'
+                            //});
+                        });
+    </script>
 </body>
 </html>

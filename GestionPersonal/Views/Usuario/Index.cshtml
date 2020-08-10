@@ -1,0 +1,63 @@
+﻿@model IEnumerable<GPSInformation.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdUsuario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pass)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Activo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UltimoIngreso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPersona)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdUsuario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pass)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Activo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UltimoIngreso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdPersona)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.IdUsuario }) 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

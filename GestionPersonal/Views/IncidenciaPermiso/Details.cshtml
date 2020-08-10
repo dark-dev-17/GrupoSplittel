@@ -4,7 +4,7 @@
     ViewData["Title"] = "Detalle del permiso";
 }
     <div data-label="Detalle del permiso" class="df-example demo-forms">
-        @await Component.InvokeAsync("EmpleadoBasic", new { id = Model.IdPersona })
+        @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
         <hr />
         <form id="crearPermiso">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -56,22 +56,22 @@
             </div>
             @if (Model.IdAsunto == 36)
             {
-            <div class="form-group row" id="PermisoPago">
-                <label asp-for="IdPagoPermiso" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <select asp-for="IdPagoPermiso" asp-items="ViewBag.PagoPermisoPersonal" disabled class="form-control select2">
-                        <option value="0">Selecciona una opción</option>
-                    </select>
-                    <span asp-validation-for="IdPagoPermiso" class="text-danger"></span>
+                <div class="form-group row" id="PermisoPago">
+                    <label asp-for="IdPagoPermiso" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <select asp-for="IdPagoPermiso" asp-items="ViewBag.PagoPermisoPersonal" disabled class="form-control select2">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
+                        <span asp-validation-for="IdPagoPermiso" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
             }
 
             @*<div class="form-group row mg-b-0">
-            <div class="col-sm-12 text-right">
-                <button type="reset" class="btn btn-sm btn-secondary">Cancelar</button>
-                <button type="button" onclick="app_incidencias.CrearPermiso()" class="btn btn-sm btn-primary">Guardar</button>
-            </div>
-        </div>*@
+                <div class="col-sm-12 text-right">
+                    <button type="reset" class="btn btn-sm btn-secondary">Cancelar</button>
+                    <button type="button" onclick="app_incidencias.CrearPermiso()" class="btn btn-sm btn-primary">Guardar</button>
+                </div>
+            </div>*@
         </form>
     </div>

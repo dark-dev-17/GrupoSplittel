@@ -1,0 +1,47 @@
+﻿@model GPSInformation.Models.Usuario
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="content content-fixed content-auth" style="margin-top: 150px;">
+    <div class="container">
+        <div class="media align-items-stretch justify-content-center ht-100p pos-relative">
+            <div class="media-body align-items-center d-none d-lg-flex">
+                <div class="mx-wd-600">
+                    <img src="https://blog.krowdy.com/hubfs/Campa%C3%B1a%202%20-%20Febrero%202020/Blogposts/recursos%20humanos%204%20proyecciones%202020.png" class="img-fluid" alt="">
+                </div>
+                <div class="pos-absolute b-0 l-0 tx-12 tx-center">
+                    @*Workspace design vector is created by <a href="https://www.freepik.com/pikisuperstar" target="_blank">pikisuperstar (freepik.com)</a>*@
+                </div>
+            </div><!-- media-body -->
+            <div class="sign-wrapper mg-lg-l-50 mg-xl-l-60">
+                <div class="wd-100p">
+                    <h3 class="tx-color-01 mg-b-5">Inicio de sesión</h3>
+                    <p class="tx-color-03 tx-16 mg-b-40">Bienvenido a GPS, por favor inicia sesión para continuar.</p>
+                    <form asp-action="DoLogin">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="UserName" class="control-label"></label>
+                            <input asp-for="UserName" class="form-control" />
+                            <span asp-validation-for="UserName" class="text-danger" placeholder="correo@@email.com"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between mg-b-5">
+                                <label asp-for="Pass" class="control-label"></label>
+                                @*<a href="" class="tx-13">Forgot password?</a>*@
+                            </div>
+                            <input type="password" asp-for="Pass" class="form-control" placeholder="Enter your password" />
+                            <span asp-validation-for="Pass" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-brand-02 btn-block">Iniciar</button>
+                        @*<div class="divider-text">or</div>
+                        <button class="btn btn-outline-facebook btn-block">Sign In With Facebook</button>
+                        <button class="btn btn-outline-twitter btn-block">Sign In With Twitter</button>*@
+                        <div class="tx-13 mg-t-20 tx-center">Don't have an account? <a href="page-signup.html">Create an Account</a></div>
+                    </form>
+                </div>
+            </div><!-- sign-wrapper -->
+        </div><!-- media -->
+    </div><!-- container -->
+</div><!-- content -->

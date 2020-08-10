@@ -1,0 +1,76 @@
+﻿@model IEnumerable<GPSInformation.Models.RequisicionPersonal>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdRequisicionPersonal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreCompleto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Departamento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoRequisicion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PasoCompletado)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdRequisicionPersonal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreCompleto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Departamento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoRequisicion)
+            </td>
+            <td>
+
+
+                @if (item.PasoCompletado == 0)
+                {
+                    <span class="badge badge-secondary">En proceso de autorización</span>
+                }
+                else if (item.PasoCompletado == 1)
+                {
+                    <span class="badge badge-primary">Aceptada</span>
+                }
+                else
+                {
+                    <span class="badge badge-danger">Rechazada</span>
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id=item.IdRequisicionPersonal }) 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

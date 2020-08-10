@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Index";
 }
+@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.persona.IdPersona  })
+    <hr />
 <div id="app_incidencias">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
@@ -39,7 +41,7 @@
                     </button>
                 </div>
                 <div class="modal-body" id="ModalPermiso_content">
-                    
+
                 </div>
                 <div class="modal-footer">
 

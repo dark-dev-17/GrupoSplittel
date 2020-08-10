@@ -1,0 +1,229 @@
+﻿@model GestionPersonal.Models.RequisicionPuesto
+
+@{
+    ViewData["Title"] = "Especificacion";
+}
+    <div id="app_createRequsicionPersonal">
+        <h2>Especificacion</h2>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RequisicionPersonal.IdPersona" class="custom-control-input">
+            <h4>I. Datos del Área solicitante</h4>
+            <hr />
+            @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.RequisicionPersonal.IdPersona })
+            <h4>II. Especificaciones de la requisición</h4>
+            <hr />
+            <div class="form-group row ml-4">
+                <div class="custom-control custom-radio col-sm-3">
+                    <input type="radio" id="TipoRequisicion_1" asp-for="RequisicionPersonal.TipoRequisicion" v-on:click="CubrirPuesto = true"  value="1" class="custom-control-input" checked>
+                    <label class="custom-control-label" for="TipoRequisicion_1">Creación de nuevo puesto </label>
+                </div>
+                <div class="custom-control custom-radio col-sm-3">
+                    <input type="radio" id="TipoRequisicion_2" asp-for="RequisicionPersonal.TipoRequisicion" v-on:click="CubrirPuesto = false"  value="2" class="custom-control-input">
+                    <label class="custom-control-label" for="TipoRequisicion_2">Cobertura de puesto vacante </label>
+                </div>
+            </div>
+            <div class="form-group row ml-4">
+                <div data-label="Motivo de a vacante" class="df-example demo-forms col-lg-12 row">
+                    @{
+                        foreach (GPSInformation.Models.CatalogoOpcionesValores item in ViewBag.Motivos)
+                        {
+                            <div class="custom-control custom-radio col-sm-3">
+                                <input type="radio" v-on:change="ValidOtroMotivo()" id="Motivo_@item.IdCatalogoOpcionesValores" asp-for="RequisicionPersonal.Motivo" value="@item.IdCatalogoOpcionesValores" class="custom-control-input">
+                                <label class="custom-control-label" for="Motivo_@item.IdCatalogoOpcionesValores">@item.Descripcion</label>
+                            </div>
+                        }
+                        <span asp-validation-for="RequisicionPersonal.Motivo" class="text-danger"></span>
+                    }
+                </div>
+                <div data-label="Especifica el motivo" class="df-example demo-forms col-lg-12 row" v-if="motivoOtro == true">
+                    <div class="form-group col-lg-12 row">
+                        <label asp-for="RequisicionPersonal.OtroMotivo" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="RequisicionPersonal.OtroMotivo" class="form-control" placeholder="Motivo" />
+                            <span asp-validation-for="RequisicionPersonal.OtroMotivo" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div data-label="Nombre de la persona a sustituir" class="df-example demo-forms col-lg-12 row" v-if="CubrirPuesto == false">
+                    <div class="form-group col-lg-12 row">
+                        <label asp-for="RequisicionPersonal.PersonaSustituir" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="RequisicionPersonal.PersonaSustituir" class="form-control" placeholder="Motivo" />
+                            <span asp-validation-for="RequisicionPersonal.PersonaSustituir" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h4>III. Definición del Puesto</h4>
+            <hr />
+            <div data-label="Detalle" class="df-example demo-forms col-lg-12 ml-3" v-if="CubrirPuesto == false">
+                <div class="form-group row" >
+                    <label class="col-sm-2 col-form-label" for="Nombre">Selecciona el puesto a cubrir</label>
+                    <div class="col-sm-10">
+                        <select class="custom-select  select2"  asp-for="RequisicionPersonal.IdPuesto" asp-items="ViewBag.Puestos">
+                            <option value="0">Selecciona una dirección</option>
+                        </select>
+                        <span class="text-danger"  asp-validation-for="Puesto.IdPuesto"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div data-label="Detalle" class="df-example demo-forms col-lg-12 ml-3"  v-if="CubrirPuesto == true">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="Nombre">Nombre del Puesto</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="text" asp-for="Puesto.Nombre"  />
+                        <span class="text-danger" asp-validation-for="Puesto.Nombre"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="IdDepartamento">Departamento</label>
+                    <div class="col-sm-4">
+                        <select class="custom-select  select2" asp-for="Puesto.IdDepartamento" asp-items="ViewBag.Departamentos">
+                            <option value="0">Selecciona una dirección</option>
+
+                        </select>
+                        <span class="text-danger" asp-validation-for="Puesto.IdDepartamento"></span>
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="IdUbicacion">Ubicación fisica del puesto</label>
+                    <div class="col-sm-4">
+                        <select class="custom-select select2" asp-for="Puesto.IdUbicacion" asp-items="ViewBag.Ubicaciones">
+                            <option value="0">Selecciona una dirección</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="Puesto.IdUbicacion"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="HoraEntrada">Hora Entrada</label>
+                    <div class="col-sm-4">
+                        <input type="time" class="form-control" asp-for="Puesto.HoraEntrada" />
+                        <span class="text-danger" asp-validation-for="Puesto.HoraEntrada"></span>
+                    </div>
+                    <label class="col-sm-2 col-form-label" for="HoraSalida">Hora Salida</label>
+                    <div class="col-sm-4">
+                        <input type="time" class="form-control" asp-for="Puesto.HoraSalida" />
+                        <span class="text-danger" asp-validation-for="Puesto.HoraSalida"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="DescripcionPuesto">
+                        Funciones generales del Puesto:
+                    </label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="5" asp-for="Puesto.DescripcionPuesto">
+                </textarea>
+                        <span class="text-danger" asp-validation-for="Puesto.DescripcionPuesto"></span>
+                    </div>
+                </div>
+            </div>
+            <h4>IV. Perfi Requerido (Conocimientos Generales)</h4>
+            <hr />
+            <div data-label="Detalle" class="df-example demo-forms col-lg-12 row ml-3">
+                <div class="form-group col-lg-12 row">
+                    <label asp-for="RequisicionPersonal.Escolaridad" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <input asp-for="RequisicionPersonal.Escolaridad" class="form-control" placeholder="Motivo" />
+                        <span asp-validation-for="RequisicionPersonal.Escolaridad" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group col-lg-12 row">
+                    <label asp-for="RequisicionPersonal.EquipoMaquinaria" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <textarea asp-for="RequisicionPersonal.EquipoMaquinaria" class="form-control" placeholder=""></textarea>
+                        <span asp-validation-for="RequisicionPersonal.EquipoMaquinaria" class="text-danger"></span>
+                    </div>
+                    <label asp-for="RequisicionPersonal.Idiomas" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <textarea asp-for="RequisicionPersonal.Idiomas" class="form-control" placeholder=""></textarea>
+                        <span asp-validation-for="RequisicionPersonal.Idiomas" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group col-lg-12 row">
+                    <label asp-for="RequisicionPersonal.SistemasProgramas" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <textarea asp-for="RequisicionPersonal.SistemasProgramas" class="form-control" placeholder=""></textarea>
+                        <span asp-validation-for="RequisicionPersonal.SistemasProgramas" class="text-danger"></span>
+                    </div>
+                    <label asp-for="RequisicionPersonal.Experiencia" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <textarea asp-for="RequisicionPersonal.Experiencia" class="form-control" placeholder=""></textarea>
+                        <span asp-validation-for="RequisicionPersonal.Experiencia" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group col-lg-12 row">
+                    <label asp-for="RequisicionPersonal.Sexo" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <select asp-for="RequisicionPersonal.Sexo" asp-items="ViewBag.Generos" class="form-control select2">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
+                        <span asp-validation-for="RequisicionPersonal.Sexo" class="text-danger"></span>
+                    </div>
+                    <label asp-for="RequisicionPersonal.EstadoCivil" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <select asp-for="RequisicionPersonal.EstadoCivil" asp-items="ViewBag.EstadosCiviles" class="form-control select2">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
+                        <span asp-validation-for="RequisicionPersonal.EstadoCivil" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group col-lg-12 row">
+                    <label asp-for="RequisicionPersonal.RangoEdad" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <input type="text" asp-for="RequisicionPersonal.RangoEdad" class="form-control" placeholder="18-29" />
+                        <span asp-validation-for="RequisicionPersonal.RangoEdad" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="form-group row mg-b-0">
+                <div class="col-sm-12 text-right">
+                    <a asp-action="Index" class="btn btn-sm btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+@section Scripts {
+    <script>
+        var app_createRequsicionPersonal = new Vue({
+            el: "#app_createRequsicionPersonal",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                CubrirPuesto: true,
+                motivoOtro: false,
+
+            },
+            mounted() {
+                this.ValidOtroMotivo();
+                this.ValidNewPuesto();
+            },
+            methods: {
+                ValidOtroMotivo: function () {
+                    let motivoOtro = document.getElementById("Motivo_53")
+                    if (motivoOtro.checked  == true) {
+                        this.motivoOtro =  true;
+                    }
+                    else {
+                        this.motivoOtro =  false;
+                    }
+                    
+                },
+                ValidNewPuesto: function () {
+                    let motivoOtro = document.getElementById("TipoRequisicion_1")
+                    let motivoOtr2o = document.getElementById("TipoRequisicion_2")
+                    if (motivoOtro.checked  == true && motivoOtr2o.checked  == false) {
+                        this.CubrirPuesto =  true;
+                    }
+                    else {
+                        this.CubrirPuesto =  false;
+                    }
+                    
+                }
+            }
+        });
+    </script>
+}

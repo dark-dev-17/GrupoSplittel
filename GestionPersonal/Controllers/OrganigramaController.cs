@@ -266,7 +266,7 @@ namespace GestionPersonal.Controllers
                 });
             });
 
-            return puestoOrgs.OrderBy(a => a.DPU).ToList();
+            return puestoOrgs.OrderBy(a => a.Descripcion).ToList();
         }
 
 

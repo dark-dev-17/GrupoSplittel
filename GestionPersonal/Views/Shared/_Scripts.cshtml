@@ -1,4 +1,5 @@
 ﻿<script src="~/template/lib/jquery/jquery.min.js"></script>
+<script src="~/template/lib/jqueryui/jquery-ui.min.js"></script>
 <script src="~/template/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="~/template/lib/feather-icons/feather.min.js"></script>
 <script src="~/template/lib/perfect-scrollbar/perfect-scrollbar.min.js"></script>
@@ -19,22 +20,22 @@
 <script src="~/template/lib/select2/js/select2.min.js"></script>
 <script>
 
-    function ShowMessageErrorShort(text,icon) {
+    function ShowMessageErrorShort(text, icon) {
         const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000,
-                timerProgressBar: true,
-                onOpen: (toast) => {
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
                 toast.addEventListener('mouseenter', Swal.stopTimer)
                 toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            })
+            }
+        })
 
-            Toast.fire({
-                icon: icon,
-                title: text
-            })
+        Toast.fire({
+            icon: icon,
+            title: text
+        })
     }
 </script>

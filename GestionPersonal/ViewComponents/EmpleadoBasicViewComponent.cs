@@ -18,7 +18,10 @@ namespace GestionPersonal.ViewComponents
             darkManager.OpenConnection();
             darkManager.LoadObject(GpsManagerObjects.Persona);
             darkManager.LoadObject(GpsManagerObjects.Puesto);
+            darkManager.LoadObject(GpsManagerObjects.Departamento);
             darkManager.LoadObject(GpsManagerObjects.Empleado);
+            darkManager.LoadObject(GpsManagerObjects.OrganigramaVersion);
+            darkManager.LoadObject(GpsManagerObjects.OrganigramaStructura);
         }
 
         public async Task<IViewComponentResult> InvokeAsync(int id)
@@ -42,5 +45,7 @@ namespace GestionPersonal.ViewComponents
 
             return await Task.FromResult((IViewComponentResult)View("EmpleadoBasic", empleadoInfor));
         }
+
+        
     }
 }

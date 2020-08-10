@@ -110,7 +110,7 @@
                     <div v-if="year.b2b == null" class="card-footer">Obteniendo B2B......</div>
                     <div v-if="year.b2c != null && year.b2b != null" class="card-body">
                         <i class="ion ion-bag tx-50 lh-0 tx-purple op-5"></i>
-                        <span class="tx-danger">${{ (lastmes.b2c + lastmes.b2b) | formatPrice}} </span>
+                        <span class="tx-danger">${{ (year.b2c + year.b2b) | formatPrice}} </span>
                     </div><!-- card-body -->
                     <div v-if="year.b2c != null && year.b2b != null" class="card-footer">
                         <div>

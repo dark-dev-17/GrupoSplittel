@@ -30,6 +30,8 @@ namespace GestionPersonal.Controllers
         }
         public ActionResult Index(int id)
         {
+
+            id = (int)HttpContext.Session.GetInt32("user_id");
             Incidencias incidencias = new Incidencias();
             incidencias.persona = darkManager.Persona.GetByColumn(""+id,"IdPersona");
             incidencias.permisos = darkManager.IncidenciaPermiso.Get("" + id, "IdPersona");

@@ -21,6 +21,7 @@ namespace GPSInformation.Models
         [ColumnDB(Name = "DescripcionPuesto", IsMapped = true, IsKey = false)]
         public string DescripcionPuesto { get; set; }
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción")]
         [ColumnDB(Name = "IdDepartamento", IsMapped = true, IsKey = false)]
         public int IdDepartamento { get; set; }
         [Required]
@@ -38,15 +39,19 @@ namespace GPSInformation.Models
         [ColumnDB(Name = "HoraSalida", IsMapped = true, IsKey = false)]
         public TimeSpan HoraSalida { get; set; }
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción")]
         [ColumnDB(Name = "IdUbicacion", IsMapped = true, IsKey = false)]
         public int IdUbicacion { get; set; }
         [ColumnDB(Name = "IdPuestoParent", IsMapped = true, IsKey = false)]
         public int IdPuestoParent { get; set; }
+        [ColumnDB(Name = "RequisicionPersonal", IsMapped = true, IsKey = false)]
+        public int RequisicionPersonal { get; set; }
 
 
         [ColumnDB(Name = "Departamento", IsMapped = false, IsKey = false)]
         public Departamento Departamento { get;  set; }
         [ColumnDB(Name = "Ubicacion", IsMapped = false, IsKey = false)]
+        
         public CatalogoOpcionesValores Ubicacion { get;  set; }
         [ColumnDB(Name = "Puesto", IsMapped = false, IsKey = false)]
         public Puesto PuestoParent { get;  set; }
