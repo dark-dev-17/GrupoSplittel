@@ -114,6 +114,11 @@ namespace GPSInformation.DBManagers
         {
             return DataReader(string.Format("select * from {0} where {1} = '{2}'", Nametable, nameCol, id));
         }
+        public List<T> GetIn(int[] keys, string nameCol)
+        {
+            
+            return DataReader(string.Format("select * from {0} where {1} in ({2})", Nametable, nameCol, string.Join(", ", keys)));
+        }
 
         public List<T> Get()
         {
@@ -298,13 +303,17 @@ namespace GPSInformation.DBManagers
                 }
                 else if (dbManagerTypes == DbManagerTypes.Update)
                 {
-                    if (!hiddenAttribute.IsKey)
+                    if (!hiddenAttribute.IsKey && hiddenAttribute.IsMapped)
                     {
                         sentencia += hiddenAttribute.Name + " = @" + hiddenAttribute.Name + ",";
                     }
-                    else
+                    else if(hiddenAttribute.IsKey && hiddenAttribute.IsMapped)
                     {
                         sentenciaVariables = hiddenAttribute.Name + " = @" + hiddenAttribute.Name + "";
+                    }
+                    else
+                    {
+                        
                     }
                 }
                 else if (dbManagerTypes == DbManagerTypes.Delete)

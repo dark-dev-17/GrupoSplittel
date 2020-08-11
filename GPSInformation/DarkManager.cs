@@ -37,6 +37,7 @@ namespace GPSInformation
         public virtual DarkAttributes<SalaReservacion> SalaReservacion { get; set; }
         public virtual DarkAttributes<Usuario> Usuario { get; set; }
         public virtual DarkAttributes<RequisicionPersonal> RequisicionPersonal { get; set; }
+        public virtual DarkAttributes<RequisicionHabilidades> RequisicionHabilidades { get; set; }
         #endregion
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
@@ -129,6 +130,10 @@ namespace GPSInformation
             {
                 RequisicionPersonal = new DarkAttributes<RequisicionPersonal>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.RequisicionHabilidades)
+            {
+                RequisicionHabilidades = new DarkAttributes<RequisicionHabilidades>(dBConnection);
+            }
         }
 
         public void OpenConnection()
@@ -168,6 +173,7 @@ namespace GPSInformation
         Sala = 16,
         SalaReservacion = 17,
         RequisicionPersonal = 19,
+        RequisicionHabilidades = 20,
     }
 
 }

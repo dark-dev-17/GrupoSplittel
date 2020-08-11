@@ -35,7 +35,7 @@ namespace GPSInformation.Models
         [ColumnDB(IsMapped = true, IsKey = false)]
         public string PersonaSustituir { get; set; }
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción")]
+        
         [ColumnDB(IsMapped = true, IsKey = false)]
         public int IdPuesto { get; set; }
         [Required]
@@ -72,5 +72,7 @@ namespace GPSInformation.Models
         public DateTime? FechaAprove { get; set; }
         [ColumnDB(IsMapped = true, IsKey = false)]
         public string Comentarios { get; set; }
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public string HabilidadesExtras { get; set; }
     }
 }

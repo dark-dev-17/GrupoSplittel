@@ -10,5 +10,6 @@ namespace GestionPersonal.Models
     {
         public RequisicionPersonal RequisicionPersonal { get; set; }
         public Puesto Puesto { get; set; }
+        public List<RequisicionHabilidades> Habilidades { get; set; }
     }
 }

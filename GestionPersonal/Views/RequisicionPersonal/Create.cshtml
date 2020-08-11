@@ -8,6 +8,7 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="RequisicionPersonal.IdPersona" class="custom-control-input">
+            
             <h4>I. Datos del Área solicitante</h4>
             <hr />
             @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.RequisicionPersonal.IdPersona })
@@ -15,11 +16,11 @@
             <hr />
             <div class="form-group row ml-4">
                 <div class="custom-control custom-radio col-sm-3">
-                    <input type="radio" id="TipoRequisicion_1" asp-for="RequisicionPersonal.TipoRequisicion" v-on:click="CubrirPuesto = true"  value="1" class="custom-control-input" checked>
+                    <input type="radio" id="TipoRequisicion_1" asp-for="RequisicionPersonal.TipoRequisicion" v-on:click="CubrirPuesto = true" value="1" class="custom-control-input" checked>
                     <label class="custom-control-label" for="TipoRequisicion_1">Creación de nuevo puesto </label>
                 </div>
                 <div class="custom-control custom-radio col-sm-3">
-                    <input type="radio" id="TipoRequisicion_2" asp-for="RequisicionPersonal.TipoRequisicion" v-on:click="CubrirPuesto = false"  value="2" class="custom-control-input">
+                    <input type="radio" id="TipoRequisicion_2" asp-for="RequisicionPersonal.TipoRequisicion" v-on:click="CubrirPuesto = false" value="2" class="custom-control-input">
                     <label class="custom-control-label" for="TipoRequisicion_2">Cobertura de puesto vacante </label>
                 </div>
             </div>
@@ -58,22 +59,23 @@
             <h4>III. Definición del Puesto</h4>
             <hr />
             <div data-label="Detalle" class="df-example demo-forms col-lg-12 ml-3" v-if="CubrirPuesto == false">
-                <div class="form-group row" >
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label" for="Nombre">Selecciona el puesto a cubrir</label>
                     <div class="col-sm-10">
-                        <select class="custom-select  select2"  asp-for="RequisicionPersonal.IdPuesto" asp-items="ViewBag.Puestos">
-                            <option value="0">Selecciona una dirección</option>
+                        <select class="custom-select  select2" asp-for="RequisicionPersonal.IdPuesto" asp-items="ViewBag.Puestos">
+                            <option value="0" selected>Selecciona una dirección</option>
                         </select>
-                        <span class="text-danger"  asp-validation-for="Puesto.IdPuesto"></span>
+                        <span class="text-danger" asp-validation-for="RequisicionPersonal.IdPuesto"></span>
                     </div>
                 </div>
             </div>
-            
-            <div data-label="Detalle" class="df-example demo-forms col-lg-12 ml-3"  v-if="CubrirPuesto == true">
+
+            <div data-label="Detalle" class="df-example demo-forms col-lg-12 ml-3" v-if="CubrirPuesto == true">
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label" for="Nombre">Nombre del Puesto</label>
                     <div class="col-sm-10">
-                        <input class="form-control" type="text" asp-for="Puesto.Nombre"  />
+                        <input type="hidden" asp-for="Puesto.DPU" value="DPU" class="custom-control-input">
+                        <input class="form-control" type="text" asp-for="Puesto.Nombre" />
                         <span class="text-danger" asp-validation-for="Puesto.Nombre"></span>
                     </div>
                 </div>
@@ -175,11 +177,90 @@
                     </div>
                 </div>
             </div>
+            <h5>HABILIDADES REQUERIDAS </h5>
+            <div class="col-lg-12 row  mt-2">
+                <div data-label="Analisis" class="df-example demo-forms col-lg-4">
+                    @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1012).ToList())
+                    {
+
+                    <div class="custom-control custom-radio col-sm-12">
+                        <input type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
+                        <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                    </div>
+                    }
+                </div>
+                <div data-label="LIderazgo" class="df-example demo-forms col-lg-4">
+                    @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1013).ToList())
+                    {
+                    <div class="custom-control custom-radio col-sm-12">
+                        <input type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
+                        <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                    </div>
+                    }
+                </div>
+                <div data-label="Comunicación" class="df-example demo-forms col-lg-4">
+                    @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1014).ToList())
+                    {
+                    <div class="custom-control custom-radio col-sm-12">
+                        <input type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
+                        <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                    </div>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div data-label="PLANEACION / ORGANIZACION" class="df-example demo-forms row mt-2">
+                    @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1015).ToList())
+                    {
+                    <div class="custom-control custom-radio col-sm-3">
+                        <input type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
+                        <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                        <input type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                    </div>
+                    }
+                </div>
+                <h5>APTITUDES REQUERIDAS </h5>
+                <div data-label="otras" class="df-example demo-forms row mt-2">
+                    @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1016).ToList())
+                    {
+                        <div class="custom-control custom-radio col-sm-3">
+                            <input type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
+                            <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                            <input type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                            <input type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                            <input type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                            <input type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="form-group col-lg-12 row mt-2">
+                <label asp-for="RequisicionPersonal.HabilidadesExtras" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-12">
+                    <input type="text" asp-for="RequisicionPersonal.HabilidadesExtras" class="form-control" placeholder="otras" />
+                    <span asp-validation-for="RequisicionPersonal.HabilidadesExtras" class="text-danger"></span>
+                </div>
+            </div>
             <br />
             <div class="form-group row mg-b-0">
                 <div class="col-sm-12 text-right">
                     <a asp-action="Index" class="btn btn-sm btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Guardar requisición</button>
                 </div>
             </div>
         </form>
