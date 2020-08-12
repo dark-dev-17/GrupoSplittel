@@ -10,5 +10,6 @@ namespace GestionPersonal.Models
     {
         public Persona persona { set; get; }
         public List<IncidenciaPermiso> permisos { set; get; }
+        public List<IncidenciaVacacion> vacaciones { set; get; }
     }
 }

@@ -137,6 +137,7 @@
                                 document.getElementById("collapseExample").innerHTML = response.data;
                                 this.ListContacto();
                                 document.getElementById("create_personaContacto").reset();
+                                ShowMessageErrorShort("Datos de contacto de emergencia  guardados", "success")
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
@@ -144,6 +145,7 @@
                                         document.getElementById("collapseExample").innerHTML = response.data;
                                     }
                                 }
+                                ShowMessageErrorShort("Datos de contacto de emergencia no guardados", "error")
                             }).finally()
                         }
                     })
@@ -164,6 +166,7 @@
                                 document.getElementById("EditPersonaContacto_"+id).innerHTML = "";
                                 document.getElementById("EditPersonaContacto_" + id).innerHTML = response.data;
                                 this.ListContacto();
+                                ShowMessageErrorShort("Datos de contacto de emergencia  guardados", "success")
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
@@ -171,6 +174,7 @@
                                         document.getElementById("EditPersonaContacto_"+id).innerHTML = response.data;
                                     }
                                 }
+                                ShowMessageErrorShort("Datos de contacto de emergencia no guardados", "error")
                             }).finally()
                         }
                     })
@@ -190,6 +194,7 @@
                             axios.post('@Url.Action("Create","SplittelEmpleado")', $('#createSplittelEmpleadoForm').serialize(), null).then(response => {
                                 document.getElementById("CreateInfoEmpleadoContent").innerHTML = "";
                                 document.getElementById("CreateInfoEmpleadoContent").innerHTML = response.data;
+                                ShowMessageErrorShort("Datos del empleado guardados", "success")
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
@@ -197,6 +202,7 @@
                                         document.getElementById("CreateInfoEmpleadoContent").innerHTML = response.data;
                                     }
                                 }
+                                ShowMessageErrorShort("Datos del empleado no guardados", "error")
                             }).finally()
                         }
                     })
@@ -216,6 +222,7 @@
                             axios.post('@Url.Action("Edit","SplittelEmpleado")', $('#EditSplittelEmpleadoForm').serialize(), null).then(response => {
                                 document.getElementById("CreateInfoEmpleadoContent").innerHTML = "";
                                 document.getElementById("CreateInfoEmpleadoContent").innerHTML = response.data;
+                                 ShowMessageErrorShort("Datos del empleado guardados", "success")
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
@@ -223,6 +230,7 @@
                                         document.getElementById("CreateInfoEmpleadoContent").innerHTML = response.data;
                                     }
                                 }
+                                ShowMessageErrorShort("Datos del empleado no guardados", "error")
                             }).finally()
                         }
                     })
@@ -241,6 +249,7 @@
                             axios.post('@Url.Action("Create","InformacionMedica")', $('#CreateInformacionMedicaForm').serialize(), null).then(response => {
                                 document.getElementById("CreateInformacionMedicaContent").innerHTML = "";
                                 document.getElementById("CreateInformacionMedicaContent").innerHTML = response.data;
+                                ShowMessageErrorShort("Datos del medicos empleado guardados", "success")
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
@@ -248,6 +257,7 @@
                                         document.getElementById("CreateInformacionMedicaContent").innerHTML = response.data;
                                     }
                                 }
+                                ShowMessageErrorShort("Datos del medicos empleado no guardados", "error")
                             }).finally()
                         }
                     })
@@ -269,6 +279,7 @@
                             axios.post('@Url.Action("Edit","InformacionMedica")', $('#EditInformacionMedicaForm').serialize(), null).then(response => {
                                 document.getElementById("CreateInformacionMedicaContent").innerHTML = "";
                                 document.getElementById("CreateInformacionMedicaContent").innerHTML = response.data;
+                                ShowMessageErrorShort("Datos del medicos empleado guardados", "success")
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
@@ -276,6 +287,7 @@
                                         document.getElementById("CreateInformacionMedicaContent").innerHTML = response.data;
                                     }
                                 }
+                                ShowMessageErrorShort("Datos del medicos empleado no guardados", "error")
                             }).finally()
                         }
                     })
@@ -294,6 +306,7 @@
                             axios.post('@Url.Action("Edit","Persona")', $('#EditInformacionPersonal').serialize(), null).then(response => {
                                 document.getElementById("PersonaEdit").innerHTML = "";
                                 document.getElementById("PersonaEdit").innerHTML = response.data;
+                                ShowMessageErrorShort("Datos del personales empleado guardados", "success")
                             }).catch(error => {
                                 if (error.response) {
                                     if (error.response.status === 400) {
@@ -301,6 +314,7 @@
                                         document.getElementById("PersonaEdit").innerHTML = response.data;
                                     }
                                 }
+                                ShowMessageErrorShort("Datos del personales empleado guardados", "error")
                             }).finally()
                         }
                     })

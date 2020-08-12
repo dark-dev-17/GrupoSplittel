@@ -20,6 +20,7 @@ namespace GestionPersonal.Controllers
             darkManager.OpenConnection();
             darkManager.LoadObject(GpsManagerObjects.Persona);
             darkManager.LoadObject(GpsManagerObjects.IncidenciaPermiso);
+            darkManager.LoadObject(GpsManagerObjects.IncidenciaVacacion);
             darkManager.LoadObject(GpsManagerObjects.CatalogoOpcionesValores);
             darkManager.LoadObject(GpsManagerObjects.Persona);
         }
@@ -41,6 +42,7 @@ namespace GestionPersonal.Controllers
                 var YipoAsunto = darkManager.CatalogoOpcionesValores.Get(permiso.IdAsunto);
                 permiso.DEscripcionTipo = YipoAsunto.Descripcion;
             });
+            incidencias.vacaciones = darkManager.IncidenciaVacacion.Get("" + id, "IdPersona");
             return View(incidencias);
         }
     }

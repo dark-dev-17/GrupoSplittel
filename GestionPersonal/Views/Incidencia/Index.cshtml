@@ -27,8 +27,15 @@
             </div>
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            <h6>Profile</h6>
-            <p>...</p>
+            <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
+                <div class="d-flex align-items-center justify-content-between mg-b-30">
+                    <h4 class="tx-15 mg-b-0">Lista de vacaciones</h4>
+                    <a href="@Url.Action("Create","IncidenciaVacacion", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+                </div>
+            </div>
+            <div id="table-permisos">
+                <partial name="../IncidenciaVacacion/Index" model="Model.vacaciones" />
+            </div>
         </div>
     </div>
     <div class="modal fade" id="modal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4" aria-hidden="true">
@@ -57,6 +64,20 @@
             data: {},
             mounted() { },
             methods: {
+                ActividadVacacion: async function (id) {
+                    axios.post('@Url.Action("Actividad","IncidenciaVacacion")/' + id, null, null).then(response => {
+                        bootbox.alert(response.data);
+                        //ShowMessageErrorShort("Datos del personales empleado guardados", "success")
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                
+                            }
+                        }
+                        ShowMessageErrorShort("Datos del personales empleado guardados", "error")
+                    }).finally()
+
+                }
             }
         });
     </script>

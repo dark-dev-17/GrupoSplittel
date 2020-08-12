@@ -38,6 +38,10 @@ namespace GPSInformation
         public virtual DarkAttributes<Usuario> Usuario { get; set; }
         public virtual DarkAttributes<RequisicionPersonal> RequisicionPersonal { get; set; }
         public virtual DarkAttributes<RequisicionHabilidades> RequisicionHabilidades { get; set; }
+        public virtual DarkAttributes<VacacionesDiasRegla> VacacionesDiasRegla { get; set; }
+        public virtual DarkAttributes<DiaFeriado> DiaFeriado { get; set; }
+        public virtual DarkAttributes<IncidenciaVacacionProcess> IncidenciaVacacionProcess { get; set; }
+        public virtual DarkAttributes<IncidenciaVacacion> IncidenciaVacacion { get; set; }
         #endregion
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
@@ -134,6 +138,22 @@ namespace GPSInformation
             {
                 RequisicionHabilidades = new DarkAttributes<RequisicionHabilidades>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.VacacionesDiasRegla)
+            {
+                VacacionesDiasRegla = new DarkAttributes<VacacionesDiasRegla>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.DiaFeriado)
+            {
+                DiaFeriado = new DarkAttributes<DiaFeriado>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.IncidenciaVacacion)
+            {
+                IncidenciaVacacion = new DarkAttributes<IncidenciaVacacion>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.IncidenciaVacacionProcess)
+            {
+                IncidenciaVacacionProcess = new DarkAttributes<IncidenciaVacacionProcess>(dBConnection);
+            }
         }
 
         public void OpenConnection()
@@ -174,6 +194,9 @@ namespace GPSInformation
         SalaReservacion = 17,
         RequisicionPersonal = 19,
         RequisicionHabilidades = 20,
+        VacacionesDiasRegla = 21,
+        DiaFeriado = 22,
+        IncidenciaVacacion = 23,
+        IncidenciaVacacionProcess = 24,
     }
-
 }

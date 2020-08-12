@@ -3,18 +3,18 @@
 @{
     ViewData["Title"] = "Aprovar requisición: " + @Html.DisplayFor(modelItem => Model.RequisicionPersonal.IdRequisicionPersonal);
 }
-<div id="app_createRequsicionPersonal">
-    <h2>Especificacion</h2>
+    <div id="app_createRequsicionPersonal">
+        <h2>Especificacion</h2>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input  disabled type="hidden" asp-for="RequisicionPersonal.IdPersona" class="custom-control-input">
-        <input  disabled type="hidden" asp-for="RequisicionPersonal.IdRequisicionPersonal" class="custom-control-input">
+        <input disabled type="hidden" asp-for="RequisicionPersonal.IdPersona" class="custom-control-input">
+        <input disabled type="hidden" asp-for="RequisicionPersonal.IdRequisicionPersonal" class="custom-control-input">
 
-        <input  disabled type="hidden" asp-for="RequisicionPersonal.Departamento" class="custom-control-input">
-        <input  disabled type="hidden" asp-for="RequisicionPersonal.Fecha" class="custom-control-input">
-        <input  disabled type="hidden" asp-for="RequisicionPersonal.Comentarios" class="custom-control-input">
-        <input  disabled type="hidden" asp-for="RequisicionPersonal.FechaAprove" class="custom-control-input">
-        <input  disabled type="hidden" asp-for="RequisicionPersonal.TipoRequisicion" class="custom-control-input">
-        <input  disabled type="hidden" asp-for="RequisicionPersonal.NombreCompleto" class="custom-control-input">
+        <input disabled type="hidden" asp-for="RequisicionPersonal.Departamento" class="custom-control-input">
+        <input disabled type="hidden" asp-for="RequisicionPersonal.Fecha" class="custom-control-input">
+        <input disabled type="hidden" asp-for="RequisicionPersonal.Comentarios" class="custom-control-input">
+        <input disabled type="hidden" asp-for="RequisicionPersonal.FechaAprove" class="custom-control-input">
+        <input disabled type="hidden" asp-for="RequisicionPersonal.TipoRequisicion" class="custom-control-input">
+        <input disabled type="hidden" asp-for="RequisicionPersonal.NombreCompleto" class="custom-control-input">
 
         <h4>I. Datos del Área solicitante</h4>
         <hr />
@@ -24,11 +24,11 @@
         <div class="form-group row ml-4">
 
             <div class="custom-control custom-radio col-sm-3">
-                <input  disabled type="radio" id="TipoRequisicion_1" disabled value="1" class="custom-control-input" @Html.Raw(Model.RequisicionPersonal.TipoRequisicion == 1 ? "checked" : "")>
+                <input disabled type="radio" id="TipoRequisicion_1" disabled value="1" class="custom-control-input" @Html.Raw(Model.RequisicionPersonal.TipoRequisicion == 1 ? "checked" : "")>
                 <label class="custom-control-label" for="TipoRequisicion_1">Creación de nuevo puesto </label>
             </div>
             <div class="custom-control custom-radio col-sm-3">
-                <input  disabled type="radio" id="TipoRequisicion_2" disabled value="2" class="custom-control-input" @Html.Raw(Model.RequisicionPersonal.TipoRequisicion == 2 ? "checked" : "")>
+                <input disabled type="radio" id="TipoRequisicion_2" disabled value="2" class="custom-control-input" @Html.Raw(Model.RequisicionPersonal.TipoRequisicion == 2 ? "checked" : "")>
                 <label class="custom-control-label" for="TipoRequisicion_2">Cobertura de puesto vacante </label>
             </div>
         </div>
@@ -37,10 +37,10 @@
                 @{
                     foreach (GPSInformation.Models.CatalogoOpcionesValores item in ViewBag.Motivos)
                     {
-                    <div class="custom-control custom-radio col-sm-3">
-                        <input  disabled type="radio" v-on:change="ValidOtroMotivo()" id="Motivo_@item.IdCatalogoOpcionesValores" asp-for="RequisicionPersonal.Motivo" value="@item.IdCatalogoOpcionesValores" class="custom-control-input">
-                        <label class="custom-control-label" for="Motivo_@item.IdCatalogoOpcionesValores">@item.Descripcion</label>
-                    </div>
+                        <div class="custom-control custom-radio col-sm-3">
+                            <input disabled type="radio" v-on:change="ValidOtroMotivo()" id="Motivo_@item.IdCatalogoOpcionesValores" asp-for="RequisicionPersonal.Motivo" value="@item.IdCatalogoOpcionesValores" class="custom-control-input">
+                            <label class="custom-control-label" for="Motivo_@item.IdCatalogoOpcionesValores">@item.Descripcion</label>
+                        </div>
                     }
                     <span asp-validation-for="RequisicionPersonal.Motivo" class="text-danger"></span>
                 }
@@ -49,7 +49,7 @@
                 <div class="form-group col-lg-12 row">
                     <label asp-for="RequisicionPersonal.OtroMotivo" class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-10">
-                        <input  disabled asp-for="RequisicionPersonal.OtroMotivo" class="form-control" placeholder="Motivo" />
+                        <input disabled asp-for="RequisicionPersonal.OtroMotivo" class="form-control" placeholder="Motivo" />
                         <span asp-validation-for="RequisicionPersonal.OtroMotivo" class="text-danger"></span>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                 <div class="form-group col-lg-12 row">
                     <label asp-for="RequisicionPersonal.PersonaSustituir" class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-10">
-                        <input  disabled asp-for="RequisicionPersonal.PersonaSustituir" class="form-control" placeholder="Motivo" />
+                        <input disabled asp-for="RequisicionPersonal.PersonaSustituir" class="form-control" placeholder="Motivo" />
                         <span asp-validation-for="RequisicionPersonal.PersonaSustituir" class="text-danger"></span>
                     </div>
                 </div>
@@ -68,17 +68,17 @@
         <hr />
         @if (Model.RequisicionPersonal.TipoRequisicion == 2)
         {
-        <div data-label="Detalle" class="df-example demo-forms col-lg-12 ml-3" v-if="CubrirPuesto == false">
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label" for="Nombre">Selecciona el puesto a cubrir </label>
-                <div class="col-sm-10">
-                    <select disabled class="form-control select2" asp-for="RequisicionPersonal.IdPuesto" asp-items="ViewBag.Puestos">
-                        <option value="0">Selecciona una dirección</option>
-                    </select>
-                    <span class="text-danger" asp-validation-for="RequisicionPersonal.IdPuesto"></span>
+            <div data-label="Detalle" class="df-example demo-forms col-lg-12 ml-3" v-if="CubrirPuesto == false">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="Nombre">Selecciona el puesto a cubrir </label>
+                    <div class="col-sm-10">
+                        <select disabled class="form-control select2" asp-for="RequisicionPersonal.IdPuesto" asp-items="ViewBag.Puestos">
+                            <option value="0">Selecciona una dirección</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="RequisicionPersonal.IdPuesto"></span>
+                    </div>
                 </div>
             </div>
-        </div>
         }
         else
         {
@@ -90,15 +90,15 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="Nombre">Nombre del Puesto</label>
                 <div class="col-sm-10">
-                    <input  disabled type="hidden" asp-for="Puesto.DPU" value="DPU" class="custom-control-input">
-                    <input  disabled class="form-control" type="text" asp-for="Puesto.Nombre" />
+                    <input disabled type="hidden" asp-for="Puesto.DPU" value="DPU" class="custom-control-input">
+                    <input disabled class="form-control" type="text" asp-for="Puesto.Nombre" />
                     <span class="text-danger" asp-validation-for="Puesto.Nombre"></span>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="IdDepartamento">Departamento</label>
                 <div class="col-sm-4">
-                    <select  disabled  class="form-control select2" asp-for="Puesto.IdDepartamento" asp-items="ViewBag.Departamentos">
+                    <select disabled class="form-control select2" asp-for="Puesto.IdDepartamento" asp-items="ViewBag.Departamentos">
                         <option value="0">Selecciona una dirección</option>
 
                     </select>
@@ -106,7 +106,7 @@
                 </div>
                 <label class="col-sm-2 col-form-label" for="IdUbicacion">Ubicación fisica del puesto</label>
                 <div class="col-sm-4">
-                    <select  disabled  class="form-control select2" asp-for="Puesto.IdUbicacion" asp-items="ViewBag.Ubicaciones">
+                    <select disabled class="form-control select2" asp-for="Puesto.IdUbicacion" asp-items="ViewBag.Ubicaciones">
                         <option value="0">Selecciona una dirección</option>
                     </select>
                     <span class="text-danger" asp-validation-for="Puesto.IdUbicacion"></span>
@@ -115,12 +115,12 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="HoraEntrada">Hora Entrada</label>
                 <div class="col-sm-4">
-                    <input  disabled type="time" class="form-control" asp-for="Puesto.HoraEntrada" />
+                    <input disabled type="time" class="form-control" asp-for="Puesto.HoraEntrada" />
                     <span class="text-danger" asp-validation-for="Puesto.HoraEntrada"></span>
                 </div>
                 <label class="col-sm-2 col-form-label" for="HoraSalida">Hora Salida</label>
                 <div class="col-sm-4">
-                    <input  disabled type="time" class="form-control" asp-for="Puesto.HoraSalida" />
+                    <input disabled type="time" class="form-control" asp-for="Puesto.HoraSalida" />
                     <span class="text-danger" asp-validation-for="Puesto.HoraSalida"></span>
                 </div>
             </div>
@@ -129,7 +129,7 @@
                     Funciones generales del Puesto:
                 </label>
                 <div class="col-sm-10">
-                    <textarea disabled  class="form-control" rows="5" asp-for="Puesto.DescripcionPuesto">
+                    <textarea disabled class="form-control" rows="5" asp-for="Puesto.DescripcionPuesto">
                 </textarea>
                     <span class="text-danger" asp-validation-for="Puesto.DescripcionPuesto"></span>
                 </div>
@@ -141,45 +141,45 @@
             <div class="form-group col-lg-12 row">
                 <label asp-for="RequisicionPersonal.Escolaridad" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
-                    <input  disabled asp-for="RequisicionPersonal.Escolaridad" class="form-control" placeholder="Motivo" />
+                    <input disabled asp-for="RequisicionPersonal.Escolaridad" class="form-control" placeholder="Motivo" />
                     <span asp-validation-for="RequisicionPersonal.Escolaridad" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group col-lg-12 row">
                 <label asp-for="RequisicionPersonal.EquipoMaquinaria" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <textarea disabled  asp-for="RequisicionPersonal.EquipoMaquinaria" class="form-control" placeholder=""></textarea>
+                    <textarea disabled asp-for="RequisicionPersonal.EquipoMaquinaria" class="form-control" placeholder=""></textarea>
                     <span asp-validation-for="RequisicionPersonal.EquipoMaquinaria" class="text-danger"></span>
                 </div>
                 <label asp-for="RequisicionPersonal.Idiomas" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <textarea disabled  asp-for="RequisicionPersonal.Idiomas" class="form-control" placeholder=""></textarea>
+                    <textarea disabled asp-for="RequisicionPersonal.Idiomas" class="form-control" placeholder=""></textarea>
                     <span asp-validation-for="RequisicionPersonal.Idiomas" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group col-lg-12 row">
                 <label asp-for="RequisicionPersonal.SistemasProgramas" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <textarea disabled  asp-for="RequisicionPersonal.SistemasProgramas" class="form-control" placeholder=""></textarea>
+                    <textarea disabled asp-for="RequisicionPersonal.SistemasProgramas" class="form-control" placeholder=""></textarea>
                     <span asp-validation-for="RequisicionPersonal.SistemasProgramas" class="text-danger"></span>
                 </div>
                 <label asp-for="RequisicionPersonal.Experiencia" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <textarea disabled  asp-for="RequisicionPersonal.Experiencia" class="form-control" placeholder=""></textarea>
+                    <textarea disabled asp-for="RequisicionPersonal.Experiencia" class="form-control" placeholder=""></textarea>
                     <span asp-validation-for="RequisicionPersonal.Experiencia" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group col-lg-12 row">
                 <label asp-for="RequisicionPersonal.Sexo" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <select  disabled  asp-for="RequisicionPersonal.Sexo" asp-items="ViewBag.Generos" class="form-control select2">
+                    <select disabled asp-for="RequisicionPersonal.Sexo" asp-items="ViewBag.Generos" class="form-control select2">
                         <option value="0">Selecciona una opción</option>
                     </select>
                     <span asp-validation-for="RequisicionPersonal.Sexo" class="text-danger"></span>
                 </div>
                 <label asp-for="RequisicionPersonal.EstadoCivil" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <select  disabled  asp-for="RequisicionPersonal.EstadoCivil" asp-items="ViewBag.EstadosCiviles" class="form-control select2">
+                    <select disabled asp-for="RequisicionPersonal.EstadoCivil" asp-items="ViewBag.EstadosCiviles" class="form-control select2">
                         <option value="0">Selecciona una opción</option>
                     </select>
                     <span asp-validation-for="RequisicionPersonal.EstadoCivil" class="text-danger"></span>
@@ -188,7 +188,7 @@
             <div class="form-group col-lg-12 row">
                 <label asp-for="RequisicionPersonal.RangoEdad" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <input  disabled type="text" asp-for="RequisicionPersonal.RangoEdad" class="form-control" placeholder="18-29" />
+                    <input disabled type="text" asp-for="RequisicionPersonal.RangoEdad" class="form-control" placeholder="18-29" />
                     <span asp-validation-for="RequisicionPersonal.RangoEdad" class="text-danger"></span>
                 </div>
             </div>
@@ -199,42 +199,42 @@
                 @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1012).ToList())
                 {
 
-                <div class="custom-control custom-radio col-sm-12">
-                    <input  disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
-                    <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
-                </div>
+                    <div class="custom-control custom-radio col-sm-12">
+                        <input disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
+                        <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                    </div>
                 }
             </div>
             <div data-label="LIderazgo" class="df-example demo-forms col-lg-4">
                 @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1013).ToList())
                 {
-                <div class="custom-control custom-radio col-sm-12">
-                    <input  disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
-                    <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].IdRequisicionHabilidades" />
-                </div>
+                    <div class="custom-control custom-radio col-sm-12">
+                        <input disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
+                        <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].IdRequisicionHabilidades" />
+                    </div>
                 }
             </div>
             <div data-label="Comunicación" class="df-example demo-forms col-lg-4">
                 @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1014).ToList())
                 {
-                <div class="custom-control custom-radio col-sm-12">
-                    <input  disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
-                    <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].IdRequisicionHabilidades" />
-                </div>
+                    <div class="custom-control custom-radio col-sm-12">
+                        <input disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
+                        <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].IdRequisicionHabilidades" />
+                    </div>
                 }
             </div>
         </div>
@@ -242,61 +242,94 @@
             <div data-label="PLANEACION / ORGANIZACION" class="df-example demo-forms row mt-2">
                 @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1015).ToList())
                 {
-                <div class="custom-control custom-radio col-sm-3">
-                    <input  disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
-                    <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].IdRequisicionHabilidades" />
-                </div>
+                    <div class="custom-control custom-radio col-sm-3">
+                        <input disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
+                        <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].IdRequisicionHabilidades" />
+                    </div>
                 }
             </div>
             <h5>APTITUDES REQUERIDAS </h5>
             <div data-label="otras" class="df-example demo-forms row mt-2">
                 @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1016).ToList())
                 {
-                <div class="custom-control custom-radio col-sm-3">
-                    <input  disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input disabled">
-                    <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
-                    <input  disabled type="hidden" asp-for="Habilidades[item.Posicion].IdRequisicionHabilidades" />
-                </div>
+                    <div class="custom-control custom-radio col-sm-3">
+                        <input disabled type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input disabled">
+                        <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Descripcion" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Bloque" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].IdHabilidad" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].Posicion" />
+                        <input disabled type="hidden" asp-for="Habilidades[item.Posicion].IdRequisicionHabilidades" />
+                    </div>
                 }
             </div>
         </div>
         <div class="form-group col-lg-12 row mt-2">
             <label asp-for="RequisicionPersonal.HabilidadesExtras" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-12">
-                <input  disabled type="text" asp-for="RequisicionPersonal.HabilidadesExtras" class="form-control" placeholder="otras" />
+                <input disabled type="text" asp-for="RequisicionPersonal.HabilidadesExtras" class="form-control" placeholder="otras" />
                 <span asp-validation-for="RequisicionPersonal.HabilidadesExtras" class="text-danger"></span>
             </div>
         </div>
         <br />
-        <div class="form-group row mg-b-0">
-            <div class="col-sm-12 text-right">
-                <a asp-action="Index" class="btn btn-sm btn-secondary">Regresar</a>
-                
-                <form asp-action="Aprobar">
-                    <input type="hidden" name="id" value="@Model.RequisicionPersonal.IdRequisicionPersonal" />
-                    <input type="hidden" name="Estatus" value="Rechazar" />
-                    <input type="hidden" name="comentarios" value="No aplica" />
-                    <button type="submit" class="btn btn-sm btn-danger">Rechazar</button>
-                </form>
-                <form asp-action="Aprobar">
-                    <input type="hidden" name="id" value="@Model.RequisicionPersonal.IdRequisicionPersonal" />
-                    <input type="hidden" name="Estatus" value="Aprobar" />
-                    <input type="hidden" name="comentarios" value="No aplica" />
-                    <button type="submit" class="btn btn-sm btn-primary">Aprobar</button>
-                </form>
 
+        <h4>V. Firmas para Gestión </h4>
+        <hr />
+        @if (Model.RequisicionPersonal.PasoCompletado == 2)
+        {
+            <div class="alert alert-danger mg-b-0" role="alert">
+                Esta requisición ha sido rechazada
+            </div>
+        }
+        else if (Model.RequisicionPersonal.PasoCompletado == 1)
+        {
+            <div class="alert alert-success mg-b-0" role="alert">
+                Esta requisición ha sido autorizada
+            </div>
+        }
+        else if (Model.RequisicionPersonal.PasoCompletado == 0)
+        {
+            <div class="alert alert-info mg-b-0" role="alert">
+                Esta requisición esta en proceso de autorización
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning mg-b-0" role="alert">
+                Esta requisición ha sido cancelada por el solicitante
+            </div>
+        }
+        @if (Model.RequisicionPersonal.IdPersonaAprove != 0)
+        {
+            @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.RequisicionPersonal.IdPersonaAprove })
+        }
+    <hr />
+        <div class="form-group row mg-b-0 mt-4">
+            <div class="col-sm-12 text-right row">
+                <a asp-action="Index" class="btn btn-sm btn-secondary  col-sm-1">Regresar</a>
+                @if (Model.RequisicionPersonal.PasoCompletado == 0)
+                {
+                    <form asp-action="Aprobar" class="form-inline col-sm-1">
+                        <input type="hidden" name="id" value="@Model.RequisicionPersonal.IdRequisicionPersonal" />
+                        <input type="hidden" name="Estatus" value="Rechazar" />
+                        <input type="hidden" name="comentarios" value="No aplica" />
+                        <button type="submit" class="btn btn-sm btn-danger">Rechazar</button>
+                    </form>
+                    <form asp-action="Aprobar" class="form-inline col-sm-1">
+                        <input type="hidden" name="id" value="@Model.RequisicionPersonal.IdRequisicionPersonal" />
+                        <input type="hidden" name="Estatus" value="Aprobar" />
+                        <input type="hidden" name="comentarios" value="No aplica" />
+                        <button type="submit" class="btn btn-sm btn-primary">Aprobar</button>
+                    </form>
+                }
             </div>
         </div>
-</div>
+    </div>
 
 @section Scripts {
     <script>

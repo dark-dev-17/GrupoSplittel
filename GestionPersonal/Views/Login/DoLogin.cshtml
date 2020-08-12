@@ -19,7 +19,7 @@
                 <div class="wd-100p">
                     <h3 class="tx-color-01 mg-b-5">Inicio de sesión</h3>
                     <p class="tx-color-03 tx-16 mg-b-40">Bienvenido a GPS, por favor inicia sesión para continuar.</p>
-                    <form asp-action="DoLogin">
+                    <form asp-action="DoLogin" asp-controller="Login">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="UserName" class="control-label"></label>

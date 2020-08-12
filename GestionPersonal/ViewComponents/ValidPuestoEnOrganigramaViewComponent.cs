@@ -65,7 +65,7 @@ namespace GestionPersonal.ViewComponents
                     var Jefes = darkManager.Empleado.Get("" + empleadoInfor.PuestoBoos.IdPuesto, "IdPuesto");
                     empleadoInfor.personaBoos = new List<GPSInformation.Models.Persona>();
                     Jefes.ForEach(a => {
-                        empleadoInfor.personaBoos.Add(darkManager.Persona.Get(id));
+                        empleadoInfor.personaBoos.Add(darkManager.Persona.Get(a.IdPersona));
                     });
                 }
             }
