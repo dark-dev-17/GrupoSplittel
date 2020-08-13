@@ -26,7 +26,7 @@
                             </div>
                             <div class="form-group">
                                 <label asp-for="Placas" class="control-label"></label>
-                                <input asp-for="Placas" class="form-control" value="@Html.Raw(Model.Placas == -1 ? "No aplica" : Model.Placas+"")" readonly/>
+                                <input asp-for="Placas" class="form-control" value="@Html.Raw(Model.Placas == "" ? "No aplica" : Model.Placas+"")" readonly/>
                                 <span asp-validation-for="Placas" class="text-danger"></span>
                             </div>
                             <div class="form-group">

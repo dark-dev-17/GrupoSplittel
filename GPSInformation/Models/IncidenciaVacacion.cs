@@ -10,6 +10,7 @@ namespace GPSInformation.Models
     public class IncidenciaVacacion
     {
         [Display(Name = "Folio")]
+        [DisplayFormat(DataFormatString = "{0:0000}", ApplyFormatInEditMode = true)]
         [ColumnDB(IsMapped = true, IsKey = true)]
         public int IdIncidenciaVacacion { get; set; }
 
@@ -49,14 +50,20 @@ namespace GPSInformation.Models
     }
 
     [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]
-    public class IncidenciaVacacionProcess
+    public class IncidenciaProcess
     {
         [ColumnDB(IsMapped = true, IsKey = true)]
-        public int IdIncidenciaVacacionProcess { get; set; }
+        public int IdIncidenciaProcess { get; set; }
 
         [Display(Name = "IdIncidenciaVacacion")]
+        [DisplayFormat(DataFormatString = "{0:0000}", ApplyFormatInEditMode = true)]
         [ColumnDB(IsMapped = true, IsKey = false)]
-        public int IdIncidenciaVacacion { get; set; }
+        public int? IdIncidenciaVacacion { get; set; }
+
+        [Display(Name = "IdIncidenciaPermiso")]
+        [DisplayFormat(DataFormatString = "{0:0000}", ApplyFormatInEditMode = true)]
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public int? IdIncidenciaPermiso { get; set; }
 
         [Display(Name = "Aprobador")]
         [ColumnDB(IsMapped = true, IsKey = false)]

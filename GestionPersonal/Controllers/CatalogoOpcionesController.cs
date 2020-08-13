@@ -195,7 +195,7 @@ namespace GestionPersonal.Controllers
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
         }
         

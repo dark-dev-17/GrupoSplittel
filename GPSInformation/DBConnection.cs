@@ -15,6 +15,8 @@ namespace GPSInformation
         private SqlCommand Command;
         public string mensaje;
         public int ErrorCode;
+        public bool IsTracsactionActive = false;
+        private SqlTransaction tran;
         #endregion
 
         #region Constructores
@@ -29,6 +31,31 @@ namespace GPSInformation
         #endregion
 
         #region Metodos
+
+        public void StartTransaction()
+        {
+            tran = SqlConnection.BeginTransaction();
+            IsTracsactionActive = true;
+        }
+
+        public void Commit()
+        {
+            if(IsTracsactionActive == false)
+            {
+                throw new GpExceptions("Transactios are inactive");
+            }
+            tran.Commit();
+        }
+
+        public void RolBack()
+        {
+            if (IsTracsactionActive == false)
+            {
+                throw new GpExceptions("Transactios are inactive");
+            }
+            tran.Rollback();
+        }
+
         public void StartInsert(string statement, List<ProcedureModel> DataModel)
         {
             string Evaluando = "";
@@ -40,7 +67,15 @@ namespace GPSInformation
                 }
 
                 SqlDataAdapter adapter = new SqlDataAdapter();
-                Command = new SqlCommand(statement, SqlConnection);
+                if (IsTracsactionActive)
+                {
+                    Command = new SqlCommand(statement, SqlConnection, tran);
+                }
+                else
+                {
+                    Command = new SqlCommand(statement, SqlConnection);
+                }
+                
                 DataModel.ForEach(param => {
                     Evaluando = param.Namefield;
                     if(param.value != null)
@@ -106,7 +141,14 @@ namespace GPSInformation
                 }
 
                 SqlDataAdapter adapter = new SqlDataAdapter();
-                Command = new SqlCommand(statement, SqlConnection);
+                if (IsTracsactionActive)
+                {
+                    Command = new SqlCommand(statement, SqlConnection, tran);
+                }
+                else
+                {
+                    Command = new SqlCommand(statement, SqlConnection);
+                }
                 DataModel.ForEach(param => {
                     Evaluando = param.Namefield;
                     if (param.value != null)
@@ -170,7 +212,14 @@ namespace GPSInformation
                 }
 
                 SqlDataAdapter adapter = new SqlDataAdapter();
-                Command = new SqlCommand(statement, SqlConnection);
+                if (IsTracsactionActive)
+                {
+                    Command = new SqlCommand(statement, SqlConnection, tran);
+                }
+                else
+                {
+                    Command = new SqlCommand(statement, SqlConnection);
+                }
                 DataModel.ForEach(param => {
                     if (typeof(int) == param.value.GetType())
                     {
@@ -272,10 +321,21 @@ namespace GPSInformation
             try
             {
                 CheckConnection();
-                using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                if (IsTracsactionActive)
                 {
-                    return string.IsNullOrEmpty(sqlCommand.ExecuteScalar().ToString()) ? 0 : int.Parse(sqlCommand.ExecuteScalar().ToString());
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection,tran))
+                    {
+                        return string.IsNullOrEmpty(sqlCommand.ExecuteScalar().ToString()) ? 0 : int.Parse(sqlCommand.ExecuteScalar().ToString());
+                    }
                 }
+                else
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                    {
+                        return string.IsNullOrEmpty(sqlCommand.ExecuteScalar().ToString()) ? 0 : int.Parse(sqlCommand.ExecuteScalar().ToString());
+                    }
+                }
+                
             }
             catch (SqlException ex)
             {
@@ -295,9 +355,19 @@ namespace GPSInformation
             try
             {
                 CheckConnection();
-                using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                if (IsTracsactionActive)
                 {
-                    return sqlCommand.ExecuteScalar().ToString();
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection, tran))
+                    {
+                        return sqlCommand.ExecuteScalar().ToString();
+                    }
+                }
+                else
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                    {
+                        return sqlCommand.ExecuteScalar().ToString();
+                    }
                 }
             }
             catch (SqlException ex)
@@ -318,10 +388,21 @@ namespace GPSInformation
             try
             {
                 CheckConnection();
-                using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                if (IsTracsactionActive)
                 {
-                    return string.IsNullOrEmpty(sqlCommand.ExecuteScalar().ToString()) ? 0 : double.Parse(sqlCommand.ExecuteScalar().ToString());
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection, tran))
+                    {
+                        return string.IsNullOrEmpty(sqlCommand.ExecuteScalar().ToString()) ? 0 : double.Parse(sqlCommand.ExecuteScalar().ToString());
+                    }
                 }
+                else
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                    {
+                        return string.IsNullOrEmpty(sqlCommand.ExecuteScalar().ToString()) ? 0 : double.Parse(sqlCommand.ExecuteScalar().ToString());
+                    }
+                }
+                    
             }
             catch (SqlException ex)
             {
@@ -341,10 +422,21 @@ namespace GPSInformation
             try
             {
                 CheckConnection();
-                using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                if (IsTracsactionActive)
                 {
-                    return DateTime.Parse(sqlCommand.ExecuteScalar().ToString());
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection, tran))
+                    {
+                        return DateTime.Parse(sqlCommand.ExecuteScalar().ToString());
+                    }
                 }
+                else
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                    {
+                        return DateTime.Parse(sqlCommand.ExecuteScalar().ToString());
+                    }
+                }
+                    
             }
             catch (SqlException ex)
             {
@@ -364,17 +456,35 @@ namespace GPSInformation
             try
             {
                 CheckConnection();
-                using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                if (IsTracsactionActive)
                 {
-                    sqlCommand.CommandTimeout = 120;
-                    SqlDataReader DataReader = sqlCommand.ExecuteReader();
-                    if (!DataReader.HasRows)
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection, tran))
                     {
-                        mensaje = "No se encontraron registros!";
-                        ErrorCode = 200;
+                        sqlCommand.CommandTimeout = 120;
+                        SqlDataReader DataReader = sqlCommand.ExecuteReader();
+                        if (!DataReader.HasRows)
+                        {
+                            mensaje = "No se encontraron registros!";
+                            ErrorCode = 200;
+                        }
+                        return DataReader;
                     }
-                    return DataReader;
                 }
+                else
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                    {
+                        sqlCommand.CommandTimeout = 120;
+                        SqlDataReader DataReader = sqlCommand.ExecuteReader();
+                        if (!DataReader.HasRows)
+                        {
+                            mensaje = "No se encontraron registros!";
+                            ErrorCode = 200;
+                        }
+                        return DataReader;
+                    }
+                }
+                
             }
             catch (SqlException ex)
             {

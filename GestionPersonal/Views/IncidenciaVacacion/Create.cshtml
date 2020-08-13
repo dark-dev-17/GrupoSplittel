@@ -1,12 +1,15 @@
 ﻿@model GPSInformation.Models.IncidenciaVacacion
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear solicitud de vacaciones";
 }
 
     <div data-label="Crear Nuevo Permiso" class="df-example demo-forms" id="app_createPermiso">
+        <h4>I. Solicitante</h4>
+        <hr />
         @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
         @*@await Component.InvokeAsync("EmpleadoBasic", new { id = Model.IdPersona })*@
+        <h4>II. Detalle de solicitud</h4>
         <hr />
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -26,8 +29,8 @@
             </div>
             <div class="form-group row mg-b-0">
                 <div class="col-sm-12 text-right">
-                    <a href="@Url.Action("Index","Incidencia", new { id = Model.IdPersona })"  class="btn btn-sm btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                    <a href="@Url.Action("Index","Incidencia", new { id = Model.IdPersona })" class="btn btn-sm btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-sm btn-primary">Guardar solicitud</button>
                 </div>
             </div>
         </form>

@@ -45,16 +45,6 @@ namespace GestionIncidenciaPermisol.Controllers
             return View(new IncidenciaPermiso() { IdPersona = id, Fecha = DateTime.Now });
         }
 
-        public ActionResult Edit(int id)
-        {
-            TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TiposPermisos"] = TiposPermisos;
-            ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
-
-            var response =  darkManager.IncidenciaPermiso.Get(id);
-            return View(response);
-        }
 
         public ActionResult Details(int id)
         {
@@ -76,7 +66,7 @@ namespace GestionIncidenciaPermisol.Controllers
             PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
             ViewData["TiposPermisos"] = TiposPermisos;
             ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
-            
+            darkManager.StartTransaction();
             try
             {
                 if (!ModelState.IsValid)
@@ -94,26 +84,128 @@ namespace GestionIncidenciaPermisol.Controllers
                 bool result = darkManager.IncidenciaPermiso.Add();
                 if (result)
                 {
-                    darkManager.IncidenciaPermisoProcess.Element = new IncidenciaPermisoProcess() {
-                        IdIncidenciaPermiso = darkManager.IncidenciaPermiso.GetLastId(),
-                        Fecha = DateTime.Now,
-                        Estatus = 1,
-                        Comentarios = "El empleado ha creado una incidencia",
-                        IdPersona = IncidenciaPermiso.IdPersona,
-                    };
-                    darkManager.IncidenciaPermisoProcess.Add();
+
+                    AddSteps(IncidenciaPermiso);
+                    darkManager.Commit();
                     return RedirectToAction("Index", "Incidencia", new { id = IncidenciaPermiso.IdPersona });
                 }
                 else
                 {
                     return View(IncidenciaPermiso);
                 }
+                
             }
             catch(GPSInformation.Exceptions.GpExceptions ex)
             {
+                darkManager.RolBack();
                 ModelState.AddModelError("", ex.Message);
                 return View(IncidenciaPermiso);
             }
+        }
+
+        public ActionResult Cancel(int id)
+        {
+            TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            ViewData["TiposPermisos"] = TiposPermisos;
+            ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
+
+            var response = darkManager.IncidenciaPermiso.Get(id);
+            return View(response);
+        }
+
+        // POST: IncidenciaVacacion/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Cancel(int id, IFormCollection collection)
+        {
+
+            try
+            {
+                // TODO: Add delete logic here
+                var result = darkManager.IncidenciaVacacion.Get(id);
+                result.Estatus = 2; // cancel
+                darkManager.IncidenciaVacacion.Element = result;
+
+                if (darkManager.IncidenciaPermiso.Update())
+                {
+                    return RedirectToAction("Index", "Incidencia", new { Id = result.IdPersona });
+                }
+                else
+                {
+                    return NotFound(darkManager.GetLastMessage());
+                }
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        // POST: IncidenciaVacacion/Delete/5
+        [HttpPost]
+        public ActionResult Actividad(int id)
+        {
+            try
+            {
+                // TODO: Add delete logic here
+                var result = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaPermiso));
+                return PartialView(result);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return PartialView(ex.Message);
+            }
+        }
+
+
+        private void AddSteps(IncidenciaPermiso IncidenciaPermiso)
+        {
+            var procesoStep = new IncidenciaProcess();
+            procesoStep.IdIncidenciaVacacion = darkManager.IncidenciaPermiso.GetLastId();
+            procesoStep.IdPersona = IncidenciaPermiso.IdPersona;
+            procesoStep.Fecha = DateTime.Now;
+            procesoStep.Titulo = "Incidencia creada por solicitante";
+            procesoStep.Comentarios = "";
+            procesoStep.Nivel = 1;
+            procesoStep.Revisada = true;
+            procesoStep.Autorizada = true;
+            procesoStep.NombreEmpleado = HttpContext.Session.GetString("user_fullname");
+            darkManager.IncidenciaProcess.Element = procesoStep;
+            darkManager.IncidenciaProcess.Add();
+
+            procesoStep.IdPersona = 0;
+            procesoStep.Fecha = null;
+            procesoStep.Titulo = "Aprobación por jefe inmediato";
+            procesoStep.Comentarios = "";
+            procesoStep.Nivel = 2;
+            procesoStep.Revisada = false;
+            procesoStep.Autorizada = false;
+            procesoStep.NombreEmpleado = "";
+            darkManager.IncidenciaProcess.Element = procesoStep;
+            darkManager.IncidenciaProcess.Add();
+
+            procesoStep.IdPersona = 0;
+            procesoStep.Fecha = null;
+            procesoStep.Titulo = "Aprobación por gestión de personal";
+            procesoStep.Comentarios = "";
+            procesoStep.Nivel = 3;
+            procesoStep.Revisada = false;
+            procesoStep.Autorizada = false;
+            procesoStep.NombreEmpleado = "";
+            darkManager.IncidenciaProcess.Element = procesoStep;
+            darkManager.IncidenciaProcess.Add();
+
+            procesoStep.IdPersona = 0;
+            procesoStep.Fecha = null;
+            procesoStep.Titulo = "permiso concluido/tomado";
+            procesoStep.Comentarios = "";
+            procesoStep.Nivel = 4;
+            procesoStep.Revisada = false;
+            procesoStep.Autorizada = false;
+            procesoStep.NombreEmpleado = "";
+            darkManager.IncidenciaProcess.Element = procesoStep;
+            darkManager.IncidenciaProcess.Add();
         }
     }
 }

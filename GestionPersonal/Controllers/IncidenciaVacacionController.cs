@@ -21,7 +21,7 @@ namespace GestionPersonal.Controllers
             darkManager.OpenConnection();
             darkManager.LoadObject(GpsManagerObjects.Persona);
             darkManager.LoadObject(GpsManagerObjects.IncidenciaVacacion);
-            darkManager.LoadObject(GpsManagerObjects.IncidenciaVacacionProcess);
+            darkManager.LoadObject(GpsManagerObjects.IncidenciaProcess);
             darkManager.LoadObject(GpsManagerObjects.DiaFeriado);
         }
 
@@ -40,7 +40,10 @@ namespace GestionPersonal.Controllers
         public ActionResult Details(int id)
         {
             //var result = darkManager.IncidenciaVacacion.Get(""+ id,nameof(darkManager.IncidenciaVacacion.Element.IdPersona));
+
             var result = darkManager.IncidenciaVacacion.Get(id);
+
+            ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
             return View(result);
         }
 
@@ -114,69 +117,39 @@ namespace GestionPersonal.Controllers
             }
         }
 
-        // GET: IncidenciaVacacion/Edit/5
-        public ActionResult Edit(int id)
+        // GET: IncidenciaVacacion/Delete/5
+        public ActionResult Cancel(int id)
         {
             var result = darkManager.IncidenciaVacacion.Get(id);
+            ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
             return View(result);
-        }
-
-        // POST: IncidenciaVacacion/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(IncidenciaVacacion IncidenciaVacacion)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-                if (!ModelState.IsValid)
-                {
-                    return View(IncidenciaVacacion);
-                }
-                darkManager.IncidenciaVacacion.Element = IncidenciaVacacion;
-                darkManager.IncidenciaVacacion.Element.CreadoPor = "E";
-                darkManager.IncidenciaVacacion.Element.Estatus = 1;
-                darkManager.IncidenciaVacacion.Element.NoDias = 2;
-                darkManager.IncidenciaVacacion.Element.Tipo = "A";
-                darkManager.IncidenciaVacacion.Element.NumAutorizaciones = 3;
-                if (darkManager.IncidenciaVacacion.Update())
-                {
-                    return RedirectToAction(nameof(Index), "Incidencia", new { Id = IncidenciaVacacion.IdPersona });
-                }
-                else
-                {
-                    ModelState.AddModelError("", darkManager.GetLastMessage());
-                    return View(IncidenciaVacacion);
-                }
-
-            }
-            catch (GPSInformation.Exceptions.GpExceptions ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return View(IncidenciaVacacion);
-            }
-        }
-
-        // GET: IncidenciaVacacion/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
         }
 
         // POST: IncidenciaVacacion/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Cancel(int id, IFormCollection collection)
         {
+            
             try
             {
                 // TODO: Add delete logic here
+                var result = darkManager.IncidenciaVacacion.Get(id);
+                result.Estatus = 2; // cancel
+                darkManager.IncidenciaVacacion.Element = result;
 
-                return RedirectToAction(nameof(Index));
+                if (darkManager.IncidenciaVacacion.Update())
+                {
+                    return RedirectToAction(nameof(Index), "Incidencia", new { Id = result.IdPersona });
+                }
+                else
+                {
+                    return NotFound(darkManager.GetLastMessage());
+                }
             }
-            catch
+            catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                return View();
+                return NotFound(ex.Message);
             }
         }
 
@@ -187,7 +160,7 @@ namespace GestionPersonal.Controllers
             try
             {
                 // TODO: Add delete logic here
-                var result = darkManager.IncidenciaVacacionProcess.Get(""+id, nameof(darkManager.IncidenciaVacacionProcess.Element.IdIncidenciaVacacion));
+                var result = darkManager.IncidenciaProcess.Get(""+id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
                 return PartialView(result);
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
@@ -198,7 +171,7 @@ namespace GestionPersonal.Controllers
 
         private void AddSteps(IncidenciaVacacion IncidenciaVacacion)
         {
-            var procesoStep = new IncidenciaVacacionProcess();
+            var procesoStep = new IncidenciaProcess();
             procesoStep.IdIncidenciaVacacion = darkManager.IncidenciaVacacion.GetLastId();
             procesoStep.IdPersona = IncidenciaVacacion.IdPersona;
             procesoStep.Fecha = DateTime.Now;
@@ -208,8 +181,8 @@ namespace GestionPersonal.Controllers
             procesoStep.Revisada = true;
             procesoStep.Autorizada = true;
             procesoStep.NombreEmpleado = HttpContext.Session.GetString("user_fullname");
-            darkManager.IncidenciaVacacionProcess.Element = procesoStep;
-            darkManager.IncidenciaVacacionProcess.Add();
+            darkManager.IncidenciaProcess.Element = procesoStep;
+            darkManager.IncidenciaProcess.Add();
 
             procesoStep.IdPersona = 0;
             procesoStep.Fecha = null;
@@ -219,8 +192,8 @@ namespace GestionPersonal.Controllers
             procesoStep.Revisada = false;
             procesoStep.Autorizada = false;
             procesoStep.NombreEmpleado = "";
-            darkManager.IncidenciaVacacionProcess.Element = procesoStep;
-            darkManager.IncidenciaVacacionProcess.Add();
+            darkManager.IncidenciaProcess.Element = procesoStep;
+            darkManager.IncidenciaProcess.Add();
 
             procesoStep.IdPersona = 0;
             procesoStep.Fecha = null;
@@ -230,8 +203,8 @@ namespace GestionPersonal.Controllers
             procesoStep.Revisada = false;
             procesoStep.Autorizada = false;
             procesoStep.NombreEmpleado = "";
-            darkManager.IncidenciaVacacionProcess.Element = procesoStep;
-            darkManager.IncidenciaVacacionProcess.Add();
+            darkManager.IncidenciaProcess.Element = procesoStep;
+            darkManager.IncidenciaProcess.Add();
 
             procesoStep.IdPersona = 0;
             procesoStep.Fecha = null;
@@ -241,8 +214,8 @@ namespace GestionPersonal.Controllers
             procesoStep.Revisada = false;
             procesoStep.Autorizada = false;
             procesoStep.NombreEmpleado = "";
-            darkManager.IncidenciaVacacionProcess.Element = procesoStep;
-            darkManager.IncidenciaVacacionProcess.Add();
+            darkManager.IncidenciaProcess.Element = procesoStep;
+            darkManager.IncidenciaProcess.Add();
         }
         private int GetDays(DateTime desde, DateTime hasta)
         {

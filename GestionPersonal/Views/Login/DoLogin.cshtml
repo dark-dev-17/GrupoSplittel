@@ -23,7 +23,7 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="UserName" class="control-label"></label>
-                            <input asp-for="UserName" class="form-control" />
+                            <input asp-for="UserName" class="form-control" placeholder="Introduce tu número de nomina" />
                             <span asp-validation-for="UserName" class="text-danger" placeholder="correo@@email.com"></span>
                         </div>
                         <div class="form-group">
@@ -31,7 +31,7 @@
                                 <label asp-for="Pass" class="control-label"></label>
                                 @*<a href="" class="tx-13">Forgot password?</a>*@
                             </div>
-                            <input type="password" asp-for="Pass" class="form-control" placeholder="Enter your password" />
+                            <input type="password" asp-for="Pass" class="form-control" placeholder="Introduce tu contraseña" />
                             <span asp-validation-for="Pass" class="text-danger"></span>
                         </div>
                         <button type="submit" class="btn btn-brand-02 btn-block">Iniciar</button>

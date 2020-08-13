@@ -13,9 +13,11 @@ namespace GPSInformation.Models
         public int IdUsuario { get; set; }
         [ColumnDB(IsMapped = true, IsKey = false)]
         [Required]
+        [Display(Name = "Número de nomina")]
         public string UserName { get; set; }
         [Required]
         [ColumnDB(IsMapped = true, IsKey = false)]
+        [Display(Name = "Contraseña")]
         public string Pass { get; set; }
         [ColumnDB(IsMapped = true, IsKey = false)]
         public bool Activo { get; set; }

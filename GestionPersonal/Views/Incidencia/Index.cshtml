@@ -5,58 +5,57 @@
 }
 @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.persona.IdPersona  })
     <hr />
-<div id="app_incidencias">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Permisos</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Vacaciones</a>
-        </li>
-    </ul>
-    <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
-                <div class="d-flex align-items-center justify-content-between mg-b-30">
-                    <h4 class="tx-15 mg-b-0">Lista de permisos</h4>
-                    <a href="@Url.Action("Create","IncidenciaPermiso", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+    <div id="app_incidencias">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Permisos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Vacaciones</a>
+            </li>
+        </ul>
+        <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
+                    <div class="d-flex align-items-center justify-content-between mg-b-30">
+                        <h4 class="tx-15 mg-b-0">Lista de permisos</h4>
+                        <a href="@Url.Action("Create","IncidenciaPermiso", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+                    </div>
+                </div>
+                <div id="table-permisos">
+                    <partial name="../IncidenciaPermiso/Index" model="Model.permisos" />
                 </div>
             </div>
-            <div id="table-permisos">
-                <partial name="../IncidenciaPermiso/Index" model="Model.permisos" />
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
+                    <div class="d-flex align-items-center justify-content-between mg-b-30">
+                        <h4 class="tx-15 mg-b-0">Lista de vacaciones</h4>
+                        <a href="@Url.Action("Create","IncidenciaVacacion", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+                    </div>
+                </div>
+                <div id="table-permisos">
+                    <partial name="../IncidenciaVacacion/Index" model="Model.vacaciones" />
+                </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
-                <div class="d-flex align-items-center justify-content-between mg-b-30">
-                    <h4 class="tx-15 mg-b-0">Lista de vacaciones</h4>
-                    <a href="@Url.Action("Create","IncidenciaVacacion", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
-                </div>
-            </div>
-            <div id="table-permisos">
-                <partial name="../IncidenciaVacacion/Index" model="Model.vacaciones" />
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="modal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content tx-14">
-                <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLabel4">Crear incidencia</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="ModalPermiso_content">
+        <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacaciones" role="dialog" data-backdrop="false" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body pd-20 pd-sm-30">
+                        <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x"></i></span>
+                        </button>
+                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad</h5>
 
-                </div>
-                <div class="modal-footer">
-
-                </div>
-            </div>
-        </div>
+                        <div id="content_vacacionesAcitivit"></div>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer">
+                        <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
     </div>
-</div>
 @section Scripts {
     <script>
         var app_incidencias = new Vue({
@@ -65,8 +64,12 @@
             mounted() { },
             methods: {
                 ActividadVacacion: async function (id) {
+                    document.getElementById("content_vacacionesAcitivit").innerHTML = "";
                     axios.post('@Url.Action("Actividad","IncidenciaVacacion")/' + id, null, null).then(response => {
-                        bootbox.alert(response.data);
+                        //bootbox.alert(response.data);
+                        
+                        
+                        document.getElementById("content_vacacionesAcitivit").innerHTML = response.data;
                         //ShowMessageErrorShort("Datos del personales empleado guardados", "success")
                     }).catch(error => {
                         if (error.response) {
@@ -74,6 +77,7 @@
                                 
                             }
                         }
+                        console.error(error);
                         ShowMessageErrorShort("Datos del personales empleado guardados", "error")
                     }).finally()
 

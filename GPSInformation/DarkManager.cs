@@ -40,7 +40,7 @@ namespace GPSInformation
         public virtual DarkAttributes<RequisicionHabilidades> RequisicionHabilidades { get; set; }
         public virtual DarkAttributes<VacacionesDiasRegla> VacacionesDiasRegla { get; set; }
         public virtual DarkAttributes<DiaFeriado> DiaFeriado { get; set; }
-        public virtual DarkAttributes<IncidenciaVacacionProcess> IncidenciaVacacionProcess { get; set; }
+        public virtual DarkAttributes<IncidenciaProcess> IncidenciaProcess { get; set; }
         public virtual DarkAttributes<IncidenciaVacacion> IncidenciaVacacion { get; set; }
         #endregion
         #region Constructtores
@@ -150,9 +150,9 @@ namespace GPSInformation
             {
                 IncidenciaVacacion = new DarkAttributes<IncidenciaVacacion>(dBConnection);
             }
-            else if (gpsManagerObjects == GpsManagerObjects.IncidenciaVacacionProcess)
+            else if (gpsManagerObjects == GpsManagerObjects.IncidenciaProcess)
             {
-                IncidenciaVacacionProcess = new DarkAttributes<IncidenciaVacacionProcess>(dBConnection);
+                IncidenciaProcess = new DarkAttributes<IncidenciaProcess>(dBConnection);
             }
         }
 
@@ -169,7 +169,21 @@ namespace GPSInformation
                 dBConnection.CloseDataBaseAccess();
             }
         }
-        
+
+
+        public void StartTransaction()
+        {
+            dBConnection.StartTransaction();
+        }
+        public void Commit()
+        {
+            dBConnection.Commit();
+        }
+        public void RolBack()
+        {
+            dBConnection.RolBack();
+        }
+
         #endregion
     }
 
@@ -197,6 +211,6 @@ namespace GPSInformation
         VacacionesDiasRegla = 21,
         DiaFeriado = 22,
         IncidenciaVacacion = 23,
-        IncidenciaVacacionProcess = 24,
+        IncidenciaProcess = 24,
     }
 }

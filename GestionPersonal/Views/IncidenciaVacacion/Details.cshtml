@@ -1,0 +1,104 @@
+﻿@model GPSInformation.Models.IncidenciaVacacion
+
+
+@{
+    ViewData["Title"] = "Detalle de solicitud de vacaciones";
+}
+
+@if (Model.Estatus == 1)
+{
+    <div class="alert alert-primary mg-b-0" role="alert">
+        solicitud en proceso
+    </div>
+}
+else
+{
+    <div class="alert alert-danger mg-b-0" role="alert">
+        solicitud cancelada
+    </div>
+
+}
+
+<div data-label="Crear Nuevo Permiso" class="df-example demo-forms" id="app_createPermiso">
+    <h4>I. Solicitante</h4>
+    <hr />
+    @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
+    @*@await Component.InvokeAsync("EmpleadoBasic", new { id = Model.IdPersona })*@
+    <h4>II. Seguimiento</h4>
+    <hr />
+    <ul class="steps steps-justified ">
+        @{
+            bool active = true;
+            string status = "";
+        }
+        @foreach (GPSInformation.Models.IncidenciaProcess item in ViewBag.Actividades)
+        {
+            if (item.Revisada && item.Autorizada)
+            {
+                status = "complete";
+            }
+            else if (!item.Revisada && !item.Autorizada && active)
+            {
+                status = "active";
+                active = false;
+            }
+            else
+            {
+                status = "disabled";
+            }
+            <li class="step-item @status">
+                <a href="#" class="step-link">
+                    <span class="step-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+                    <div>
+                        <span class="step-title">@Html.DisplayFor(modelItem => item.Titulo)</span>
+                        <span class="step-desc">@Html.DisplayFor(modelItem => item.NombreEmpleado)</span>
+                        <span class="step-desc">
+                            @if (item.Fecha != null)
+                            {
+                                @Html.Raw(GPSInformation.Herramientas.RelativeTime((DateTime)item.Fecha))
+                            }
+                            else
+                            {
+
+                            }
+                        </span>
+                    </div>
+                </a>
+            </li>
+        }
+    </ul>
+    <h4>III. Detalle de solicitud</h4>
+    <hr />
+    <form>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <label asp-for="Inicio" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                @*<input type="hidden" asp-for="IdIncidenciaVacacion" class="form-control" />*@
+                <input type="hidden" asp-for="IdPersona" class="form-control" />
+                <input type="date" asp-for="Inicio" class="form-control" disabled />
+                <span asp-validation-for="Inicio" class="text-danger"></span>
+            </div>
+            <label asp-for="Fin" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input type="date" asp-for="Fin" class="form-control" disabled />
+                <span asp-validation-for="Fin" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="NoDias" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                @*<input type="hidden" asp-for="IdIncidenciaVacacion" class="form-control" />*@
+                <input type="number" asp-for="NoDias" class="form-control" disabled />
+                <span asp-validation-for="NoDias" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="form-group row mg-b-0">
+            <div class="col-sm-12 text-right">
+                <a href="@Url.Action("Index","Incidencia", new { id = Model.IdPersona })" class="btn btn-sm btn-secondary">Regresar</a>
+            </div>
+        </div>
+    </form>
+
+</div>

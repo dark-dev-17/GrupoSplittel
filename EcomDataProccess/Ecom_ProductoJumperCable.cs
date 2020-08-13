@@ -77,7 +77,7 @@ namespace EcomDataProccess
             try
             {
 
-                Ecom_DBConnection_.StartProcedure("Admin_PrecioJumperConector");
+                Ecom_DBConnection_.StartProcedure("Admin_PrecioJumperCable");
                 Ecom_DBConnection_.AddParameter(Id, "Idd", "INT");
                 Ecom_DBConnection_.AddParameter(Precio, "Precio_", "DOUBLE");
                 Ecom_DBConnection_.AddParameter(TipoJumper, "TipoJumper", "INT");

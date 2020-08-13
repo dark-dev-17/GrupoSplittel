@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.NoDias)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estatus)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -43,8 +46,22 @@
                 @Html.DisplayFor(modelItem => item.NoDias)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ })|
-                <a href="#" onclick="app_incidencias.ActividadVacacion(@item.IdIncidenciaVacacion)">Actividad</a>
+                @if (item.Estatus == 1)
+                {
+                    <span class="badge badge-primary">En proceso</span>
+                }
+                else
+                {
+                    <span class="badge badge-danger">Cancelada</span>
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion })|
+                @if (item.Estatus == 1)
+                {
+                    @Html.ActionLink("Cancelar", "Cancel", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion })<span>|</span>
+                }
+                <a href="#modalActividadVacaciones" data-toggle="modal" onclick="app_incidencias.ActividadVacacion(@item.IdIncidenciaVacacion)">Actividad</a>
             </td>
         </tr>
 }

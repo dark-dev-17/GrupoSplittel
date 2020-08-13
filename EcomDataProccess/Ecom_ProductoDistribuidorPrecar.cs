@@ -15,7 +15,7 @@ namespace EcomDataProccess
         [Display(Name = "Componente")]
         public string Componente { get; set; }
         [Display(Name = "Placas")]
-        public double Placas { get; set; }
+        public string Placas { get; set; }
         [Display(Name = "Precio")]
         //[RegularExpression(@"^\d+\.\d{0,3}$", ErrorMessage = "Solo se permiten 3 decimales")]
         [Required]
@@ -146,8 +146,8 @@ namespace EcomDataProccess
                             Id = Data.IsDBNull(0) ? -1 : (int)Data.GetUInt32(0),
                             Tipo = Data.IsDBNull(1) ? "--" : Data.GetString(1),
                             Componente = Data.IsDBNull(2) ? "--" : Data.GetString(2),
-                            Placas = Data.IsDBNull(3) ? -1 : Data.GetDouble(3),
-                            Precio = Data.IsDBNull(4) ? -1 : Data.GetDouble(4),
+                            Placas = Data.IsDBNull(3) ? "" : Data.GetString(3),
+                            Precio = Data.IsDBNull(5) ? -1 : Data.GetDouble(5),
                         });
 
                     }
