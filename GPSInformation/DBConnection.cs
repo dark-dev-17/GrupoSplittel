@@ -54,6 +54,7 @@ namespace GPSInformation
                 throw new GpExceptions("Transactios are inactive");
             }
             tran.Rollback();
+            CloseDataBaseAccess();
         }
 
         public void StartInsert(string statement, List<ProcedureModel> DataModel)

@@ -13,7 +13,7 @@ namespace EcomDataProccess
         [Display(Name = "Precio")]
         //[RegularExpression(@"^\d+\.\d{0,3}$", ErrorMessage = "Solo se permiten 3 decimales")]
         [Required]
-        public double Precio { get; set; }
+        public decimal Precio { get; set; }
         [Display(Name = "Tipo de Jumper")]
         public int TipoJumper { get; set; }
         [Display(Name = "Tipo Fibra")]
@@ -145,7 +145,7 @@ namespace EcomDataProccess
                         List.Add(new Ecom_ProductoJumperCable
                         {
                             Id = Data.IsDBNull(0) ? -1 : (int)Data.GetUInt32(0),
-                            Precio = Data.IsDBNull(1) ? -1 : Data.GetDouble(1),
+                            Precio = Data.IsDBNull(1) ? -1 : Data.GetDecimal(1),
                             TipoJumper = Data.IsDBNull(2) ? -1 : Data.GetInt32(2),
                             TipoFibra = Data.IsDBNull(3) ? -1 : Data.GetInt32(3),
                             TipoCubierta = Data.IsDBNull(4) ? -1 : Data.GetInt32(4),

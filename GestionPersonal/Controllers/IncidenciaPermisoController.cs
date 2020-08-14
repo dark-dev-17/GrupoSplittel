@@ -161,51 +161,61 @@ namespace GestionIncidenciaPermisol.Controllers
 
         private void AddSteps(IncidenciaPermiso IncidenciaPermiso)
         {
-            var procesoStep = new IncidenciaProcess();
-            procesoStep.IdIncidenciaVacacion = darkManager.IncidenciaPermiso.GetLastId();
-            procesoStep.IdPersona = IncidenciaPermiso.IdPersona;
-            procesoStep.Fecha = DateTime.Now;
-            procesoStep.Titulo = "Incidencia creada por solicitante";
-            procesoStep.Comentarios = "";
-            procesoStep.Nivel = 1;
-            procesoStep.Revisada = true;
-            procesoStep.Autorizada = true;
-            procesoStep.NombreEmpleado = HttpContext.Session.GetString("user_fullname");
-            darkManager.IncidenciaProcess.Element = procesoStep;
-            darkManager.IncidenciaProcess.Add();
+            try
+            {
+                var procesoStep = new IncidenciaProcess();
+                procesoStep.IdIncidenciaVacacion = darkManager.IncidenciaPermiso.GetLastId();
+                procesoStep.IdPersona = IncidenciaPermiso.IdPersona;
+                procesoStep.Fecha = DateTime.Now;
+                procesoStep.Titulo = "Incidencia creada por solicitante";
+                procesoStep.Comentarios = "";
+                procesoStep.Nivel = 1;
+                procesoStep.Revisada = true;
+                procesoStep.Autorizada = true;
+                procesoStep.NombreEmpleado = HttpContext.Session.GetString("user_fullname");
+                darkManager.IncidenciaProcess.Element = procesoStep;
+                darkManager.IncidenciaProcess.Add();
 
-            procesoStep.IdPersona = 0;
-            procesoStep.Fecha = null;
-            procesoStep.Titulo = "Aprobación por jefe inmediato";
-            procesoStep.Comentarios = "";
-            procesoStep.Nivel = 2;
-            procesoStep.Revisada = false;
-            procesoStep.Autorizada = false;
-            procesoStep.NombreEmpleado = "";
-            darkManager.IncidenciaProcess.Element = procesoStep;
-            darkManager.IncidenciaProcess.Add();
+                procesoStep.IdPersona = 0;
+                procesoStep.Fecha = null;
+                procesoStep.Titulo = "Aprobación por jefe inmediato";
+                procesoStep.Comentarios = "";
+                procesoStep.Nivel = 2;
+                procesoStep.Revisada = false;
+                procesoStep.Autorizada = false;
+                procesoStep.NombreEmpleado = "";
+                darkManager.IncidenciaProcess.Element = procesoStep;
+                darkManager.IncidenciaProcess.Add();
 
-            procesoStep.IdPersona = 0;
-            procesoStep.Fecha = null;
-            procesoStep.Titulo = "Aprobación por gestión de personal";
-            procesoStep.Comentarios = "";
-            procesoStep.Nivel = 3;
-            procesoStep.Revisada = false;
-            procesoStep.Autorizada = false;
-            procesoStep.NombreEmpleado = "";
-            darkManager.IncidenciaProcess.Element = procesoStep;
-            darkManager.IncidenciaProcess.Add();
+                procesoStep.IdPersona = 0;
+                procesoStep.Fecha = null;
+                procesoStep.Titulo = "Aprobación por gestión de personal";
+                procesoStep.Comentarios = "";
+                procesoStep.Nivel = 3;
+                procesoStep.Revisada = false;
+                procesoStep.Autorizada = false;
+                procesoStep.NombreEmpleado = "";
+                darkManager.IncidenciaProcess.Element = procesoStep;
+                darkManager.IncidenciaProcess.Add();
 
-            procesoStep.IdPersona = 0;
-            procesoStep.Fecha = null;
-            procesoStep.Titulo = "permiso concluido/tomado";
-            procesoStep.Comentarios = "";
-            procesoStep.Nivel = 4;
-            procesoStep.Revisada = false;
-            procesoStep.Autorizada = false;
-            procesoStep.NombreEmpleado = "";
-            darkManager.IncidenciaProcess.Element = procesoStep;
-            darkManager.IncidenciaProcess.Add();
+                procesoStep.IdPersona = 0;
+                procesoStep.Fecha = null;
+                procesoStep.Titulo = "permiso concluido/tomado";
+                procesoStep.Comentarios = "";
+                procesoStep.Nivel = 4;
+                procesoStep.Revisada = false;
+                procesoStep.Autorizada = false;
+                procesoStep.NombreEmpleado = "";
+                darkManager.IncidenciaProcess.Element = procesoStep;
+                darkManager.IncidenciaProcess.Add();
+            }
+            catch (Exception ex)
+            {
+
+                throw new GPSInformation.Exceptions.GpExceptions(ex.Message);
+            }
+            
+            
         }
     }
 }
