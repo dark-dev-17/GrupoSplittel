@@ -182,7 +182,6 @@
                 <div data-label="Analisis" class="df-example demo-forms col-lg-4">
                     @foreach (var item in Model.Habilidades.Where(a => a.Bloque == 1012).ToList())
                     {
-
                     <div class="custom-control custom-radio col-sm-12">
                         <input type="checkbox" id="Id_@Model.Habilidades[item.Posicion].IdHabilidad" asp-for="Habilidades[item.Posicion].Selected" class="custom-control-input">
                         <label class="custom-control-label" for="Id_@Model.Habilidades[item.Posicion].IdHabilidad"> @Model.Habilidades[item.Posicion].Descripcion</label>

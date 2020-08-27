@@ -1,0 +1,141 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_Pregunta>
+@{
+    ViewData["Title"] = "Preguntas";
+}
+<div id="App_Preguntas">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap table-sm" id="table_cotizacion" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NombreCreador)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Titulo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdCategoria)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Pregunta)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Creado)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Active)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.HasRespuesta)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreCreador)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Titulo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CategoriaNombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Pregunta)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Creado)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Active)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HasRespuesta)
+                        </td>
+                        <td>
+
+                            @if (item.Active)
+                            {
+                                @Html.ActionLink("Responder", "Responder", new { id = item.IdPregunta }) <span>|</span>
+                                <a href="#" v-on:click="DeletePregunta('@item.IdPregunta')">Desactivar</a>
+                            }
+
+
+                        </td>
+
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+        var App_Preguntas = new Vue({
+            el: "#App_Preguntas",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+            },
+            mounted() {
+
+            },
+            methods: {
+                DeletePregunta: async function (id) {
+                    Swal.fire({
+                        title: "¿Deseas eliminar esta pregunta?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, eliminala!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var params = new URLSearchParams();
+                            params.append('id', id);
+                            axios.post('@Url.Action("DataDeletPregunta", "ConsultorPregunta")', params, { headers: this.serverToken }).then(response => {
+                                this.ShowMessageErrorShort(response.data, 'success')
+                                window.location.reload();
+                            }).catch(error => {
+                                this.ShowMessageErrorShort(error.response.data,'error')
+                            }).finally()
+                        }
+                    })
+                },
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+                },
+            },
+
+        });
+
+    </script>
+
+}
+
+
+

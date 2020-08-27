@@ -42,11 +42,19 @@ namespace GPSInformation
         public virtual DarkAttributes<DiaFeriado> DiaFeriado { get; set; }
         public virtual DarkAttributes<IncidenciaProcess> IncidenciaProcess { get; set; }
         public virtual DarkAttributes<IncidenciaVacacion> IncidenciaVacacion { get; set; }
+        public virtual DarkAttributes<Modulo> Modulo { get; set; }
+        public virtual DarkAttributes<SubModulo> SubModulo { get; set; }
+        public virtual DarkAttributes<AccesosSistema> AccesosSistema { get; set; }
+
         #endregion
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
         {
             this.StringConnectionDb = Configuration.GetConnectionString("Default");
+        }
+        public DarkManager(string DBconnection)
+        {
+            this.StringConnectionDb = DBconnection;
         }
         ~DarkManager()
         {
@@ -154,6 +162,18 @@ namespace GPSInformation
             {
                 IncidenciaProcess = new DarkAttributes<IncidenciaProcess>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.Modulo)
+            {
+                Modulo = new DarkAttributes<Modulo>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.SubModulo)
+            {
+                SubModulo = new DarkAttributes<SubModulo>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.AccesosSistema)
+            {
+                AccesosSistema = new DarkAttributes<AccesosSistema>(dBConnection);
+            }
         }
 
         public void OpenConnection()
@@ -212,5 +232,8 @@ namespace GPSInformation
         DiaFeriado = 22,
         IncidenciaVacacion = 23,
         IncidenciaProcess = 24,
+        Modulo = 25,
+        SubModulo = 26,
+        AccesosSistema = 27,
     }
 }

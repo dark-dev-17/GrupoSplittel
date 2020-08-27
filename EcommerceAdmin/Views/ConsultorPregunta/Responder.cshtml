@@ -1,0 +1,200 @@
+﻿@model EcomDataProccess.Ecom_Pregunta
+@{
+    ViewData["Title"] = "Pregunta: " + @Model.Titulo;
+}
+    <link href="https://www.jqueryscript.net/demo/Disqus-Style-Comment-System/css/jquery-comments.css" rel="stylesheet" />
+<div id="app_Respuestas">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table">
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.Titulo)</strong></td>
+                    <td>@Html.DisplayFor(model => model.Titulo)</td>
+                    <td><strong>@Html.DisplayNameFor(model => model.Pregunta)</strong></td>
+                    <td>@Html.DisplayFor(model => model.Pregunta)</td>
+                </tr>
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.NombreCreador)</strong></td>
+                    <td>@Html.DisplayFor(model => model.NombreCreador)</td>
+
+                    <td><strong>@Html.DisplayNameFor(model => model.IdCategoria)</strong></td>
+                    <td>@Html.DisplayFor(model => model.CategoriaNombre)</td>
+
+                    <td><strong>@Html.DisplayNameFor(model => model.Creado)</strong></td>
+                    <td>@Html.DisplayFor(model => model.Creado)</td>
+                </tr>
+                <tr>
+                    <td><strong>@Html.DisplayNameFor(model => model.Correo)</strong></td>
+                    <td>@Html.DisplayFor(model => model.Correo)</td>
+                    <td><strong>@Html.DisplayNameFor(model => model.Actualizado)</strong></td>
+                    <td>@Html.DisplayFor(model => model.Actualizado)</td>
+                </tr>
+            </table>
+            <h5>Respuestas</h5>
+            <div class="row">
+                <div class="col-12" id="comments-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/jquery-comments.js"></script>
+    <script>
+        var app_Respuestas = new Vue({
+            el: "#app_Respuestas",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                comments: []
+            },
+            async mounted() {
+                await this.GetComentarios();
+                this.LoadCommentarios();
+            },
+            methods: {
+                EditComment: async function (commentJSON, success, errorr) {
+                    console.log(commentJSON)
+                    let NewComment = {
+                        idRespuesta: commentJSON.id,
+                        creado: new Date(),
+                        actualizado: new Date(),
+                        respuesta: commentJSON.content.replace("\n",""),
+                        idPregunta: '@Model.IdPregunta',
+                        tipoCreador: "FIBREMEX",
+                    }
+                    await axios.post('@Url.Action("DataUpdate","ConsultorPregunta")', NewComment, {
+                        headers:
+                        {
+                            'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                        } 
+                    }).then(response => {
+                        success(commentJSON)
+                    }).catch(error => {
+                       this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.newName = "")
+                },
+                PostComment: async function (commentJSON, success, errorr) {
+                    console.log(commentJSON)
+                    let NewComment = {
+                        idRespuesta: 0,
+                        idPregunta: '@Model.IdPregunta',
+                        tipoCreador: "FIBREMEX",
+                        creado: new Date(),
+                        actualizado: new Date(),
+                        respuesta: commentJSON.content.replace("\n", ""),
+                        profile_picture_url: "http://fibremex.co/fibra-optica/public/images/img_spl/usuarios/Us_1136.png"
+                    }
+                    await axios.post('@Url.Action("DataCreate","ConsultorPregunta")', NewComment, {
+                        headers:
+                        {
+                            'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                        } 
+                    }).then(response => {
+                        commentJSON.id = response.data.id
+                        success(commentJSON)
+                    }).catch(error => {
+                       this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.newName = "")
+                },
+                ShowMessageErrorShort: function (text,icon) {
+                    const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 4000,
+                          timerProgressBar: true,
+                          onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                        })
+
+                        Toast.fire({
+                          icon: icon,
+                          title: text
+                        })
+                },
+                DeleteComment: async function (commentJSON, success, errorr) {
+                    console.log(commentJSON)
+                    let NewComment = {
+                        idRespuesta: commentJSON.id,
+                        creado: new Date(),
+                        actualizado: new Date(),
+                        respuesta: commentJSON.content.replace("\n",""),
+                        idPregunta: '@Model.IdPregunta',
+                        tipoCreador: "FIBREMEX",
+                    }
+                    await axios.post('@Url.Action("DataDelete","ConsultorPregunta")', NewComment, {
+                        headers:
+                        {
+                            'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                        } 
+                    }).then(response => {
+                        success()
+                    }).catch(error => {
+                       this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.newName = "")
+                },
+                GetComentarios: async function () {
+                    let params = new FormData();
+                        params.append('IdBlog', @Model.IdPregunta);
+                    await axios.post('@Url.Action("DataGet","ConsultorPregunta")', params, { headers: this.serverToken }).then(response => {
+                        this.comments = response.data
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    }).finally(() => this.newName = "")
+                },
+                LoadCommentarios: function () {
+                    let ComentariosList = [];
+                    this.comments.forEach((e, i) => {
+                        let comentario = {
+                           "id": e.idRespuesta,
+                           "parent": 0,
+                           "created": e.creado,
+                           "modified": e.actualizado,
+                           "content": e.respuesta,
+                           "pings": [],
+                           "creator": 1,
+                           "fullname": e.nombreCliente,
+                            "profile_picture_url": (e.tipoCreador == "FIBREMEX") ? "http://fibremex.co/fibra-optica/public/images/img_spl/usuarios/Us_1136.png" :"https://fibremex.co//fibra-optica/public/images/Otros/user_.jpg",
+                           "created_by_admin": false,
+                           "created_by_current_user": (e.tipoCreador == "FIBREMEX") ? true : false,
+                           "upvote_count": "",
+                           "user_has_upvoted": false,
+                            "is_new": false,
+                        
+                        }
+                        ComentariosList.push(comentario);
+                    });
+                $('#comments-container').comments({
+                    currentUserIsAdmin: false,
+                    replyText: 'Responder',
+                    sendText: 'Enviar',
+                    editText: 'Editar',
+                    editedText: 'Modificado',
+                    deleteText: 'Eliminar',
+                    textareaPlaceholderText: 'Nuevo comentario',
+                    attachmentsText: 'Ver adjuntos',
+                    popularText: 'Populares',
+                    oldestText: 'Antiguos',
+                    newestText: 'Recientes',
+                    youText: 'Soporte Fibremex',
+                    enableUpvoting: false,
+                    enableEditing: true,
+                    "currentUserIsAdmin": true,
+                    "enableReplying": false,
+                    enableDeletingCommentWithReplies: false,
+                    getComments: function(success, error) {
+                        success(ComentariosList);
+                    },
+                    postComment: this.PostComment,
+                    putComment: this.EditComment,
+                    deleteComment: this.DeleteComment,
+                });
+                }
+            }
+        });
+    </script>
+
+}

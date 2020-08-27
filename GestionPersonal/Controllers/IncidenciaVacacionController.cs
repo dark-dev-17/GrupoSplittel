@@ -97,6 +97,7 @@ namespace GestionPersonal.Controllers
                 darkManager.IncidenciaVacacion.Element.NoDias = GetDays(IncidenciaVacacion.Inicio, IncidenciaVacacion.Fin);
                 darkManager.IncidenciaVacacion.Element.Tipo = "A";
                 darkManager.IncidenciaVacacion.Element.NumAutorizaciones = 4;
+                darkManager.IncidenciaVacacion.Element.Creado = DateTime.Now;
                 if (darkManager.IncidenciaVacacion.Add())
                 {
                     AddSteps(IncidenciaVacacion);

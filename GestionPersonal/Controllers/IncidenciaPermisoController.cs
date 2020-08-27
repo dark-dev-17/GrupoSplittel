@@ -24,7 +24,7 @@ namespace GestionIncidenciaPermisol.Controllers
             darkManager = new DarkManager(configuration);
             darkManager.OpenConnection();
             darkManager.LoadObject(GpsManagerObjects.IncidenciaPermiso);
-            darkManager.LoadObject(GpsManagerObjects.IncidenciaPermisoProcess);
+            darkManager.LoadObject(GpsManagerObjects.IncidenciaProcess);
             darkManager.LoadObject(GpsManagerObjects.CatalogoOpcionesValores);
             darkManager.LoadObject(GpsManagerObjects.Persona);
             darkManager.LoadObject(GpsManagerObjects.Puesto);
@@ -76,6 +76,8 @@ namespace GestionIncidenciaPermisol.Controllers
 
                 darkManager.IncidenciaPermiso.Element = IncidenciaPermiso;
                 darkManager.IncidenciaPermiso.Element.CreadoPor = "Empleado";
+                darkManager.IncidenciaPermiso.Element.Estatus = 1;
+                darkManager.IncidenciaPermiso.Element.Creado = DateTime.Now;
                 if(darkManager.IncidenciaPermiso.Element.IdAsunto == 36)
                 {
                     darkManager.IncidenciaPermiso.Element.IdPagoPermiso = 0;
@@ -119,13 +121,12 @@ namespace GestionIncidenciaPermisol.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Cancel(int id, IFormCollection collection)
         {
-
             try
             {
                 // TODO: Add delete logic here
-                var result = darkManager.IncidenciaVacacion.Get(id);
+                var result = darkManager.IncidenciaPermiso.Get(id);
                 result.Estatus = 2; // cancel
-                darkManager.IncidenciaVacacion.Element = result;
+                darkManager.IncidenciaPermiso.Element = result;
 
                 if (darkManager.IncidenciaPermiso.Update())
                 {
@@ -164,7 +165,8 @@ namespace GestionIncidenciaPermisol.Controllers
             try
             {
                 var procesoStep = new IncidenciaProcess();
-                procesoStep.IdIncidenciaVacacion = darkManager.IncidenciaPermiso.GetLastId();
+                procesoStep.IdIncidenciaPermiso = darkManager.IncidenciaPermiso.GetLastId();
+                procesoStep.IdIncidenciaVacacion = 0;
                 procesoStep.IdPersona = IncidenciaPermiso.IdPersona;
                 procesoStep.Fecha = DateTime.Now;
                 procesoStep.Titulo = "Incidencia creada por solicitante";
@@ -176,6 +178,7 @@ namespace GestionIncidenciaPermisol.Controllers
                 darkManager.IncidenciaProcess.Element = procesoStep;
                 darkManager.IncidenciaProcess.Add();
 
+                procesoStep.IdIncidenciaVacacion = 0;
                 procesoStep.IdPersona = 0;
                 procesoStep.Fecha = null;
                 procesoStep.Titulo = "Aprobación por jefe inmediato";
@@ -187,6 +190,7 @@ namespace GestionIncidenciaPermisol.Controllers
                 darkManager.IncidenciaProcess.Element = procesoStep;
                 darkManager.IncidenciaProcess.Add();
 
+                procesoStep.IdIncidenciaVacacion = 0;
                 procesoStep.IdPersona = 0;
                 procesoStep.Fecha = null;
                 procesoStep.Titulo = "Aprobación por gestión de personal";
@@ -198,6 +202,7 @@ namespace GestionIncidenciaPermisol.Controllers
                 darkManager.IncidenciaProcess.Element = procesoStep;
                 darkManager.IncidenciaProcess.Add();
 
+                procesoStep.IdIncidenciaVacacion = 0;
                 procesoStep.IdPersona = 0;
                 procesoStep.Fecha = null;
                 procesoStep.Titulo = "permiso concluido/tomado";

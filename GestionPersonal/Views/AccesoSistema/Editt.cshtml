@@ -1,0 +1,35 @@
+﻿@model IEnumerable<GPSInformation.Models.Modulo>
+
+@{
+    ViewData["Title"] = "Edit";
+    int Iteration = 0;
+    List<GPSInformation.Models.Modulo> Modulos = Model.ToList();
+}
+@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = (GPSInformation.Models.Usuario)ViewBag.Persona.IdPersona })
+<div class="row">
+    <form action="/" method="post">
+        @foreach (var item in Model)
+        {
+            <div data-label="@Modulos[Iteration].Nombre" class="df-example col-lg-3">
+                @*<input type="hidden" asp-for="Modulos[Iteration].Nombre" />*@
+                @foreach (var sub in item.SubModulos)
+                {
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="id_@sub.IdSubModulo">
+                        <label class="custom-control-label" for="id_@sub.IdSubModulo">@sub.Descripcion<span>@sub.AccesosSistema.IdUsuario</span></label>
+                    </div>
+                }
+            </div>
+            Iteration++;
+        }
+    </form>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            
+        });
+    </script>
+}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionPersonal.Models;
 using GPSInformation;
 using GPSInformation.Models;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Departamento
+        [AccessMultipleView( IdAction = new int[] { 14,15})]
         public ActionResult Index()
         {
             var result = darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList();
@@ -43,6 +45,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Departamento/Details/5
+        [AccessMultipleView(IdAction = new int[] { 14, 15 })]
         public ActionResult Details(int id)
         {
             var result = darkManager.Departamento.Get(id);
@@ -55,6 +58,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Departamento/Create
+        [AccessMultipleView(IdAction = new int[] { 15 })]
         public ActionResult Create()
         {
             ViewData["Direcciones"] = Direcciones;
@@ -64,6 +68,7 @@ namespace GestionPersonal.Controllers
         // POST: Departamento/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 15 })]
         public ActionResult Create(Departamento Departamento)
         {
             try
@@ -98,6 +103,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Departamento/Edit/5
+        [AccessMultipleView(IdAction = new int[] { 15 })]
         public ActionResult Edit(int id)
         {
             ViewData["Direcciones"] = Direcciones;
@@ -112,6 +118,7 @@ namespace GestionPersonal.Controllers
         // POST: Departamento/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 15 })]
         public ActionResult Edit(Departamento Departamento)
         {
             try
@@ -142,29 +149,6 @@ namespace GestionPersonal.Controllers
                 ViewData["Direcciones"] = Direcciones;
                 ModelState.AddModelError("", ex.Message);
                 return View(Departamento);
-            }
-        }
-
-        // GET: Departamento/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Departamento/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
             }
         }
     }

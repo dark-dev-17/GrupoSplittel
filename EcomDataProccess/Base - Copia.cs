@@ -23,7 +23,7 @@ namespace EcomDataProccess
         #region Constructores
         ~Base()
         {
-            
+
         }
         public Base()
         {

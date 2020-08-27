@@ -83,6 +83,7 @@ namespace GestionPersonal.Controllers
 
             HttpContext.Session.SetInt32("user_id", usuario.IdPersona);
 
+            HttpContext.Session.SetInt32("user_id_permiss", usuario.IdUsuario);
             HttpContext.Session.SetString("user_name", ResultUser.Nombre);
             HttpContext.Session.SetString("user_appP", ResultUser.ApellidoPaterno);
             HttpContext.Session.SetString("user_appM", ResultUser.ApellidoMaterno);

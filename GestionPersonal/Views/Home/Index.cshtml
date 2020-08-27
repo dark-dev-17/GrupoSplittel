@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h2>Index</h2>
-
+    <h2>Index</h2>
+@{
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    var controllerAction = this.ViewContext.RouteData.Values["action"].ToString();
+}
+@await Component.InvokeAsync("Menu", new { controller = controllerName, accion = controllerAction })

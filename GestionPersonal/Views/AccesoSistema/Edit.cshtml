@@ -1,0 +1,76 @@
+﻿@model GestionPersonal.Models.UsuarioPermisos
+
+@{
+    ViewData["Title"] = "Editar permisos";
+}
+
+@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
+<div class="row col-lg-12" id="app_accessystem">
+    <form class="col-sm-12 row" v-if="Access != null">
+        <div v-bind:data-label="item.nombre" class="df-example col-lg-3" v-for="(item, index) in Access.modulos">
+            <div class="custom-control custom-checkbox" v-for="(item2, index2) in item.subModulos">
+                <input type="checkbox" class="custom-control-input" v-model="item2.accesosSistema.tieneAcceso" v-bind:id="'id_' + item2.idSubModulo">
+                <label class="custom-control-label" v-bind:for="'id_' + item2.idSubModulo">{{ item2.descripcion }}</label>
+            </div>
+        </div>
+        <div class="col-sm-12 text-right">
+            <button type="reset" class="btn btn-sm btn-secondary">Cancelar</button>
+            <button type="button" v-on:click="Save()" class="btn btn-sm btn-primary">Guardar</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+    <script>
+        var app_accessystem = new Vue({
+            el: "#app_accessystem",
+            data: {
+                Access: null
+
+            },
+            mounted() {
+                this.Details();
+            },
+            methods: {
+                Details: function () {
+                    axios.post('@Url.Action("Details","AccesoSistema", new { id = Model.IdPersona })', null, null).then(response => {
+                        console.log(response.data)
+                        this.Access = response.data;
+                        ShowMessageErrorShort("Permisos obtenidos", "success")
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                
+                            }
+                        }
+                        console.error(error)
+                        ShowMessageErrorShort("error al extraer información", "error")
+                    }).finally()
+                },
+                Save: function () {
+                    axios.post('@Url.Action("EditPermissions","AccesoSistema")', this.Access, null).then(response => {
+                        console.log(response.data)
+                        //this.Access = response.data;
+                        ShowMessageErrorShort(response.data, "success")
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data, "error")
+                            }
+                        }
+                        console.error(error)
+                        
+                    }).finally()
+                },
+            }
+        });
+    </script>
+}
+
+

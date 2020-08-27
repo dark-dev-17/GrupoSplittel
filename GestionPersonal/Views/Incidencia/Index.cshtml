@@ -1,7 +1,7 @@
 ﻿@model GestionPersonal.Models.Incidencias
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Permisos y vacaciones";
 }
 @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.persona.IdPersona  })
     <hr />
@@ -55,6 +55,24 @@
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->
         </div><!-- modal -->
+
+        <div class="modal calendar-modal-create fade effect-scale" id="modalActividadPermisos" role="dialog" data-backdrop="false" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body pd-20 pd-sm-30">
+                        <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x"></i></span>
+                        </button>
+                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad</h5>
+
+                        <div id="content_permisoAcitivit"></div>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer">
+                        <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
     </div>
 @section Scripts {
     <script>
@@ -78,7 +96,24 @@
                             }
                         }
                         console.error(error);
-                        ShowMessageErrorShort("Datos del personales empleado guardados", "error")
+                        ShowMessageErrorShort("Error al obtener la actividad de este permiso", "error")
+                    }).finally()
+
+                },
+                ActividadPermisos: async function (id) {
+                    document.getElementById("content_permisoAcitivit").innerHTML = "";
+                    axios.post('@Url.Action("Actividad","IncidenciaPermiso")/' + id, null, null).then(response => {
+                        //bootbox.alert(response.data);
+                        document.getElementById("content_permisoAcitivit").innerHTML = response.data;
+                        //ShowMessageErrorShort("Datos del personales empleado guardados", "success")
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                
+                            }
+                        }
+                        console.error(error);
+                        ShowMessageErrorShort("Error al obtener la actividad de este permiso", "error")
                     }).finally()
 
                 }

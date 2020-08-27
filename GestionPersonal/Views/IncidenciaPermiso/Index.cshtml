@@ -31,9 +31,8 @@ else
                     @Html.DisplayNameFor(model => model.Fin)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.IdAsunto)
+                    @Html.DisplayNameFor(model => model.Estatus)
                 </th>
-
                 <th></th>
             </tr>
         </thead>
@@ -57,11 +56,22 @@ else
                         @Html.DisplayFor(modelItem => item.Fin)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DEscripcionTipo)
+                        @if (item.Estatus == 1)
+                        {
+                            <span class="badge badge-primary">En proceso</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">Cancelada</span>
+                        }
                     </td>
                     <td>
-                        @Html.ActionLink("Details", "Details","IncidenciaPermiso", new { id=item.IdIncidenciaPermiso}) |
-                        @Html.ActionLink("Cancelar", "Delete", new { /* id=item.PrimaryKey */ })
+                        @Html.ActionLink("Details", "Details", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso }) |
+                        @if (item.Estatus == 1)
+                        {
+                            @Html.ActionLink("Cancelar", "Cancel", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso })<span>|</span>
+                        }
+                    <a href="#modalActividadPermisos" data-toggle="modal" onclick="app_incidencias.ActividadPermisos(@item.IdIncidenciaPermiso)">Actividad</a>
                     </td>
                 </tr>
             }

@@ -47,6 +47,10 @@ namespace GPSInformation.Models
         [Display(Name = "Tipo solicitud")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public string Tipo { get; set; }
+
+        [Display(Name = "Creado")]
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public DateTime Creado { get; set; }
     }
 
     [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]
@@ -93,7 +97,7 @@ namespace GPSInformation.Models
         [ColumnDB(IsMapped = true, IsKey = false)]
         public string Titulo { get; set; }
 
-        [Display(Name = "NombreEmpleado")]
+        [Display(Name = "Nombre del Empleado")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public string NombreEmpleado { get; set; }
     }

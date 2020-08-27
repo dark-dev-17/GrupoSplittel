@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using EcomDataProccess.Foro;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 
@@ -47,7 +48,12 @@ namespace EcomDataProccess
                     }
                 }
             }
-            return Ecom_Email_.SendMailNotification(BodyHTML, Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaTo), Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaCC), Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaBCC));
+            return Ecom_Email_.SendMailNotification(
+                BodyHTML, 
+                Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaTo), 
+                Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaCC), 
+                Ecom_Tools.ConvevrtListString(Ecom_ProcesoEmail_.ListaBCC)
+             );
         }
         public List<Ecom_Notificacion> GetNotificacionsEcom(int USR_IdSplinnet, int USR_IdArea)
         {
@@ -304,6 +310,18 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.Ecom_Pregunta)
+            {
+                Ecom_Pregunta objeto = (Ecom_Pregunta)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
+            else if (objectSource == ObjectSource.Ecom_RespuestaPregunta)
+            {
+                Ecom_RespuestaPregunta objeto = (Ecom_RespuestaPregunta)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -430,6 +448,14 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.ContentFileType)
             {
                 return new Ecom_ContentFileType(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.Ecom_Pregunta)
+            {
+                return new Ecom_Pregunta(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.Ecom_RespuestaPregunta)
+            {
+                return new Ecom_RespuestaPregunta(Ecom_DBEcommerce);
             }
             else
             {
