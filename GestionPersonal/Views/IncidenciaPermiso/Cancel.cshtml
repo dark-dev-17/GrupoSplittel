@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Detalle del permiso";
 }
+<h1>¿Deseas cancelar esta solicitud?</h1>
     <div data-label="Detalle del permiso" class="df-example demo-forms">
         @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
         <hr />
@@ -73,5 +74,16 @@
                     <button type="button" onclick="app_incidencias.CrearPermiso()" class="btn btn-sm btn-primary">Guardar</button>
                 </div>
             </div>*@
+        </form>
+    </div>
+    <div data-label="Acciones" class="df-example demo-forms">
+        <form asp-action="Cancel">
+            <input type="hidden" name="id" value="@Model.IdIncidenciaPermiso" />
+            <div class="form-group row mg-b-0">
+                <div class="col-sm-12 text-right">
+                    <button type="button" class="btn btn-sm btn-secondary">regresar</button>
+                    <button type="submit" onclick="" class="btn btn-sm btn-primary">Cancelar</button>
+                </div>
+            </div>
         </form>
     </div>

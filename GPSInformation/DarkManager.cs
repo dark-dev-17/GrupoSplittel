@@ -1,5 +1,6 @@
 ﻿using GPSInformation.DBManagers;
 using GPSInformation.Models;
+using GPSInformation.Views;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace GPSInformation
     public class DarkManager
     {
         protected DBConnection dBConnection { get; set; }
+        protected DBConnection dBConnectionAccess { get; set; }
+        protected string DefaultAccess { get; set; }
         protected string StringConnectionDb { get; set; }
         protected string Server { get; set; }
         protected string From { get; set; }
@@ -45,12 +48,24 @@ namespace GPSInformation
         public virtual DarkAttributes<Modulo> Modulo { get; set; }
         public virtual DarkAttributes<SubModulo> SubModulo { get; set; }
         public virtual DarkAttributes<AccesosSistema> AccesosSistema { get; set; }
+        public virtual DarkAttributes<VacionesPeriodo> VacionesPeriodo { get; set; }
+        public virtual DarkAttributes<Evaluacion> Evaluacion { get; set; }
+        public virtual DarkAttributes<EvaluacionSeccionPregnts> EvaluacionSeccionPregnts { get; set; }
+        public virtual DarkAttributes<EvaluacioSeccion> EvaluacioSeccion { get; set; }
+        public virtual DarkAttributes<EvaluacionTemplate> EvaluacionTemplate { get; set; }
+        public virtual DarkAttributes<View_empleado> View_empleado { get; set; }
+        public virtual DarkAttributes<EvaluacionEmpleado> EvaluacionEmpleado { get; set; }
+        public virtual DarkAttributes<EvaluacionRespuestas> EvaluacionRespuestas { get; set; }
+        public virtual DarkAttributes<ExpedienteEmpleado> ExpedienteEmpleado { get; set; }
+        public virtual DarkAttributes<ExpedienteArchivo> ExpedienteArchivo { get; set; }
+        public virtual DarkAttributes<View_EmpleadoExpediente> View_EmpleadoExpediente { get; set; }
 
         #endregion
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
         {
             this.StringConnectionDb = Configuration.GetConnectionString("Default");
+            this.DefaultAccess = Configuration.GetConnectionString("DefaultAccess");
         }
         public DarkManager(string DBconnection)
         {
@@ -58,7 +73,7 @@ namespace GPSInformation
         }
         ~DarkManager()
         {
-
+            //CloseConnection();
         }
         #endregion
 
@@ -174,6 +189,50 @@ namespace GPSInformation
             {
                 AccesosSistema = new DarkAttributes<AccesosSistema>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.VacionesPeriodo)
+            {
+                VacionesPeriodo = new DarkAttributes<VacionesPeriodo>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.Evaluacion)
+            {
+                Evaluacion = new DarkAttributes<Evaluacion>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.EvaluacionSeccionPregnts)
+            {
+                EvaluacionSeccionPregnts = new DarkAttributes<EvaluacionSeccionPregnts>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.EvaluacioSeccion)
+            {
+                EvaluacioSeccion = new DarkAttributes<EvaluacioSeccion>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.EvaluacionTemplate)
+            {
+                EvaluacionTemplate = new DarkAttributes<EvaluacionTemplate>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.View_empleado)
+            {
+                View_empleado = new DarkAttributes<View_empleado>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.EvaluacionEmpleado)
+            {
+                EvaluacionEmpleado = new DarkAttributes<EvaluacionEmpleado>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.EvaluacionRespuestas)
+            {
+                EvaluacionRespuestas = new DarkAttributes<EvaluacionRespuestas>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.ExpedienteEmpleado)
+            {
+                ExpedienteEmpleado = new DarkAttributes<ExpedienteEmpleado>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.ExpedienteArchivo)
+            {
+                ExpedienteArchivo = new DarkAttributes<ExpedienteArchivo>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.View_EmpleadoExpediente)
+            {
+                View_EmpleadoExpediente = new DarkAttributes<View_EmpleadoExpediente>(dBConnection);
+            }
         }
 
         public void OpenConnection()
@@ -189,7 +248,19 @@ namespace GPSInformation
                 dBConnection.CloseDataBaseAccess();
             }
         }
+        public void OpenConnectionAcces()
+        {
+            dBConnectionAccess = new DBConnection(this.DefaultAccess);
+            dBConnectionAccess.OpenConnection();
+        }
 
+        public void CloseConnectionAccess()
+        {
+            if (dBConnectionAccess != null)
+            {
+                dBConnectionAccess.CloseDataBaseAccess();
+            }
+        }
 
         public void StartTransaction()
         {
@@ -235,5 +306,16 @@ namespace GPSInformation
         Modulo = 25,
         SubModulo = 26,
         AccesosSistema = 27,
+        VacionesPeriodo = 28,
+        Evaluacion = 29,
+        EvaluacionSeccionPregnts = 30,
+        EvaluacioSeccion = 31,
+        EvaluacionTemplate = 32,
+        View_empleado = 33,
+        EvaluacionEmpleado = 34,
+        EvaluacionRespuestas = 35,
+        ExpedienteEmpleado = 36,
+        ExpedienteArchivo = 37,
+        View_EmpleadoExpediente = 38,
     }
 }

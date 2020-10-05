@@ -31,11 +31,13 @@ namespace GestionPersonal.Controllers
         }
 
         #region Sala
+        [AccessMultipleView(IdAction = new int[] { 33, 35 })]
         public ActionResult Index()
         {
             return View();
         }
 
+        [AccessDataSession(IdAction = new int[] { 33 })]
         public ActionResult Details(int id)
         {
             var result = darkManager.Sala.Get(id);
@@ -47,6 +49,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 33 })]
         public ActionResult GetList()
         {
             var result = darkManager.Sala.Get().OrderBy(a => a.Nombre);
@@ -55,6 +58,7 @@ namespace GestionPersonal.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        [AccessDataSession(IdAction = new int[] { 35 })]
         public ActionResult Create(Sala Sala)
         {
             try
@@ -81,6 +85,7 @@ namespace GestionPersonal.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        [AccessDataSession(IdAction = new int[] { 35 })]
         public ActionResult Edit(Sala Sala)
         {
             try
@@ -108,6 +113,7 @@ namespace GestionPersonal.Controllers
         #endregion
 
         #region Reservaciones
+        [AccessDataSession(IdAction = new int[] { 33 })]
         public ActionResult DetailsReservacion(int id)
         {
             var result = darkManager.SalaReservacion.Get(id);
@@ -119,6 +125,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 33 })]
         public ActionResult GetListReservacion()
         {
             var result = darkManager.SalaReservacion.Get().OrderByDescending(a => a.FechaInicio);
@@ -128,6 +135,7 @@ namespace GestionPersonal.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        [AccessDataSession(IdAction = new int[] { 33 })]
         public ActionResult CreateReservacion([FromBody]SalaReservacion SalaReservacion)
         {
             try
@@ -156,6 +164,7 @@ namespace GestionPersonal.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        [AccessDataSession(IdAction = new int[] { 33 })]
         public ActionResult EditReservacion(SalaReservacion SalaReservacion)
         {
             try

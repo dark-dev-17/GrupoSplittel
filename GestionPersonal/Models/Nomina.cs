@@ -1,4 +1,5 @@
 ﻿
+using GPSInformation.Exceptions;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -62,7 +63,7 @@ namespace GestionPersonal.Models
                     return false;
                 }
             }
-            catch (GPDataInformation.GpExceptions ex)
+            catch (GpExceptions ex)
             {
                 throw ex;
             }
@@ -125,7 +126,7 @@ namespace GestionPersonal.Models
                 }
                 return List;
             }
-            catch (GPDataInformation.GpExceptions ex)
+            catch (GpExceptions ex)
             {
                 throw ex;
             }

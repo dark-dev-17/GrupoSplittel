@@ -10,7 +10,7 @@
         <div v-bind:data-label="item.nombre" class="df-example col-lg-3" v-for="(item, index) in Access.modulos">
             <div class="custom-control custom-checkbox" v-for="(item2, index2) in item.subModulos">
                 <input type="checkbox" class="custom-control-input" v-model="item2.accesosSistema.tieneAcceso" v-bind:id="'id_' + item2.idSubModulo">
-                <label class="custom-control-label" v-bind:for="'id_' + item2.idSubModulo">{{ item2.descripcion }}</label>
+                <label class="custom-control-label" v-bind:for="'id_' + item2.idSubModulo">{{item2.idSubModulo}}.-{{ item2.descripcion }}</label>
             </div>
         </div>
         <div class="col-sm-12 text-right">

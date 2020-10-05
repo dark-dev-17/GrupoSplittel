@@ -23,6 +23,7 @@ namespace GestionPersonal.Controllers
         private SelectList Ubicaciones;
         private SelectList EstadosCiviles;
         private SelectList Generos;
+
         public RequisicionPersonalController(IConfiguration configuration)
         {
             darkManager = new DarkManager(configuration);
@@ -45,6 +46,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: RequisicionPersonal
+        [AccessMultipleView(IdAction = new int[] { 26 })]
         public ActionResult Index()
         {
             var result = darkManager.RequisicionPersonal.Get();
@@ -52,12 +54,14 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: RequisicionPersonal/Details/5
+        [AccessMultipleView(IdAction = new int[] { 26 })]
         public ActionResult Details(int id)
         {
             return View();
         }
 
         // GET: RequisicionPersonal/Create
+        [AccessMultipleView(IdAction = new int[] { 26 })]
         public ActionResult Create()
         {
             ViewData["Departamentos"] = Departamentos;
@@ -96,6 +100,7 @@ namespace GestionPersonal.Controllers
         // POST: RequisicionPersonal/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 26 })]
         public ActionResult Create(RequisicionPuesto RequisicionPuesto)
         {
             ViewData["Departamentos"] = Departamentos;
@@ -186,6 +191,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: RequisicionPersonal/Edit/5
+        [AccessMultipleView(IdAction = new int[] { 26 })]
         public ActionResult Edit(int id)
         {
             ViewData["Departamentos"] = Departamentos;
@@ -215,6 +221,7 @@ namespace GestionPersonal.Controllers
         // POST: RequisicionPersonal/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 26 })]
         public ActionResult Edit(RequisicionPuesto RequisicionPuesto)
         {
             ViewData["Departamentos"] = Departamentos;
@@ -288,6 +295,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: RequisicionPersonal/Delete/5
+        [AccessMultipleView(IdAction = new int[] { 28 })]
         public ActionResult Aprobar(int id)
         {
             ViewData["Departamentos"] = Departamentos;
@@ -317,6 +325,7 @@ namespace GestionPersonal.Controllers
         // POST: RequisicionPersonal/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 28 })]
         public ActionResult Aprobar(int id, string Estatus, string comentarios)
         {
             try
@@ -340,8 +349,10 @@ namespace GestionPersonal.Controllers
                 return View(darkManager.RequisicionPersonal.Get(id));
             }
         }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 26 })]
         public ActionResult Cancelar(int id)
         {
             try

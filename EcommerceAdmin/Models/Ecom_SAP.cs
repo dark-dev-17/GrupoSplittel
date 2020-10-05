@@ -30,7 +30,7 @@ namespace EcommerceAdmin.Models
             sAP_Documents.ForEach(doc => {
                 if (!string.IsNullOrEmpty(doc.DocNumEcommerce))
                 {
-                    if (ecom_Pedido.GetById(Int32.Parse(doc.DocNumEcommerce)))
+                    if (ecom_Pedido.GetById2(Int32.Parse(doc.DocNumEcommerce)))
                     {
                         if (ecom_Cliente.Get(ecom_Pedido.Id_cliente))
                         {

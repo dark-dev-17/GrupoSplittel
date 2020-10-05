@@ -1,0 +1,152 @@
+﻿@model IEnumerable<GPSInformation.Views.View_EmpleadoExpediente>
+
+@{
+    ViewData["Title"] = "Expediente";
+}
+<link rel="stylesheet" href="~/template/assets/css/dashforge.filemgr.css">
+@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = ViewBag.IdPersona })
+<hr />
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <h2 class="tx-15 mg-b-0"></h2>
+        <a href="#modalActividadVacacionesPeriodos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar nuevo participante</a>
+    </div>
+</div>
+<hr />
+@if(Model.ToList().Count == 0)
+{
+    <div class="alert alert-primary mg-b-0" role="alert">
+        No se encontró ningun documento dentro de este expediente
+    </div>
+}
+<div class="row">
+    @foreach (var item in Model)
+	{
+        <div class="col-lg-2">
+            <div class="card card-file">
+                <div class="dropdown-file">
+                    <a href="" class="dropdown-link" data-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></a>
+                    <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-142px, 18px, 0px);">
+                        <a href="#modalShare" data-toggle="modal" class="dropdown-item share"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>Subir</a>
+                        <a href="@Url.Action("Dowload","Expediente", new {IdPersona = ViewBag.IdPersona, IdExpedienteArchivo = item.IdExpedienteArchivo })" class="dropdown-item download"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download</a>
+                    </div>
+                </div><!-- dropdown -->
+                <div class="card-file-thumb tx-danger">
+                    <i class="far fa-file-pdf"></i>
+                </div>
+                <div class="card-body">
+                    <h6><a href="" class="link-02">@item.Nombre</a></h6>
+                    <span>@item.Ruta</span>
+                </div>
+                <div class="card-footer"><span class="d-none d-sm-inline">Updated: </span>@item.Actualizado</div>
+            </div>
+        </div>
+	}
+    
+</div>
+<div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacacionesPeriodos" role="dialog" data-backdrop="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body pd-20 pd-sm-30">
+                <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i data-feather="x"></i></span>
+                </button>
+                <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Periodos de vacaciones</h5>
+
+                <div id="content_vacacionesAcitivit">
+                    <form asp-action="CreateAsync"  enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label>Tipo Documento</label>
+                            <input type="hidden" name="IdPersona" value="@ViewBag.IdPersona" />
+                            <select name="IdExpedienteArchivo" asp-items="ViewBag.Documentos" class="form-control">
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Documento</label>
+                            <input type="file" name="Archivo" class="form-control" value="" />
+                        </div>
+                        <div class="form-group row mg-b-0">
+                            <div class="col-sm-12 text-right">
+                                <a data-dismiss="modal" class="btn btn-sm btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-sm btn-primary">Agregar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- modal-body -->
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+@*<h2>Expediente</h2>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdExpedienteEmpleado)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdExpedienteArchivo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Ruta)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TipoFile)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdPersona)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Creado)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Actualizado)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdExpedienteEmpleado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdExpedienteArchivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ruta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoFile)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdPersona)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Creado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Actualizado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>*@

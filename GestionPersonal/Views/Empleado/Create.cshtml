@@ -10,10 +10,13 @@
         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Infromación personal</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+        <a class="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Información medica</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+        <a class="nav-link disabled" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Información del empleado</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link disabled" id="tab_personacontacto-tab" data-toggle="tab" href="#tab_personacontacto" role="tab" aria-controls="tab_personacontacto" aria-selected="false">Persona de contacto</a>
     </li>
 </ul>
 <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
@@ -66,19 +69,19 @@
                 <div class="row form-group">
                     <label asp-for="RFC" class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-4">
-                        <input type="number" asp-for="RFC" class="form-control" />
+                        <input type="text" asp-for="RFC" class="form-control" />
                         <span asp-validation-for="RFC" class="text-danger"></span>
                     </div>
                     <label asp-for="CURP" class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-4">
-                        <input type="number" asp-for="CURP" class="form-control" />
+                        <input type="text" asp-for="CURP" class="form-control" />
                         <span asp-validation-for="CURP" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row form-group">
                     <label asp-for="Email" class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-4">
-                        <input type="number" asp-for="Email" class="form-control" />
+                        <input type="email" asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <label asp-for="TelefonoPersonal" class="col-sm-2 col-form-label"></label>
@@ -113,13 +116,13 @@
                         <span asp-validation-for="Calle" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="form-group row">
+                @*<div class="form-group row">
                     <label asp-for="Empleado" class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-4">
                         <input type="text" asp-for="Empleado" class="form-control" />
                         <span asp-validation-for="Empleado" class="text-danger"></span>
                     </div>
-                </div>
+                </div>*@
                 <div class="form-group row mg-b-0">
                     <div class="col-sm-12 text-right">
                         <a asp-action="Index" class="btn btn-sm btn-secondary">Cancelar</a>

@@ -38,7 +38,7 @@
     </div>
 </div>
 @section Scripts {
-    <script src="~/js/jquery-comments.js"></script>
+    <script src="https://viima.github.io/jquery-comments/demo/js/jquery-comments.js"></script>
     <script>
         var app_Respuestas = new Vue({
             el: "#app_Respuestas",
@@ -54,49 +54,72 @@
             },
             methods: {
                 EditComment: async function (commentJSON, success, errorr) {
-                    console.log(commentJSON)
-                    let NewComment = {
-                        idRespuesta: commentJSON.id,
-                        creado: new Date(),
-                        actualizado: new Date(),
-                        respuesta: commentJSON.content.replace("\n",""),
-                        idPregunta: '@Model.IdPregunta',
-                        tipoCreador: "FIBREMEX",
-                    }
-                    await axios.post('@Url.Action("DataUpdate","ConsultorPregunta")', NewComment, {
+                    // Append attachments to be created to the form data
+                    var attachmentsToBeCreated = commentJSON.attachments.filter(function (attachment) {
+                        return !attachment.id
+                    });
+                    console.log(attachmentsToBeCreated.length > 0 ? attachmentsToBeCreated[0].file : null)
+
+                    var formData = new FormData();
+                    formData.append('adjunto', attachmentsToBeCreated.length > 0 ? attachmentsToBeCreated[0].file : null);
+                    formData.append('idRespuesta', commentJSON.id);
+                    formData.append('idPregunta', '@Model.IdPregunta');
+                    formData.append('tipoCreador', "FIBREMEX");
+                    formData.append('creado', "2020-01-01");
+                    formData.append('actualizado', "2020-01-01");
+                    formData.append('respuesta', commentJSON.content.replace("\n", ""));
+
+                    await axios.post('@Url.Action("DataUpdate","ConsultorPregunta")', formData, {
                         headers:
                         {
-                            'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
-                        } 
+                            'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value,
+                            'Content-Type': 'multipart/form-data',
+                        }
                     }).then(response => {
                         success(commentJSON)
                     }).catch(error => {
                        this.ShowMessageErrorShort(error.response.data,'error')
                     }).finally(() => this.newName = "")
+                    window.location.reload();
                 },
                 PostComment: async function (commentJSON, success, errorr) {
-                    console.log(commentJSON)
-                    let NewComment = {
-                        idRespuesta: 0,
-                        idPregunta: '@Model.IdPregunta',
-                        tipoCreador: "FIBREMEX",
-                        creado: new Date(),
-                        actualizado: new Date(),
-                        respuesta: commentJSON.content.replace("\n", ""),
-                        profile_picture_url: "http://fibremex.co/fibra-optica/public/images/img_spl/usuarios/Us_1136.png"
-                    }
-                    await axios.post('@Url.Action("DataCreate","ConsultorPregunta")', NewComment, {
+                    // Append attachments to be created to the form data
+                    var attachmentsToBeCreated = commentJSON.attachments.filter(function (attachment) {
+                        return !attachment.id
+                    });
+                    console.log(attachmentsToBeCreated.length > 0 ? attachmentsToBeCreated[0].file : null)
+
+                    var formData = new FormData();
+                    formData.append('adjunto', attachmentsToBeCreated.length > 0 ? attachmentsToBeCreated[0].file : null);
+                    formData.append('idRespuesta', 0);
+                    formData.append('idPregunta', '@Model.IdPregunta');
+                    formData.append('tipoCreador', "FIBREMEX");
+                    formData.append('creado', "2020-01-01");
+                    formData.append('actualizado', "2020-01-01");
+                    formData.append('respuesta', commentJSON.content.replace("\n", ""));
+                    formData.append('profile_picture_url', "http://fibremex.co/fibra-optica/public/images/img_spl/usuarios/Us_1136.png");
+
+                    await axios.post('@Url.Action("DataCreate","ConsultorPregunta")', formData, {
                         headers:
                         {
-                            'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
-                        } 
+                            'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value,
+                            'Content-Type': 'multipart/form-data',
+                        }
                     }).then(response => {
                         commentJSON.id = response.data.id
                         success(commentJSON)
                     }).catch(error => {
-                       this.ShowMessageErrorShort(error.response.data,'error')
+
+                        this.ShowMessageErrorShort(error.response.data, 'error')
+                        
                     }).finally(() => this.newName = "")
+                    window.location.reload();
                 },
+                validateAttachments: function(attachments, callback) {
+						setTimeout(function() {
+							callback(attachments);
+						}, 500);
+					},
                 ShowMessageErrorShort: function (text,icon) {
                     const Toast = Swal.mixin({
                           toast: true,
@@ -129,7 +152,7 @@
                         headers:
                         {
                             'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
-                        } 
+                        }
                     }).then(response => {
                         success()
                     }).catch(error => {
@@ -148,6 +171,20 @@
                 LoadCommentarios: function () {
                     let ComentariosList = [];
                     this.comments.forEach((e, i) => {
+                        let attach = [];
+                        if (e.rutaArchivo != "") {
+                            console.log(e.rutaArchivo)
+                            attach = [{
+                                "id": 1,
+                                "file": e.rutaArchivo,
+                                "mime_type": e.rutaArchivo.includes("pdf") ? "application/pdf" : "application/x-rar-compressed, application/octet-stream,application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip"
+                            }]
+                        }
+                        else {
+                            attach : []
+                        }
+
+
                         let comentario = {
                            "id": e.idRespuesta,
                            "parent": 0,
@@ -163,35 +200,38 @@
                            "upvote_count": "",
                            "user_has_upvoted": false,
                             "is_new": false,
-                        
+                            "attachments": attach
+
                         }
                         ComentariosList.push(comentario);
                     });
+                    console.log(ComentariosList);
                 $('#comments-container').comments({
-                    currentUserIsAdmin: false,
-                    replyText: 'Responder',
-                    sendText: 'Enviar',
-                    editText: 'Editar',
-                    editedText: 'Modificado',
-                    deleteText: 'Eliminar',
-                    textareaPlaceholderText: 'Nuevo comentario',
-                    attachmentsText: 'Ver adjuntos',
-                    popularText: 'Populares',
-                    oldestText: 'Antiguos',
-                    newestText: 'Recientes',
-                    youText: 'Soporte Fibremex',
-                    enableUpvoting: false,
-                    enableEditing: true,
-                    "currentUserIsAdmin": true,
-                    "enableReplying": false,
-                    enableDeletingCommentWithReplies: false,
-                    getComments: function(success, error) {
-                        success(ComentariosList);
-                    },
-                    postComment: this.PostComment,
-                    putComment: this.EditComment,
-                    deleteComment: this.DeleteComment,
-                });
+                        currentUserIsAdmin: false,
+                        replyText: 'Responder',
+                        sendText: 'Enviar',
+                        editText: 'Editar',
+                        editedText: 'Modificado',
+                        deleteText: 'Eliminar',
+                        textareaPlaceholderText: 'Nuevo comentario',
+                        attachmentsText: 'Ver adjuntos',
+                        popularText: 'Populares',
+                        oldestText: 'Antiguos',
+                        newestText: 'Recientes',
+                        youText: 'Soporte Fibremex',
+                        enableUpvoting: false,
+                        enableAttachments: true,
+                        enableEditing: true,
+                        "currentUserIsAdmin": true,
+                        "enableReplying": false,
+                        enableDeletingCommentWithReplies: false,
+                        getComments: function(success, error) {
+                            success(ComentariosList);
+                        },
+                        postComment: this.PostComment,
+                        putComment: this.EditComment,
+                        deleteComment: this.DeleteComment,
+                    });
                 }
             }
         });

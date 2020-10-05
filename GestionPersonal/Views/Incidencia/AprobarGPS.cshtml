@@ -1,0 +1,274 @@
+﻿@model GestionPersonal.Models.Incidencias
+
+@{
+    ViewData["Title"] = "Aprobación de solictudes nivel 2 ";
+}
+<h2>@ViewData["Title"]</h2>
+<hr />
+<div id="app_incidencias">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link @Html.Raw(ViewBag.tab == "Permisos" ? "active" : "") " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Permisos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Html.Raw(ViewBag.tab == "Vacaciones" ? "active" : "")" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Vacaciones</a>
+        </li>
+    </ul>
+    <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
+        <div class="tab-pane fade @Html.Raw(ViewBag.tab == "Permisos" ? "show active" : "")" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
+                <div class="d-flex align-items-center justify-content-between mg-b-30">
+                    <h4 class="tx-15 mg-b-0">Lista de permisos</h4>
+                </div>
+            </div>
+            <div id="table-permisos">
+                @if (Model.permisos.Count() == 0)
+                {
+                    <div class="alert alert-primary mg-b-0" role="alert">
+                        Sin solicitudes de permisos
+                    </div>
+                }
+                else
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Folio
+                                </th>
+                                <th>
+                                    Solicitante
+                                </th>
+                                <th>
+                                    Fecha
+                                </th>
+                                <th>
+                                    Inicio
+                                </th>
+                                <th>
+                                    Fin
+                                </th>
+                                <th>
+                                    Estatus
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.permisos)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Folio)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmpleadoNombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Fecha)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Inicio)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Fin)
+                                    </td>
+                                    <td>
+                                        @if (item.Estatus == 1)
+                                        {
+                                            <span class="badge badge-primary">En proceso</span>
+                                        }
+                                        else if (item.Estatus == 2)
+                                        {
+                                            <span class="badge badge-danger">Cancelada</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-warning">Rechazda</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                            var nive2 = item.Proceso.Find(a => a.Nivel == 3);
+
+                                        }
+                                        @Html.ActionLink("Details", "Details", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso }) |
+                                        @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
+                                        {
+                                            @Html.ActionLink("Aprobar", "Aprobar", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso, Mode = 2 })<span>|</span>
+                                        }
+                                        <a href="#modalActividadPermisos" data-toggle="modal" onclick="app_incidencias.ActividadPermisos(@item.IdIncidenciaPermiso)">Actividad</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+        <div class="tab-pane fade @Html.Raw(ViewBag.tab == "Vacaciones" ? "show active" : "")" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
+                <div class="d-flex align-items-center justify-content-between mg-b-30">
+                    <h4 class="tx-15 mg-b-0">Lista de vacaciones</h4>
+                </div>
+            </div>
+            <div id="table-permisos">
+                @if (Model.vacaciones.Count() == 0)
+                {
+                    <div class="alert alert-primary mg-b-0" role="alert">
+                        Sin solicitudes de vacaciones
+                    </div>
+                }
+                else
+                {
+                    <table class="table table-condensed table-sm">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Folio
+                                </th>
+                                <th>
+                                    Solicitante
+                                </th>
+                                <th>
+                                    Inicio
+                                </th>
+                                <th>
+                                    Fin
+                                </th>
+                                <th>
+                                    No.D&#xED;as
+                                </th>
+                                <th>
+                                    Estatus
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.vacaciones)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Folio)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IdPersona)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Inicio)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Fin)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NoDias)
+                                    </td>
+                                    <td>
+                                        @if (item.Estatus == 1)
+                                        {
+                                            <span class="badge badge-primary">En proceso</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">Cancelada</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                                var nive2 = item.Proceso.Find(a => a.Nivel == 3);
+                                            }
+                                            @Html.ActionLink("Details", "Details", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion })|
+                                            @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
+                                            {
+                                                @Html.ActionLink("Aprobar", "Aprobar", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion, Mode = 1 })<span>|</span>
+                                            }
+                                        <a href="#modalActividadVacaciones" data-toggle="modal" onclick="app_incidencias.ActividadVacacion(@item.IdIncidenciaVacacion)">Actividad</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacaciones" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad</h5>
+
+                    <div id="content_vacacionesAcitivit"></div>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+
+    <div class="modal calendar-modal-create fade effect-scale" id="modalActividadPermisos" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad</h5>
+
+                    <div id="content_permisoAcitivit"></div>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+</div>
+@section Scripts {
+    <script>
+        var app_incidencias = new Vue({
+            el: "#app_incidencias",
+            data: {},
+            mounted() { },
+            methods: {
+                ActividadVacacion: async function (id) {
+                    document.getElementById("content_vacacionesAcitivit").innerHTML = "";
+                    axios.post('@Url.Action("Actividad","IncidenciaVacacion")/' + id, null, null).then(response => {
+                        document.getElementById("content_vacacionesAcitivit").innerHTML = response.data;
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+
+                            }
+                        }
+                        console.error(error);
+                        ShowMessageErrorShort("Error al obtener la actividad de este permiso", "error")
+                    }).finally()
+
+                },
+                ActividadPermisos: async function (id) {
+                    document.getElementById("content_permisoAcitivit").innerHTML = "";
+                    axios.post('@Url.Action("Actividad","IncidenciaPermiso")/' + id, null, null).then(response => {
+                        //bootbox.alert(response.data);
+                        document.getElementById("content_permisoAcitivit").innerHTML = response.data;
+                        //ShowMessageErrorShort("Datos del personales empleado guardados", "success")
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+
+                            }
+                        }
+                        console.error(error);
+                        ShowMessageErrorShort("Error al obtener la actividad de este permiso", "error")
+                    }).finally()
+
+                }
+            }
+        });
+    </script>
+}

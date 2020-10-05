@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionPersonal.Models;
 using GPSInformation;
 using GPSInformation.Models;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +36,7 @@ namespace GestionInformacionMedical.Controllers
         {
 
         }
-
+        [AccessMultipleView(IdAction = new int[] { 19,20 })]
         public ActionResult Get(int id)
         {
             var result = darkManager.InformacionMedica.Get(id);
@@ -47,6 +48,7 @@ namespace GestionInformacionMedical.Controllers
        // POST: InformacionMedica/Create
        [HttpPost]
         //[ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] {20 })]
         public ActionResult Create(InformacionMedica InformacionMedica)
         {
             try
@@ -88,6 +90,7 @@ namespace GestionInformacionMedical.Controllers
         // POST: InformacionMedica/Edit/5
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Edit(InformacionMedica InformacionMedica)
         {
             try

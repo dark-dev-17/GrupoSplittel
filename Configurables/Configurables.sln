@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configurables", "Configurables.csproj", "{48B8A118-72EB-4835-A7DD-26A45829C77E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurables", "Configurables.csproj", "{48B8A118-72EB-4835-A7DD-26A45829C77E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FibremexConfiArt", "..\FibremexConfiArt\FibremexConfiArt.csproj", "{6DA757BF-0ACB-4760-B066-78B67C65E3FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{48B8A118-72EB-4835-A7DD-26A45829C77E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48B8A118-72EB-4835-A7DD-26A45829C77E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48B8A118-72EB-4835-A7DD-26A45829C77E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DA757BF-0ACB-4760-B066-78B67C65E3FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DA757BF-0ACB-4760-B066-78B67C65E3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DA757BF-0ACB-4760-B066-78B67C65E3FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DA757BF-0ACB-4760-B066-78B67C65E3FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

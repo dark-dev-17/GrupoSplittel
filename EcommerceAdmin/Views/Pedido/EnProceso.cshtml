@@ -1,12 +1,10 @@
 ﻿@model IEnumerable<SAPDataProcess.SAP_Document>
-@using Microsoft.AspNetCore.Http;
-@inject IHttpContextAccessor HttpContextAccessor
+@*@using Microsoft.AspNetCore.Http;*@
+@*@inject IHttpContextAccessor HttpContextAccessor*@
 @{
-    int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
+    //int UserId = (int)HttpContextAccessor.HttpContext.Session.GetInt32("USR_IdSplinnet");
     ViewData["Title"] = "Pedidos en proceso";
-    bool ctrlShowBussines = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 18 });
-
-    
+    //bool ctrlShowBussines = new EcommerceAdmin.Models.Ecom_SAP().ValidAction(UserId, new int[] { 18 });
 
 }
 <div id="app_enProceso">
@@ -67,14 +65,15 @@
                                 @Html.DisplayFor(modelItem => item.DocCur)
                             </td>
                             <td>
-                                @if (ctrlShowBussines)
-                                {
-                                    @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
-                                }
-                                else
-                                {
-                                    @Html.DisplayFor(modelItem => item.CardCode)
-                                }
+                                @*@if (ctrlShowBussines)
+        {
+            @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
+        }
+        else
+        {
+            @Html.DisplayFor(modelItem => item.CardCode)
+        }*@
+                                @Html.ActionLink(item.CardCode, "BussinessPartner", "Cliente", new { id = item.CardCode }, new { @class = "btn btn-sm btn-outline-success", title = "Ver socio de negocios" })
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Cardname)

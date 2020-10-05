@@ -84,6 +84,10 @@ namespace GPSInformation.DBManagers
         {
             return dBConnection.GetIntegerValue(string.Format("select max(Id{0}) from {0}", Nametable));
         }
+        public int GetLastId(string nameCol, string Value)
+        {
+            return dBConnection.GetIntegerValue(string.Format("select max(Id{0}) from {0} where {1} = '{2}'", Nametable, nameCol, Value));
+        }
 
         public T Get(int? id)
         {
@@ -120,11 +124,53 @@ namespace GPSInformation.DBManagers
             return DataReader(string.Format("select * from {0} where {1} in ({2})", Nametable, nameCol, string.Join(", ", keys)));
         }
 
+        public List<T> GetIn(List<int> keys, string nameCol, List<int> keys2, string nameCol2)
+        {
+
+            return DataReader(string.Format("select * from {0} where {1} in ({2}) and {3} in ({4})", Nametable, nameCol, string.Join(", ", keys), nameCol2, string.Join(", ", keys2)));
+        }
+        public List<T> GetList(string Columna1, string Columna1Val, string Columna2, string Columna1Val2)
+        {
+            List<T> Lista = DataReader(string.Format("select * from {0} where {1} = '{2}' and  {3} = '{4}'", Nametable, Columna1, Columna1Val, Columna2, Columna1Val2));
+            return Lista;
+        }
+        public T Get(string Columna1, string Columna1Val, string Columna2, string Columna1Val2)
+        {
+            List<T> Lista = DataReader(string.Format("select * from {0} where {1} = '{2}' and  {3} = '{4}'", Nametable, Columna1, Columna1Val, Columna2, Columna1Val2));
+            if (Lista.Count == 0)
+            {
+                return default(T);
+            }
+            return Lista.ElementAt(0);
+        }
         public List<T> Get()
         {
             return DataReader(string.Format("select * from {0}", Nametable));
         }
+        public string ColumName(string Name)
+        {
+            string columna = "";
+            if (GetClassAttribute().IsMappedByLabels)
+            {
+                object exFormAsObj = Activator.CreateInstance(typeof(T));
+                foreach (var prop in typeof(T).GetProperties())
+                {
+                    PropertyInfo propertyInfo = exFormAsObj.GetType().GetProperty(prop.Name);
+                    ColumnDB hiddenAttribute = (ColumnDB)propertyInfo.GetCustomAttribute(typeof(ColumnDB));
 
+                    if (prop.Name == Name)
+                    {
+                        columna = hiddenAttribute.Name;
+                    }
+                }
+            }
+            else
+            {
+                columna = Name;
+            }
+
+            return columna;
+        }
         private string KeyCol()
         {
             string columna = "";

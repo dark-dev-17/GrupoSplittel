@@ -116,6 +116,70 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
+        public bool GetById2(int DocNumEcommerce_)
+        {
+            string Statement = string.Format("select * from Admin_pedidosInfo where id = '{0}'", DocNumEcommerce_);
+            bool IsExists = false;
+            MySqlDataReader Data = null;
+            try
+            {
+                Ecom_Tools.ValidDBobject(Ecom_DBConnection_);
+                Data = Ecom_DBConnection_.DoQuery(Statement);
+                if (Data.HasRows)
+                {
+                    while (Data.Read())
+                    {
+                        Id_cliente = Data.IsDBNull(1) ? 0 : Data.GetInt32(1);
+                        DocSubTotal = Data.IsDBNull(2) ? 0 : Data.GetDouble(2);
+                        DocIva = Data.IsDBNull(3) ? 0 : Data.GetDouble(3);
+                        DocTotal = Data.IsDBNull(4) ? 0 : Data.GetDouble(4);
+                        DocDate = Data.IsDBNull(7) ? DateTime.Now : Data.GetDateTime(7);
+                        Status = Data.IsDBNull(9) ? "" : Data.GetString(9);
+                        PaymentMethod = Data.IsDBNull(10) ? "" : Data.GetString(10);
+                        DocCur = Data.IsDBNull(11) ? "" : Data.GetString(11);
+                        ShipTo = Data.IsDBNull(12) ? "" : Data.GetString(12);
+                        BillTo = Data.IsDBNull(13) ? "" : Data.GetString(13);
+                        //TransportationCode = Data.IsDBNull(14) ? 0 : Data.GetInt32(14);
+                        DocRate = Data.IsDBNull(16) ? 0 : Data.GetDouble(16);
+                        CFDIUser = Data.IsDBNull(18) ? "" : Data.GetString(18);
+                        PorcentDisaccount = Data.IsDBNull(19) ? 0 : Data.GetInt32(19);
+                        StatusProcessWS = Data.IsDBNull(21) ? -1 : Data.GetInt32(21);
+                        ShipRefences = Data.IsDBNull(22) ? "" : Data.GetString(22);
+                        TypeCustomer = Data.IsDBNull(20) ? "" : Data.GetString(20);
+                        RequireInvoice = Data.IsDBNull(24) ? false : (Data.GetString(24) == "false" ? false : true);
+                        RequireShipCost = Data.IsDBNull(5) ? -1 : Data.GetInt32(5);
+                        DocNumEcommerce = DocNumEcommerce_;
+                        if (DocCur != "USD" && Status != "C")
+                        {
+                            DocIva *= DocRate;
+                            DocTotal *= DocRate;
+                            DocSubTotal *= DocRate;
+                        }
+                        //sentencia para traer cliente
+
+                    }
+                    IsExists = true;
+                    Data.Close();
+                    //obtener lineas
+                    //Ecom_PedidoLines_ = new Ecom_PedidoLine(Ecom_DBConnection_).GetByPedido(DocNumEcommerce);
+                    //obtener cliente
+                    //Ecom_Cliente_ = new Ecom_Cliente(Ecom_DBConnection_);
+                    //Ecom_Cliente_.Get(Id_cliente);
+                }
+                return IsExists;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (Data != null)
+                {
+                    Data.Close();
+                }
+            }
+        }
         public bool GetById(int DocNumEcommerce_)
         {
             string Statement = string.Format("select * from Admin_pedidosInfo where id = '{0}'", DocNumEcommerce_);
@@ -197,7 +261,9 @@ namespace EcomDataProccess
         }
         public List<Ecom_Pedido> GetCotizacion()
         {
-            string Statement = string.Format("select * from Admin_pedidosInfo where estatus = 'C' order by fecha desc");
+            string Statement = string.Format("select * from Admin_pedidosInfo where estatus = 'C' and Fecha >= '{0}' order by fecha desc",
+                DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd")
+                );
             return ReadDatReader(Statement);
         }
         public List<Ecom_Pedido> GetPending()

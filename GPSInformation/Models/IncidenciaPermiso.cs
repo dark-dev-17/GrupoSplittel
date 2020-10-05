@@ -58,5 +58,11 @@ namespace GPSInformation.Models
 
         [ColumnDB(IsMapped = false, IsKey = false)]
         public string DEscripcionTipo { get; set; }
+
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public List<IncidenciaProcess> Proceso { get; set; }
+
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public string Folio { get { return string.Format("P-{0:0000}", IdIncidenciaPermiso); } }
     }
 }

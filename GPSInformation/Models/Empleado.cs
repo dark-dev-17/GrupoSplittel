@@ -46,5 +46,56 @@ namespace GPSInformation.Models
         [Required]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public int IdEstatus { get; set; }
+
+        [ColumnDB(Name = "Nombre", IsMapped = false, IsKey = false)]
+        public string NominaReal { 
+            get {
+                string letra = "";
+                if(TipoNomina == 14)
+                {
+                    //semanal
+                    letra = "S";
+                }
+                else if (TipoNomina == 15)
+                {
+                    //quincenal
+                    letra = "Q";
+                }
+                else
+                {
+                    //mensual
+                    letra = "Q";
+                }
+                return letra + string.Format("{0:000000}", NumeroNomina); 
+            } 
+        }
+
+        [ColumnDB(Name = "Nombre", IsMapped = false, IsKey = false)]
+        public string NominaRealDescripcion
+        {
+            get
+            {
+                if (TipoNomina == 14)
+                {
+                    //semanal
+                    return "Semanal";
+                }
+                else if (TipoNomina == 15)
+                {
+                    //quincenal
+                    return "Quincenal";
+                }
+                else
+                {
+                    //mensual
+                    return "Mensual";
+                }
+            }
+        }
+
+
+
+
+
     }
 }

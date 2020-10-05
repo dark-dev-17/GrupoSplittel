@@ -6,7 +6,7 @@
 @if (Model.Count() == 0)
 {
     <div class="alert alert-primary mg-b-0" role="alert">
-        Sin solicitudes de permisos <a href="#" class="alert-link">an example link</a>.
+        Sin solicitudes de permisos 
     </div>
 }
 else
@@ -16,7 +16,7 @@ else
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.IdIncidenciaPermiso)
+                    @Html.DisplayNameFor(model => model.Folio)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.IdPersona)
@@ -41,7 +41,7 @@ else
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.IdIncidenciaPermiso)
+                        @Html.DisplayFor(modelItem => item.Folio)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.EmpleadoNombre)
@@ -77,6 +77,5 @@ else
             }
         </tbody>
     </table>
-
 }
 

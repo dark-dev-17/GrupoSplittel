@@ -72,6 +72,7 @@ namespace EcomDataProccess
                     ListaBCC = item.ListaBCC;
                     IsActive = item.IsActive;
                 });
+
                 return true;
             }
             else

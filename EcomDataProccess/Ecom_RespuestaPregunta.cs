@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.AspNetCore.Http;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace EcomDataProccess
         public int IdPregunta { get; set; }
         public DateTime Creado { get; set; }
         public DateTime Actualizado { get; set; }
+        public IFormFile Adjunto { get; set; }
+        public string RutaArchivo { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
 
@@ -45,6 +48,7 @@ namespace EcomDataProccess
                 Ecom_DBConnection_.AddParameter(Respuesta, "Respuesta", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(Creado, "Creado", "DATETIME");
                 Ecom_DBConnection_.AddParameter(Actualizado, "Actualizado", "DATETIME");
+                Ecom_DBConnection_.AddParameter(RutaArchivo, "RutaArchivo", "VARCHAR");
 
                 Ecom_DBConnection_.AddParameter(Ecom_RespuestaPreguntaActions, "ModeProcedure", "INT");
                 int result = Ecom_DBConnection_.ExecProcedure();
@@ -100,6 +104,7 @@ namespace EcomDataProccess
                             IdPregunta = Data.IsDBNull(3) ? 0 : (int)Data.GetUInt32(3),
                             Creado = Data.IsDBNull(4) ? DateTime.Today : Data.GetDateTime(4),
                             Actualizado = Data.IsDBNull(5) ? DateTime.Today : Data.GetDateTime(5),
+                            RutaArchivo = Data.IsDBNull(6) ? "" : Data.GetString(6),
                         });
                     }
                     Data.Close();

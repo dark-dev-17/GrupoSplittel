@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionPersonal.Models;
 using GPSInformation;
 using GPSInformation.Models;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +40,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Puesto
+        [AccessMultipleView(IdAction = new int[] { 16,17 })]
         public ActionResult Index()
         {
             var result = darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList();
@@ -49,6 +51,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Puesto/Details/5
+        [AccessMultipleView(IdAction = new int[] { 16, 17 })]
         public ActionResult Details(int id)
         {
             var result = darkManager.Puesto.Get(id);
@@ -61,6 +64,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Puesto/Create
+        [AccessMultipleView(IdAction = new int[] { 17 })]
         public ActionResult Create()
         {
             ViewData["Departamentos"] = Departamentos;
@@ -72,6 +76,7 @@ namespace GestionPersonal.Controllers
         // POST: Puesto/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 17 })]
         public ActionResult Create(Puesto Puesto)
         {
             try
@@ -113,6 +118,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Puesto/Edit/5
+        [AccessMultipleView(IdAction = new int[] { 17 })]
         public ActionResult Edit(int id)
         {
             ViewData["Departamentos"] = Departamentos;
@@ -129,6 +135,7 @@ namespace GestionPersonal.Controllers
         // POST: Puesto/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 17 })]
         public ActionResult Edit(Puesto Puesto)
         {
             try
@@ -169,6 +176,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Puesto/Delete/5
+        [AccessMultipleView(IdAction = new int[] { 17 })]
         public ActionResult Delete(int id)
         {
             return View();
@@ -177,6 +185,7 @@ namespace GestionPersonal.Controllers
         // POST: Puesto/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 17 })]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

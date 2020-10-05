@@ -23,4 +23,5 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
     <UserSecretsId>5b9ee886-8fcf-42ea-ba09-4a2ef51feaf2</UserSecretsId>
   </PropertyGroup>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 </Project>

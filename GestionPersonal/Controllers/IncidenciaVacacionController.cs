@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GestionPersonal.Models;
 using GPSInformation;
+using GPSInformation.Controllers;
+using GPSInformation.Exceptions;
 using GPSInformation.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +25,9 @@ namespace GestionPersonal.Controllers
             darkManager.LoadObject(GpsManagerObjects.IncidenciaVacacion);
             darkManager.LoadObject(GpsManagerObjects.IncidenciaProcess);
             darkManager.LoadObject(GpsManagerObjects.DiaFeriado);
+            darkManager.LoadObject(GpsManagerObjects.VacionesPeriodo);
+            darkManager.LoadObject(GpsManagerObjects.VacacionesDiasRegla);
+            darkManager.LoadObject(GpsManagerObjects.Empleado);
         }
 
         ~IncidenciaVacacionController()
@@ -36,6 +41,7 @@ namespace GestionPersonal.Controllers
             return View(result);
         }
 
+        [AccessMultipleView(IdAction = new int[] { 30 })]
         // GET: IncidenciaVacacion/Details/5
         public ActionResult Details(int id)
         {
@@ -47,6 +53,7 @@ namespace GestionPersonal.Controllers
             return View(result);
         }
 
+        [AccessMultipleView(IdAction = new int[] { 30 })]
         // GET: IncidenciaVacacion/Create
         public ActionResult Create(int id)
         {
@@ -56,6 +63,7 @@ namespace GestionPersonal.Controllers
         // POST: IncidenciaVacacion/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 30 })]
         public ActionResult Create(IncidenciaVacacion IncidenciaVacacion)
         {
             try
@@ -100,7 +108,7 @@ namespace GestionPersonal.Controllers
                 darkManager.IncidenciaVacacion.Element.Creado = DateTime.Now;
                 if (darkManager.IncidenciaVacacion.Add())
                 {
-                    AddSteps(IncidenciaVacacion);
+                    AddSteps(darkManager.IncidenciaVacacion.Get(darkManager.IncidenciaVacacion.GetLastId(nameof(darkManager.IncidenciaVacacion.Element.IdPersona), IncidenciaVacacion.IdPersona + "")));
 
                     return RedirectToAction(nameof(Index), "Incidencia", new { Id = IncidenciaVacacion.IdPersona });
                 }
@@ -119,6 +127,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: IncidenciaVacacion/Delete/5
+        [AccessMultipleView(IdAction = new int[] { 30 })]
         public ActionResult Cancel(int id)
         {
             var result = darkManager.IncidenciaVacacion.Get(id);
@@ -129,6 +138,7 @@ namespace GestionPersonal.Controllers
         // POST: IncidenciaVacacion/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 30 })]
         public ActionResult Cancel(int id, IFormCollection collection)
         {
             
@@ -154,14 +164,175 @@ namespace GestionPersonal.Controllers
             }
         }
 
+        [AccessMultipleView(IdAction = new int[] { 32, 36 })]
+        [HttpGet]
+        public ActionResult AprobarInc(int id, int Mode)
+        {
+            darkManager.StartTransaction();
+            try
+            {
+                // TODO: Add delete logic here
+                var result = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+                if (Mode == 1)
+                {
+                    var Persona = darkManager.Persona.Get((int)HttpContext.Session.GetInt32("user_id"));
+                    var nivel = result.Find(a => a.Nivel == 2);
+                    nivel.Autorizada = true;
+                    nivel.Fecha = DateTime.Now;
+                    nivel.IdPersona = (int)HttpContext.Session.GetInt32("user_id");
+                    nivel.NombreEmpleado = Persona.NombreCompelto;
+                    nivel.Revisada = true;
+                    nivel.IdIncidenciaVacacion = id;
+
+                    darkManager.IncidenciaProcess.Element = nivel;
+
+                    if (darkManager.IncidenciaProcess.Update())
+                    {
+                        darkManager.Commit();
+                        return RedirectToAction("AprobarJefe", "Incidencia", new { tab = "Vacaciones" });
+                    }
+                    else
+                    {
+                        darkManager.RolBack();
+                        ModelState.AddModelError("", "Error al aprobar");
+                        return RedirectToAction("Aprobar", new { id = id, Mode = Mode });
+                    }
+                }
+                else if (Mode == 2)
+                {
+                    var Persona = darkManager.Persona.Get((int)HttpContext.Session.GetInt32("user_id"));
+                    var nivel = result.Find(a => a.Nivel == 3);
+                    nivel.Autorizada = true;
+                    nivel.Fecha = DateTime.Now;
+                    nivel.IdPersona = (int)HttpContext.Session.GetInt32("user_id");
+                    nivel.NombreEmpleado = Persona.NombreCompelto;
+                    nivel.Revisada = true;
+                    nivel.IdIncidenciaVacacion = id;
+                    darkManager.IncidenciaProcess.Element = nivel;
+
+                    if (darkManager.IncidenciaProcess.Update())
+                    {
+                        darkManager.Commit();
+                        return RedirectToAction("AprobarGPS", "Incidencia", new { tab = "Vacaciones" });
+                    }
+                    else
+                    {
+                        darkManager.RolBack();
+                        ModelState.AddModelError("", "Error al aprobar");
+                        return RedirectToAction("Aprobar", new { id = id, Mode = Mode });
+                    }
+                }
+                else
+                {
+                    throw new GpExceptions("El parametro mode no es valido");
+                }
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return PartialView(ex.Message);
+            }
+        }
+
+        [AccessMultipleView(IdAction = new int[] { 32, 36 })]
+        [HttpGet]
+        public ActionResult RechazarInc(int id, int Mode)
+        {
+            darkManager.StartTransaction();
+            try
+            {
+                // TODO: Add delete logic here
+                var result = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+                if (Mode == 1)
+                {
+                    var Persona = darkManager.Persona.Get((int)HttpContext.Session.GetInt32("user_id"));
+                    var nivel = result.Find(a => a.Nivel == 2);
+                    nivel.Autorizada = false;
+                    nivel.Fecha = DateTime.Now;
+                    nivel.IdPersona = (int)HttpContext.Session.GetInt32("user_id");
+                    nivel.NombreEmpleado = Persona.NombreCompelto;
+                    nivel.Revisada = true;
+                    nivel.IdIncidenciaVacacion = id;
+                    darkManager.IncidenciaProcess.Element = nivel;
+
+                    if (darkManager.IncidenciaProcess.Update())
+                    {
+                        darkManager.Commit();
+                        return RedirectToAction("AprobarJefe", "Incidencia", new { tab = "Vacaciones" });
+                    }
+                    else
+                    {
+                        darkManager.RolBack();
+                        ModelState.AddModelError("", "Error al Rechazar");
+                        return RedirectToAction("Rechazar", new { id = id, Mode = Mode });
+                    }
+                }
+                else if (Mode == 2)
+                {
+                    var Persona = darkManager.Persona.Get((int)HttpContext.Session.GetInt32("user_id"));
+                    var nivel = result.Find(a => a.Nivel == 3);
+                    nivel.Autorizada = false;
+                    nivel.Fecha = DateTime.Now;
+                    nivel.IdPersona = (int)HttpContext.Session.GetInt32("user_id");
+                    nivel.NombreEmpleado = Persona.NombreCompelto;
+                    nivel.Revisada = true;
+                    nivel.IdIncidenciaVacacion = id;
+                    darkManager.IncidenciaProcess.Element = nivel;
+
+                    if (darkManager.IncidenciaProcess.Update())
+                    {
+                        darkManager.Commit();
+                        return RedirectToAction("AprobarGPS", "Incidencia", new { tab = "Vacaciones" });
+                    }
+                    else
+                    {
+                        darkManager.RolBack();
+                        ModelState.AddModelError("", "Error al Rechazar");
+                        return RedirectToAction("Aprobar", new { id = id, Mode = Mode });
+                    }
+                }
+                else
+                {
+                    throw new GpExceptions("El parametro mode no es valido");
+                }
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return PartialView(ex.Message);
+            }
+        }
+
+        [AccessMultipleView(IdAction = new int[] { 32, 36 })]
+        public ActionResult Aprobar(int id, string Mode)
+        {
+            var result = darkManager.IncidenciaVacacion.Get(id);
+
+            ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+            ViewData["ModeAprobar"] = Mode;
+            return View(result);
+        }
+
+        [AccessMultipleView(IdAction = new int[] { 32, 36 })]
+        public ActionResult Rechazar(int id, string Mode)
+        {
+            var result = darkManager.IncidenciaVacacion.Get(id);
+
+            ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+            ViewData["ModeAprobar"] = Mode;
+            return View(result);
+        }
+
         // POST: IncidenciaVacacion/Delete/5
         [HttpPost]
+        [AccessMultipleView(IdAction = new int[] { 30, 32, 36 })]
         public ActionResult Actividad(int id)
         {
             try
             {
                 // TODO: Add delete logic here
                 var result = darkManager.IncidenciaProcess.Get(""+id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+                ViewData["Incidencia"] = darkManager.IncidenciaVacacion.Get(id);
                 return PartialView(result);
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
@@ -173,7 +344,7 @@ namespace GestionPersonal.Controllers
         private void AddSteps(IncidenciaVacacion IncidenciaVacacion)
         {
             var procesoStep = new IncidenciaProcess();
-            procesoStep.IdIncidenciaVacacion = darkManager.IncidenciaVacacion.GetLastId();
+            procesoStep.IdIncidenciaVacacion = IncidenciaVacacion.IdIncidenciaVacacion;
             procesoStep.IdPersona = IncidenciaVacacion.IdPersona;
             procesoStep.Fecha = DateTime.Now;
             procesoStep.Titulo = "Incidencia creada por solicitante";
@@ -218,6 +389,7 @@ namespace GestionPersonal.Controllers
             darkManager.IncidenciaProcess.Element = procesoStep;
             darkManager.IncidenciaProcess.Add();
         }
+
         private int GetDays(DateTime desde, DateTime hasta)
         {
             DateTime inicio = desde;
@@ -235,6 +407,15 @@ namespace GestionPersonal.Controllers
                 inicio = inicio.AddDays(1);
             }
             return dias;
+        }
+
+        [HttpGet]
+        [AccessMultipleView(IdAction = new int[] { 30, 32, 36 })]
+        public ActionResult GenerarPeridos()
+        {
+            VacacionesCtrl vacacionesCtrl = new VacacionesCtrl((int)HttpContext.Session.GetInt32("user_id"),darkManager);
+            vacacionesCtrl.ProcPeridosVac((int)HttpContext.Session.GetInt32("user_id"));
+            return Ok("asasdasdasdasda");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using GPDataInformation;
+﻿using GPSInformation.Exceptions;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -100,7 +100,7 @@ namespace GestionPersonal.Models
                 return (int)RequestStatus;
 
             }
-            catch (GPDataInformation.GpExceptions ex)
+            catch (GpExceptions ex)
             {
                 throw new GpExceptions(string.Format("GpExceptions - {0}", ex.Message));
             }

@@ -33,7 +33,7 @@ namespace EcommerceApiLogic.Validators
             {
                 var currentUser = httpContext.User;
 
-                if (currentUser.HasClaim(c => c.Type == "IdCliente"))
+                if (!currentUser.HasClaim(c => c.Type == "IdCliente"))
                 {
                     throw new DarkExceptionSystem("Error, el token ha sido destruido o no se ha generadó correctamente");
                 }

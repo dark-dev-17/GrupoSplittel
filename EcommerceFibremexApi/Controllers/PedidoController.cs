@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApiLogic.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -23,6 +24,7 @@ namespace EcommerceFibremexApi.Controllers
 
         // GET api/values
         [HttpGet]
+        [EnableCors("AllowAllHeaders")]
         public ActionResult<IEnumerable<Pedido>> Get()
         {
             return darkDev.Pedido.Get();
@@ -30,7 +32,7 @@ namespace EcommerceFibremexApi.Controllers
 
         [HttpGet("{id}")]
         [Route("[action]/{id}")]
-        [Authorize]
+        //[Authorize]
         public ActionResult<IEnumerable<Pedido>> GetByCustomer(int id)
         {
             if (!darkDev.tokenValidationAction.Validation(id, HttpContext,EcommerceApiLogic.Validators.TokenValidationType.Pedido))

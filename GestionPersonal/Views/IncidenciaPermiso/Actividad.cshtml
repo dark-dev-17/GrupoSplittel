@@ -2,52 +2,69 @@
 
 @{
     ViewData["Title"] = "Actividad";
+    GPSInformation.Models.IncidenciaPermiso incidenciaPermiso = null;
+    if (ViewBag.Incidencia != null)
+    {
+        incidenciaPermiso = (GPSInformation.Models.IncidenciaPermiso)ViewBag.Incidencia;
+    }
+
+}
+@if (incidenciaPermiso != null && incidenciaPermiso.Estatus == 2)
+{
+    <div class="alert alert-warning mg-b-0" role="alert">
+        Esta solicitud fue cancelada por el solicitante
+    </div>
 }
 
 <ul class="activity  px-4 py-3">
     @foreach (var item in Model)
     {
-    <li class="activity-item">
+        <li class="activity-item">
 
-        @if (!item.Revisada)
-        {
-            <div class="activity-icon bg-primary-light tx-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            </div>
-        }
-        else
-        {
-            @if (item.Autorizada)
+            @if (!item.Revisada)
             {
-                <div class="activity-icon bg-success-light tx-success">
+                <div class="activity-icon bg-primary-light tx-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 </div>
             }
             else
             {
-                <div class="activity-icon bg-pink-light tx-pink">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                </div>
-            }
-        }
-        <div class="activity-body">
-            <p class="mg-b-2">
-                <h4 class="tx-19 mg-b-2">@Html.DisplayFor(modelItem => item.Titulo)</h4>
-                @Html.DisplayFor(modelItem => item.NombreEmpleado)
-            </p>
-            <small class="tx-color-03">
-                @if (item.Fecha != null)
+                @if (item.Autorizada)
                 {
-                    @Html.Raw(GPSInformation.Herramientas.RelativeTime((DateTime)item.Fecha))
+                    <div class="activity-icon bg-success-light tx-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
                 }
                 else
                 {
-
+                    <div class="activity-icon bg-pink-light tx-pink">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
                 }
-            </small>
-        </div><!-- activity-body -->
-    </li>
+            }
+            <div class="activity-body">
+                <p class="mg-b-2">
+                    <h4 class="tx-19 mg-b-2">@Html.DisplayFor(modelItem => item.Titulo)</h4>
+                    @Html.DisplayFor(modelItem => item.NombreEmpleado)
+                </p>
+                <small class="tx-color-03">
+                    @if (item.Fecha != null)
+                    {
+                        @Html.Raw(GPSInformation.Herramientas.RelativeTime((DateTime)item.Fecha))
+                    }
+                    else
+                    {
+
+                    }
+                </small>
+            </div><!-- activity-body -->
+        </li>
         <!-- activity-item -->
     }
-
+    @if (Model.Where(a => a.Autorizada == false && a.Revisada == true).ToList().Count > 0)
+    {
+        <div class="alert alert-warning mg-b-0" role="alert">
+            Esta solicitud fue rechazda por alguno de los involucrados
+        </div>
+    }
 </ul>

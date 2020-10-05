@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionPersonal.Models;
 using GPSInformation;
 using GPSInformation.Models;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +40,7 @@ namespace GestionEmpleadol.Controllers
         {
 
         }
-
+        [AccessMultipleView(IdAction = new int[] { 19,20 })]
         public ActionResult Get(int id)
         {
             var result = darkManager.Empleado.Get(id);
@@ -51,6 +52,7 @@ namespace GestionEmpleadol.Controllers
        // POST: Empleado/Create
        [HttpPost]
         //[ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Create(Empleado Empleado)
         {
             TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
@@ -95,6 +97,7 @@ namespace GestionEmpleadol.Controllers
         // POST: Empleado/Edit/5
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Edit(Empleado Empleado)
         {
             TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");

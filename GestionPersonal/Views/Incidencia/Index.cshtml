@@ -1,7 +1,8 @@
 ﻿@model GestionPersonal.Models.Incidencias
-
 @{
     ViewData["Title"] = "Permisos y vacaciones";
+
+    List<GPSInformation.Models.VacionesPeriodo> periodos = ViewBag.Periodos;
 }
 @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.persona.IdPersona  })
     <hr />
@@ -30,7 +31,10 @@
                 <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
                     <div class="d-flex align-items-center justify-content-between mg-b-30">
                         <h4 class="tx-15 mg-b-0">Lista de vacaciones</h4>
-                        <a href="@Url.Action("Create","IncidenciaVacacion", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a href="#modalActividadVacacionesPeriodos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>ver periodos</a>
+                            <a href="@Url.Action("Create","IncidenciaVacacion", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+                        </div>
                     </div>
                 </div>
                 <div id="table-permisos">
@@ -38,6 +42,43 @@
                 </div>
             </div>
         </div>
+        <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacacionesPeriodos" role="dialog" data-backdrop="false" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body pd-20 pd-sm-30">
+                        <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x"></i></span>
+                        </button>
+                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Periodos de vacaciones</h5>
+
+                        <div id="content_vacacionesAcitivit">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Periodo</th>
+                                        <th>Dias</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    @foreach (var item in periodos)
+                                    {
+                                        <tr>
+                                            <td>@item.NumeroPeriodo</td>
+                                            <td><strong>@item.DiasAprobadors</strong><span> / </span>@item.DiasUsados</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- modal-body -->
+                    <div class="modal-footer">
+                        <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                    </div><!-- modal-footer -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+
         <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacaciones" role="dialog" data-backdrop="false" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">

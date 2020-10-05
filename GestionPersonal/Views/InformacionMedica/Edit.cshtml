@@ -12,14 +12,14 @@
                 <input type="hidden" asp-for="IdPersona" class="form-control" />
                 <input type="hidden" asp-for="IdInformacionMedica" class="form-control" />
                 <select asp-for="Alergias" asp-items="ViewBag.Alergias" class="form-control select2">
-                    <option value="0">Selecciona una opcion</option>
+                    <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="Alergias" class="text-danger"></span>
             </div>
             <label asp-for="TipoSangre" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
                 <select asp-for="TipoSangre" asp-items="ViewBag.TiposSangre" class="form-control select2">
-                    <option value="0">Selecciona un tipo de sangre</option>
+                    <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="TipoSangre" class="text-danger"></span>
             </div>

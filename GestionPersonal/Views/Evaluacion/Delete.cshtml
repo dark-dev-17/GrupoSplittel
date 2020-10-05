@@ -1,0 +1,92 @@
+﻿@model GPSInformation.Models.Evaluacion
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Evaluacion</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IdEvaluacion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdEvaluacion)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdPersona)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdPersona)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.InicioFecha)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.InicioFecha)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.InicioHora)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.InicioHora)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FinFecha)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FinFecha)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FinHora)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FinHora)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdModalidad)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdModalidad)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdEvaluacionTemplate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdEvaluacionTemplate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Activa)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Activa)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Creada)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Creada)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Actualizada)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Actualizada)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

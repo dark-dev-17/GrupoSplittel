@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionPersonal.Models;
 using GPSInformation;
 using GPSInformation.Models;
 using Microsoft.AspNetCore.Http;
@@ -48,6 +49,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Empleado
+        [AccessMultipleView(IdAction = new int[] { 19,20 })]
         public ActionResult Index()
         {
             var result = darkManager.Persona.Get().OrderBy(a => a.Nombre).ToList();
@@ -57,6 +59,7 @@ namespace GestionPersonal.Controllers
         }
 
         // GET: Empleado/Create
+        [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Create()
         {
             GetSelects();
@@ -75,6 +78,7 @@ namespace GestionPersonal.Controllers
         // POST: Persona/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Create(Persona Persona)
         {
             GetSelects();
@@ -107,11 +111,12 @@ namespace GestionPersonal.Controllers
             {
                 ViewData["Generos"] = Generos;
                 ViewData["EstadosCiviles"] = EstadosCiviles;
-                ModelState.AddModelError("Error", ex.Message);
+                ModelState.AddModelError("", ex.Message);
                 return View(Persona);
             }
         }
         // GET: Empleado/Edit
+        [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Edit(int id)
         {
             GetSelects();

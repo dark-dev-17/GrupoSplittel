@@ -1,0 +1,103 @@
+﻿@model IEnumerable<GPSInformation.Models.Evaluacion>
+
+@{
+    ViewData["Title"] = "Evaluaciones";
+}
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <h2 class="tx-15 mg-b-0"></h2>
+        <a asp-action="Create" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+    </div>
+</div>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdEvaluacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPersona)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InicioFecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InicioHora)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.FinFecha)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.FinHora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdModalidad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdEvaluacionTemplate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Activa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Creada)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Actualizada)
+                </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdEvaluacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PersonaName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InicioFecha)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InicioHora)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.FinFecha)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.FinHora)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModalidadName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModeloName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Activa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Creada)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Actualizada)
+                    </td>*@
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.IdEvaluacion }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.IdEvaluacion }) 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

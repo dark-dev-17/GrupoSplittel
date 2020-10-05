@@ -504,6 +504,10 @@ namespace GPSInformation
         {
             try
             {
+                //if (SqlConnection.State == ConnectionState.Open && SqlConnection != null)
+                //{
+                //    SqlConnection.Close();
+                //}
                 SqlConnection = new SqlConnection(ConnectionString);
                 SqlConnection.Open();
                 CheckConnection();

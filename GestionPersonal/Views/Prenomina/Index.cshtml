@@ -1,0 +1,96 @@
+﻿@model GPSInformation.Reportes.Prenomina_Rep
+
+@{
+    ViewData["Title"] = "Index";
+    int Indice = 0;
+    int Indice2 = 0;
+
+    List<GPSInformation.Views.View_empleado> view_Empleados = (List<GPSInformation.Views.View_empleado>)ViewBag.Empleados;
+}
+<a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Filtro</a>
+
+<div data-label="Filtro" class="df-example demo-forms collapse mg-t-5" id="collapseExample">
+    <form asp-action="Index">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="form-group col-lg-2">
+                <label asp-for="Inicio" class="control-label"></label>
+                <input type="date" asp-for="Inicio" class="form-control form-control-sm" />
+                <span asp-validation-for="Inicio" class="text-danger"></span>
+            </div>
+            <div class="form-group col-lg-2">
+                <label asp-for="Fin" class="control-label"></label>
+                <input type="date" asp-for="Fin" class="form-control form-control-sm" />
+                <span asp-validation-for="Fin" class="text-danger"></span>
+            </div>
+            <div class="form-group col-lg-2">
+                <label asp-for="Fin" class="control-label">TipoNomina</label>
+                @foreach (var item in Model.TipoNominas)
+                {
+                    <div class="custom-control custom-checkbox">
+                        <input type="hidden" class="custom-control-input" asp-for="TipoNominas[Indice].IdTipoNomina">
+                        <input type="hidden" class="custom-control-input" asp-for="TipoNominas[Indice].Nombre">
+                        <input type="checkbox" class="custom-control-input" asp-for="TipoNominas[Indice].Selected" id="checTn_@Indice">
+                        <label class="custom-control-label" for="checTn_@Indice">@item.Nombre</label>
+                    </div>
+
+                    Indice++;
+                }
+                <span asp-validation-for="Fin" class="text-danger"></span>
+            </div>
+            <div class="form-group col-lg-4 row">
+                <label asp-for="Fin" class="control-label col-lg-12">TipoNomina</label>
+                @foreach (var item in Model.Departamentos)
+                {
+                    <div class="custom-control custom-checkbox col-lg-6">
+                        <input type="hidden" class="custom-control-input" asp-for="Departamentos[Indice2].IdDepartamento">
+                        <input type="hidden" class="custom-control-input" asp-for="Departamentos[Indice2].Nombre">
+                        <input type="checkbox" class="custom-control-input" asp-for="Departamentos[Indice2].Selected" id="checDep_@Indice2">
+                        <label class="custom-control-label" for="checDep_@Indice2">@item.Nombre</label>
+                    </div>
+                    Indice2++;
+                }
+                <span asp-validation-for="Fin" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row mg-b-0">
+            <div class="col-sm-12 text-right">
+                <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-sm btn-primary">Extraer</button>
+            </div>
+        </div>
+    </form>
+</div>
+@if (view_Empleados != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Empleado</th>
+                <th>Correo</th>
+                <th>Antiguedad</th>
+                <th>Contestó</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in view_Empleados)
+            {
+                <tr>
+                    <td>@item.NombreCompleto</td>
+                    <td>@item.Correo</td>
+                    <td>@item.Antiguedad</td>
+                    <td>
+                        @item.TipoNomina
+                    </td>
+                    <td>
+                        @item.NombreSociedad
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+}
+
+

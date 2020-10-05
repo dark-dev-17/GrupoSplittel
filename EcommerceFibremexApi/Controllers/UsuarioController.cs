@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using EcommerceApiLogic.Models;
+using EcommerceFibremexApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -35,14 +36,19 @@ namespace EcommerceFibremexApi.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{usuario}/{password}")]
-        [Route("[action]/{usuario}/{password}")]
+        [HttpGet]
+        [Route("[action]")]
         [AllowAnonymous]
-        public ActionResult<Usuario> Get(string usuario, string password)
+        public ActionResult<Usuario> Get([FromBody] Login Login)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.Values);
+            }
+
             var Result = darkDev.Usuario.Get(
-                darkDev.Usuario.ColumName(nameof(darkDev.Usuario.Element.Email)), usuario,
-                darkDev.Usuario.ColumName(nameof(darkDev.Usuario.Element.Password)), password
+                darkDev.Usuario.ColumName(nameof(darkDev.Usuario.Element.Email)), Login.User.Trim(),
+                darkDev.Usuario.ColumName(nameof(darkDev.Usuario.Element.Password)), Login.Password.Trim()
             );
 
             if(Result == null)
@@ -54,20 +60,25 @@ namespace EcommerceFibremexApi.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("[action]")]
+        public ActionResult Login([FromBody] Login Login)
         {
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.Values);
+            }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+            var Result = darkDev.Usuario.Get(
+                darkDev.Usuario.ColumName(nameof(darkDev.Usuario.Element.Email)), Login.User.Trim(),
+                darkDev.Usuario.ColumName(nameof(darkDev.Usuario.Element.Password)), Login.Password.Trim()
+            );
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (Result == null)
+            {
+                return Unauthorized();
+            }
+            return Ok(new { token = darkDev.tokenValidationAction.GenerateToken(Result) });
         }
+        
     }
 }

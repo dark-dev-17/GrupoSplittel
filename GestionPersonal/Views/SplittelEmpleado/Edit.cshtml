@@ -17,7 +17,7 @@
             <label asp-for="TipoNomina" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
                 <select asp-for="TipoNomina" asp-items="ViewBag.TipoNomina" class="form-control select2">
-                    <option value="0">Selecciona un tipo de sangre</option>
+                    <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="TipoNomina" class="text-danger"></span>
             </div>
@@ -26,14 +26,14 @@
             <label asp-for="IdSociedad" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
                 <select asp-for="IdSociedad" asp-items="ViewBag.Sociedades" class="form-control select2">
-                    <option value="0">Selecciona un tipo de sangre</option>
+                    <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="IdSociedad" class="text-danger"></span>
             </div>
             <label asp-for="IdDepartamento" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
                 <select asp-for="IdDepartamento" asp-items="ViewBag.Departamentos" class="form-control select2">
-                    <option value="0">Selecciona un tipo de sangre</option>
+                    <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="IdDepartamento" class="text-danger"></span>
             </div>
@@ -42,13 +42,13 @@
             <label asp-for="IdPuesto" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
                 <select asp-for="IdPuesto" asp-items="ViewBag.Puestos" class="form-control select2">
-                    <option value="0">Selecciona un tipo de sangre</option>
+                    <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="IdPuesto" class="text-danger"></span>
             </div>
             <label asp-for="Salario" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
-                <input type="text" asp-for="Salario" class="form-control" />
+                <input type="number" asp-for="Salario" class="form-control" />
                 <span asp-validation-for="Salario" class="text-danger"></span>
             </div>
         </div>
@@ -73,7 +73,7 @@
             <label asp-for="IdEstatus" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
                 <select asp-for="IdEstatus" asp-items="ViewBag.Puestos" class="form-control select2">
-                    <option value="0">Selecciona un tipo de sangre</option>
+                    <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="IdEstatus" class="text-danger"></span>
             </div>

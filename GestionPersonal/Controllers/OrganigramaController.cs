@@ -30,16 +30,18 @@ namespace GestionPersonal.Controllers
 
         }
 
+        [AccessMultipleView(IdAction = new int[] { 4,5,9 })]
         public ActionResult Index()
         {
             var result = darkManager.OrganigramaVersion.Get();
             return View(result);
         }
-
+        [AccessMultipleView(IdAction = new int[] { 4, 5, 9 })]
         public ActionResult Details(int id)
         {
             return View();
         }
+        [AccessMultipleView(IdAction = new int[] { 5 })]
         public ActionResult Edit(int id)
         {
             var result = darkManager.OrganigramaVersion.Get(id);
@@ -52,13 +54,14 @@ namespace GestionPersonal.Controllers
                 return NotFound();
             }
         }
-
+        [AccessMultipleView(IdAction = new int[] { 5 })]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 5 })]
         public ActionResult<List<PuestoOrg>> GetPuestos()
         {
             List<PuestoOrg> puestoOrgs =  ListPuestos();
@@ -67,6 +70,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 5 })]
         public ActionResult CreateNewVersion()
         {
             darkManager.OrganigramaVersion.Element = new GPSInformation.Models.OrganigramaVersion();
@@ -85,6 +89,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 5 })]
         public ActionResult AddFirstNode(int IdPuesto, int IdVersion)
         {
 
@@ -121,6 +126,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 5 })]
         public ActionResult AddNode(int IdPuesto, int IdPuestoParent, int IdVersion)
         {
 
@@ -160,6 +166,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 5 })]
         public ActionResult GetNodes(int IdVersion)
         {
             var result = darkManager.OrganigramaStructura.Get(""+ IdVersion, "IdOrganigramaVersion");
@@ -167,6 +174,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 9 })]
         public ActionResult Autorizar(int IdVersion)
         {
             var result = darkManager.OrganigramaVersion.Get();
@@ -193,6 +201,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 5 })]
         public ActionResult ChangeNode(int IdOrganigramaStructura, int IdPuesto, int IdPuestoParent)
         {
             var puestoChild = darkManager.OrganigramaStructura.Get(IdOrganigramaStructura);
@@ -231,6 +240,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 5 })]
         public ActionResult Remove(int IdPuesto, int IdVersion)
         {
             var result = darkManager.OrganigramaStructura.Get("" + IdVersion, "IdOrganigramaVersion");
@@ -251,7 +261,8 @@ namespace GestionPersonal.Controllers
                 return BadRequest("Puesto no eliminado!");
             }
         }
-
+        
+        [AccessDataSession(IdAction = new int[] { 5 })]
         private List<PuestoOrg> ListPuestos()
         {
             List<PuestoOrg> puestoOrgs = new List<PuestoOrg>();

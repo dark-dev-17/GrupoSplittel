@@ -19,6 +19,10 @@ namespace EcommerceAdmin.Controllers
         private readonly string SMTP_account = ConfigurationManager.AppSettings["SMTP_account"].ToString();
         private readonly string SMTP_user = ConfigurationManager.AppSettings["SMTP_user"].ToString();
         private readonly string SMTP_pass = ConfigurationManager.AppSettings["SMTP_pass"].ToString();
+        private readonly string FTP_User = ConfigurationManager.AppSettings["FTP_User"].ToString();
+        private readonly string FTP_Password = ConfigurationManager.AppSettings["FTP_Password"].ToString();
+        private readonly string FTP_Server = ConfigurationManager.AppSettings["FTP_Server"].ToString();
+        private readonly string Ecommerce_Domain = ConfigurationManager.AppSettings["Ecommerce_Domain"].ToString();
         private Ecommerce Ecommerce_;
         public ConsultorPreguntaController()
         {
@@ -35,7 +39,9 @@ namespace EcommerceAdmin.Controllers
                 Ecommerce_.StartLib(LibraryEcommerce.Ecommerce);
                 Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
                 Ecom_RespuestaPregunta Ecom_RespuestaPregunta_ = (Ecom_RespuestaPregunta)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_RespuestaPregunta);
-                return Ok(Ecom_RespuestaPregunta_.Get(IdBlog));
+                var Respuestas = Ecom_RespuestaPregunta_.Get(IdBlog);
+                Respuestas.ForEach(a => a.RutaArchivo = a.RutaArchivo != "" ? string.Format(@"{0}/fibra-optica/public/images/img_spl/consultecnico/{1}", Ecommerce_Domain, a.RutaArchivo) : "");
+                return Ok(Respuestas);
             }
             catch (Ecom_Exception ex)
             {
@@ -62,7 +68,7 @@ namespace EcommerceAdmin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessData(IdAction = 56)]
-        public ActionResult DataCreate([FromBody]Ecom_RespuestaPregunta Ecom_RespuestaPregunta_)
+        public ActionResult DataCreate(Ecom_RespuestaPregunta Ecom_RespuestaPregunta_)
         {
             try
             {
@@ -77,10 +83,28 @@ namespace EcommerceAdmin.Controllers
                 Ecommerce_ = new Ecommerce(HttpContext.Session);
                 Ecommerce_.StartLib(LibraryEcommerce.Ecommerce);
                 Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
+                Ecom_RespuestaPregunta_.Actualizado = DateTime.Now;
+                Ecom_RespuestaPregunta_.Creado = DateTime.Now;
                 Ecom_RespuestaPregunta_ = (Ecom_RespuestaPregunta)Ecommerce_.ecomData.SetObjectConnection(Ecom_RespuestaPregunta_, ObjectSource.Ecom_RespuestaPregunta);
+
+                if (Ecom_RespuestaPregunta_.Adjunto != null)
+                {
+                    Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
+                    List<string> Aceptados = new List<string> { "PDF", "pdf", "rar", "RAR" };
+                    if (!Aceptados.Contains(Ecom_RespuestaPregunta_.Adjunto.ContentType.Split("/")[1]))
+                    {
+                        throw new Ecom_Exception("El archivo adjunto no es valido, valores aceptados(pdf, rar)");
+                    }
+                    string FilePaths = string.Format(@"public_html/fibra-optica/public/images/img_spl/consultecnico/{0}_{1}", Ecom_RespuestaPregunta_.IdPregunta, Ecom_RespuestaPregunta_.Adjunto.FileName);
+                    Ecom_FilesFtp.UpdateFile(FilePaths, Ecom_RespuestaPregunta_.Adjunto);
+                    Ecom_RespuestaPregunta_.RutaArchivo = Ecom_RespuestaPregunta_.IdPregunta+"_" +Ecom_RespuestaPregunta_.Adjunto.FileName;
+                }
+
                 if (Ecom_RespuestaPregunta_.Actions(Ecom_RespuestaPreguntaActions.Agregar))
                 {
                     Ecom_RespuestaPregunta_.Get(Ecom_RespuestaPregunta_.LastId());
+                    
+                    
 
                     Ecommerce_.ecomData.Ecom_Email_ = new Ecom_Email(SMTP_Server, SMTP_account, Int32.Parse(SMTP_Port), SMTP_user, SMTP_pass, (SMTP_ssl == "true" ? true : false));
                     Ecom_Pregunta Ecom_Pregunta = (Ecom_Pregunta)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_Pregunta);
@@ -125,7 +149,7 @@ namespace EcommerceAdmin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessData(IdAction = 56)]
-        public ActionResult DataUpdate([FromBody]Ecom_RespuestaPregunta Ecom_RespuestaPregunta_)
+        public ActionResult DataUpdate(Ecom_RespuestaPregunta Ecom_RespuestaPregunta_)
         {
             try
             {
@@ -140,7 +164,40 @@ namespace EcommerceAdmin.Controllers
                 Ecommerce_ = new Ecommerce(HttpContext.Session);
                 Ecommerce_.StartLib(LibraryEcommerce.Ecommerce);
                 Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
+
+                var respuesta = (Ecom_RespuestaPregunta)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_RespuestaPregunta);
+                respuesta = respuesta.GetByid(Ecom_RespuestaPregunta_.IdRespuesta);
+                if(Ecom_RespuestaPregunta_.Adjunto != null)
+                {
+                    List<string> Aceptados = new List<string> { "PDF", "pdf", "rar", "RAR" };
+                    if (!Aceptados.Contains(Ecom_RespuestaPregunta_.Adjunto.ContentType.Split("/")[1]))
+                    {
+                        throw new Ecom_Exception("El archivo adjunto no es valido, valores aceptados(pdf, rar)");
+                    }
+                    Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
+                    if (respuesta.RutaArchivo != "")
+                    {
+                        string FilePath = string.Format(@"public_html/fibra-optica/public/images/img_spl/consultecnico/{0}", respuesta.RutaArchivo);
+                        if (Ecom_FilesFtp.ExistsFile(FilePath))
+                        {
+                            Ecom_FilesFtp.DeleteFile(FilePath);
+                        }
+                        
+                    }
+
+                    string FilePaths = string.Format(@"public_html/fibra-optica/public/images/img_spl/consultecnico/{0}_{1}_{2}", Ecom_RespuestaPregunta_.IdPregunta, Ecom_RespuestaPregunta_.IdRespuesta, Ecom_RespuestaPregunta_.Adjunto.FileName);
+                    if (Ecom_FilesFtp.ExistsFile(FilePaths))
+                    {
+                        Ecom_FilesFtp.DeleteFile(FilePaths);
+                    }
+                    Ecom_FilesFtp.UpdateFile(FilePaths, Ecom_RespuestaPregunta_.Adjunto);
+
+                    Ecom_RespuestaPregunta_.RutaArchivo = string.Format(@"{0}_{1}_{2}", Ecom_RespuestaPregunta_.IdPregunta, Ecom_RespuestaPregunta_.IdRespuesta, Ecom_RespuestaPregunta_.Adjunto.FileName);
+                }
+
                 Ecom_RespuestaPregunta_ = (Ecom_RespuestaPregunta)Ecommerce_.ecomData.SetObjectConnection(Ecom_RespuestaPregunta_, ObjectSource.Ecom_RespuestaPregunta);
+                Ecom_RespuestaPregunta_.Actualizado = DateTime.Now;
+                Ecom_RespuestaPregunta_.Creado = DateTime.Now;
                 if (Ecom_RespuestaPregunta_.Actions(Ecom_RespuestaPreguntaActions.Update))
                 {
                     Ecom_RespuestaPregunta_.Get(Ecom_RespuestaPregunta_.LastId());
@@ -191,6 +248,21 @@ namespace EcommerceAdmin.Controllers
                 Ecommerce_ = new Ecommerce(HttpContext.Session);
                 Ecommerce_.StartLib(LibraryEcommerce.Ecommerce);
                 Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
+
+                var respuesta = (Ecom_RespuestaPregunta)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_RespuestaPregunta);
+                respuesta = respuesta.GetByid(Ecom_RespuestaPregunta_.IdRespuesta);
+
+                if(respuesta.RutaArchivo != "")
+                {
+                    Ecom_FilesFtp Ecom_FilesFtp = new Ecom_FilesFtp(FTP_Server, FTP_User, FTP_Password);
+                    string FilePath = string.Format(@"public_html/fibra-optica/public/images/img_spl/consultecnico/{0}", respuesta.RutaArchivo);
+                    if (Ecom_FilesFtp.ExistsFile(FilePath))
+                    {
+                        Ecom_FilesFtp.DeleteFile(FilePath);
+                    }
+                }
+                
+
                 Ecom_RespuestaPregunta_ = (Ecom_RespuestaPregunta)Ecommerce_.ecomData.SetObjectConnection(Ecom_RespuestaPregunta_, ObjectSource.Ecom_RespuestaPregunta);
                 if (Ecom_RespuestaPregunta_.Actions(Ecom_RespuestaPreguntaActions.Eliminar))
                 {
