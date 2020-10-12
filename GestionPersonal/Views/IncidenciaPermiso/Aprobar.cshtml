@@ -87,8 +87,9 @@
                 {
                     <a href="@Url.Action("AprobarGPS","Incidencia")" class="btn btn-sm btn-secondary">Atras</a>
                 }
-                <a href="@Url.Action("AprobarInc","IncidenciaPermiso", new { id = Model.IdIncidenciaPermiso, Mode = ViewBag.ModeAprobar })" class="btn btn-sm btn-secondary">Aprobar</a>
-                <a href="@Url.Action("RechazarInc","IncidenciaPermiso", new { id = Model.IdIncidenciaPermiso, Mode = ViewBag.ModeAprobar })" class="btn btn-sm btn-secondary">Rechazar</a>
+                <a href="@Url.Action("RechazarInc","IncidenciaPermiso", new { id = Model.IdIncidenciaPermiso, Mode = ViewBag.ModeAprobar })" class="btn btn-sm btn-danger">Rechazar</a>
+                <a href="@Url.Action("AprobarInc","IncidenciaPermiso", new { id = Model.IdIncidenciaPermiso, Mode = ViewBag.ModeAprobar })" class="btn btn-sm btn-primary">Aprobar</a>
+
             </div>
         </div>
     </div>

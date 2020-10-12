@@ -70,7 +70,8 @@ namespace GestionPersonal
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 

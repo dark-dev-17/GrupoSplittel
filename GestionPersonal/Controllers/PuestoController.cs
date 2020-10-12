@@ -46,6 +46,7 @@ namespace GestionPersonal.Controllers
             var result = darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList();
             result.ForEach(a => {
                 a.Departamento = darkManager.Departamento.Get(a.IdDepartamento);
+                a.DPU = string.Format("{0}-DPU-{1}", a.Departamento.ClaveDPU, a.NumeroDPU);
             });
             return View(result);
         }

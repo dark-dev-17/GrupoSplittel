@@ -1,8 +1,6 @@
-﻿@model IEnumerable<GPSInformation.Models.Persona>
+﻿@model IEnumerable<GPSInformation.Views.View_empleado>
 
 @{
-    List<GPSInformation.Models.Puesto> puestos = ViewBag.Puestos;
-    List<GPSInformation.Models.Empleado> empleados = ViewBag.Empleados;
     ViewData["Title"] = "Lista de empleados";
 }
 <div class="d-flex align-items-center justify-content-between mg-b-30">
@@ -13,19 +11,12 @@
     </div>
 </div>
 <hr />
-<table class="table">
+<table class="table table-sm">
     <thead>
         <tr>
-            <th>No.Nomina</th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApellidoPaterno)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApellidoMaterno)
-            </th>
+            <th>Nomina</th>
+            <th>Empleado</th>
+            <th>Departamento</th>
             <th>Puesto</th>
             <th>Tipo Nomina</th>
             <th></th>
@@ -34,33 +25,18 @@
     <tbody>
         @foreach (var item in Model)
         {
-            GPSInformation.Models.Empleado empleado = empleados.Find(a => a.IdPersona == item.IdPersona);
-
-            GPSInformation.Models.Puesto puesto = puestos.Find(a => a.IdPuesto == empleado.IdPuesto);
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => empleado.NominaReal)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ApellidoPaterno)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ApellidoMaterno)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => puesto.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => empleado.NominaRealDescripcion)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.IdPersona })|
-                    @Html.ActionLink("Expediente", "Expediente", "Expediente", new { id = item.IdPersona })
-                </td>
-            </tr>
+        <tr>
+            <td>@item.NumeroNomina</td>
+            <td>@item.NombreCompleto</td>
+            <td>@item.NombreDepartamento</td>
+            <td>@item.PuestoNombre</td>
+            <td>@item.TipoNomina</td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.IdPersona })|
+                @Html.ActionLink("Acceso", "Create","Usuario", new { id = item.IdPersona })|
+                @Html.ActionLink("Expediente", "Expediente", "Expediente", new { id = item.IdPersona })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

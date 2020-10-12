@@ -84,7 +84,7 @@
                                         }
                                         else
                                         {
-                                            <span class="badge badge-warning">Rechazda</span>
+                                            <span class="badge badge-primary">Completada</span>
                                         }
                                     </td>
                                     <td>
@@ -169,9 +169,13 @@
                                         {
                                             <span class="badge badge-primary">En proceso</span>
                                         }
-                                        else
+                                        else if (item.Estatus == 2)
                                         {
                                             <span class="badge badge-danger">Cancelada</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-primary">Completada</span>
                                         }
                                     </td>
                                     <td>
@@ -181,7 +185,7 @@
                                             @Html.ActionLink("Details", "Details", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion })|
                                             @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
                                             {
-                                                @Html.ActionLink("Aprobar", "Aprobar", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion, Mode = 1 })<span>|</span>
+                                                @Html.ActionLink("Aprobar", "Aprobar", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion, Mode = 2 })<span>|</span>
                                             }
                                         <a href="#modalActividadVacaciones" data-toggle="modal" onclick="app_incidencias.ActividadVacacion(@item.IdIncidenciaVacacion)">Actividad</a>
                                     </td>

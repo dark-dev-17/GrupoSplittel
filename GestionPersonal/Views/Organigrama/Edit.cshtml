@@ -10,7 +10,7 @@
         @if (Model.Autirizada == 2)
         {
             <div class="alert alert-primary mg-b-0" role="alert">
-              Esta versión de organigrama se encuentra activa por  ello no se podrá modificar a menos que autorices otra
+              Esta versión de organigrama se encuentra activa por  ello no se podrá modificar a menos que se aprueve otra
             </div>
         }
         <a href="#puestosselect" style="display: none" id="element" data-toggle="modal">content</a>
@@ -22,7 +22,8 @@
 
                     @if (Model.Autirizada == 1)
                     {
-                        <button href="#addprimero" type="button" class="btn btn-white"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar primer nodo</button>
+                        <button v-if="Node.length == 0" href="#addprimero" data-toggle="modal" type="button" class="btn btn-white"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar primer nodo</button>
+                        <button href="#" onclick="window.location.reload()" id="btn_refrescar" type="button" class="btn btn-white"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Refrescar</button>
                         <form asp-action="Autorizar">
                             <input type="hidden" name="IdVersion" value="@Model.IdOrganigramaVersion" />
                             <button type="submit" class="btn btn-white">Autorizar esta versión</button>
@@ -49,7 +50,7 @@
                                 </option>
                             </select>
                             <label>Puesto</label>
-                            <select class="form-control" id="NewPuestoa">
+                            <select class="form-control select2" id="NewPuestoa">
                                 <option v-for="option in Puestos" v-bind:value="option.idPuesto">
                                     {{ option.dpu }} - {{ option.descripcion }}
                                 </option>
@@ -76,7 +77,7 @@
                         <div class="form-group">
 
                             <label>Puesto</label>
-                            <select class="form-control  " id="NewPuesto">
+                            <select class="form-control select2 " id="NewPuesto">
                                 <option v-for="option in Puestos" v-bind:value="option.idPuesto">
                                     {{ option.dpu }} - {{ option.descripcion }}
                                 </option>
@@ -93,8 +94,8 @@
     </div>
 
 @section Scripts {
-    @*<script src="~/js/getorgchart1.js"></script>*@
-    <script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
+    <script src="~/js/getorgchart1.js"></script>
+    @*<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>*@
     <script>
         var app_organigrama = new Vue({
             el: "#app_organigrama",
@@ -102,17 +103,21 @@
                 Puestos: [],
                 chart: null,
                 selected: 0,
-                hasmainPosition: true
+                hasmainPosition: true,
+                Node: []
             },
             async mounted() {
                 await this.GetPuestos();
-                
-                this.StartChartOrg();
+
+                await this.GetEstructura();
+
+                await this.StartChartOrg();
                 $('.select2').select2({
                     placeholder: 'Choose one',
-                    searchInputPlaceholder: 'Search options'
+                    searchInputPlaceholder: 'Search options',
+                    dropdownParent: $('#puestosselect')
                 });
-                await this.GetEstructura();
+                
             },
             methods: {
                 AddFirstNode: async function () {
@@ -136,7 +141,7 @@
                 GetPuestos: async function () {
                     await axios.post('@Url.Action("GetPuestos","Organigrama")', null, null).then(response => {
                         this.Puestos = response.data;
-                        console.log(response.data)
+                        //console.log(response.data)
                     }).catch(error => {
                         if (error.response) {
                             if (error.response.status === 400) {
@@ -153,13 +158,13 @@
                     await axios.post('@Url.Action("GetNodes","Organigrama")', params, null).then(response => {
                         response.data.forEach((e,i) => {
                             if (e.idPuestoParent == 0) {
-                                this.chart.add({ id: e.idPuesto, name: e.descripcion, title: e.dpu });
+                                this.Node.push({ id: e.idPuesto, Puesto: e.descripcion, DPU: e.dpu });
                             } else {
-                                this.chart.add({ id: e.idPuesto, pid: e.idPuestoParent, name: e.descripcion, title: e.dpu });
+                                this.Node.push({ id: e.idPuesto, pid: e.idPuestoParent, Puesto: e.descripcion, DPU: e.dpu });
                             }
                         })
                         //this.chart.draw(OrgChart.action.init);
-                        
+                        console.log(this.Node);
                     }).catch(error => {
                         if (error.response) {
                             if (error.response.status === 400) {
@@ -169,20 +174,66 @@
                         }
                     }).finally()
                 },
-                StartChartOrg: function () {
+                StartChartOrg: async function () {
+                    //this.chart.draw(OrgChart.action.init);
+                    // alert(""+expand_limit)
+                    // OrgChart.templates.ula.field_0 = 
+                    //     '<text class="field_0" style="font-size: 20px;" fill="#000000" x="125" y="30" text-anchor="middle">{val}</text>';
+                    // OrgChart.templates.ula.field_1 = 
+                    //     '<text class="field_1" style="font-size: 14px;" fill="#000000" x="125" y="50" text-anchor="middle">{val}</text>';
                     this.chart = new OrgChart(document.getElementById("tree"), {
                         template: "ula",
+                        scaleInitial: 0.8,
+                        mouseScroolBehaviour: BALKANGraph.action.zoom,
+                        /*siblingSeparation: 200,
+                        subtreeSeparation: 200,*/
+                        // mixedHierarchyNodesSeparation: 500,
+                        // nodeMouseClick: BALKANGraph.action.details,
+                        toolbar: true,
+                        // exportUrl: "http://192.168.2.29/gestion_personal/models/export.php",
+                        // enableDragDrop: true,
+                        collapse: {
+                            level: 3,
+                            allChildren: true
+                        },
+                        expand: {
+                            nodes: [3]
+                        },
                         nodeBinding: {
-                            field_0: "name",
-                            field_1: "title",
+                            field_0: "DPU",
+                            field_1: "Puesto",
+                        },
+                        menu: {
+                            pdf: { text: "Exportar PDF" },
+                            svg: { text: "Exportar SVG" },
+                            png: { text: "Exportar PNG" }
                         },
                         nodeMenu: {
-                            add: { text: "Agregar nuevo",onClick: this.ShowAdd },
-                            remove: { text: "Deliminar",onClick: this.Remove },
-                        }
-
+                            //details: { text: "Detalles" },
+                            add: { text: "Agregar nuevo", onClick: this.ShowAdd },
+                            //edit: { text: "Editar" },
+                            remove: { text: "Remover", onClick: this.Remove },
+                        },
+                        tags: {
+                            "assistant": {
+                                template: "ula"
+                            }
+                        },
+                        
                     });
-                    this.chart.draw(OrgChart.action.init);
+
+                    OrgChart.templates.ula.field_0 = '<text style="font-size: 18px; font-weight: bold;" fill="#DA4453" x="60" y="55">{val}</text>';
+                    OrgChart.templates.ula.field_1 = '<text style="font-size: 12px; font-weight: bold;" fill="#626567" x="10" y="76">{val}</text>';
+
+                    this.Node.forEach((e, i) => {
+                        //console.log(e)
+                        this.chart.addNode(e);
+                    });
+
+                    this.chart.draw(BALKANGraph.action.init);
+                    
+
+                    ORg_chart = this.chart;
                 },
                 ShowAdd: function (a) {
                     this.selected = a;
@@ -207,8 +258,10 @@
                             params.append('IdVersion', '@Model.IdOrganigramaVersion');
                             axios.post('@Url.Action("Remove","Organigrama")', params, null).then(response => {
                                 ShowMessageErrorShort("Puesto eliminado","success")
-                                this.GetEstructura();
-                                this.chart.remove(a);
+                                //this.GetEstructura();
+                                ShowMessageErrorShort("Recargando pagina", "success")
+                                document.getElementById("btn_refrescar").click();
+                                //this.chart.remove(a);
                             }).catch(error => {
                                 console.error(error)
                                 if (error.response) {
@@ -230,8 +283,11 @@
                     params.append('IdVersion', '@Model.IdOrganigramaVersion');
                     axios.post('@Url.Action("AddNode","Organigrama")', params, null).then(response => {
                         document.getElementById("element").click();
+                        
                         ShowMessageErrorShort("Nuevo puesto agregado","success")
-                        this.GetEstructura();
+                        ShowMessageErrorShort("Recargando pagina", "success")
+                        document.getElementById("btn_refrescar").click();
+                        //this.GetEstructura();
                     }).catch(error => {
                         if (error.response) {
                             if (error.response.status === 400) {

@@ -30,7 +30,14 @@ namespace GestionPersonal.Controllers
 
         }
 
-        [AccessMultipleView(IdAction = new int[] { 4,5,9 })]
+        [AccessMultipleView(IdAction = new int[] { 2 })]
+        public ActionResult Vigente()
+        {
+            var result = darkManager.OrganigramaVersion.GetByColumn("2", "Autirizada");
+            return View(result);
+        }
+
+        [AccessMultipleView(IdAction = new int[] { 4, 5, 9 })]
         public ActionResult Index()
         {
             var result = darkManager.OrganigramaVersion.Get();
@@ -70,7 +77,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
-        [AccessDataSession(IdAction = new int[] { 5 })]
+        [AccessMultipleView(IdAction = new int[] { 5 })]
         public ActionResult CreateNewVersion()
         {
             darkManager.OrganigramaVersion.Element = new GPSInformation.Models.OrganigramaVersion();
@@ -166,7 +173,7 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
-        [AccessDataSession(IdAction = new int[] { 5 })]
+        [AccessDataSession(IdAction = new int[] {2, 5 })]
         public ActionResult GetNodes(int IdVersion)
         {
             var result = darkManager.OrganigramaStructura.Get(""+ IdVersion, "IdOrganigramaVersion");
@@ -272,7 +279,7 @@ namespace GestionPersonal.Controllers
                 puestoOrgs.Add(new PuestoOrg
                 {
                     IdPuesto = puesto.IdPuesto,
-                    DPU = string.Format("{0}-DPU-{1}", departamentos.Find(a => a.IdDepartamento == puesto.IdDepartamento).ClaveDPU, puesto.DPU),
+                    DPU = string.Format("{0}-DPU-{1}", departamentos.Find(a => a.IdDepartamento == puesto.IdDepartamento).ClaveDPU, puesto.NumeroDPU),
                     Descripcion = puesto.Nombre
                 });
             });

@@ -51,7 +51,7 @@
                         </button>
                         <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Periodos de vacaciones</h5>
 
-                        <div id="content_vacacionesAcitivit">
+                        <div id="content_vacacionesAcitivitdssdfsdf">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -86,7 +86,7 @@
                         <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true"><i data-feather="x"></i></span>
                         </button>
-                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad</h5>
+                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad solicitud de vacaciones</h5>
 
                         <div id="content_vacacionesAcitivit"></div>
                     </div><!-- modal-body -->
@@ -104,7 +104,7 @@
                         <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true"><i data-feather="x"></i></span>
                         </button>
-                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad</h5>
+                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad solicitud de permiso</h5>
 
                         <div id="content_permisoAcitivit"></div>
                     </div><!-- modal-body -->
@@ -126,8 +126,6 @@
                     document.getElementById("content_vacacionesAcitivit").innerHTML = "";
                     axios.post('@Url.Action("Actividad","IncidenciaVacacion")/' + id, null, null).then(response => {
                         //bootbox.alert(response.data);
-                        
-                        
                         document.getElementById("content_vacacionesAcitivit").innerHTML = response.data;
                         //ShowMessageErrorShort("Datos del personales empleado guardados", "success")
                     }).catch(error => {

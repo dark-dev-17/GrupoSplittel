@@ -80,8 +80,8 @@
 
                 @*<div class="form-group row mg-b-0">
                 <div class="col-sm-12 text-right">
-                    <button type="reset" class="btn btn-sm btn-secondary">Cancelar</button>
-                    <button type="button" onclick="app_incidencias.CrearPermiso()" class="btn btn-sm btn-primary">Guardar</button>
+                    <a href="@Url.Action("Index","Incidencia", new { id = Model.IdPersona })" class="btn btn-sm btn-secondary">Cancelar</a>
+                    <a href="@Url.Action("Aprobar","IncidenciaPermiso", new { id = Model.IdIncidenciaPermiso, Mode = 2 })" class="btn btn-sm btn-primary">Aprobar</a>
                 </div>
             </div>*@
             </form>

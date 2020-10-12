@@ -25,6 +25,9 @@ namespace GPSInformation.Models
         [ColumnDB(IsMapped = false, IsKey = false)]
         public List<SubModulo> SubModulos { get; set; }
 
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public string Icono { get; set; }
+
     }
 
 

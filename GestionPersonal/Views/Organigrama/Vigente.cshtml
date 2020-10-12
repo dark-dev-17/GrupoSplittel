@@ -1,0 +1,138 @@
+﻿@model GPSInformation.Models.OrganigramaVersion
+@{
+    ViewData["Title"] = "Organigrama Vigente";
+}
+<h2>Vigente</h2>
+@if (Model != null)
+{
+    <div id="app_organigrama">
+        <div id="tree"></div>
+    </div>
+    @section Scripts {
+        <script src="~/js/getorgchart1.js"></script>
+        @*<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>*@
+        <script>
+        var app_organigrama = new Vue({
+            el: "#app_organigrama",
+            data: {
+                Puestos: [],
+                chart: null,
+                selected: 0,
+                hasmainPosition: true,
+                Node: []
+            },
+            async mounted() {
+
+                await this.GetEstructura();
+
+                await this.StartChartOrg();
+                $('.select2').select2({
+                    placeholder: 'Choose one',
+                    searchInputPlaceholder: 'Search options',
+                    dropdownParent: $('#puestosselect')
+                });
+
+            },
+            methods: {
+                GetEstructura: async function () {
+                    ShowMessageErrorShort("Recopilando estructura de la versión","success")
+                    let params = new URLSearchParams();
+                    params.append('IdVersion', '@Model.IdOrganigramaVersion');
+                    await axios.post('@Url.Action("GetNodes","Organigrama")', params, null).then(response => {
+                        response.data.forEach((e,i) => {
+                            if (e.idPuestoParent == 0) {
+                                this.Node.push({ id: e.idPuesto, Puesto: e.descripcion, DPU: e.dpu });
+                            } else {
+                                this.Node.push({ id: e.idPuesto, pid: e.idPuestoParent, Puesto: e.descripcion, DPU: e.dpu });
+                            }
+                        })
+                        //this.chart.draw(OrgChart.action.init);
+                        console.log(this.Node);
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                console.log(error.response)
+                                ShowMessageErrorShort(error.response.data,"error")
+                            }
+                        }
+                    }).finally()
+                },
+                StartChartOrg: async function () {
+                    //this.chart.draw(OrgChart.action.init);
+                    // alert(""+expand_limit)
+                    // OrgChart.templates.ula.field_0 =
+                    //     '<text class="field_0" style="font-size: 20px;" fill="#000000" x="125" y="30" text-anchor="middle">{val}</text>';
+                    // OrgChart.templates.ula.field_1 =
+                    //     '<text class="field_1" style="font-size: 14px;" fill="#000000" x="125" y="50" text-anchor="middle">{val}</text>';
+                    this.chart = new OrgChart(document.getElementById("tree"), {
+                        template: "ula",
+                        scaleInitial: 0.8,
+                        mouseScroolBehaviour: BALKANGraph.action.zoom,
+                        /*siblingSeparation: 200,
+                        subtreeSeparation: 200,*/
+                        // mixedHierarchyNodesSeparation: 500,
+                        // nodeMouseClick: BALKANGraph.action.details,
+                        toolbar: true,
+                        // exportUrl: "http://192.168.2.29/gestion_personal/models/export.php",
+                        // enableDragDrop: true,
+                        collapse: {
+                            level: 3,
+                            allChildren: true
+                        },
+                        expand: {
+                            nodes: [3]
+                        },
+                        nodeBinding: {
+                            field_0: "DPU",
+                            field_1: "Puesto",
+                        },
+                        menu: {
+                            pdf: { text: "Exportar PDF" },
+                            svg: { text: "Exportar SVG" },
+                            png: { text: "Exportar PNG" }
+                        },
+                        //nodeMenu: {
+                        //    //details: { text: "Detalles" },
+                        //    add: { text: "Agregar nuevo", onClick: this.ShowAdd },
+                        //    //edit: { text: "Editar" },
+                        //    remove: { text: "Remover", onClick: this.Remove },
+                        //},
+                        tags: {
+                            "assistant": {
+                                template: "ula"
+                            }
+                        },
+
+                    });
+
+                    OrgChart.templates.ula.field_0 = '<text style="font-size: 18px; font-weight: bold;" fill="#DA4453" x="60" y="55">{val}</text>';
+                    OrgChart.templates.ula.field_1 = '<text style="font-size: 12px; font-weight: bold;" fill="#626567" x="10" y="76">{val}</text>';
+
+                    this.Node.forEach((e, i) => {
+                        //console.log(e)
+                        this.chart.addNode(e);
+                    });
+
+                    this.chart.draw(BALKANGraph.action.init);
+
+
+                    ORg_chart = this.chart;
+                },
+                
+            }
+        });
+        </script>
+    }
+}
+else
+{
+    <div class="alert alert-warning " role="alert">
+        <h4 class="alert-heading">Advertencia!</h4>
+        <p>Gestión de personal no ha definido un organigrama</p>
+        <hr>
+        <p class="mb-0">Esto puede ser un proceso tardado!</p>
+    </div>
+}
+
+
+

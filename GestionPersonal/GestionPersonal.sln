@@ -5,9 +5,7 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestionPersonal", "GestionPersonal.csproj", "{9DEB3008-CBFA-45EC-AD73-0D25547CD12C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPSInformation", "..\GPSInformation\GPSInformation.csproj", "{AC034516-344A-450E-9AB5-C7C462E7AC4C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GPDataInformation", "..\GPDataInformation\GPDataInformation.csproj", "{7344AB43-8FF7-41BD-9052-1637D5DF91C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GPSInformation", "..\GPSInformation\GPSInformation.csproj", "{AC034516-344A-450E-9AB5-C7C462E7AC4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{AC034516-344A-450E-9AB5-C7C462E7AC4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC034516-344A-450E-9AB5-C7C462E7AC4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC034516-344A-450E-9AB5-C7C462E7AC4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7344AB43-8FF7-41BD-9052-1637D5DF91C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7344AB43-8FF7-41BD-9052-1637D5DF91C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7344AB43-8FF7-41BD-9052-1637D5DF91C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7344AB43-8FF7-41BD-9052-1637D5DF91C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

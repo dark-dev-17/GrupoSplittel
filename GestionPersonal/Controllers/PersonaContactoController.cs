@@ -60,7 +60,7 @@ namespace GestionPersonaContactol.Controllers
                 bool result = darkManager.PersonaContacto.Add();
                 if (result)
                 {
-                    return PartialView("Edit",PersonaContacto);
+                    return PartialView();
                 }
                 else
                 {

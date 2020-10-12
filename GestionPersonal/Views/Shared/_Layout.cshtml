@@ -25,7 +25,11 @@
     else
     {
         <partial name="_NavBar" />
-        @if (controllerName != "Sala")
+        @if (controllerName == "Sala" && controllerAction == "Reservar")
+        {
+
+        }
+        else
         {
             <partial name="_Slide" />
         }
@@ -50,19 +54,19 @@
     </environment>
     @RenderSection("Scripts", required: false)
     <script>
-                        $(document).ready(function() {
-                            $('.table').DataTable({
-                                  language: {
-                                    searchPlaceholder: 'Search...',
-                                    sSearch: '',
-                                    lengthMenu: '_MENU_ items/page',
-                                  }
-                            });
-                            //$('.select2').select2({
-                            //    placeholder: 'Choose one',
-                            //    searchInputPlaceholder: 'Search options'
-                            //});
-                        });
+        $(document).ready(function () {
+            $('.table').DataTable({
+                language: {
+                    searchPlaceholder: 'Search...',
+                    sSearch: '',
+                    lengthMenu: '_MENU_ items/page',
+                }
+            });
+            //$('.select2').select2({
+            //    placeholder: 'Choose one',
+            //    searchInputPlaceholder: 'Search options'
+            //});
+        });
     </script>
 </body>
 </html>

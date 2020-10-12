@@ -9,7 +9,7 @@
         <div class="row form-group">
             <label asp-for="Nombre" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
-                <input type="hidden" asp-for="IdPersona" value="0" class="form-control" />
+                <input type="hidden" asp-for="IdPersona" class="form-control" />
                 <input type="hidden" asp-for="Empleado" value="1" class="form-control" />
                 <input type="text" asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
@@ -60,6 +60,13 @@
                 <span asp-validation-for="CURP" class="text-danger"></span>
             </div>
         </div>
+        <div class="form-group row">
+            <label asp-for="NSS" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input type="text" asp-for="NSS" class="form-control" />
+                <span asp-validation-for="NSS" class="text-danger"></span>
+            </div>
+        </div>
         <div class="row form-group">
             <label asp-for="Email" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
@@ -98,7 +105,7 @@
                 <span asp-validation-for="Calle" class="text-danger"></span>
             </div>
         </div>
-        
+
         <div class="form-group row mg-b-0">
             <div class="col-sm-12 text-right">
                 <button type="reset" class="btn btn-sm btn-secondary">Cancelar</button>

@@ -18,12 +18,12 @@ namespace GestionPersonal.Models
         public int[] IdAction { get; set; }
         public AccessDataSession()
         {
-            darkManager = new DarkManager("Data Source=FMXLTLMARTI01;User ID=sa;Password=C0nnect+1;Initial Catalog=GestionPersonal; Integrated Security=True; Connect timeout=30;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
+            darkManager = new DarkManager("Data Source=192.168.31.29;User ID=sa;Password=C0nnect+1;Initial Catalog=GestionPersonal; Integrated Security=false; Connect timeout=30;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
            
         }
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.HttpContext.Session.IsAvailable && filterContext.HttpContext.Session.GetInt32("USR_IdSplinnet") != null)
+            if (filterContext.HttpContext.Session.IsAvailable && filterContext.HttpContext.Session.GetInt32("user_id_permiss") != null)
             {
                 if (IdAction.Length > 0)
                 {
@@ -72,7 +72,7 @@ namespace GestionPersonal.Models
 
         public AccessMultipleView()
         {
-            darkManager = new DarkManager("Data Source=FMXLTLMARTI01;User ID=sa;Password=C0nnect+1;Initial Catalog=GestionPersonal; Integrated Security=True; Connect timeout=30;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
+            darkManager = new DarkManager("Data Source=192.168.31.29;User ID=sa;Password=C0nnect+1;Initial Catalog=GestionPersonal; Integrated Security=false; Connect timeout=30;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
             //darkManager.OpenConnection();
             //darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
         }
@@ -114,6 +114,36 @@ namespace GestionPersonal.Models
                 return;
             }
             
+            base.OnActionExecuting(filterContext);
+        }
+    }
+    #endregion
+
+    #region AccessView
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class AccessView : ActionFilterAttribute
+    {
+        private DarkManager darkManager;
+
+        public AccessView()
+        {
+            darkManager = new DarkManager("Data Source=192.168.31.29;User ID=sa;Password=C0nnect+1;Initial Catalog=GestionPersonal; Integrated Security=false; Connect timeout=30;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
+            //darkManager.OpenConnection();
+            //darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Session.IsAvailable && filterContext.HttpContext.Session.GetInt32("user_id_permiss") != null)
+            {
+                
+            }
+            else
+            {
+                filterContext.Result = new RedirectResult("~/");
+                return;
+            }
+
             base.OnActionExecuting(filterContext);
         }
     }

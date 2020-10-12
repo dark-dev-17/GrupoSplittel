@@ -45,7 +45,8 @@ namespace GestionPersonal.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-
+                Persona.Creado = DateTime.Now;
+                Persona.Actualizado = DateTime.Now;
                 darkManager.Persona.Element = Persona;
                 bool result = darkManager.Persona.Add();
                 if (result)
@@ -79,7 +80,8 @@ namespace GestionPersonal.Controllers
                     ViewData["EstadosCiviles"] = EstadosCiviles;
                     return PartialView(Persona);
                 }
-
+                Persona.Creado = DateTime.Now;
+                Persona.Actualizado = DateTime.Now;
                 darkManager.Persona.Element = Persona;
                 bool result = darkManager.Persona.Update();
                 if (result)

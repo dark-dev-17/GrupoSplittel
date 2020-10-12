@@ -1,21 +1,30 @@
 ﻿@model GPSInformation.Models.Usuario
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear acceso a GPS";
 }
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <h2 class="tx-15 mg-b-0"></h2>
+    </div>
+</div>
+<hr />
+@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
+
 <div data-label="Informacion" class="df-example demo-forms">
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group row">
             <label asp-for="UserName" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
-                
-                <input asp-for="UserName" placeholder="Nombre" class="form-control" />
+                <input type="hidden" asp-for="IdPersona" placeholder="Nombre" class="form-control" />
+                <input asp-for="UserName" readonly placeholder="Contraseña" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <label asp-for="Pass" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
-                <input asp-for="Pass" placeholder="Nombre" class="form-control" />
+                <input asp-for="Pass" placeholder="Contraseña" class="form-control" />
                 <span asp-validation-for="Pass" class="text-danger"></span>
             </div>
         </div>
@@ -25,17 +34,17 @@
                 <input asp-for="Activo" placeholder="Nombre" class="form-control" />
                 <span asp-validation-for="Activo" class="text-danger"></span>
             </div>
-            <label asp-for="IdPersona" class="col-sm-2 col-form-label"></label>
+            <label asp-for="IdRol" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
-                <select asp-for="IdPersona" asp-items="ViewBag.Personas" class="form-control">
-                    <option value="value">Selecciona un empleado</option>
+                <select asp-for="IdRol" asp-items="ViewBag.Roles" class="form-control select2">
+                    <option value="0">Selecciona una opción</option>
                 </select>
-                <span asp-validation-for="IdPersona" class="text-danger"></span>
+                <span asp-validation-for="IdRol" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row mg-b-0">
             <div class="col-sm-12 text-right">
-                <a asp-action="Index" class="btn btn-sm btn-secondary">Cancelar</a>
+                <a asp-action="Index" asp-controller="Empleado" class="btn btn-sm btn-secondary">Cancelar</a>
                 <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
             </div>
         </div>

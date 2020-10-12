@@ -1,16 +1,67 @@
 ﻿@model GPSInformation.Reportes.Prenomina_Rep
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Prenomina(Incidencias)";
     int Indice = 0;
     int Indice2 = 0;
 
-    List<GPSInformation.Views.View_empleado> view_Empleados = (List<GPSInformation.Views.View_empleado>)ViewBag.Empleados;
-}
-<a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Filtro</a>
+    int IndiceExcel = 0;
+    int IndiceExcel2 = 0;
 
+    List<GPSInformation.Views.View_empleado> view_Empleados = (List<GPSInformation.Views.View_empleado>)ViewBag.Empleados;
+    List<GPSInformation.Controllers.PrenominaDias> Dias = (List<GPSInformation.Controllers.PrenominaDias>)ViewBag.Dias;
+}
+
+<div class="col-sm-12 text-right">
+    <a class="btn btn-primary btn-sm" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true" aria-controls="collapseExample">Filtro</a>
+    @if (view_Empleados != null)
+    {
+        <form asp-action="ReporteExcel" id="btn_refrescar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="form-group col-lg-2">
+                    <input type="hidden" asp-for="Inicio" class="form-control form-control-sm" />
+                </div>
+                <div class="form-group col-lg-2">
+                    <input type="hidden" asp-for="Fin" class="form-control form-control-sm" />
+                </div>
+                <div class="form-group col-lg-2">
+                    @foreach (var item in Model.TipoNominas)
+                    {
+                        <div class="custom-control custom-checkbox">
+                            <input type="hidden" class="custom-control-input" asp-for="TipoNominas[IndiceExcel].IdTipoNomina">
+                            <input type="hidden" class="custom-control-input" asp-for="TipoNominas[IndiceExcel].Nombre">
+                            <input type="hidden" class="custom-control-input" asp-for="TipoNominas[IndiceExcel].Selected" id="checTn_@IndiceExcel">
+                        </div>
+
+                        IndiceExcel++;
+                    }
+                    <span asp-validation-for="Fin" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-6 row">
+                    @foreach (var item in Model.Departamentos)
+                    {
+                        <div class="custom-control custom-checkbox col-lg-4">
+                            <input type="hidden" class="custom-control-input" asp-for="Departamentos[IndiceExcel2].IdDepartamento">
+                            <input type="hidden" class="custom-control-input" asp-for="Departamentos[IndiceExcel2].Nombre">
+                            <input type="hidden" class="custom-control-input" asp-for="Departamentos[IndiceExcel2].Selected" id="checDep_@IndiceExcel2">
+                        </div>
+                        IndiceExcel2++;
+                    }
+                    <span asp-validation-for="Fin" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row mg-b-0">
+                <div class="col-sm-12 text-right">
+                    <button type="submit" id="" class="btn btn-sm btn-primary">Exportar</button>
+                </div>
+            </div>
+        </form>
+    }
+
+</div>
 <div data-label="Filtro" class="df-example demo-forms collapse mg-t-5" id="collapseExample">
-    <form asp-action="Index">
+    <form asp-action="Index" id="btn_refrescar">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <div class="form-group col-lg-2">
@@ -38,11 +89,11 @@
                 }
                 <span asp-validation-for="Fin" class="text-danger"></span>
             </div>
-            <div class="form-group col-lg-4 row">
-                <label asp-for="Fin" class="control-label col-lg-12">TipoNomina</label>
+            <div class="form-group col-lg-6 row">
+                <label asp-for="Fin" class="control-label col-lg-12">Departamentos</label>
                 @foreach (var item in Model.Departamentos)
                 {
-                    <div class="custom-control custom-checkbox col-lg-6">
+                    <div class="custom-control custom-checkbox col-lg-4">
                         <input type="hidden" class="custom-control-input" asp-for="Departamentos[Indice2].IdDepartamento">
                         <input type="hidden" class="custom-control-input" asp-for="Departamentos[Indice2].Nombre">
                         <input type="checkbox" class="custom-control-input" asp-for="Departamentos[Indice2].Selected" id="checDep_@Indice2">
@@ -56,41 +107,175 @@
         <div class="form-group row mg-b-0">
             <div class="col-sm-12 text-right">
                 <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-sm btn-primary">Extraer</button>
+                <button type="submit" id="" class="btn btn-sm btn-primary">Extraer</button>
             </div>
         </div>
     </form>
 </div>
-@if (view_Empleados != null)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Empleado</th>
-                <th>Correo</th>
-                <th>Antiguedad</th>
-                <th>Contestó</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in view_Empleados)
-            {
+<div data-label="Reporte" class="df-example demo-forms  mg-t-5 mt-4" id="app_prenomina">
+    @if (view_Empleados != null)
+    {
+        <table class="table table-sm table-condensed">
+            <thead>
                 <tr>
-                    <td>@item.NombreCompleto</td>
-                    <td>@item.Correo</td>
-                    <td>@item.Antiguedad</td>
-                    <td>
-                        @item.TipoNomina
-                    </td>
-                    <td>
-                        @item.NombreSociedad
-                    </td>
+                    <th>Nomina</th>
+                    <th>Empleado</th>
+                    <th>Departamento</th>
+                    <th>Puesto</th>
+                    @{
+                        DateTime InitialDate = Model.Inicio;
+                    }
+                    @while (InitialDate <= Model.Fin)
+                    {
+                        <th class="@Html.Raw((InitialDate.DayOfWeek == DayOfWeek.Saturday || InitialDate.DayOfWeek == DayOfWeek.Sunday) ? "bg-success" : "" )">@Html.Raw(InitialDate.ToString("ddd - dd"))</th>
+                        InitialDate = InitialDate.AddDays(1);
+                    }
+
                 </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in view_Empleados)
+                {
+                    <tr>
+                        <td>@item.NumeroNomina</td>
+                        <td>@item.NombreCompleto</td>
+                        <td>@item.NombreDepartamento</td>
+                        <td>@item.PuestoNombre</td>
+                        @{
+                            InitialDate = Model.Inicio;
+                        }
+                        @while (InitialDate <= Model.Fin)
+                        {
+
+                            @if (InitialDate.DayOfWeek != DayOfWeek.Saturday && InitialDate.DayOfWeek != DayOfWeek.Sunday)
+                            {
+                                List<GPSInformation.Controllers.PreniminaList> Lista = Dias.Find(a => a.IdPersona == item.IdPersona).Dias;
+                                GPSInformation.Controllers.PreniminaList dia = Lista.Find(a => a.Fecha == InitialDate);
+                                @if (dia != null)
+                                {
+                                    @foreach (var reg in dia.Incidencias)
+                                    {
+                                        <td style="background-color: @reg.Color; color: @reg.TextColor" title="@reg.Title">
+                                            @if (reg.Clave == "FAL" || reg.Clave == "SNJ")
+                                            {
+                                                <a style="color: @reg.TextColor; text-decoration: none" href="#modalActividadVacacionesPeriodos" data-toggle="modal" v-on:click="JustificarModal('@item.IdPersona','@InitialDate.ToString("yyyy-MM-dd")')" title="@reg.Title">@reg.Clave</a>
+                                            }
+                                            else
+                                            {
+                                                @reg.Clave
+                                            }
+                                        </td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td>
+                                    </td>
+                                }
+                            }
+                            else
+                            {
+                                <td class="bg-success"></td>
+                            }
+                            InitialDate = InitialDate.AddDays(1);
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+    <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacacionesPeriodos" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Periodos de vacaciones</h5>
+
+                    <div id="content_vacacionesAcitivitdssdfsdf">
+                        <div class="form-group">
+                            <label>Fecha</label>
+                            <input type="hidden" name="name" id="IdPersona" value="" />
+                            <input type="Date" class="form-control" name="name" id="Fecha" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label>Comentarios</label>
+                            <input type="hidden" name="name" id="comentarios" value="" />
+                            <textarea class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                    <a href="#" v-on:click="Justificar()" class="btn btn-primary">Guardar</a>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+    <script>
+        var App_editEmpleado = new Vue({
+            el: "#app_prenomina",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+            },
+            mounted() {
+
+            },
+            methods: {
+                JustificarModal: async function (IdPersona, fecha) {
+                    console.log(IdPersona);
+                    console.log(fecha);
+                    document.getElementById("Fecha").value = fecha
+                    document.getElementById("IdPersona").value = IdPersona
+                },
+                Justificar: async function () {
+
+                    Swal.fire({
+                        title: "¿Deseas justificar esta incidencia?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, adelante!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var Request = {
+                                IdFaltaJustificacion: 0,
+                                IdPersona: document.getElementById("IdPersona").value,
+                                Fecha: document.getElementById("Fecha").value,
+                                Comentarios: document.getElementById("comentarios").value
+                            }
+                            axios.post('@Url.Action("Justificar", "Prenomina")', Request, null).then(response => {
+                                ShowMessageErrorShort("Recargando pagina", "success")
+                                document.getElementById("btn_refrescar").submit();
+                            }).catch(error => {
+                                console.error(error)
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        console.log(error.response)
+                                        ShowMessageErrorShort(error.response.data,"error")
+                                    }
+                                }
+                            }).finally()
+                        }
+                    })
+                }
             }
-        </tbody>
-    </table>
-    
+        });
+    </script>
 }
 
 

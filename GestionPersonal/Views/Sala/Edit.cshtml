@@ -1,0 +1,44 @@
+﻿@model GPSInformation.Models.Sala
+
+@{
+    ViewData["Title"] = "Crear nueva sala";
+}
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <h2 class="tx-15 mg-b-0"></h2>
+    </div>
+</div>
+<hr />
+
+<div data-label="Informacion" class="df-example demo-forms">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <label asp-for="Nombre" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input type="hidden" asp-for="IdSala"  class="form-control" />
+                <input asp-for="Nombre" placeholder="Nombre de la sala" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <label asp-for="Capacidad" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input asp-for="Capacidad" type="number" placeholder="Capacidad" class="form-control" />
+                <span asp-validation-for="Capacidad" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="Activa" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input asp-for="Activa" placeholder="Nombre" class="form-control" />
+                <span asp-validation-for="Activa" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row mg-b-0">
+            <div class="col-sm-12 text-right">
+                <a asp-action="Index" class="btn btn-sm btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+            </div>
+        </div>
+    </form>
+</div>

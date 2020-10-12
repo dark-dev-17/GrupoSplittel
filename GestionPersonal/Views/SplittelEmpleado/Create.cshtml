@@ -30,13 +30,6 @@
                     </select>
                     <span asp-validation-for="IdSociedad" class="text-danger"></span>
                 </div>
-                <label asp-for="IdDepartamento" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-4">
-                    <select asp-for="IdDepartamento" asp-items="ViewBag.Departamentos" class="form-control select2">
-                        <option value="0">Selecciona una opción</option>
-                    </select>
-                    <span asp-validation-for="IdDepartamento" class="text-danger"></span>
-                </div>
             </div>
             <div class="row form-group">
                 <label asp-for="IdPuesto" class="col-sm-2 col-form-label"></label>
@@ -50,6 +43,18 @@
                 <div class="col-sm-4">
                     <input type="number" asp-for="Salario" class="form-control" />
                     <span asp-validation-for="Salario" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label asp-for="TarjetaAcceso" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-4">
+                    <input type="number" asp-for="TarjetaAcceso" class="form-control" />
+                    <span asp-validation-for="TarjetaAcceso" class="text-danger"></span>
+                </div>
+                <label asp-for="Placas" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-4">
+                    <input type="text" asp-for="Placas" class="form-control" />
+                    <span asp-validation-for="Placas" class="text-danger"></span>
                 </div>
             </div>
             <div class="row form-group">
@@ -72,7 +77,7 @@
                 </div>
                 <label asp-for="IdEstatus" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
-                    <select asp-for="IdEstatus" asp-items="ViewBag.Puestos" class="form-control select2">
+                    <select asp-for="IdEstatus" asp-items="ViewBag.EstatusEmpleado" class="form-control select2">
                         <option value="0">Selecciona una opción</option>
                     </select>
                     <span asp-validation-for="IdEstatus" class="text-danger"></span>

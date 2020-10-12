@@ -84,7 +84,7 @@
                                             }
                                             else
                                             {
-                                                <span class="badge badge-warning">Rechazda</span>
+                                                <span class="badge badge-primary">Completada</span>
                                             }
                                         </td>
                                         <td>
@@ -169,9 +169,13 @@
                                             {
                                                 <span class="badge badge-primary">En proceso</span>
                                             }
-                                            else
+                                            else if (item.Estatus == 2)
                                             {
                                                 <span class="badge badge-danger">Cancelada</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-primary">Completada</span>
                                             }
                                         </td>
                                         <td>

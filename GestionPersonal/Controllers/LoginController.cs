@@ -20,6 +20,7 @@ namespace GestionPersonal.Controllers
             darkManager.OpenConnection();
             darkManager.LoadObject(GpsManagerObjects.Usuario);
             darkManager.LoadObject(GpsManagerObjects.Persona);
+            darkManager.LoadObject(GpsManagerObjects.View_empleado);
             darkManager.LoadObject(GpsManagerObjects.Puesto);
         }
 
@@ -88,6 +89,7 @@ namespace GestionPersonal.Controllers
             HttpContext.Session.SetString("user_appP", ResultUser.ApellidoPaterno);
             HttpContext.Session.SetString("user_appM", ResultUser.ApellidoMaterno);
             HttpContext.Session.SetString("user_fullname", ResultUser.NombreCompelto);
+            HttpContext.Session.SetString("user_puesto", darkManager.View_empleado.Get(usuario.IdPersona).PuestoNombre);
         }
     }
 }

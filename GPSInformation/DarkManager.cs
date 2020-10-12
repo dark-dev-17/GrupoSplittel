@@ -4,6 +4,7 @@ using GPSInformation.Views;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace GPSInformation
@@ -59,6 +60,7 @@ namespace GPSInformation
         public virtual DarkAttributes<ExpedienteEmpleado> ExpedienteEmpleado { get; set; }
         public virtual DarkAttributes<ExpedienteArchivo> ExpedienteArchivo { get; set; }
         public virtual DarkAttributes<View_EmpleadoExpediente> View_EmpleadoExpediente { get; set; }
+        public virtual DarkAttributes<FaltaJustificacion> FaltaJustificacion { get; set; }
 
         #endregion
         #region Constructtores
@@ -233,14 +235,16 @@ namespace GPSInformation
             {
                 View_EmpleadoExpediente = new DarkAttributes<View_EmpleadoExpediente>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.FaltaJustificacion)
+            {
+                FaltaJustificacion = new DarkAttributes<FaltaJustificacion>(dBConnection);
+            }
         }
-
         public void OpenConnection()
         {
             dBConnection = new DBConnection(this.StringConnectionDb);
             dBConnection.OpenConnection();
         }
-
         public void CloseConnection()
         {
             if (dBConnection != null)
@@ -248,20 +252,6 @@ namespace GPSInformation
                 dBConnection.CloseDataBaseAccess();
             }
         }
-        public void OpenConnectionAcces()
-        {
-            dBConnectionAccess = new DBConnection(this.DefaultAccess);
-            dBConnectionAccess.OpenConnection();
-        }
-
-        public void CloseConnectionAccess()
-        {
-            if (dBConnectionAccess != null)
-            {
-                dBConnectionAccess.CloseDataBaseAccess();
-            }
-        }
-
         public void StartTransaction()
         {
             dBConnection.StartTransaction();
@@ -275,6 +265,25 @@ namespace GPSInformation
             dBConnection.RolBack();
         }
 
+        #endregion
+
+        #region Control de accesos
+        public void OpenConnectionAcces()
+        {
+            dBConnectionAccess = new DBConnection(this.DefaultAccess);
+            dBConnectionAccess.OpenConnection();
+        }
+        public void CloseConnectionAccess()
+        {
+            if (dBConnectionAccess != null)
+            {
+                dBConnectionAccess.CloseDataBaseAccess();
+            }
+        }
+        public SqlDataReader ExecuteStatementAccess(string Statement)
+        {
+            return dBConnectionAccess.GetDataReader(Statement);
+        }
         #endregion
     }
 
@@ -317,5 +326,6 @@ namespace GPSInformation
         ExpedienteEmpleado = 36,
         ExpedienteArchivo = 37,
         View_EmpleadoExpediente = 38,
+        FaltaJustificacion = 39,
     }
 }

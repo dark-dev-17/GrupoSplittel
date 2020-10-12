@@ -23,6 +23,7 @@ namespace GestionPersonal.Controllers
             darkManager.LoadObject(GpsManagerObjects.SalaReservacion);
             darkManager.LoadObject(GpsManagerObjects.Persona);
             darkManager.LoadObject(GpsManagerObjects.Empleado);
+            darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
         }
 
         ~SalaController()
@@ -31,13 +32,25 @@ namespace GestionPersonal.Controllers
         }
 
         #region Sala
-        [AccessMultipleView(IdAction = new int[] { 33, 35 })]
-        public ActionResult Index()
+        [AccessMultipleView(IdAction = new int[] { 33 })]
+        public ActionResult Reservar()
         {
+            var AccesoAdmin = darkManager.AccesosSistema.Get(
+                "IdUsuario","" + (int)HttpContext.Session.GetInt32("user_id_permiss"),
+                "IdSubModulo", "35");
+            bool access = AccesoAdmin != null ? AccesoAdmin.TieneAcceso : false;
+            ViewData["access"] = access;
             return View();
         }
 
-        [AccessDataSession(IdAction = new int[] { 33 })]
+        [AccessMultipleView(IdAction = new int[] { 35 })]
+        public ActionResult Index()
+        {
+            
+            return View(darkManager.Sala.Get());
+        }
+
+        [AccessMultipleView(IdAction = new int[] { 33, 35 })]
         public ActionResult Details(int id)
         {
             var result = darkManager.Sala.Get(id);
@@ -57,57 +70,71 @@ namespace GestionPersonal.Controllers
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        [AccessDataSession(IdAction = new int[] { 35 })]
+        [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 35 })]
         public ActionResult Create(Sala Sala)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest("Algunos campos son invalidos");
+                    return View(Sala);
                 }
                 darkManager.Sala.Element = Sala;
                 if (darkManager.Sala.Add())
                 {
-                    return Ok(darkManager.GetLastMessage());
+                    return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    return BadRequest(darkManager.GetLastMessage());
+                    ModelState.AddModelError("", darkManager.GetLastMessage());
+                    return View(Sala);
                 }
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError("", ex.Message);
+                return View(Sala);
             }
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        [AccessDataSession(IdAction = new int[] { 35 })]
+        [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 35 })]
         public ActionResult Edit(Sala Sala)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest("Algunos campos son invalidos");
+                    return View(Sala);
                 }
                 darkManager.Sala.Element = Sala;
                 if (darkManager.Sala.Update())
                 {
-                    return Ok(darkManager.GetLastMessage());
+                    return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    return BadRequest(darkManager.GetLastMessage());
+                    ModelState.AddModelError("", darkManager.GetLastMessage());
+                    return View(Sala);
                 }
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                return BadRequest( ex.Message);
+                ModelState.AddModelError("", ex.Message);
+                return View(Sala);
             }
+        }
+        [AccessMultipleView(IdAction = new int[] { 35 })]
+        public ActionResult Edit(int id)
+        {
+            return View(darkManager.Sala.Get(id));
+        }
+        [AccessMultipleView(IdAction = new int[] { 35 })]
+        public ActionResult Create()
+        {
+            return View();
         }
 
         #endregion
@@ -181,6 +208,61 @@ namespace GestionPersonal.Controllers
                 else
                 {
                     return BadRequest(darkManager.GetLastMessage());
+                }
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
+        [AccessDataSession(IdAction = new int[] { 33 })]
+        public ActionResult Ismine(int id)
+        {
+            try
+            {
+                var result = darkManager.SalaReservacion.Get(id);
+                if (result == null)
+                {
+                    return BadRequest("No se encontró ninguna sala");
+                }
+                if(result.IdPersona != (int)HttpContext.Session.GetInt32("user_id"))
+                {
+                    return BadRequest("No es tu reservación");
+                }
+                return Ok(result);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
+        [AccessDataSession(IdAction = new int[] { 33 })]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                var result = darkManager.SalaReservacion.Get(id);
+                if (result == null)
+                {
+                    return BadRequest("No se encontró ninguna sala");
+                }
+                if (result.IdPersona != (int)HttpContext.Session.GetInt32("user_id"))
+                {
+                    return BadRequest("No es tu reservación");
+                }
+                darkManager.SalaReservacion.Element = result;
+                if (!darkManager.SalaReservacion.Delete())
+                {
+                    return BadRequest("Error al eliminar");
+                }
+                else
+                {
+                    return Ok("Se elimino la reservación");
                 }
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)

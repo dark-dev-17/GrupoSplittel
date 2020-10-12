@@ -38,6 +38,7 @@ namespace GestionPersonal.Controllers
             darkManager.LoadObject(GpsManagerObjects.Departamento);
             darkManager.LoadObject(GpsManagerObjects.Empleado);
             darkManager.LoadObject(GpsManagerObjects.PersonaContacto);
+            darkManager.LoadObject(GpsManagerObjects.View_empleado);
 
            
             
@@ -52,9 +53,9 @@ namespace GestionPersonal.Controllers
         [AccessMultipleView(IdAction = new int[] { 19,20 })]
         public ActionResult Index()
         {
-            var result = darkManager.Persona.Get().OrderBy(a => a.Nombre).ToList();
-            ViewData["Puestos"] = darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList();
-            ViewData["Empleados"] = darkManager.Empleado.Get().OrderBy(a => a.NumeroNomina).ToList();
+            var result = darkManager.View_empleado.Get().OrderBy(a => a.NombreCompleto).ToList();
+            //ViewData["Puestos"] = darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList();
+            //ViewData["Empleados"] = darkManager.Empleado.Get().OrderBy(a => a.NumeroNomina).ToList();
             return View(result);
         }
 
@@ -91,7 +92,8 @@ namespace GestionPersonal.Controllers
                     ViewData["EstadosCiviles"] = EstadosCiviles;
                     return View(Persona);
                 }
-
+                Persona.Creado = DateTime.Now;
+                Persona.Actualizado = DateTime.Now;
                 darkManager.Persona.Element = Persona;
                 bool result = darkManager.Persona.Add();
                 if (result)

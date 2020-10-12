@@ -14,6 +14,7 @@ namespace GestionPersonal.Controllers
     public class IncidenciaController : Controller
     {
         private DarkManager darkManager;
+        private IncidenciaCtrl IncidenciaCtrl;
 
         public IncidenciaController(IConfiguration configuration)
         {
@@ -29,6 +30,8 @@ namespace GestionPersonal.Controllers
             darkManager.LoadObject(GpsManagerObjects.OrganigramaVersion);
             darkManager.LoadObject(GpsManagerObjects.IncidenciaProcess);
             darkManager.LoadObject(GpsManagerObjects.VacionesPeriodo);
+
+            IncidenciaCtrl = new IncidenciaCtrl(new DarkManager(configuration));
         }
 
         ~IncidenciaController()
@@ -70,25 +73,30 @@ namespace GestionPersonal.Controllers
 
             Incidencias incidencias = new Incidencias { permisos =  new List<GPSInformation.Models.IncidenciaPermiso>(), vacaciones =  new List<GPSInformation.Models.IncidenciaVacacion>()};
 
-            structuraOrg.ForEach(a => { 
-                
-                var solicitante = darkManager.Persona.GetByColumn("" + darkManager.Empleado.GetByColumn("" + a.IdPuesto, "IdPuesto").IdPersona, "IdPersona");
-                incidencias.persona = darkManager.Persona.GetByColumn("" + solicitante.IdPersona, "IdPersona");
-                var permisos = darkManager.IncidenciaPermiso.Get("" + solicitante.IdPersona, "IdPersona");
-                permisos.ForEach(permiso => {
-                    var empleado = darkManager.Persona.Get(permiso.IdPersona);
-                    permiso.EmpleadoNombre = string.Format("{0} {1} {2}", empleado.Nombre, empleado.ApellidoPaterno, empleado.ApellidoMaterno);
-                    var YipoAsunto = darkManager.CatalogoOpcionesValores.Get(permiso.IdAsunto);
-                    permiso.DEscripcionTipo = YipoAsunto.Descripcion;
+            structuraOrg.ForEach(a => {
+                darkManager.Empleado.Get("" + a.IdPuesto, "IdPuesto").ForEach(emp => {
+                    var solicitante = darkManager.Persona.GetByColumn("" + emp.IdPersona, "IdPersona");
+                    incidencias.persona = darkManager.Persona.GetByColumn("" + solicitante.IdPersona, "IdPersona");
+                    var permisos = darkManager.IncidenciaPermiso.Get("" + solicitante.IdPersona, "IdPersona");
+                    permisos.ForEach(permiso => {
+                        var empleado = darkManager.Persona.Get(permiso.IdPersona);
+                        permiso.EmpleadoNombre = string.Format("{0} {1} {2}", empleado.Nombre, empleado.ApellidoPaterno, empleado.ApellidoMaterno);
+                        var YipoAsunto = darkManager.CatalogoOpcionesValores.Get(permiso.IdAsunto);
+                        permiso.DEscripcionTipo = YipoAsunto.Descripcion;
+                    });
+                    var vacaciones = darkManager.IncidenciaVacacion.Get("" + solicitante.IdPersona, "IdPersona");
+                    permisos.ForEach(p => incidencias.permisos.Add(p));
+                    vacaciones.ForEach(p => incidencias.vacaciones.Add(p));
+
                 });
-                var vacaciones = darkManager.IncidenciaVacacion.Get("" + solicitante.IdPersona, "IdPersona");
-                permisos.ForEach( p => incidencias.permisos.Add(p));
-                vacaciones.ForEach( p => incidencias.vacaciones.Add(p));
+                
             });
 
             incidencias.permisos.ForEach(a => a.Proceso = darkManager.IncidenciaProcess.Get(a.IdIncidenciaPermiso+"", "IdIncidenciaPermiso"));
             incidencias.vacaciones.ForEach(a => a.Proceso = darkManager.IncidenciaProcess.Get(a.IdIncidenciaVacacion+"", "IdIncidenciaVacacion"));
             ViewData["tab"] = "Permisos";
+
+            darkManager.CloseConnection();
             return View(incidencias);
         }
         [AccessMultipleView(IdAction = new int[] { 36 })]
@@ -112,8 +120,18 @@ namespace GestionPersonal.Controllers
             incidencias.permisos.ForEach(a => a.Proceso = darkManager.IncidenciaProcess.Get(a.IdIncidenciaPermiso + "", "IdIncidenciaPermiso"));
             incidencias.vacaciones.ForEach(a => a.Proceso = darkManager.IncidenciaProcess.Get(a.IdIncidenciaVacacion + "", "IdIncidenciaVacacion"));
             ViewData["tab"] = "Permisos";
+            darkManager.CloseConnection();
             return View(incidencias);
         }
+
+        [AccessMultipleView(IdAction = new int[] { 36 })]
+        public ActionResult ProcesarIncidencias(DateTime Fecha)
+        {
+            IncidenciaCtrl.ProcessPermisosComplete(Fecha);
+            IncidenciaCtrl.ProcessVacacionesComplete(Fecha);
+            return Ok("Ok");
+        }
+
 
     }
 }

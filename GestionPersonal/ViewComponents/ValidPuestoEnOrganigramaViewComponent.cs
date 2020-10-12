@@ -24,6 +24,7 @@ namespace GestionPersonal.ViewComponents
             darkManager.LoadObject(GpsManagerObjects.Empleado);
             darkManager.LoadObject(GpsManagerObjects.OrganigramaVersion);
             darkManager.LoadObject(GpsManagerObjects.OrganigramaStructura);
+            darkManager.LoadObject(GpsManagerObjects.View_empleado);
         }
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
@@ -31,20 +32,22 @@ namespace GestionPersonal.ViewComponents
 
             EmpleadoInfor2 empleadoInfor = new EmpleadoInfor2();
 
-            empleadoInfor.persona = darkManager.Persona.Get(id);
-            if (empleadoInfor.persona != null)
-            {
-                empleadoInfor.Empleado = darkManager.Empleado.GetByColumn("" + id, "IdPersona");
-                if (empleadoInfor.Empleado == null)
-                {
-                    empleadoInfor.Empleado = new GPSInformation.Models.Empleado();
-                    empleadoInfor.Puesto = new PuestoOrg();
-                }
-                else
-                {
-                    empleadoInfor.Puesto = listaPuestos.Find(a => a.IdPuesto == empleadoInfor.Empleado.IdPuesto);
-                }
-            }
+            empleadoInfor.View_empleado = darkManager.View_empleado.Get(id);
+
+            //if (empleadoInfor.persona != null)
+            //{
+            //    empleadoInfor.Empleado = darkManager.Empleado.GetByColumn("" + id, "IdPersona");
+            //    if (empleadoInfor.Empleado == null)
+            //    {
+            //        empleadoInfor.Empleado = new GPSInformation.Models.Empleado();
+            //        empleadoInfor.Puesto = new PuestoOrg();
+            //    }
+            //    else
+            //    {
+            //        empleadoInfor.Puesto = listaPuestos.Find(a => a.IdPuesto == empleadoInfor.Empleado.IdPuesto);
+            //    }
+            //}
+
             empleadoInfor.IsActiveVersionOgg = false;
             empleadoInfor.IsPuestoOrg = false;
 
@@ -53,9 +56,7 @@ namespace GestionPersonal.ViewComponents
             {
                 empleadoInfor.IsActiveVersionOgg = true;
                 //extraer puesto de organigrama del empleado a checar
-                var ResultStructura = darkManager.OrganigramaStructura.Get("" + resultOrgActive.IdOrganigramaVersion, "IdOrganigramaVersion").Find(a => a.IdPuesto == empleadoInfor.Puesto.IdPuesto);
-
-                
+                var ResultStructura = darkManager.OrganigramaStructura.Get("" + resultOrgActive.IdOrganigramaVersion, "IdOrganigramaVersion").Find(a => a.IdPuesto == empleadoInfor.View_empleado.IdPuesto);
 
                 if(ResultStructura != null)
                 {

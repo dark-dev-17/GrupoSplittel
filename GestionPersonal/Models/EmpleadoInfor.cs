@@ -19,6 +19,7 @@ namespace GestionPersonal.Models
         public GPSInformation.Models.Persona persona { get; set; }
         public PuestoOrg Puesto { get; set; }
         public GPSInformation.Models.Empleado Empleado { get; set; }
+        public GPSInformation.Views.View_empleado View_empleado { get; set; }
         public PuestoOrg PuestoBoos { get; set; }
         public List<GPSInformation.Models.Persona> personaBoos { get; set; }
         public bool IsActiveVersionOgg { get; set; }

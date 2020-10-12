@@ -114,8 +114,9 @@ else
             {
                 <a href="@Url.Action("AprobarGPS","Incidencia")" class="btn btn-sm btn-secondary">Atras</a>
             }
-            <a href="@Url.Action("AprobarInc","IncidenciaVacacion", new { id = Model.IdIncidenciaVacacion, Mode = ViewBag.ModeAprobar })" class="btn btn-sm btn-secondary">Aprobar</a>
-            <a href="@Url.Action("RechazarInc","IncidenciaVacacion", new { id = Model.IdIncidenciaVacacion, Mode = ViewBag.ModeAprobar })" class="btn btn-sm btn-secondary">Rechazar</a>
+
+            <a href="@Url.Action("RechazarInc","IncidenciaVacacion", new { id = Model.IdIncidenciaVacacion, Mode = ViewBag.ModeAprobar })" class="btn btn-sm btn-warning">Rechazar</a>
+            <a href="@Url.Action("AprobarInc","IncidenciaVacacion", new { id = Model.IdIncidenciaVacacion, Mode = ViewBag.ModeAprobar })" class="btn btn-sm btn-primary">Aprobar</a>
         </div>
     </div>
 </div>

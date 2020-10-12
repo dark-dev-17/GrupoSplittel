@@ -34,7 +34,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @item.Departamento.ClaveDPU<span>-DPU-</span>@item.DPU
+                @Html.DisplayFor(modelItem => item.DPU)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)

@@ -46,13 +46,16 @@ namespace GPSInformation.Models
         public int IdPuestoParent { get; set; }
         [ColumnDB(Name = "RequisicionPersonal", IsMapped = true, IsKey = false)]
         public int RequisicionPersonal { get; set; }
+        [ColumnDB(Name = "NumeroDPU", IsMapped = true, IsKey = false)]
+        public int NumeroDPU { get; set; }
 
 
         [ColumnDB(Name = "Departamento", IsMapped = false, IsKey = false)]
         public Departamento Departamento { get;  set; }
-        [ColumnDB(Name = "Ubicacion", IsMapped = false, IsKey = false)]
         
+        [ColumnDB(Name = "Ubicacion", IsMapped = false, IsKey = false)]
         public CatalogoOpcionesValores Ubicacion { get;  set; }
+        
         [ColumnDB(Name = "Puesto", IsMapped = false, IsKey = false)]
         public Puesto PuestoParent { get;  set; }
     }

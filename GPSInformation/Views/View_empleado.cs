@@ -36,9 +36,15 @@ namespace GPSInformation.Views
         public int IdDepartamento { get; set; }
 
         [ColumnDB(IsMapped = true, IsKey = false)]
+        public string NombreDepartamento { get; set; }
+
+        [ColumnDB(IsMapped = true, IsKey = false)]
         public int IdTipoNomina { get; set; }
 
         [ColumnDB(IsMapped = false, IsKey = false)]
         public double Antiguedad { get { return Tools.Funciones.GetAntiguedad(Ingreso); } }
+
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public int IdPuesto { get; set; }
     }
 }
