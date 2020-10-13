@@ -27,19 +27,19 @@ namespace GPSInformation.Models
 
         [Display(Name = "Altura(Mts)")]
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter a number > 0")]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción > 0")]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public double Altura { set; get; }
 
         [Display(Name = "Peso(Kg)")]
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter a number > 0")]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción > 0")]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public double Peso { set; get; }
 
         [Display(Name = "Talla")]
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter a number > 0")]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción > 0")]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public double Talla { set; get; }
 

@@ -1,0 +1,43 @@
+﻿@model GPSInformation.Models.TurnoEmpleadoForm
+
+@{
+    ViewData["Title"] = "AsignarTurno";
+}
+
+<div data-label="Empleado" class="df-example demo-forms">
+    @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
+</div>
+<div data-label="Turno" class="df-example demo-forms">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="AsignarTurno" id="formAsignarturno"  onsubmit="event.preventDefault(); app_turnos.Send(@Model.IdPersona)">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="FechaInicio" class="control-label"></label>
+                    <input type="hidden" asp-for="IdPersona" class="form-control" />
+                    <input type="date" asp-for="FechaInicio" class="form-control" />
+                    <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FechaFin" class="control-label"></label>
+                    <input type="date" asp-for="FechaFin" class="form-control" />
+                    <span asp-validation-for="FechaFin" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdTurnosProduccion" class="control-label"></label>
+                    <select asp-for="IdTurnosProduccion" class="form-control" asp-items="ViewBag.Turnos">
+                        <option value="0">Selecciona una opción</option>
+                    </select>
+                    <span asp-validation-for="IdTurnosProduccion" class="text-danger"></span>
+                </div>
+                <div class="form-group row mg-b-0">
+                    <div class="col-sm-12 text-right">
+                        <a href="#" data-dismiss="modal" class="btn btn-sm btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

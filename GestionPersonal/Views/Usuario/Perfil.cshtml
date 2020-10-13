@@ -9,8 +9,13 @@
 }
 <link href="~/template/lib/select2/css/select2.min.css" rel="stylesheet" />
 
-<h4>@ViewData["Title"]</h4>
-<br />
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <a href="#modalActividadVacacionesPeriodos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Cambiar foto de perfil</a>
+    </div>
+</div>
+<hr />
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item">
         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Información personal</a>
@@ -86,6 +91,34 @@
             <partial name="../PersonaContacto/List" model="ViewBag.PersonaContacto" />
         </div>
     </div>
+    <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacacionesPeriodos" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Periodos de vacaciones</h5>
+
+                    <div id="content_vacacionesAcitivitdssdfsdf">
+                        <form asp-action="FotoPerfil" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label  class="control-label">Foto</label>
+                                <input type="file" name="foto" id="foto" class="form-control" />
+                            </div>
+                            <div class="form-group row mg-b-0">
+                                <div class="col-sm-12 text-right">
+                                    <a href="#" data-dismiss="modal" class="btn btn-sm btn-secondary">Cancelar</a>
+                                    <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div><!-- modal-body -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
 </div>
 @Html.AntiForgeryToken()
 

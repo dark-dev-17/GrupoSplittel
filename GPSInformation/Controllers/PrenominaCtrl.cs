@@ -1,5 +1,6 @@
 ﻿using GPSInformation.Models;
 using GPSInformation.Reportes;
+using GPSInformation.Tools;
 using GPSInformation.Views;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -41,22 +42,7 @@ namespace GPSInformation.Controllers
             this.darkManager.LoadObject(GpsManagerObjects.FaltaJustificacion);
 
 
-            Nomenclatura.Add(new Registro { Clave = "S.E.5", Title = "Salario Emocional", TextColor = "#ffffff", Color = "#ffff00", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "VAC", Title = "Vacacione", TextColor = "#ffffff", Color = "#2962ff", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "PCG", Title = "Permiso con goce", TextColor = "#ffffff", Color = "#bf360c", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "VIS", Title = "Visitas a Cliente", TextColor = "#ffffff", Color = "#bdbdbd", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "FAL", Title = "Falta Injustificado", TextColor = "#ffffff", Color = "#0277bd", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "INC", Title = "Incapacidad Medico", TextColor = "#ffffff", Color = "#bf360c", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "GS", Title = "Guardia Sabatino", TextColor = "#000000", Color = "#e0e0e0", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "DXG", Title = "Descanso por Guardia Sabatina Horario Flotado", TextColor = "#ffffff", Color = "#aa00ff", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "DXC", Title = "Descanso por Cumpleaños", TextColor = "#ffffff", Color = "#009688", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "FES", Title = "Festivo", TextColor = "#ffffff", Color = "#76ff03", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "PSG", Title = "permiso sin goce de sueldo", TextColor = "#ffffff", Color = "#9ccc65", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "TXT", Title = "Tiempo x Tiempo", TextColor = "#ffffff", Color = "#f1948a ", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "SAL", Title = "SALIDA POR TEMA DE TRABAJO O CURSO", TextColor = "#ffffff", Color = "#aeea00", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "HO", Title = "Home Office", TextColor = "#ffffff", Color = "#186a3b", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "SNJ", Title = "Incidencia sin justificar", TextColor = "#ffffff", Color = "#dd2c00", Tipo = 1 });
-            Nomenclatura.Add(new Registro { Clave = "INJ", Title = "Incidencia justificada", TextColor = "#ffffff", Color = "#000000", Tipo = 1 });
+            Nomenclatura = Funciones.GetRegistrosInc();
         }
         #endregion
         #region Metodos

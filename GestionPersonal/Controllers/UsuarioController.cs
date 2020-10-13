@@ -12,6 +12,9 @@ using GPSInformation;
 using GestionPersonal.Models;
 using Microsoft.AspNetCore.Http;
 using GPSInformation.Controllers;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using GPSInformation.Exceptions;
 
 namespace GestionPersonal.Controllers
 {
@@ -29,11 +32,11 @@ namespace GestionPersonal.Controllers
         private SelectList Departamentos;
         private SelectList Parentezcos;
         private SelectList Personas;
-
+        private readonly IHostingEnvironment _environment;
         private UsuarioCtrl usuarioCtrl;
 
 
-        public UsuarioController(IConfiguration configuration)
+        public UsuarioController(IConfiguration configuration, IHostingEnvironment IHostingEnvironment)
         {
             darkManager = new DarkManager(configuration);
             //darkManager.OpenConnection();
@@ -49,6 +52,81 @@ namespace GestionPersonal.Controllers
             //darkManager.LoadObject(GpsManagerObjects.View_empleado);
             //darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
             usuarioCtrl = new UsuarioCtrl(darkManager);
+            _environment = IHostingEnvironment;
+        }
+
+        [AccessView]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult FotoPerfil(IFormFile foto)
+        {
+            darkManager.StartTransaction();
+            try
+            {
+                int UsuarioIdPer = (int)HttpContext.Session.GetInt32("user_id_permiss");
+
+                var Usuario_re = darkManager.Usuario.Get(UsuarioIdPer);
+
+                if (Usuario_re == null)
+                    throw new Exception("Error usuario no encontrado");
+
+                if (foto.Length <= 0)
+                    throw new Exception("Error, la foto esta dañada");
+
+                if (Usuario_re.ImagenDefault == true)
+                {
+                    Usuario_re.ImagenPerfil = string.Format("usuario_perfil_{0}.{1}", Usuario_re.IdUsuario, foto.FileName.Split('.')[1]);
+                    string Directorio = string.Format(@"{0}\Perfil\{1}", _environment.WebRootPath, Usuario_re.ImagenPerfil);
+
+
+                    using (FileStream fs = System.IO.File.Create(Directorio))
+                    {
+                        foto.CopyTo(fs);
+                        fs.Flush();
+                    }
+
+                    Usuario_re.ImagenDefault = false;
+                    darkManager.Usuario.Element = Usuario_re;
+                    if (!darkManager.Usuario.Update())
+                    {
+                        throw new Exception("Error, Error al actualizar datos del perfil");
+                    }
+                }
+                else
+                {
+                    string Directorio = string.Format(@"{0}\{1}", _environment.WebRootPath, Usuario_re.ImagenPerfil);
+                    if (System.IO.File.Exists(Directorio))
+                    {
+                        System.IO.File.Delete(Directorio);
+                    }
+
+                    Usuario_re.ImagenPerfil = string.Format("usuario_perfil_{0}.{1}", Usuario_re.IdUsuario, foto.FileName.Split('.')[1]);
+                    Directorio = string.Format(@"{0}\Perfil\{1}", _environment.WebRootPath, Usuario_re.ImagenPerfil);
+
+                    using (FileStream fs = System.IO.File.Create(Directorio))
+                    {
+                        foto.CopyTo(fs);
+                        fs.Flush();
+                    }
+
+                    Usuario_re.ImagenDefault = false;
+                    darkManager.Usuario.Element = Usuario_re;
+                    if (!darkManager.Usuario.Update())
+                    {
+                        throw new Exception("Error, Error al actualizar datos del perfil");
+                    }
+                }
+                HttpContext.Session.SetString("user_imagenPerfil", Usuario_re.ImagenPerfil);
+                darkManager.Commit();
+                return RedirectToAction("Perfil");
+            }
+            catch (GpExceptions ex)
+            {
+                darkManager.RolBack();
+                throw ex;
+            }
+
+
         }
 
         // GET: Direccion
@@ -59,7 +137,6 @@ namespace GestionPersonal.Controllers
             darkManager.CloseConnection();
             return View(List);
         }
-
 
         #region Usuario
         [AccessMultipleView(IdAction = new int[] { 20 })]

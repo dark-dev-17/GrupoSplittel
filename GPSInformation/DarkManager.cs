@@ -61,6 +61,10 @@ namespace GPSInformation
         public virtual DarkAttributes<ExpedienteArchivo> ExpedienteArchivo { get; set; }
         public virtual DarkAttributes<View_EmpleadoExpediente> View_EmpleadoExpediente { get; set; }
         public virtual DarkAttributes<FaltaJustificacion> FaltaJustificacion { get; set; }
+        public virtual DarkAttributes<TurnosProduccion> TurnosProduccion { get; set; }
+        public virtual DarkAttributes<TurnoEmpleado> TurnoEmpleado { get; set; }
+        public virtual DarkAttributes<View_empleadoEnsamble> View_empleadoEnsamble { get; set; }
+        public virtual DarkAttributes<EnsablesTurnos> EnsablesTurnos { get; set; }
 
         #endregion
         #region Constructtores
@@ -239,6 +243,22 @@ namespace GPSInformation
             {
                 FaltaJustificacion = new DarkAttributes<FaltaJustificacion>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.TurnosProduccion)
+            {
+                TurnosProduccion = new DarkAttributes<TurnosProduccion>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.TurnoEmpleado)
+            {
+                TurnoEmpleado = new DarkAttributes<TurnoEmpleado>(dBConnection);
+            } 
+            else if (gpsManagerObjects == GpsManagerObjects.View_empleadoEnsamble)
+            {
+                View_empleadoEnsamble = new DarkAttributes<View_empleadoEnsamble>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.EnsablesTurnos)
+            {
+                EnsablesTurnos = new DarkAttributes<EnsablesTurnos>(dBConnection);
+            }
         }
         public void OpenConnection()
         {
@@ -327,5 +347,9 @@ namespace GPSInformation
         ExpedienteArchivo = 37,
         View_EmpleadoExpediente = 38,
         FaltaJustificacion = 39,
+        TurnosProduccion = 40,
+        TurnoEmpleado = 41,
+        View_empleadoEnsamble = 42,
+        EnsablesTurnos = 43,
     }
 }

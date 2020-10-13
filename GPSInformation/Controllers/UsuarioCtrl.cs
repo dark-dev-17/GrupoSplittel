@@ -56,6 +56,8 @@ namespace GPSInformation.Controllers
                 if(Usuario_re is null)
                 {
                     Usuario.UltimoIngreso = DateTime.Now;
+                    Usuario_re.ImagenDefault = true;
+                    Usuario_re.ImagenPerfil = "";
                     darkManager.Usuario.Element = Usuario;
                     if (!darkManager.Usuario.Add())
                     {
@@ -70,6 +72,7 @@ namespace GPSInformation.Controllers
                     Usuario_re.Pass = Usuario.Pass;
                     Usuario_re.Activo = Usuario.Activo;
                     Usuario_re.IdRol = Usuario.IdRol;
+                    
                     darkManager.Usuario.Element = Usuario_re;
                     if (!darkManager.Usuario.Update())
                     {
@@ -103,17 +106,17 @@ namespace GPSInformation.Controllers
 
             if (IdPermiso == 80)
             {
-                Permisos = new List<int> { 2, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 28, 30, 32, 36, 33, 35, 37, 39 };
+                Permisos = new List<int> { 2, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 28, 30, 32, 36, 33, 35, 37, 39, 40,42,43 };
             }
             else if (IdPermiso == 81)
             {
                 //Con personal a cargo
-                Permisos = new List<int> { 2, 18, 26, 30, 32, 33, 39 };
+                Permisos = new List<int> { 2, 18, 26, 30, 32, 33, 39,43 };
             }
             else if (IdPermiso == 82)
             {
                 //rol sin personal a cargo
-                Permisos = new List<int> { 2, 18, 30, 33, 39 };
+                Permisos = new List<int> { 2, 18, 30, 33, 39,43 };
             }
             else
             {

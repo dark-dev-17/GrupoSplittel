@@ -52,7 +52,7 @@ namespace GPSInformation.Controllers
         }
         public IEnumerable<View_empleado> GetEmpleados()
         {
-            return darkManager.View_empleado.Get().OrderBy(a => a.NombreCompleto);
+            return darkManager.View_empleado.Get().Where(a => a.IdEstatus == 19 || a.IdEstatus == 18).OrderBy(a => a.NombreCompleto);
         }
         public IEnumerable<EvaluacionEmpleado> GetParticipantes(int IdEvaluacion)
         {

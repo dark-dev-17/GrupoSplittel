@@ -38,5 +38,11 @@ namespace GPSInformation.Models
         [ColumnDB(IsMapped = true, IsKey = false)]
         public int IdRol { get; set; }
 
+
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public string ImagenPerfil { get; set; }
+
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public bool ImagenDefault { get; set; }
     }
 }

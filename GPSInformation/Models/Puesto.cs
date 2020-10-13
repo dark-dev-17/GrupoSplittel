@@ -25,11 +25,11 @@ namespace GPSInformation.Models
         [ColumnDB(Name = "IdDepartamento", IsMapped = true, IsKey = false)]
         public int IdDepartamento { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = false)]
+        [DisplayFormat(DataFormatString = "{0:00}", ApplyFormatInEditMode = false)]
         [ColumnDB(Name = "SalarioMin", IsMapped = true, IsKey = false)]
         public double SalarioMin { set; get; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = false)]
+        [DisplayFormat(DataFormatString = "{0:00}", ApplyFormatInEditMode = false)]
         [ColumnDB(Name = "SalarioMax", IsMapped = true, IsKey = false)]
         public double SalarioMax { set; get; }
         [Required]

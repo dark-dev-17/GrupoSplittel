@@ -28,4 +28,8 @@
     <ProjectReference Include="..\GPSInformation\GPSInformation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Perfil\" />
+  </ItemGroup>
+
 </Project>

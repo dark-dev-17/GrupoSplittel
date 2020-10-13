@@ -1,0 +1,114 @@
+﻿@model GPSInformation.Reportes.Prenomina_RepProd
+@using System.Globalization;
+@{
+    ViewData["Title"] = "Prenomina";
+    int Indice = 0;
+
+    List<GPSInformation.Views.View_empleadoEnsamble> view_Empleados = (List<GPSInformation.Views.View_empleadoEnsamble>)ViewBag.Empleados;
+    CultureInfo cul = CultureInfo.CurrentCulture;
+
+    var firstDayWeek = cul.Calendar.GetWeekOfYear(Model.Inicio, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+    int sizeCol = 0;
+
+}
+<div class="col-sm-12 text-right">
+    <a class="btn btn-primary btn-sm" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true" aria-controls="collapseExample">Filtro</a>
+</div>
+<div data-label="Filtro @firstDayWeek" class="df-example demo-forms collapse mg-t-5" id="collapseExample">
+    <form asp-action="Prenomina" id="btn_refrescar">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="form-group col-lg-2">
+                <label asp-for="Inicio" class="control-label"></label>
+                <input type="date" asp-for="Inicio" class="form-control form-control-sm" />
+                <span asp-validation-for="Inicio" class="text-danger"></span>
+            </div>
+            <div class="form-group col-lg-2">
+                <label asp-for="Fin" class="control-label"></label>
+                <input type="date" asp-for="Fin" class="form-control form-control-sm" />
+                <span asp-validation-for="Fin" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row mg-b-0">
+            <div class="col-sm-12 text-right">
+                <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm btn-secondary">Cancelar</a>
+                <button type="submit" id="" class="btn btn-sm btn-primary">Extraer</button>
+            </div>
+        </div>
+    </form>
+</div>
+@if (view_Empleados != null)
+{
+    <div>
+        <table class="table table-sm table-condensed">
+            <thead>
+                <tr>
+                    <th colspan="3">
+                        No.Nomina
+                    </th>
+                    @{
+                        DateTime InitialDate = Model.Inicio;
+                    }
+                    @while (InitialDate <= Model.Fin)
+                    {
+                        if (firstDayWeek == cul.Calendar.GetWeekOfYear(InitialDate, CalendarWeekRule.FirstDay, DayOfWeek.Monday))
+                        {
+                            sizeCol++;
+                        }
+                        else
+                        {
+                            <th class="text-center" colspan="@sizeCol">semana <span>@firstDayWeek</span></th>
+                            firstDayWeek = cul.Calendar.GetWeekOfYear(InitialDate, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                            InitialDate = InitialDate.AddDays(-1);
+                            sizeCol = 0;
+                        }
+                        InitialDate = InitialDate.AddDays(1);
+                    }
+
+                </tr>
+                <tr>
+                    <th>
+                        No.Nomina
+                    </th>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Puesto
+                    </th>
+                    @{
+                        InitialDate = Model.Inicio;
+                    }
+                    @while (InitialDate <= Model.Fin)
+                    {
+                <th class="@Html.Raw((InitialDate.DayOfWeek == DayOfWeek.Saturday || InitialDate.DayOfWeek == DayOfWeek.Sunday) ? "bg-success small" : "small" )">@Html.Raw(InitialDate.ToString("ddd - dd"))</th>
+                        InitialDate = InitialDate.AddDays(1);
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in view_Empleados)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NumeroNomina)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreCompleto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PuestoNombre)
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

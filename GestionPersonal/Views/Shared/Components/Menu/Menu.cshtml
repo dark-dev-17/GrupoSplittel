@@ -2,7 +2,7 @@
 
 @foreach (var item in Model)
 { 
-    if (item.SubModulos.Count > 0)
+    if (item.SubModulos.Count > 0 && item.SubModulos.Where(a => a.AccesosSistema.TieneAcceso).ToList().Count > 0)
     {
         <li class="nav-item @Html.Raw(item.SubModulos.Where(a => a.Activemenu).ToList().Count > 0 ? "show" : "")">
             <a href="" class="nav-link with-sub @Html.Raw(item.SubModulos.Where(a => a.Activemenu).ToList().Count > 0 ? "active" : "")">

@@ -7,7 +7,7 @@ using System.Text;
 namespace GPSInformation.Views
 {
     [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]
-    public class View_empleado
+    public class View_empleadoEnsamble
     {
         [ColumnDB(IsMapped = true, IsKey = true)]
         public int IdPersona { get; set; }
@@ -18,6 +18,7 @@ namespace GPSInformation.Views
         public string Correo { get; set; }
 
         [ColumnDB(IsMapped = true, IsKey = false)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime Ingreso { get; set; }
 
         [ColumnDB(IsMapped = true, IsKey = false)]
@@ -53,5 +54,15 @@ namespace GPSInformation.Views
 
         [ColumnDB(IsMapped = true, IsKey = false)]
         public string EstatusDescripcion { get; set; }
+
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public int IdTurnosProduccion { get; set; }
+
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public string DescripcionTurno { get; set; }
+        
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        public DateTime FechaFinturno { get; set; }
     }
 }

@@ -88,6 +88,7 @@ namespace GestionPersonal.Controllers
             HttpContext.Session.SetString("user_name", ResultUser.Nombre);
             HttpContext.Session.SetString("user_appP", ResultUser.ApellidoPaterno);
             HttpContext.Session.SetString("user_appM", ResultUser.ApellidoMaterno);
+            HttpContext.Session.SetString("user_imagenPerfil", usuario.ImagenDefault ? "imagenperfil.png" : usuario.ImagenPerfil);
             HttpContext.Session.SetString("user_fullname", ResultUser.NombreCompelto);
             HttpContext.Session.SetString("user_puesto", darkManager.View_empleado.Get(usuario.IdPersona).PuestoNombre);
         }
