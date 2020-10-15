@@ -37,7 +37,7 @@ namespace GPSInformation.Models
 
         [Display(Name = "Departamento")]
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción")]
+        [Range(0, int.MaxValue, ErrorMessage = "Por favor selecciona una opción")]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public int IdDepartamento { get; set; }
 

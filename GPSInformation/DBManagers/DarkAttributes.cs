@@ -84,9 +84,32 @@ namespace GPSInformation.DBManagers
         {
             return dBConnection.GetIntegerValue(string.Format("select max(Id{0}) from {0}", Nametable));
         }
+
         public int GetLastId(string nameCol, string Value)
         {
             return dBConnection.GetIntegerValue(string.Format("select max(Id{0}) from {0} where {1} = '{2}'", Nametable, nameCol, Value));
+        }
+
+        /// <summary>
+        /// Obtiene el valor maximo de la columna seleccionada en base a una condicion where
+        /// </summary>
+        /// <param name="colMax">Columna DB</param>
+        /// <param name="nameCol">Nombre de la columna </param>
+        /// <param name="Value">valor de la columna</param>
+        /// <returns></returns>
+        public object GetMax(string colMax, string nameCol, string Value)
+        {
+            return dBConnection.GetValue(string.Format("select max({1}) from {0} where {2} = '{3}'", Nametable, colMax, nameCol, Value));
+        }
+
+        /// <summary>
+        /// Obtiene el valor maximo de la columna seleccionada en base a una condicion where
+        /// </summary>
+        /// <param name="colMax">Columna DB</param>
+        /// <returns></returns>
+        public object GetMax(string colMax)
+        {
+            return dBConnection.GetValue(string.Format("select max({1}) from {0}", Nametable, colMax));
         }
 
         public T Get(int? id)
@@ -118,6 +141,7 @@ namespace GPSInformation.DBManagers
         {
             return DataReader(string.Format("select * from {0} where {1} = '{2}'", Nametable, nameCol, id));
         }
+
         public List<T> GetIn(int[] keys, string nameCol)
         {
             
@@ -129,11 +153,13 @@ namespace GPSInformation.DBManagers
 
             return DataReader(string.Format("select * from {0} where {1} in ({2}) and {3} in ({4})", Nametable, nameCol, string.Join(", ", keys), nameCol2, string.Join(", ", keys2)));
         }
+
         public List<T> GetList(string Columna1, string Columna1Val, string Columna2, string Columna1Val2)
         {
             List<T> Lista = DataReader(string.Format("select * from {0} where {1} = '{2}' and  {3} = '{4}'", Nametable, Columna1, Columna1Val, Columna2, Columna1Val2));
             return Lista;
         }
+
         public T Get(string Columna1, string Columna1Val, string Columna2, string Columna1Val2)
         {
             List<T> Lista = DataReader(string.Format("select * from {0} where {1} = '{2}' and  {3} = '{4}'", Nametable, Columna1, Columna1Val, Columna2, Columna1Val2));
@@ -143,10 +169,12 @@ namespace GPSInformation.DBManagers
             }
             return Lista.ElementAt(0);
         }
+
         public List<T> Get()
         {
             return DataReader(string.Format("select * from {0}", Nametable));
         }
+
         public string ColumName(string Name)
         {
             string columna = "";
@@ -171,6 +199,7 @@ namespace GPSInformation.DBManagers
 
             return columna;
         }
+
         private string KeyCol()
         {
             string columna = "";
@@ -204,6 +233,11 @@ namespace GPSInformation.DBManagers
             }
 
             return columna;
+        }
+
+        public List<T> GetSpecialStat(string SqlStatements)
+        {
+            return DataReader(SqlStatements);
         }
 
         private List<T> DataReader(string SqlStatements)

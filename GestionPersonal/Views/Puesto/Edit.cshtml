@@ -3,8 +3,12 @@
 @{
     ViewData["Title"] = "Editar puesto";
 }
+
 <h4>@ViewData["Title"]</h4>
 <br />
+<div class="alert alert-primary mg-b-0" role="alert">
+    Si deseas utlizar el siguiente número de DPU de acuerdo al departamento seleccionado, por favor deja en blanco el campo <strong>DPU</strong>
+</div>
 <div data-label="Informacion" class="df-example demo-forms">
     <form asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -12,8 +16,9 @@
             <label asp-for="DPU" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-2">
                 <input type="hidden" asp-for="IdPuesto" class="form-control" />
-                <input asp-for="DPU" class="form-control" />
-                <span asp-validation-for="DPU" class="text-danger"></span>
+                <input type="hidden" asp-for="DPU" class="form-control" />
+                <input asp-for="NumeroDPU" class="form-control" />
+                <span asp-validation-for="NumeroDPU" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">
@@ -76,7 +81,7 @@
                 <span asp-validation-for="IdUbicacion" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group row">
+        @*<div class="form-group row">
             <label asp-for="IdPuestoParent" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
                 <select asp-for="IdPuestoParent" asp-items="ViewBag.Puestos" class="custom-select">
@@ -84,7 +89,7 @@
                 </select>
                 <span asp-validation-for="IdPuestoParent" class="text-danger"></span>
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group row mg-b-0">
             <div class="col-sm-12 text-right">

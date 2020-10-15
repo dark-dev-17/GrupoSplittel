@@ -39,9 +39,6 @@ namespace GestionPersonal.Controllers
             darkManager.LoadObject(GpsManagerObjects.Empleado);
             darkManager.LoadObject(GpsManagerObjects.PersonaContacto);
             darkManager.LoadObject(GpsManagerObjects.View_empleado);
-
-           
-            
         }
 
         ~EmpleadoController()
@@ -92,6 +89,8 @@ namespace GestionPersonal.Controllers
                     ViewData["EstadosCiviles"] = EstadosCiviles;
                     return View(Persona);
                 }
+                // agregar validacion cuando numero de nomina este en 0 o vacio
+
                 Persona.Creado = DateTime.Now;
                 Persona.Actualizado = DateTime.Now;
                 darkManager.Persona.Element = Persona;

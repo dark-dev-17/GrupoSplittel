@@ -1,5 +1,6 @@
 ﻿using GPSInformation.DBManagers;
 using GPSInformation.Models;
+using GPSInformation.Tools;
 using GPSInformation.Views;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -13,11 +14,12 @@ namespace GPSInformation
     {
         protected DBConnection dBConnection { get; set; }
         protected DBConnection dBConnectionAccess { get; set; }
+        public EmailServ EmailServ_ { get; set; }
         protected string DefaultAccess { get; set; }
         protected string StringConnectionDb { get; set; }
         protected string Server { get; set; }
         protected string From { get; set; }
-        protected int Port { get; set; }
+        protected string Port { get; set; }
         protected string User { get; set; }
         protected string Password { get; set; }
         protected bool UserSSL { get; set; }
@@ -65,13 +67,25 @@ namespace GPSInformation
         public virtual DarkAttributes<TurnoEmpleado> TurnoEmpleado { get; set; }
         public virtual DarkAttributes<View_empleadoEnsamble> View_empleadoEnsamble { get; set; }
         public virtual DarkAttributes<EnsablesTurnos> EnsablesTurnos { get; set; }
+        public virtual DarkAttributes<Nomina> Nomina { get; set; }
 
         #endregion
+
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
         {
             this.StringConnectionDb = Configuration.GetConnectionString("Default");
             this.DefaultAccess = Configuration.GetConnectionString("DefaultAccess");
+            Server = Configuration.GetSection("Ftp").GetSection("Server").Value;
+            Port = Configuration.GetSection("Ftp").GetSection("Server").Value;
+            From = Configuration.GetSection("Ftp").GetSection("Server").Value;
+            User = Configuration.GetSection("Ftp").GetSection("Server").Value;
+            Password = Configuration.GetSection("Ftp").GetSection("Server").Value;
+            UserSSL = Configuration.GetSection("Ftp").GetSection("Server").Value == "true" ? true : false;
+
+
+            EmailServ_ = new EmailServ(Server, From,Port,User,Password,UserSSL);
+
         }
         public DarkManager(string DBconnection)
         {
@@ -259,6 +273,10 @@ namespace GPSInformation
             {
                 EnsablesTurnos = new DarkAttributes<EnsablesTurnos>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.Nomina)
+            {
+                Nomina = new DarkAttributes<Nomina>(dBConnection);
+            }
         }
         public void OpenConnection()
         {
@@ -304,6 +322,7 @@ namespace GPSInformation
         {
             return dBConnectionAccess.GetDataReader(Statement);
         }
+        
         #endregion
     }
 
@@ -351,5 +370,6 @@ namespace GPSInformation
         TurnoEmpleado = 41,
         View_empleadoEnsamble = 42,
         EnsablesTurnos = 43,
+        Nomina = 44,
     }
 }

@@ -29,9 +29,14 @@ namespace GestionPersonal.Controllers
             darkManager.LoadObject(GpsManagerObjects.Departamento);
             darkManager.LoadObject(GpsManagerObjects.CatalogoOpcionesValores);
 
-            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre");
-            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre");
-            Ubicaciones = new SelectList(darkManager.CatalogoOpcionesValores.Get(""+1, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            AddSelects(0, 0, 0);
+        }
+
+        private void AddSelects(int idDepartamentos, int idPuestos, int idUbicaciones)
+        {
+            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre", idDepartamentos);
+            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre", idPuestos);
+            Ubicaciones = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion", idUbicaciones);
         }
 
         ~PuestoController()
@@ -56,7 +61,6 @@ namespace GestionPersonal.Controllers
         public ActionResult Details(int id)
         {
             var result = darkManager.Puesto.Get(id);
-
             if(result == null)
             {
                 return NotFound();
@@ -85,10 +89,33 @@ namespace GestionPersonal.Controllers
 
                 if (!ModelState.IsValid)
                 {
+                    AddSelects(Puesto.IdDepartamento, 0, Puesto.IdUbicacion);
                     ViewData["Departamentos"] = Departamentos;
                     ViewData["Puestos"] = Puestos;
                     ViewData["Ubicaciones"] = Ubicaciones;
                     return View(Puesto);
+                }
+                if(Puesto.NumeroDPU != 0)
+                {
+                    var puesto_re = darkManager.Puesto.GetByColumn("" + Puesto.NumeroDPU, "NumeroDPU");
+                    if(puesto_re != null)
+                    {
+                        int max = (int)darkManager.Puesto.GetMax("NumeroDPU", "IdDepartamento", Puesto.IdDepartamento + "");
+                        ModelState.AddModelError("NumeroDPU", string.Format("El numero de DPU {0} ya esta siendo usado en otro puesto, numero DPU dispobible {1}", Puesto.NumeroDPU, max));
+                        return View(Puesto);
+                    }
+                }
+                else if(Puesto.NumeroDPU == 0)
+                {
+                    object max = darkManager.Puesto.GetMax("NumeroDPU", "IdDepartamento", Puesto.IdDepartamento + "");
+                    if (max is null)
+                    {
+                        Puesto.NumeroDPU = 1;
+                    }
+                    else
+                    {
+                        Puesto.NumeroDPU = (int)max + 1;
+                    }
                 }
 
                 darkManager.Puesto.Element = Puesto;
@@ -100,6 +127,7 @@ namespace GestionPersonal.Controllers
                 }
                 else
                 {
+                    AddSelects(Puesto.IdDepartamento, 0, Puesto.IdUbicacion);
                     ViewData["Departamentos"] = Departamentos;
                     ViewData["Puestos"] = Puestos;
                     ViewData["Ubicaciones"] = Ubicaciones;
@@ -110,6 +138,7 @@ namespace GestionPersonal.Controllers
             }
             catch(GPSInformation.Exceptions.GpExceptions ex)
             {
+                AddSelects(Puesto.IdDepartamento, 0, Puesto.IdUbicacion);
                 ViewData["Departamentos"] = Departamentos;
                 ViewData["Puestos"] = Puestos;
                 ViewData["Ubicaciones"] = Ubicaciones;
@@ -122,10 +151,12 @@ namespace GestionPersonal.Controllers
         [AccessMultipleView(IdAction = new int[] { 17 })]
         public ActionResult Edit(int id)
         {
+            
+            var result = darkManager.Puesto.Get(id);
+            AddSelects(result.IdDepartamento, 0, result.IdUbicacion);
             ViewData["Departamentos"] = Departamentos;
             ViewData["Puestos"] = Puestos;
             ViewData["Ubicaciones"] = Ubicaciones;
-            var result = darkManager.Puesto.Get(id);
             if (result == null)
             {
                 return NotFound();
@@ -139,15 +170,43 @@ namespace GestionPersonal.Controllers
         [AccessMultipleView(IdAction = new int[] { 17 })]
         public ActionResult Edit(Puesto Puesto)
         {
+            AddSelects(Puesto.IdDepartamento, 0, Puesto.IdUbicacion);
+            ViewData["Departamentos"] = Departamentos;
+            ViewData["Puestos"] = Puestos;
+            ViewData["Ubicaciones"] = Ubicaciones;
             try
             {
 
                 if (!ModelState.IsValid)
                 {
-                    ViewData["Departamentos"] = Departamentos;
-                    ViewData["Puestos"] = Puestos;
-                    ViewData["Ubicaciones"] = Ubicaciones;
+                    //AddSelects(Puesto.IdDepartamento, 0, Puesto.IdUbicacion);
+                    //ViewData["Departamentos"] = Departamentos;
+                    //ViewData["Puestos"] = Puestos;
+                    //ViewData["Ubicaciones"] = Ubicaciones;
                     return View(Puesto);
+                }
+
+                if (Puesto.NumeroDPU != 0)
+                {
+                    var puesto_re = darkManager.Puesto.GetByColumn("" + Puesto.NumeroDPU, "NumeroDPU");
+                    if (puesto_re != null && puesto_re.IdPuesto != Puesto.IdPuesto)
+                    {
+                        int max = (int)darkManager.Puesto.GetMax("NumeroDPU", "IdDepartamento", Puesto.IdDepartamento + "");
+                        ModelState.AddModelError("NumeroDPU", string.Format("El numero de DPU {0} ya esta siendo usado en otro puesto, numero DPU dispobible {1}", Puesto.NumeroDPU, max));
+                        return View(Puesto);
+                    }
+                }
+                else if(Puesto.NumeroDPU == 0)
+                {
+                    object max = darkManager.Puesto.GetMax("NumeroDPU", "IdDepartamento", Puesto.IdDepartamento + "");
+                    if(max is null)
+                    {
+                        Puesto.NumeroDPU = 1;
+                    }
+                    else
+                    {
+                        Puesto.NumeroDPU = (int)max + 1;
+                    }
                 }
 
                 darkManager.Puesto.Element = Puesto;
@@ -158,9 +217,10 @@ namespace GestionPersonal.Controllers
                 }
                 else
                 {
-                    ViewData["Departamentos"] = Departamentos;
-                    ViewData["Puestos"] = Puestos;
-                    ViewData["Ubicaciones"] = Ubicaciones;
+                    //AddSelects(Puesto.IdDepartamento, 0, Puesto.IdUbicacion);
+                    //ViewData["Departamentos"] = Departamentos;
+                    //ViewData["Puestos"] = Puestos;
+                    //ViewData["Ubicaciones"] = Ubicaciones;
                     ModelState.AddModelError("", darkManager.GetLastMessage());
                     return View(Puesto);
                 }
@@ -168,9 +228,10 @@ namespace GestionPersonal.Controllers
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                ViewData["Departamentos"] = Departamentos;
-                ViewData["Puestos"] = Puestos;
-                ViewData["Ubicaciones"] = Ubicaciones;
+                //AddSelects(Puesto.IdDepartamento, 0, Puesto.IdUbicacion);
+                //ViewData["Departamentos"] = Departamentos;
+                //ViewData["Puestos"] = Puestos;
+                //ViewData["Ubicaciones"] = Ubicaciones;
                 ModelState.AddModelError("", ex.Message);
                 return View(Puesto);
             }

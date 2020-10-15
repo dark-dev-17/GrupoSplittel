@@ -4,11 +4,14 @@
     ViewData["Title"] = "Puestos";
 }
 
-<h2>Index</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <h2 class="tx-15 mg-b-0"></h2>
+        <a asp-action="Create" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+    </div>
+</div>
+<hr />
 <table class="table">
     <thead>
         <tr>
@@ -31,27 +34,28 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DPU)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Departamento.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SalarioMin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SalarioMax)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.IdPuesto })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DPU)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Departamento.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SalarioMin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SalarioMax)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.IdPuesto })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

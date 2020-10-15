@@ -9,6 +9,7 @@ namespace GPSInformation.Models
     [TableDB(Name = "Persona", IsMappedByLabels = false, IsStoreProcedure = false)]
     public class Persona
     {
+        [Display(Name = "#")]
         [ColumnDB(Name = "IdPersona", IsMapped = true, IsKey = true)]
         public int IdPersona { get; set; }
 
@@ -99,6 +100,14 @@ namespace GPSInformation.Models
         [Display(Name = "NSS")]
         [ColumnDB(Name = "NSS", IsMapped = true, IsKey = false)]
         public string NSS { get; set; }
+
+        [Display(Name = "Puesto a aplicar")]
+        [ColumnDB(Name = "IdPuesto", IsMapped = true, IsKey = false)]
+        public int IdPuesto { get; set; }
+
+        [Display(Name = "Estatus del prospecto")]
+        [ColumnDB(Name = "Estatus", IsMapped = true, IsKey = false)]
+        public int IdEstatusPros { get; set; }
 
         [Display(Name = "Nombre Completo")]
         [ColumnDB(IsMapped = false, IsKey = false)]

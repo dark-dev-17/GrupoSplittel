@@ -6,10 +6,10 @@ using System.Text;
 
 namespace GPSInformation.Models
 {
-    [TableDB(Name = "Puesto", IsMappedByLabels = false, IsStoreProcedure = true)]
+    [TableDB(Name = "Puesto", IsMappedByLabels = false, IsStoreProcedure = false)]
     public class Puesto
     {
-        [ColumnDB(Name = "IdDepartamento", IsMapped = true, IsKey = true)]
+        [ColumnDB(Name = "#", IsMapped = true, IsKey = true)]
         public int IdPuesto { get; set; }
         [Required]
         [ColumnDB(Name = "DPU", IsMapped = true, IsKey = false)]

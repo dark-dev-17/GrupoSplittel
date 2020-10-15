@@ -9,9 +9,11 @@ namespace GPSInformation.Models
     [TableDB(Name = "Sociedad", IsMappedByLabels = false, IsStoreProcedure = true)]
     public class Direccion
     {
+        [Display(Name = "#")]
         [ColumnDB(Name = "IdDireccion", IsMapped = true, IsKey = true)]
         public int IdDireccion { get; set; }
         [Required]
+        [Display(Name = "Nombre")]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public string Nombre { get; set; }
         [Required]

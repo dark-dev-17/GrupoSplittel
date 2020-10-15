@@ -21,6 +21,14 @@
 <script src="~/template/lib/select2/js/select2.min.js"></script>
 @*<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>*@
 @*<script src="https://bootboxjs.com/v3.x/bootbox.js"></script>*@
+
+<script src="~/template/lib/jquery.flot/jquery.flot.js"></script>
+<script src="~/template/lib/jquery.flot/jquery.flot.stack.js"></script>
+<script src="~/template/lib/jquery.flot/jquery.flot.resize.js"></script>
+<script src="~/template/lib/chart.js/Chart.bundle.min.js"></script>
+<script src="~/template/lib/jqvmap/jquery.vmap.min.js"></script>
+
+
 <script>
     function ShowMessageErrorShort(text, icon) {
         const Toast = Swal.mixin({
@@ -40,10 +48,19 @@
             title: text
         })
     }
+    $(document).ready(function () {
+        //$('.select2').select2({
+        //    placeholder: 'Choose one',
+        //    searchInputPlaceholder: 'Search options',
+        //    dropdownParent: $('#puestosselect')
+        //});
+        //$('.select2').select2({
+        //    minimumResultsForSearch: 1,
+        //    dropdownParent: $parent,
+        //    placeholder: "Select a country",
+        //    width: '100%'
+        //});
+    });
+
 </script>
 
-<script src="~/template/lib/jquery.flot/jquery.flot.js"></script>
-<script src="~/template/lib/jquery.flot/jquery.flot.stack.js"></script>
-<script src="~/template/lib/jquery.flot/jquery.flot.resize.js"></script>
-<script src="~/template/lib/chart.js/Chart.bundle.min.js"></script>
-<script src="~/template/lib/jqvmap/jquery.vmap.min.js"></script>

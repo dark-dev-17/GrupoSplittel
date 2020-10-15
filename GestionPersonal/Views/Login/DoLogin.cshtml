@@ -4,21 +4,22 @@
     ViewData["Title"] = "Bienvenido a GPS";
 }
 
-<div class="content content-fixed content-auth" style="margin-top: 150px;">
+<div class="content content-fixed content-auth" style="margin-top: 120px;">
     <div class="container">
-        <div class="media align-items-stretch justify-content-center ht-100p pos-relative">
+        <h1 class="text-center">Sistema Gestión de Personal</h1>
+        <div class="media align-items-stretch justify-content-center ht-100p pos-relative" style="margin-top: 30px;">
             <div class="media-body align-items-center d-none d-lg-flex">
                 <div class="mx-wd-600">
-                    <img src="https://blog.krowdy.com/hubfs/Campa%C3%B1a%202%20-%20Febrero%202020/Blogposts/recursos%20humanos%204%20proyecciones%202020.png" class="img-fluid" alt="">
+                    <img src="https://image.freepik.com/vector-gratis/empresarios-reunion-isometrica-ilustracion_23-2148324644.jpg" class="img-fluid" alt="">
                 </div>
                 <div class="pos-absolute b-0 l-0 tx-12 tx-center">
                     @*Workspace design vector is created by <a href="https://www.freepik.com/pikisuperstar" target="_blank">pikisuperstar (freepik.com)</a>*@
                 </div>
             </div><!-- media-body -->
-            <div class="sign-wrapper mg-lg-l-50 mg-xl-l-60">
+            <div class="sign-wrapper mg-lg-l-50 mg-xl-l-60" style="align-items: center;display: flex;">
                 <div class="wd-100p">
-                    <h3 class="tx-color-01 mg-b-5">Inicio de sesión</h3>
-                    <p class="tx-color-03 tx-16 mg-b-40">Bienvenido a GPS, por favor inicia sesión para continuar.</p>
+                    <h1 class="tx-color-01 mg-b-5 text-center">Grupo Splittel</h1>
+                    <p class="tx-color-03 tx-16 mg-b-40 mt-5">Bienvenido a GPS, por favor inicia sesión para continuar.</p>
                     <form asp-action="DoLogin" asp-controller="Login">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">

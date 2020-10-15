@@ -351,6 +351,40 @@ namespace GPSInformation
                 throw ex;
             }
         }
+        public object GetValue(string sqlStatement)
+        {
+            try
+            {
+                CheckConnection();
+                if (IsTracsactionActive)
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection, tran))
+                    {
+                        return sqlCommand.ExecuteScalar();
+                    }
+                }
+                else
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand(sqlStatement, SqlConnection))
+                    {
+                        return sqlCommand.ExecuteScalar();
+                    }
+                }
+
+            }
+            catch (SqlException ex)
+            {
+                throw new GpExceptions(string.Format("SqlException - {0}", ex.Message));
+            }
+            catch (GpExceptions ex)
+            {
+                throw new GpExceptions(string.Format("SAP_Excepcion - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public string GetStringValue(string sqlStatement)
         {
             try

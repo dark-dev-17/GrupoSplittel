@@ -33,6 +33,7 @@ namespace GPSInformation.Tools
             Nomenclatura.Add(new Registro { Clave = "HO", Title = "Home Office", TextColor = "#ffffff", Color = "#186a3b", Tipo = 1 });
             Nomenclatura.Add(new Registro { Clave = "SNJ", Title = "Incidencia sin justificar", TextColor = "#ffffff", Color = "#dd2c00", Tipo = 1 });
             Nomenclatura.Add(new Registro { Clave = "INJ", Title = "Incidencia justificada", TextColor = "#ffffff", Color = "#000000", Tipo = 1 });
+            Nomenclatura.Add(new Registro { Clave = "DES", Title = "Descanso", TextColor = "#fd4d45", Color = "#000000", Tipo = 1 });
 
 
             return Nomenclatura;

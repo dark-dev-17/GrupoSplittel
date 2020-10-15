@@ -55,12 +55,12 @@ namespace GestionEmpleadol.Controllers
         [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Create(Empleado Empleado)
         {
-            TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            EstatusEmpleado = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 7, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion", Empleado.TipoNomina);
+            EstatusEmpleado = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 7, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion",Empleado.IdEstatus);
 
-            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre");
-            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre");
-            Sociedades = new SelectList(darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList(), "IdSociedad", "Descripcion");
+            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre", Empleado.IdDepartamento);
+            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre", Empleado.IdPuesto);
+            Sociedades = new SelectList(darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList(), "IdSociedad", "Descripcion", Empleado.IdSociedad);
             ViewData["TipoNomina"] = TipoNomina;
             ViewData["EstatusEmpleado"] = EstatusEmpleado;
             ViewData["Departamentos"] = Departamentos;
@@ -72,6 +72,23 @@ namespace GestionEmpleadol.Controllers
                 if (!ModelState.IsValid)
                 {
                     return PartialView(Empleado);
+                }
+
+                if (Empleado.NumeroNomina == 0)
+                {
+                    int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "NumeroNomina", Empleado.TipoNomina + "");
+                    Empleado.NumeroNomina = max + 1;
+                }
+                else
+                {
+                    var emple = darkManager.Empleado.GetByColumn("NumeroNomina", Empleado.TipoNomina + "");
+                    if (emple != null)
+                    {
+                        int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "NumeroNomina", Empleado.TipoNomina + "");
+                        ModelState.AddModelError("NumeroNomina", string.Format("El número de nomina '{0}' ya esta siendo utilizado por otro empleado, número disponible: '{0}'",
+                            Empleado.TipoNomina, max + 1));
+                        return PartialView(Empleado);
+                    }
                 }
 
                 darkManager.Empleado.Element = Empleado;
@@ -100,12 +117,12 @@ namespace GestionEmpleadol.Controllers
         [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Edit(Empleado Empleado)
         {
-            TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            EstatusEmpleado = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 7, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+            TipoNomina = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 6, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion", Empleado.TipoNomina);
+            EstatusEmpleado = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 7, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion", Empleado.IdEstatus);
 
-            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre");
-            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre");
-            Sociedades = new SelectList(darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList(), "IdSociedad", "Descripcion");
+            Departamentos = new SelectList(darkManager.Departamento.Get().OrderBy(a => a.Nombre).ToList(), "IdDepartamento", "Nombre", Empleado.IdDepartamento);
+            Puestos = new SelectList(darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList(), "IdPuesto", "Nombre", Empleado.IdPuesto);
+            Sociedades = new SelectList(darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList(), "IdSociedad", "Descripcion", Empleado.IdSociedad);
             ViewData["TipoNomina"] = TipoNomina;
             ViewData["EstatusEmpleado"] = EstatusEmpleado;
             ViewData["Departamentos"] = Departamentos;
@@ -118,7 +135,22 @@ namespace GestionEmpleadol.Controllers
                 {
                     return PartialView(Empleado);
                 }
-
+                if (Empleado.NumeroNomina == 0)
+                {
+                    int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "TipoNomina", Empleado.TipoNomina + "");
+                    Empleado.NumeroNomina = max + 1;
+                }
+                else
+                {
+                    var emple = darkManager.Empleado.GetByColumn( Empleado.NumeroNomina + "", "NumeroNomina");
+                    if (emple != null && emple.IdEmpleado != Empleado.IdEmpleado)
+                    {
+                        int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "TipoNomina", Empleado.TipoNomina + "");
+                        ModelState.AddModelError("NumeroNomina", string.Format("El número de nomina '{0}' ya esta siendo utilizado por otro empleado, número disponible: '{1}'",
+                            Empleado.NumeroNomina, max + 1));
+                        return PartialView(Empleado);
+                    }
+                }
                 darkManager.Empleado.Element = Empleado;
                 darkManager.Empleado.Element.Egreso = DateTime.Now;
                 bool result = darkManager.Empleado.Update();

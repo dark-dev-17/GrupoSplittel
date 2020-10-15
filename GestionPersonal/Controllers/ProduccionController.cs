@@ -86,7 +86,10 @@ namespace GestionPersonal.Controllers
         {
             try
             {
-                ViewData["Empleados"] = ProduccionModCtrl.GetEmpleadosProd();
+                var empleadoEnsambles = ProduccionModCtrl.GetEmpleadosProd();
+                ViewData["Empleados"] = empleadoEnsambles;
+                ViewData["Dias"] = ProduccionModCtrl.GetPreniminaLists(prenomina_Rep, empleadoEnsambles); 
+
                 return View(prenomina_Rep);
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)

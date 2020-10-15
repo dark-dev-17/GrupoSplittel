@@ -1,0 +1,56 @@
+﻿@model IEnumerable<GPSInformation.Models.Nomina>
+
+@{
+    ViewData["Title"] = "Mis nominas";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<table class="table table-condensed table-sm table-hover display compact">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Folio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaInicialPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaFinalPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalNeto)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Folio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaInicialPago)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaFinalPago)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaPago)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalNeto)
+            </td>
+            <td>
+                @Html.ActionLink("PDF", "GetByRFC_Id", new { Type = "PDF", id = item.Folio }, new { title="Descargar PDF" }) |
+                @Html.ActionLink("XML", "GetByRFC_Id", new { Type = "XML", id = item.Folio }, new { title = "Descargar XML" }) 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

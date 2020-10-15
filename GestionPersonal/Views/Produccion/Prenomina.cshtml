@@ -5,6 +5,7 @@
     int Indice = 0;
 
     List<GPSInformation.Views.View_empleadoEnsamble> view_Empleados = (List<GPSInformation.Views.View_empleadoEnsamble>)ViewBag.Empleados;
+    List<GPSInformation.Controllers.PrenominaDias> Dias = (List<GPSInformation.Controllers.PrenominaDias>)ViewBag.Dias;
     CultureInfo cul = CultureInfo.CurrentCulture;
 
     var firstDayWeek = cul.Calendar.GetWeekOfYear(Model.Inicio, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
@@ -81,7 +82,9 @@
                     }
                     @while (InitialDate <= Model.Fin)
                     {
-                <th class="@Html.Raw((InitialDate.DayOfWeek == DayOfWeek.Saturday || InitialDate.DayOfWeek == DayOfWeek.Sunday) ? "bg-success small" : "small" )">@Html.Raw(InitialDate.ToString("ddd - dd"))</th>
+                        <th class="@Html.Raw((InitialDate.DayOfWeek == DayOfWeek.Saturday || InitialDate.DayOfWeek == DayOfWeek.Sunday) ? "bg-success small" : "small" )">
+                            @Html.Raw(InitialDate.ToString("ddd - dd"))
+                        </th>
                         InitialDate = InitialDate.AddDays(1);
                     }
                 </tr>
@@ -89,19 +92,67 @@
             <tbody>
                 @foreach (var item in view_Empleados)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.NumeroNomina)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.NombreCompleto)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PuestoNombre)
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumeroNomina)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreCompleto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PuestoNombre)
+                    </td>
+                    @{
+                        InitialDate = Model.Inicio;
+                    }
+                    @while (InitialDate <= Model.Fin)
+                    {
+
+                        @if (InitialDate.DayOfWeek != DayOfWeek.Saturday && InitialDate.DayOfWeek != DayOfWeek.Sunday)
+                        {
+                            List<GPSInformation.Controllers.PreniminaList> Lista = Dias.Find(a => a.IdPersona == item.IdPersona).Dias;
+                            GPSInformation.Controllers.PreniminaList dia = Lista.Find(a => a.Fecha == InitialDate);
+
+                            @if (dia != null)
+                            {
+                                @if (dia.Incidencias.Count > 0)
+                                {
+                                    @foreach (var reg in dia.Incidencias)
+                                    {
+                                        <td style="background-color: @reg.Color; color: @reg.TextColor" title="@reg.Title">
+                                            @if (reg.Clave == "FAL" || reg.Clave == "SNJ")
+                                            {
+                                                <a style="color: @reg.TextColor; text-decoration: none" href="#modalActividadVacacionesPeriodos" data-toggle="modal" v-on:click="JustificarModal('@item.IdPersona','@InitialDate.ToString("yyyy-MM-dd")')" title="@reg.Title">@reg.Clave</a>
+                                            }
+                                            else
+                                            {
+                                                @reg.Clave
+                                            }
+                                        </td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td>
+                                        
+                                    </td>
+                                }
+
+                            }
+                            else
+                            {
+                                <td>
+                                    
+                                </td>
+                            }
+                        }
+                        else
+                        {
+                            <td class="bg-success"></td>
+                        }
+                        InitialDate = InitialDate.AddDays(1);
+                    }
+                </tr>
                 }
             </tbody>
         </table>
