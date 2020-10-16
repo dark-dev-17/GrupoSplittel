@@ -33,13 +33,20 @@
             <div class="col-sm-4">
                 <input asp-for="Activo" placeholder="Nombre" class="form-control" />
                 <span asp-validation-for="Activo" class="text-danger"></span>
-            </div> 
+            </div>
             <label asp-for="IdRol" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
                 <select asp-for="IdRol" asp-items="ViewBag.Roles" class="form-control select2">
                     <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="IdRol" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="EnviarCorreo" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input asp-for="EnviarCorreo" placeholder="Nombre" class="form-control" />
+                <span asp-validation-for="EnviarCorreo" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row mg-b-0">

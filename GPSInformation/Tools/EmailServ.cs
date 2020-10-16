@@ -113,7 +113,7 @@ namespace GPSInformation.Tools
 
             GetEmails(correos).ForEach(a =>
             {
-                if (IsValidEmail(a))
+                if (!IsValidEmail(a))
                     throw new Exceptions.GpExceptions(string.Format("El correo '{0}' no es valido para destinatario", a));
                 ListReply.Add(a);
             });
@@ -126,7 +126,7 @@ namespace GPSInformation.Tools
 
             GetEmails(correos).ForEach(a =>
             {
-                if (IsValidEmail(a))
+                if (!IsValidEmail(a))
                     throw new Exceptions.GpExceptions(string.Format("El correo '{0}' no es valido para destinatario", a));
                 ListBCC.Add(a);
             });
@@ -139,7 +139,7 @@ namespace GPSInformation.Tools
 
             GetEmails(correos).ForEach(a =>
             {
-                if (IsValidEmail(a))
+                if (!IsValidEmail(a))
                     throw new Exceptions.GpExceptions(string.Format("El correo '{0}' no es valido para destinatario", a));
                 ListCC.Add(a);
             });
@@ -152,7 +152,7 @@ namespace GPSInformation.Tools
 
             GetEmails(correos).ForEach(a =>
             {
-                if (IsValidEmail(a))
+                if (!IsValidEmail(a))
                     throw new Exceptions.GpExceptions(string.Format("El correo '{0}' no es valido para destinatario", a));
                 ListTo.Add(a);
             });

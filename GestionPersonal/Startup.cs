@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionPersonal.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -54,7 +55,7 @@ namespace GestionPersonal
                 options.Cookie.IsEssential = true;
 
             });
-
+            services.AddScoped<IViewRenderService, ViewRenderService>();
             services.AddSingleton<IConfiguration>(Configuration);
 
 

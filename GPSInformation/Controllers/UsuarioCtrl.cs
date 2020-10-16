@@ -1,8 +1,10 @@
 ﻿using GPSInformation.Models;
+using GPSInformation.Reportes;
 using GPSInformation.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Web.Mvc;
 
@@ -46,6 +48,36 @@ namespace GPSInformation.Controllers
         #endregion
 
         #region Metodos
+
+        public Usuario GetUsuario(int IdPersona)
+        {
+            return darkManager.Usuario.GetByColumn("" + IdPersona, nameof(darkManager.Usuario.Element.IdPersona));
+        }
+        public UsuarioRe GetUsuarioRe(int IdPersona)
+        {
+            return new UsuarioRe
+            {
+                Usuario = darkManager.Usuario.GetByColumn("" + IdPersona, nameof(darkManager.Usuario.Element.IdPersona)),
+                view_Empleado = darkManager.View_empleado.GetByColumn("" + IdPersona, nameof(darkManager.Usuario.Element.IdPersona)),
+            };
+        }
+
+        public bool SendEmail(UsuarioRe usuarioRe, string Body)
+        {
+            try
+            {
+                // enviar corrreo al usuario
+                darkManager.EmailServ_.AddListTO(usuarioRe.view_Empleado.Correo);
+                //agregar correos de gps
+                // enter code here
+                darkManager.EmailServ_.Send(Body, "Bienvenido a GPS");
+                return true;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
+        }
 
         public void AddUsuario(Usuario Usuario)
         {

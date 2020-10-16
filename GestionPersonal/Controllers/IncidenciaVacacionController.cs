@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using GestionPersonal.Models;
+using GestionPersonal.Service;
 using GPSInformation;
 using GPSInformation.Controllers;
 using GPSInformation.Exceptions;
 using GPSInformation.Models;
+using GPSInformation.Reportes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,8 +19,8 @@ namespace GestionPersonal.Controllers
     public class IncidenciaVacacionController : Controller
     {
         private DarkManager darkManager;
-
-        public IncidenciaVacacionController(IConfiguration configuration)
+        private readonly IViewRenderService _viewRenderService;
+        public IncidenciaVacacionController(IConfiguration configuration, IViewRenderService viewRenderService)
         {
             darkManager = new DarkManager(configuration);
             darkManager.OpenConnection();
@@ -28,12 +31,27 @@ namespace GestionPersonal.Controllers
             darkManager.LoadObject(GpsManagerObjects.VacionesPeriodo);
             darkManager.LoadObject(GpsManagerObjects.VacacionesDiasRegla);
             darkManager.LoadObject(GpsManagerObjects.Empleado);
+            darkManager.LoadObject(GpsManagerObjects.View_empleado);
+            _viewRenderService = viewRenderService;
         }
 
         ~IncidenciaVacacionController()
         {
 
         }
+
+        [AccessMultipleView(IdAction = new int[] { 30 })]
+        public ActionResult DetailsEmail(int id)
+        {
+            IncidenciaVacaRe incidenciaVacaRe = new IncidenciaVacaRe();
+            incidenciaVacaRe.IncidenciaVacacion = darkManager.IncidenciaVacacion.Get(id);
+            incidenciaVacaRe.view_Empleado = darkManager.View_empleado.Get(incidenciaVacaRe.IncidenciaVacacion.IdPersona);
+            incidenciaVacaRe.IncidenciaVacacion.Proceso = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+            
+
+            return View(incidenciaVacaRe);
+        }
+
         // GET: IncidenciaVacacion
         public ActionResult Index()
         {
@@ -64,7 +82,7 @@ namespace GestionPersonal.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessMultipleView(IdAction = new int[] { 30 })]
-        public ActionResult Create(IncidenciaVacacion IncidenciaVacacion)
+        public async Task<ActionResult> Create(IncidenciaVacacion IncidenciaVacacion)
         {
             try
             {
@@ -108,8 +126,10 @@ namespace GestionPersonal.Controllers
                 darkManager.IncidenciaVacacion.Element.Creado = DateTime.Now;
                 if (darkManager.IncidenciaVacacion.Add())
                 {
-                    AddSteps(darkManager.IncidenciaVacacion.Get(darkManager.IncidenciaVacacion.GetLastId(nameof(darkManager.IncidenciaVacacion.Element.IdPersona), IncidenciaVacacion.IdPersona + "")));
-
+                    int last = darkManager.IncidenciaVacacion.GetLastId(nameof(darkManager.IncidenciaVacacion.Element.IdPersona), IncidenciaVacacion.IdPersona + "");
+                    AddSteps(darkManager.IncidenciaVacacion.Get(last));
+                    await SendEmailAsync(1, last);
+                    await SendEmailAsync(2, last);
                     return RedirectToAction(nameof(Index), "Incidencia", new { Id = IncidenciaVacacion.IdPersona });
                 }
                 else
@@ -416,6 +436,65 @@ namespace GestionPersonal.Controllers
             VacacionesCtrl vacacionesCtrl = new VacacionesCtrl((int)HttpContext.Session.GetInt32("user_id"),darkManager);
             vacacionesCtrl.ProcPeridosVac((int)HttpContext.Session.GetInt32("user_id"));
             return Ok("asasdasdasdasda");
+        }
+
+        private async Task SendEmailAsync(int mode, int id)
+        {
+            try
+            {
+                IncidenciaVacaRe incidenciaVacaRe = new IncidenciaVacaRe();
+                incidenciaVacaRe.IncidenciaVacacion = darkManager.IncidenciaVacacion.Get(id);
+                incidenciaVacaRe.view_Empleado = darkManager.View_empleado.Get(incidenciaVacaRe.IncidenciaVacacion.IdPersona);
+
+                if (mode == 1)
+                {
+                    darkManager.LoadObject(GpsManagerObjects.OrganigramaVersion);
+                    darkManager.LoadObject(GpsManagerObjects.OrganigramaStructura);
+                    //nivel 1
+                    var resultOrgActive = darkManager.OrganigramaVersion.GetByColumn("" + 2, "Autirizada");
+                    if (resultOrgActive != null)
+                    {
+                        var ResultStructura = darkManager.OrganigramaStructura.Get(
+                            "" + resultOrgActive.IdOrganigramaVersion,
+                            "IdOrganigramaVersion").Find(a => a.IdPuesto == incidenciaVacaRe.view_Empleado.IdPuesto);
+
+                        if (ResultStructura != null)
+                        {
+                            //extrar jefe del empleado
+                            darkManager.View_empleado.Get("" + ResultStructura.IdPuestoParent, "IdPuesto").ForEach(a => {
+                                darkManager.EmailServ_.AddListTO(a.Correo);
+                            });
+                        }
+                        var result = await _viewRenderService.RenderToStringAsync("IncidenciaVacacion/DetailsEmail", incidenciaVacaRe);
+                        darkManager.EmailServ_.Send(result, "Nuevas vacaciones - Aprobación N1");
+                        darkManager.RestartEmail();
+                    }
+                }
+                else
+                { 
+                    //nivel 2
+                    darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
+                    darkManager.LoadObject(GpsManagerObjects.Usuario);
+                    darkManager.AccesosSistema.Get("36", "IdSubModulo").Where(a => a.TieneAcceso).ToList().ForEach(a => {
+                        darkManager.View_empleado.Get("" + darkManager.Usuario.Get(a.IdUsuario).IdPersona, "IdPersona").ForEach(b => {
+                            darkManager.EmailServ_.AddListTO(b.Correo);
+                        });
+                    });
+                    incidenciaVacaRe.ModeAmin = true;
+                    var result = await _viewRenderService.RenderToStringAsync("IncidenciaVacacion/DetailsEmail", incidenciaVacaRe);
+                    darkManager.EmailServ_.Send(result, "Nuevas vacaciones - Aprobación N2");
+                    darkManager.RestartEmail();
+                }
+            }
+            catch (SmtpException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
     }
 }

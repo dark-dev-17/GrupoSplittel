@@ -44,5 +44,8 @@ namespace GPSInformation.Models
 
         [ColumnDB(IsMapped = true, IsKey = false)]
         public bool ImagenDefault { get; set; }
+
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public bool EnviarCorreo { get; set; }
     }
 }

@@ -15,6 +15,8 @@ using GPSInformation.Controllers;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using GPSInformation.Exceptions;
+using GestionPersonal.Service;
+using System.Net;
 
 namespace GestionPersonal.Controllers
 {
@@ -34,9 +36,10 @@ namespace GestionPersonal.Controllers
         private SelectList Personas;
         private readonly IHostingEnvironment _environment;
         private UsuarioCtrl usuarioCtrl;
+        private readonly IViewRenderService _viewRenderService;
 
 
-        public UsuarioController(IConfiguration configuration, IHostingEnvironment IHostingEnvironment)
+        public UsuarioController(IConfiguration configuration, IHostingEnvironment IHostingEnvironment, IViewRenderService viewRenderService)
         {
             darkManager = new DarkManager(configuration);
             //darkManager.OpenConnection();
@@ -53,6 +56,7 @@ namespace GestionPersonal.Controllers
             //darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
             usuarioCtrl = new UsuarioCtrl(darkManager);
             _environment = IHostingEnvironment;
+            _viewRenderService = viewRenderService;
         }
 
         [AccessView]
@@ -142,6 +146,8 @@ namespace GestionPersonal.Controllers
         [AccessMultipleView(IdAction = new int[] { 20 })]
         public IActionResult Create(int id)
         {
+            Personas = GetDictionary(1018, 0);
+            ViewData["Roles"] = Personas;
             var usuario = darkManager.Usuario.GetByColumn(""+  id, "IdPersona");
             if(usuario is null)
             {
@@ -162,7 +168,7 @@ namespace GestionPersonal.Controllers
         [AccessMultipleView(IdAction = new int[] { 20 })]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Usuario Usuario)
+        public async Task<IActionResult> Create(Usuario Usuario)
         {
 
             Personas = GetDictionary(1018, 0);
@@ -180,6 +186,16 @@ namespace GestionPersonal.Controllers
                     return View(Usuario);
                 }
                 usuarioCtrl.AddUsuario(Usuario);
+                if (Usuario.EnviarCorreo)
+                {
+                    var us_re = usuarioCtrl.GetUsuarioRe(Usuario.IdPersona);
+                    us_re.Ipserver = HttpContext.Connection.LocalIpAddress?.ToString();
+                    us_re.Port = HttpContext.Connection.LocalPort.ToString();
+                    var result = await _viewRenderService.RenderToStringAsync("Usuario/DetailsEmail", us_re);
+                    usuarioCtrl.SendEmail(us_re, result);
+                }
+
+
                 return RedirectToAction(nameof(Index),"Empleado");
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
@@ -205,11 +221,17 @@ namespace GestionPersonal.Controllers
         }
 
         [AccessMultipleView(IdAction = new int[] { 20 })]
+        public IActionResult DetailsEmail(int id)
+        {
+            return View(usuarioCtrl.GetUsuarioRe(id));
+        }
+
+        [AccessMultipleView(IdAction = new int[] { 20 })]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Usuario Usuario)
+        public async Task<IActionResult> Edit(Usuario Usuario)
         {
-            Personas = GetDictionary(1018, 0);
+            Personas = GetDictionary(1018, Usuario.IdRol);
             ViewData["Roles"] = Personas;
 
             try
@@ -224,6 +246,18 @@ namespace GestionPersonal.Controllers
                     return View(Usuario);
                 }
                 usuarioCtrl.AddUsuario(Usuario);
+
+
+                if (Usuario.EnviarCorreo)
+                {
+                    var us_re = usuarioCtrl.GetUsuarioRe(Usuario.IdPersona);
+                    us_re.Ipserver = HttpContext.Connection.LocalIpAddress?.ToString();
+                    us_re.Port = HttpContext.Connection.LocalPort.ToString();
+                    var result = await _viewRenderService.RenderToStringAsync("Usuario/DetailsEmail", us_re);
+                    usuarioCtrl.SendEmail(us_re,result);
+                }
+
+
                 return RedirectToAction(nameof(Index), "Empleado");
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)

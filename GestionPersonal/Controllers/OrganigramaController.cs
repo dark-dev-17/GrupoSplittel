@@ -116,7 +116,7 @@ namespace GestionPersonal.Controllers
             darkManager.OrganigramaStructura.Element.DPU = puestoChild.DPU;
             darkManager.OrganigramaStructura.Element.Descripcion = puestoChild.Descripcion;
 
-            if(darkManager.OrganigramaStructura.Get("" + IdPuesto, "IdPuesto").Count > 0)
+            if(darkManager.OrganigramaStructura.Get("IdPuesto", "" + IdPuesto, "IdOrganigramaVersion", IdVersion+"") != null)
             {
                 return BadRequest("ya existe este puesto en el organigrama");
             }

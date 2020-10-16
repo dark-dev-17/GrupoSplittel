@@ -88,20 +88,20 @@ namespace GestionPersonal.Controllers
         // POST: AccesoSistema/Edit/5
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult EditPermissions([FromBody]UsuarioPermisos modulos)
+        public ActionResult EditPermissions([FromBody] UsuarioPermisos modulos)
         {
             try
             {
                 var accesos = darkManager.AccesosSistema.Get("" + modulos.IdPersonaUser, nameof(darkManager.AccesosSistema.Element.IdUsuario));
                 // TODO: Add update logic here
-                modulos.Modulos.ForEach(a => 
+                modulos.Modulos.ForEach(a =>
                 {
                     a.SubModulos.ForEach(b =>
                     {
                         b.AccesosSistema.Modificado = DateTime.Now;
                         darkManager.AccesosSistema.Element = b.AccesosSistema;
 
-                        if(accesos.Find(c => c.IdSubModulo == b.IdSubModulo) == null)
+                        if (accesos.Find(c => c.IdSubModulo == b.IdSubModulo) == null)
                         {
                             if (!darkManager.AccesosSistema.Add())
                             {
@@ -119,7 +119,7 @@ namespace GestionPersonal.Controllers
                 });
                 return Ok("Permisos guardados");
             }
-            catch(GPSInformation.Exceptions.GpExceptions ex)
+            catch (GPSInformation.Exceptions.GpExceptions ex)
             {
                 return BadRequest(ex.Message);
             }

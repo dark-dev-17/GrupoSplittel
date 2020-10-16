@@ -18,7 +18,7 @@ namespace GestionPersonal.Models
         public int[] IdAction { get; set; }
         public AccessDataSession()
         {
-            darkManager = new DarkManager("Data Source=192.168.31.29;User ID=sa;Password=C0nnect+1;Initial Catalog=GestionPersonal; Integrated Security=false; Connect timeout=30;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
+            darkManager = new DarkManager("Data Source=192.168.2.21;User ID=infra;Password=SAPca+Ah*76U19$*;Initial Catalog=GestionPersonal; Integrated Security=false; Connect timeout=60;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
            
         }
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -72,7 +72,7 @@ namespace GestionPersonal.Models
 
         public AccessMultipleView()
         {
-            darkManager = new DarkManager("Data Source=192.168.31.29;User ID=sa;Password=C0nnect+1;Initial Catalog=GestionPersonal; Integrated Security=false; Connect timeout=30;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
+            darkManager = new DarkManager("Data Source=192.168.2.21;User ID=infra;Password=SAPca+Ah*76U19$*;Initial Catalog=GestionPersonal; Integrated Security=false; Connect timeout=60;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
             //darkManager.OpenConnection();
             //darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
         }
@@ -127,7 +127,7 @@ namespace GestionPersonal.Models
 
         public AccessView()
         {
-            darkManager = new DarkManager("Data Source=192.168.31.29;User ID=sa;Password=C0nnect+1;Initial Catalog=GestionPersonal; Integrated Security=false; Connect timeout=30;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
+            darkManager = new DarkManager("Data Source=192.168.2.21;User ID=infra;Password=SAPca+Ah*76U19$*;Initial Catalog=GestionPersonal; Integrated Security=false; Connect timeout=60;Encrypt=False;TrustServerCertificate=false;ApplicationIntent=ReadWrite;MultiSubnetfailover=False");
             //darkManager.OpenConnection();
             //darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
         }

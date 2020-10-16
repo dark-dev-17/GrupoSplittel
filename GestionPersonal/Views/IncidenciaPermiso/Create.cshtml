@@ -37,7 +37,7 @@
             <div class="form-group row">
                 <label asp-for="IdAsunto" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
-                    <select asp-for="IdAsunto" asp-items="ViewBag.TiposPermisos" v-on:change="ValidateForm()" class="form-control select2">
+                    <select asp-for="IdAsunto" asp-items="ViewBag.TiposPermisos" onchange="app_createPermiso.ValidateForm()" class="form-control select2">
                         <option value="0">Selecciona una opción</option>
                     </select>
                     <span asp-validation-for="IdAsunto" class="text-danger"></span>

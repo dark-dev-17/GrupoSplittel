@@ -69,6 +69,9 @@ namespace GPSInformation
         public virtual DarkAttributes<EnsablesTurnos> EnsablesTurnos { get; set; }
         public virtual DarkAttributes<Nomina> Nomina { get; set; }
 
+
+        private string CorreosBCC { get; set; }
+
         #endregion
 
         #region Constructtores
@@ -76,16 +79,16 @@ namespace GPSInformation
         {
             this.StringConnectionDb = Configuration.GetConnectionString("Default");
             this.DefaultAccess = Configuration.GetConnectionString("DefaultAccess");
-            Server = Configuration.GetSection("Ftp").GetSection("Server").Value;
-            Port = Configuration.GetSection("Ftp").GetSection("Server").Value;
-            From = Configuration.GetSection("Ftp").GetSection("Server").Value;
-            User = Configuration.GetSection("Ftp").GetSection("Server").Value;
-            Password = Configuration.GetSection("Ftp").GetSection("Server").Value;
-            UserSSL = Configuration.GetSection("Ftp").GetSection("Server").Value == "true" ? true : false;
+            Server = Configuration.GetSection("Smtp").GetSection("Server").Value;
+            Port = Configuration.GetSection("Smtp").GetSection("Port").Value;
+            From = Configuration.GetSection("Smtp").GetSection("account").Value;
+            User = Configuration.GetSection("Smtp").GetSection("User").Value;
+            Password = Configuration.GetSection("Smtp").GetSection("Password").Value;
+            UserSSL = Configuration.GetSection("Smtp").GetSection("Ssl").Value == "true" ? true : false;
 
-
+            CorreosBCC = Configuration.GetSection("Smtp").GetSection("Bcc").Value;
             EmailServ_ = new EmailServ(Server, From,Port,User,Password,UserSSL);
-
+            EmailServ_.AddListBCC(CorreosBCC);
         }
         public DarkManager(string DBconnection)
         {
@@ -98,6 +101,11 @@ namespace GPSInformation
         #endregion
 
         #region Base de datos
+        public void RestartEmail()
+        {
+            EmailServ_ = new EmailServ(Server, From, Port, User, Password, UserSSL);
+            EmailServ_.AddListBCC(CorreosBCC);
+        }
         public string GetLastMessage()
         {
             return dBConnection.mensaje;
