@@ -68,6 +68,8 @@ namespace GPSInformation
         public virtual DarkAttributes<View_empleadoEnsamble> View_empleadoEnsamble { get; set; }
         public virtual DarkAttributes<EnsablesTurnos> EnsablesTurnos { get; set; }
         public virtual DarkAttributes<Nomina> Nomina { get; set; }
+        public virtual DarkAttributes<InformacionCompania> InformacionCompania { get; set; }
+        public virtual DarkAttributes<EmpleadoContrato> EmpleadoContrato { get; set; }
 
 
         private string CorreosBCC { get; set; }
@@ -285,6 +287,14 @@ namespace GPSInformation
             {
                 Nomina = new DarkAttributes<Nomina>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.InformacionCompania)
+            {
+                InformacionCompania = new DarkAttributes<InformacionCompania>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.EmpleadoContrato)
+            {
+                EmpleadoContrato = new DarkAttributes<EmpleadoContrato>(dBConnection);
+            }
         }
         public void OpenConnection()
         {
@@ -379,5 +389,7 @@ namespace GPSInformation
         View_empleadoEnsamble = 42,
         EnsablesTurnos = 43,
         Nomina = 44,
+        InformacionCompania = 45,
+        EmpleadoContrato = 46,
     }
 }

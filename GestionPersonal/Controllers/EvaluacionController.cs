@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionPersonal.Models;
+using GestionPersonal.Service;
 using GPSInformation;
 using GPSInformation.Controllers;
 using GPSInformation.Exceptions;
 using GPSInformation.Models;
+using GPSInformation.Reportes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,10 +19,11 @@ namespace GestionPersonal.Controllers
     public class EvaluacionController : Controller
     {
         private EvaluacionCtrl EvaluacionCtrl;
+        private readonly IViewRenderService _viewRenderService;
 
-        public EvaluacionController(IConfiguration configuration)
+        public EvaluacionController(IConfiguration configuration, IViewRenderService viewRenderService)
         {
-            //int IdUserLog = (int)HttpContext.Session.GetInt32("user_id");
+            _viewRenderService = viewRenderService;
             EvaluacionCtrl = new EvaluacionCtrl(new DarkManager(configuration));
         }
 
@@ -51,6 +54,22 @@ namespace GestionPersonal.Controllers
                 ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto");
                 
                 return View(EvaluacionCtrl.Get(id));
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return View(ex.Message);
+            }
+        }
+
+        public ActionResult EmailDetails(int id, int IdPersona)
+        {
+            try
+            {
+                return View(new EvaluacionEmpleados
+                {
+                    View_empleado = EvaluacionCtrl.GetEmpleado(IdPersona),
+                    Evaluacion = EvaluacionCtrl.Get(id)
+                });
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
@@ -154,7 +173,7 @@ namespace GestionPersonal.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AccessMultipleView(IdAction = new int[] { 37 })]
-        public ActionResult AddParticipante(EvaluacionEmpleado evaluacionEmpleado)
+        public async Task<ActionResult> AddParticipante(EvaluacionEmpleado evaluacionEmpleado)
         {
             try
             {
@@ -164,6 +183,14 @@ namespace GestionPersonal.Controllers
                 }
 
                 EvaluacionCtrl.AddParticupante(evaluacionEmpleado);
+
+                var result = await _viewRenderService.RenderToStringAsync("Evaluacion/EmailDetails", new EvaluacionEmpleados
+                {
+                    View_empleado = EvaluacionCtrl.GetEmpleado(evaluacionEmpleado.IdPersona),
+                    Evaluacion = EvaluacionCtrl.Get(evaluacionEmpleado.IdEvaluacion)
+                });
+                EvaluacionCtrl.EnviarCorreo(result, evaluacionEmpleado.IdEvaluacion, evaluacionEmpleado.IdPersona);
+
                 return RedirectToAction(nameof(Details), new { id = evaluacionEmpleado.IdEvaluacion});
             }
             catch (GpExceptions ex)

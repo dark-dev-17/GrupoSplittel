@@ -1,0 +1,88 @@
+﻿@model IEnumerable<GPSInformation.Models.EmpleadoContrato>
+
+@{
+    ViewData["Title"] = "Lista de contratos";
+}
+
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <h2 class="tx-15 mg-b-0"></h2>
+        <a href="@Url.Action("Create","Contrato", new { id = ViewBag.IdPersona })"  class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+    </div>
+</div>
+<hr />
+@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = ViewBag.IdPersona })
+<hr />
+<table class="table table-sm">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Inicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fin)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.Tipo == 1)
+                    {
+                        @Html.DisplayFor(modelItem => item.Inicio)
+                    }
+                    else
+                    {
+                        <span>--</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Tipo == 1)
+                    {
+                        @Html.DisplayFor(modelItem => item.Fin)
+                    }
+                    else
+                    {
+                        <span>--</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Tipo == 1)
+                    {
+                        <span>Determinado</span>
+                    }
+                    else
+                    {
+                        <span>Indeterminado</span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @if (item.Tipo == 1)
+                    {
+                        @Html.ActionLink("Ver", "Determinado", new { id=item.IdEmpleadoContrato  }, new { title = "Ver PDF del contrato" , target= "_blank"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Ver", "Indeterminado", new { id=item.IdEmpleadoContrato }, new { title = "Ver PDF del contrato", target = "_blank" })
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

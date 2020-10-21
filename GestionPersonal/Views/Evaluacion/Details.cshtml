@@ -99,7 +99,7 @@
                 <tr>
                     <td>@emp.EmpleadoDatos.NombreCompleto</td>
                     <td>@emp.EmpleadoDatos.Correo</td>
-                    <td>@emp.EmpleadoDatos.Antiguedad</td>
+                    <td>@emp.EmpleadoDatos.Antiguedad.ToString("0.0 año(s)")</td>
                     <td>
                         @if (@emp.Respondio)
                         {
@@ -132,7 +132,7 @@
                         <div class="form-group">
                             <label>Empleado</label>
                             <input type="hidden" name="IdEvaluacion" value="@Model.IdEvaluacion" />
-                            <select name="IdPersona" asp-items="ViewBag.Empleados" class="form-control">
+                            <select name="IdPersona" asp-items="ViewBag.Empleados" class="form-control select2">
                                 <option value="0">Selecciona una opción</option>
                             </select>
                         </div>
@@ -149,7 +149,6 @@
     </div><!-- modal-dialog -->
 </div><!-- modal -->
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     <a asp-action="Index">Back to List</a>
 </div>
 @section Scripts {

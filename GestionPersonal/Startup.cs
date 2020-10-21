@@ -91,6 +91,10 @@ namespace GestionPersonal
                     name: "default",
                     template: "{controller=Login}/{action=DoLogin}/{id?}");
             });
+
+            // Configuramos Rotativa indicándole el Path RELATIVO donde se
+            // encuentran los archivos de la herramienta wkhtmltopdf.
+            Rotativa.AspNetCore.RotativaConfiguration.Setup(env);
         }
     }
 }

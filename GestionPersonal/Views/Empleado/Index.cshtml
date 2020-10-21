@@ -34,6 +34,7 @@
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.IdPersona })|
                 @Html.ActionLink("Acceso", "Create","Usuario", new { id = item.IdPersona })|
+                @Html.ActionLink("Contrato", "Index", "Contrato", new { id = item.IdPersona })|
                 @Html.ActionLink("Expediente", "Expediente", "Expediente", new { id = item.IdPersona })
             </td>
         </tr>

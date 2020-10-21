@@ -488,11 +488,11 @@ namespace GestionPersonal.Controllers
             }
             catch (SmtpException ex)
             {
-                throw;
+                //throw;
             }
             catch (Exception ex)
             {
-                throw;
+                //throw;
             }
 
         }

@@ -4,11 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using GestionPersonal.Models;
 using GPSInformation;
+using GPSInformation.Controllers;
 using GPSInformation.Models;
+using GPSInformation.Reportes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
+using MySqlX.XDevAPI.Common;
+using Rotativa.AspNetCore;
 
 namespace GestionPersonal.Controllers
 {
@@ -45,6 +49,8 @@ namespace GestionPersonal.Controllers
         {
 
         }
+
+        
 
         // GET: Empleado
         [AccessMultipleView(IdAction = new int[] { 19,20 })]

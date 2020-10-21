@@ -3,6 +3,8 @@ using GPSInformation.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace GPSInformation.Controllers
@@ -53,6 +55,10 @@ namespace GPSInformation.Controllers
         public IEnumerable<View_empleado> GetEmpleados()
         {
             return darkManager.View_empleado.Get().Where(a => a.IdEstatus == 19 || a.IdEstatus == 18).OrderBy(a => a.NombreCompleto);
+        }
+        public View_empleado GetEmpleado(int idPersona)
+        {
+            return darkManager.View_empleado.Get(idPersona);
         }
         public IEnumerable<EvaluacionEmpleado> GetParticipantes(int IdEvaluacion)
         {
@@ -208,6 +214,29 @@ namespace GPSInformation.Controllers
                 throw ex;
             }
         }
+
+
+        public void EnviarCorreo(string body, int IdEvaluacion, int IdPersona )
+        {
+            try
+            {
+                var Evaluacion_re = darkManager.Evaluacion.Get(IdEvaluacion);
+                var Emplead_re = darkManager.View_empleado.Get(Evaluacion_re.IdPersona);
+                darkManager.EmailServ_.AddListTO(Emplead_re.Correo);
+                darkManager.EmailServ_.Send(body, string.Format("Evaluacion: {0}", Evaluacion_re.Nombre));
+                darkManager.RestartEmail();
+            }
+            catch (SmtpException ex)
+            {
+                //throw;
+            }
+            catch (Exception ex)
+            {
+                //throw;
+            }
+        }
+
+
         public void DeleteParticupante(EvaluacionEmpleado evaluacionEmpleado)
         {
             darkManager.StartTransaction();

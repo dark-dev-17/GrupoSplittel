@@ -1,0 +1,42 @@
+﻿@model GPSInformation.Models.EmpleadoContrato
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div data-label="Crear nueva evaluación" class="df-example demo-forms" id="app_createPermiso">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <label asp-for="Tipo" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input type="hidden" asp-for="IdPersona" class="form-control" />
+                <select asp-for="Tipo" class="form-control">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">Determinado</option>
+                    <option value="2">Indeterminado</option>
+                </select>
+                <span asp-validation-for="Tipo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="Inicio" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input type="date" asp-for="Inicio" class="form-control" />
+                <span asp-validation-for="Inicio" class="text-danger"></span>
+            </div>
+            <label asp-for="Fin" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input type="date" asp-for="Fin" class="form-control" />
+                <span asp-validation-for="Fin" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row mg-b-0">
+            <div class="col-sm-12 text-right">
+                <a href="@Url.Action("Index","Contrato", new { id = Model.IdPersona })" class="btn btn-sm btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-sm btn-primary">Guardar evaluación</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+

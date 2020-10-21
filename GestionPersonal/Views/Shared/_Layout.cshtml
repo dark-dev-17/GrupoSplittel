@@ -1,24 +1,39 @@
-﻿<!DOCTYPE html>
-
+﻿@{
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    var controllerAction = this.ViewContext.RouteData.Values["action"].ToString();
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title | Gestión de personal</title>
-    <environment include="Development">
-        <partial name="_Styles"/>
-    </environment>
-    <environment exclude="Development">
-        <partial name="./_Styles" />
-    </environment>
+    @if (controllerName == "Contrato" && controllerAction == "Determinado" || controllerName == "Contrato" && controllerAction == "Indeterminado" || controllerName == "Evaluacion" && controllerAction == "EmailDetails")
+    {
+<style>
+            @@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+    @@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+body {
+    font-family: "Roboto";
+    /*font-family: "Open Sans";*/
+}
+</style>
+    }
+    else
+    {
+        <environment include="Development">
+            <partial name="_Styles" />
+        </environment>
+        <environment exclude="Development">
+            <partial name="./_Styles" />
+        </environment>
 
-    <link href="~/css/site.css" rel="stylesheet" />
+        <link href="~/css/site.css" rel="stylesheet" />
+    }
+
 </head>
 <body class="pos-relative" data-spy="scroll" data-target="#navSection" data-offset="120">
-    @{
-        var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
-        var controllerAction = this.ViewContext.RouteData.Values["action"].ToString();
-    }
-    @if (controllerName == "Login")
+
+    @if (controllerName == "Login" || controllerName == "Contrato" && controllerAction == "Determinado" || controllerName == "Contrato" && controllerAction == "Indeterminado" || controllerName == "Evaluacion" && controllerAction == "EmailDetails")
     {
         @RenderBody()
     }

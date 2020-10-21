@@ -1,0 +1,161 @@
+﻿@model GPSInformation.Reportes.ContratoEmp
+
+@{
+    ViewData["Title"] = "Contrato indeterminado: " + Model.Persona.NombreCompelto;
+
+
+    //if (Model.EmpleadoContrato == null)
+    //{
+    //    Model.EmpleadoContrato = new GPSInformation.Models.EmpleadoContrato();
+    //}
+
+    //Model.EmpleadoContrato.Inicio = DateTime.Now;
+    //Model.EmpleadoContrato.Fin = DateTime.Now.AddMonths(6);
+
+    //TimeSpan diferencia = Model.EmpleadoContrato.Fin - Model.EmpleadoContrato.Inicio;
+
+}
+<style>
+
+    .parrafo {
+        padding: 0px;
+        margin: 0px;
+        /*font-family: "Open Sans";*/
+        line-height: 1.5;
+    }
+
+</style>
+<p align="justify" class="parrafo">
+    CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO, que celebran por una parte como PATRÓN: <strong>@Model.InformacionCompania.Nombre</strong>. representada en este acto por el C. <b>@Model.InformacionCompania.Encargado</b>, con domicilio en: <b>@Model.InformacionCompania.Direccion C.P. @Model.InformacionCompania.CodigoPostal</b> y por otra parte, el TRABAJADOR: <b style="text-transform: uppercase;">@Model.Persona.NombreCompelto</b> por su propio derecho, con domicilio en: <b style="text-transform: uppercase;">@Model.InformacionCompania.Direccion C.P. @Model.InformacionCompania.CodigoPostal.</b> quienes se les denominará en el curso del presente contrato "PATRÓN" y "TRABAJADOR", de conformidad con las siguientes declaraciones y cláusulas del presente instrumento.
+</p>
+<br />
+<h3 align="center">DECLARACIONES</h3>
+<br />
+<br />
+<p align="justify" class="parrafo">
+
+    <strong>I.-</strong> Declara la sociedad mercantil denominada @Model.InformacionCompania.Nombre a través de su Representante Legal, el Contador Público @Model.InformacionCompania.Encargado, bajo protesta de decir verdad:
+    <br />
+    <br />
+    <strong>I.1</strong> Ser una Sociedad Mercantil debidamente constituida conforme a las leyes de los Estados Unidos Mexicanos, dedicada a <strong>@Model.InformacionCompania.Enfoque </strong><br />
+    <strong>I.2</strong> Declara el Contador Público @Model.InformacionCompania.Encargado, que las facultades con las que se ostenta no le han sido revocadas o modificadas de forma alguna.<br />
+    <strong>I.3</strong> Que requiere de los servicios del "TRABAJADOR", para desarrollar temporalmente las funciones de <strong>@Model.Puesto.Nombre</strong>, en virtud de las necesidades que en la actualidad tiene "LA EMPRESA" de mano de obra.<br />
+    <strong>I.4</strong> Que el personal que el "PATRÓN" tiene contratado de planta no puede cumplir con las obligaciones establecidas en el presente contrato, dadas las características del mismo.<br />
+    Es por lo anterior, que ambas partes están en todo de acuerdo, que la exposición del motivo descrito en el párrafo que antecede, es considerada suficiente para que se dé por cumplida la exigencia prevista en el artículo 37 fracción I, de la Ley Federal del Trabajo, ya que la Naturaleza del Trabajo y de la Relación Laboral que brinda "EL EMPLEADO" a "LA EMPRESA", existirá mientras dure el proyecto señalado.<br />
+    <strong>I.5</strong> Que como consecuencia de lo manifestado en la Declaración anterior, el "PATRÓN" tiene la necesidad de contratar personal por tiempo y por obra determinada, para llevar a cabo las funciones que más adelante se señalan, durante un período de <strong>@GPSInformation.Tools.Funciones.MonthDifference(Model.EmpleadoContrato.Inicio, Model.EmpleadoContrato.Fin)</strong> meses, el cual iniciará el día <b style="text-transform: uppercase;">@Model.EmpleadoContrato.Inicio.ToString("dd") (@GPSInformation.Tools.Funciones.GetDayName(Model.EmpleadoContrato.Inicio))</b> del mes de <b style="text-transform: uppercase;">        @GPSInformation.Tools.Funciones.GetMotnhName(Model.EmpleadoContrato.Inicio)</b> del año <strong>@Model.EmpleadoContrato.Inicio.ToString("yyyy") (@GPSInformation.Tools.Funciones.Convertir(Model.EmpleadoContrato.Inicio.ToString("yyyy"), true, ""))</strong> y terminará el día <b style="text-transform: uppercase;">@Model.EmpleadoContrato.Fin.ToString("dd") (@GPSInformation.Tools.Funciones.GetDayName(Model.EmpleadoContrato.Fin))</b> del mes de <b style="text-transform: uppercase;">@GPSInformation.Tools.Funciones.GetMotnhName(Model.EmpleadoContrato.Fin)</b> del año <strong> @Model.EmpleadoContrato.Fin.ToString("yyyy") (@GPSInformation.Tools.Funciones.Convertir(Model.EmpleadoContrato.Fin.ToString("yyyy"), true, ""))</strong>.
+    <br />
+    <br />
+    <strong>II.-</strong> Declara el "TRABAJADOR" bajo protesta de decir verdad:
+    <br />
+    <br><strong>II.1.-</strong> Que es una persona física, mayor de edad, de nacionalidad <strong>MEXICANA</strong>, de nombre <b style="text-transform: uppercase;">@Model.Persona.NombreCompelto</b>, nacido el día <b style="text-transform: uppercase;"> @Model.Persona.Nacimiento.ToString("dd") (@GPSInformation.Tools.Funciones.GetDayName(Model.Persona.Nacimiento))</b> del mes de <b style="text-transform: uppercase;">@GPSInformation.Tools.Funciones.GetMotnhName(Model.Persona.Nacimiento)</b> del año <strong> @Model.Persona.Nacimiento.ToString("yyyy") (@GPSInformation.Tools.Funciones.Convertir(Model.Persona.Nacimiento.ToString("yyyy"), true, "")),</strong> de estado civil <b style="text-transform: uppercase;"></b>, domiciliado en calle <b style="text-transform: uppercase;">@Model.Persona.Calle CP: @Model.Persona.CodigoPostal</b> del Fraccionamiento ________________, Santiago de Querétaro, Querétaro.
+
+    <br><strong>II.2.-</strong> Que tiene amplia capacidad, trayectoria profesional y experiencia en el área para la cual fue contratado.
+
+    <br><strong>II.3.-</strong> Que su número de afiliación al Instituto Mexicano del Seguro Social es el <strong>@Model.Persona.NSS</strong>.
+
+    <br><strong>II.4.-</strong> Que no tiene impedimento alguno para celebrar el presente Contrato y obligarse en los términos del mismo.
+
+    <br><strong>II.5.-</strong> Que conoce el sistema de operación del "PATRÓN", así como las necesidades de la misma y está conforme con esta situación.
+    <br />
+    <br><strong>III.-</strong> Declaran ambas partes bajo protesta de decir verdad:
+    <br />
+    <br><strong>III.1.-</strong> Que se reconocen mutua y recíprocamente su capacidad legal para obligarse en los términos del presente Contrato.
+
+    <br><strong>III.2.-</strong> Que es su voluntad sujetar el presente contrato a tenor de las siguientes:
+</p>
+<br>
+<br>
+<h3 align="center">CLAUSULAS</h3>
+<br>
+<br>
+<p align="justify" class="parrafo">
+    PRIMERA. DURACION DEL CONTRATO. El presente contrato se celebra por tiempo indeterminado y no podrá ser suspendido, rescindido o terminado sino de acuerdo con lo previsto en la Ley Federal del Trabajo o por voluntad de ambas partes contratantes. Sin embargo, los primeros treinta días de prestación de servicios se considerarán como periodo de prueba, término durante el cual la compañía podrá dar por terminado el presente contrato sin ninguna responsabilidad si, a su juicio, el “TRABAJADOR” no demuestra contar con la capacidad, aptitudes o facultades requeridas para el desempeño del trabajo encomendado, en los términos de la Fracción I, del Artículo 47 de la Ley Federal del Trabajo.
+
+    <br><br>SEGUNDA. TIPO DE TRABAJO. El “TRABAJADOR” se obliga  a prestar sus servicios personales al “PATRÓN” en el domicilio ubicado en <strong>@Model.InformacionCompania.Direccion C.P. @Model.InformacionCompania.CodigoPostal</strong> o en el lugar que para tal efecto se le indique en la ejecución de su trabajo consistente en <strong>@Model.Puesto.Nombre</strong> , trabajo que debe desempeñar siempre con esmero y eficiencia, pero queda bien entendido que esta enumeración de labores es enunciativa y no limitativa, otra vez que el "TRABAJADOR" tiene obligación de atender también cualquier otro trabajo anexo o conexo con su obligación principal, o cualesquiera otra actividad, siempre y cuando se le respete su salario, aun cuando accidentalmente haya de ser desempeñado fuera del lugar de trabajo. El "TRABAJADOR" acatará  siempre en todos sus actos las órdenes que sus jefes le den, las disposiciones del Reglamento Interior de Trabajo de la empresa que le sean aplicables, y las demás disposiciones y órdenes que esta le dicte.
+
+    <br><br>TERCERA. JORNADA DE TRABAJO. El "TRABAJADOR" laborará de <b>lunes</b> a <b>sábado</b> según el horario que se le indique sin exceder lo establecido por la Ley federal del Trabajo, con  una hora para tomar alimentos, la cual podrá ser gozada fuera del lugar de trabajo, motivo por el cual no se computará como jornada de trabajo. La jornada de trabajo a que se refiere la presente cláusula se encuentra repartida de conformidad con lo dispuesto por el artículo 59 de la Ley Federal del Trabajo. El “TRABAJADOR” faculta expresamente al “PATRÓN” para modificar el horario de trabajo anterior, de acuerdo con las necesidades del mismo, para lo cual bastará que éste último le asigne un nuevo horario, ya sea por escrito o de manera verbal, pero nunca podrá exceder de su jornada semanal.
+    <br><br>CUARTA. DIAS DE DESCANSO SEMANAL. El "TRABAJADOR" disfrutará  semanalmente de <b>un</b> día de descanso con goce de sueldo por cada 6 seis días efectivamente laborados, el que se conviene por ambas partes que será  el día domingo de cada semana. El "TRABAJADOR" faculta expresamente al "PATRÓN" para cambiar el día de descanso a que antes se hace mención, de acuerdo con sus necesidades.
+
+    <br><br>QUINTA. SALARIO. El TRABAJADOR percibirá un salario mensual bruto por la prestación de los servicios a que se refiere este contrato, la cantidad de <strong>
+    @Model.Empleado.Salario (@GPSInformation.Tools.Funciones.Convertir(Model.Empleado.Salario + "", true, "") pesos 00/100 M.N.),
+</strong> el cual le será pagado en forma semanal, en las oficinas del "PATRON", dicho importe ya incluye el salario de descanso.
+
+    <br><br>Esta retribución será abonada a la hora que fije el "PATRÓN", dentro del horario que comprende la jornada laboral, en el local donde son prestados los servicios y en moneda de cuño corriente mexicano, o bien, mediante transferencia bancaria a la cuenta que designe.
+
+    <br><br>En caso de que alguno de los días de pago sea feriado, el "TRABAJADOR" será pagado el día anterior en los términos antes convenidos.
+
+    <br><br>El TRABAJADOR recibirá por concepto de aguinaldo el importe de <b>15 (QUINCE)</b> días de salario, que le será cubierto a más tardar el día 20 veinte de diciembre de cada año, o la parte proporcional en caso de que no haya trabajado el año completo.
+
+    <br><br>SEXTA. AGUINALDO. El "TRABAJADOR" recibirá  por concepto de aguinaldo el importe de 15 quince días de salario base, que le será abonado a más tardar el día 20 veinte de diciembre de cada año, o la parte proporcional en caso de que no haya trabajado el año completo.
+
+    <br><br>SEPTIMA. DIAS DE DESCANSO OBLIGATORIO. El TRABAJADOR disfrutará de los días de descanso obligatorio señalados en el Artículo 74 de la Ley Federal del Trabajo con goce de salario íntegro.
+
+    <br><br>OCTAVA. VACACIONES. El "TRABAJADOR" disfrutará de los días de vacaciones que correspondan por cada año completo de servicios prestados, en los términos del artículo 76 de la Ley Federal del Trabajo, en la inteligencia de que dicho período le será concedido después de vencido el año de servicios y en la época que determiné el "PATRÓN", obligándose el "TRABAJADOR", en todo caso, a solicitar sus vacaciones con una anticipación no menor de un mes. El TRABAJADOR tendrá derecho a recibir una prima vacacional del <b>25% VEINTICINCO POR CIENTO</b> del pago correspondiente al período vacacional. En consecuencia, tanto las vacaciones como la prima vacacional serán pagadas precisamente el día anterior a la fecha en que el "TRABAJADOR" comience a disfrutarlas.
+
+    <br><br>NOVENA. TIEMPO EXTRAORDINARIO. Ambas partes convienen que, cuando conforme a las necesidades del "PATRÓN", se ordene por escrito al "TRABAJADOR" laborar tiempo extra, éste se obliga desde este momento a prestar sus servicios en jornada extraordinaria, conforme al límite establecido por el Artículo 66 de la Ley Federal del Trabajo, en la inteligencia de que el tiempo extraordinario laborado le será abonado al "TRABAJADOR". Sin embargo, queda prohibido al "TRABAJADOR" trabajar tiempo extraordinario si no es consentimiento previo y orden dada por el "PATRÓN". Por ello, cuando por cualquier circunstancia deba trabajar el "TRABAJADOR" mayor tiempo que el señalado como jornada ordinaria, recabará previamente del "PATRÓN" la orden a que se refiere esta cláusula, sin cuyo requisito no le será abandonada por cantidad alguna por el tiempo que trabaje con exceso a la jornada legal.
+
+    <br><br>DÉCIMA. Queda establecido que durante el tiempo que dure la presente relación de trabajo, el "TRABAJADOR" no podrá desarrollar actividad laboral alguna, distinta a la de la presente relación de trabajo, a excepción de aquellas que le sean ordenadas por su superior jerárquico.
+
+    <br><br>DÉCIMA PRIMERA. En caso de terminación de la relación laboral por cualquier causa, el "TRABAJADOR" se compromete a devolver todo aquel material que le haya sido otorgado para el desempeño de sus funciones, así como toda la correspondencia que con fines de la presente relación de trabajo hubiese recibido, sin quedarse con copia de ésta.
+
+    <br><br>DÉCIMA SEGUNDA. CONFIDENCIALIDAD. En atención a las actividades que realiza el "PATRÓN" y dada la necesidad de mantener en absoluta confidencialidad los procesos de trabajo y de cualquier otra naturaleza, el "TRABAJADOR" se obliga a guardar escrupulosamente los secretos técnicos, comerciales del producto, a cuya elaboración concurran directa o indirectamente o de los cuales tenga conocimiento por razones de trabajo, así como de los asuntos administrativos, cuya divulgación pueda causar perjuicios al "PATRÓN", en la inteligencia de que el incumplimiento especifico de esta obligación, lo hará acreedor a la rescisión de su Contrato de Trabajo, de conformidad con lo dispuesto en el artículo 47 de la Ley Federal del Trabajo.
+
+    <br><br>DÉCIMA TERCERA. DATOS PERSONALES. El "TRABAJADOR" expresamente otorga su consentimiento al "PATRÓN", para que éste utilice los datos personales proporcionados por el "TRABAJADOR" de acuerdo a la Política y/o Aviso de Privacidad del "PATRÓN".
+
+    <br><br>DÉCIMA CUARTA. CAPACITACION Y SEGURIDAD. El "PATRON" se obliga a proporcionar capacitación o adiestramiento al "TRABAJADOR", en los términos de la Ley Federal del Trabajo, y de conformidad con el programa de capacitación y adiestramiento convenido y el Trabajador se obliga a sujetarse a los Planes y Programas de Capacitación que se establezcan en la empresa, a utilizar el equipo de protección personal que se le asigne y cumplir con las normas de seguridad e higiene vigentes.
+
+    <br><br>DÉCIMA QUINTA. DOMICILIO DEL TRABAJADOR. El "TRABAJADOR" se obliga a dar aviso al "PATRÓN" de su cambio de domicilio porque de no hacerlo se tendrá como tal el manifestado en este Contrato.
+
+    <br><br>DÉCIMA SEXTA. REGLAMENTO INTERIOR DE TRABAJO. Ambas partes contratantes declaran que se sujetaran a lo dispuesto por el Reglamento Interior de Trabajo de la Empresa y que con respecto a las obligaciones que NO hayan sido motivo de cláusula expresa, el presente contrato se sujeta a las disposiciones de la Ley Federal del Trabajo y para la interpretación, ejecución y cumplimiento del mismo se someten expresamente a la jurisdicción y competencia de la Junta Local de Conciliación y Arbitraje de la ciudad de Querétaro.
+
+    <br><br>DÉCIMA SEPTIMA. Para todos los efectos se le reconoce al trabajador su antigüedad a partir del.
+
+    Leído que fue por ambas partes el presente contrato lo firman en 2 dos tantos y 4 cuatro hojas, tanto al margen como al calce, sabedores de su contenido y de las obligaciones que contraerán al firmarlo, en la ciudad de <strong>Querétaro, Qro,</strong> el día <strong>@DateTime.Now.ToString("dddd")</strong> de <b style="text-transform: uppercase;">
+        @GPSInformation.Tools.Funciones.GetMotnhName(Model.EmpleadoContrato.Created)
+    </b> de <strong>@Model.EmpleadoContrato.Created.ToString("yyyy") ((@GPSInformation.Tools.Funciones.Convertir(Model.EmpleadoContrato.Created.ToString("yyyy"), true, ""))</strong>
+
+    <br><br><br><br><br><br>
+</p>
+<p>
+    <table cellspacing="0" cellpadding="1" border="0" style="        width: 100%
+">
+        <tr>
+            <td style="text-align:center;">EL PATRÓN</td>
+            <td style="text-align:center;">EL TRABAJADOR</td>
+        </tr>
+        <br>
+        <br>
+        <br>
+        <br>
+        <tr>
+            <td style="text-align:center;">_____________________________ <br> @Model.InformacionCompania.Encargado</td>
+            <td style="text-align:center;">_____________________________ <br><strong>@Model.Persona.NombreCompelto</strong></td>
+        </tr>
+        <br>
+        <br>
+        <tr>
+            <td style="text-align:center;">TESTIGO</td>
+            <td style="text-align:center;">TESTIGO</td>
+        </tr>
+        <br>
+        <br>
+        <br>
+        <br>
+        <tr>
+            <td style="text-align:center;">_____________________________ <br> MONTSERRAT A. STRAFFON CASTILLO</td>
+            <td style="text-align:center;">_____________________________ <br> JESUS SANCHEZ HERNANDEZ</td>
+        </tr>
+    </table>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+

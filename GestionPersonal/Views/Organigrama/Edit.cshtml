@@ -132,8 +132,9 @@
                     params.append('IdPuestoParent', 0);
                     params.append('IdVersion', '@Model.IdOrganigramaVersion');
                     await axios.post('@Url.Action("AddFirstNode","Organigrama")', params, null).then(response => {
-                        alert(response.data)
-                        ShowMessageErrorShort(response.data,"success")
+                        //alert(response.data)
+                        ShowMessageErrorShort(response.data, "success")
+                        document.getElementById("btn_refrescar").click();
                     }).catch(error => {
                         if (error.response) {
                             if (error.response.status === 400) {
