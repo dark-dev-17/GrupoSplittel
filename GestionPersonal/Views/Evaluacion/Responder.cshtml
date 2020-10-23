@@ -8,13 +8,13 @@
 <div class="d-sm-flex align-items-center justify-content-between">
     <div>
         <h2 class="mg-b-5">@Html.DisplayFor(model => model.Nombre)</h2>  <small>@Html.DisplayFor(model => model.PersonaName)</small>
+        <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.ModeloName)</p>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.InicioHora)<span>-</span>@Html.DisplayFor(model => model.FinHora)</p>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.ModalidadName)</p>
+
     </div>
     <div class="mg-t-20 mg-sm-t-0">
-        <button class="btn btn-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer mg-r-5"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Print</button>
-        <button class="btn btn-white mg-l-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail mg-r-5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> Email</button>
-        <button class="btn btn-primary mg-l-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card mg-r-5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg> Pay</button>
+        <button class="btn btn-sm btn-primary mg-l-5" id="btn_refrescar" onclick="window.location.reload()">Refrecar</button>
     </div>
 </div>
 <hr />
@@ -25,32 +25,32 @@
         <table class="table table-bordered table-hover">
             <tr>
                 <th colspan="1" style="width: 60%;"></th>
-                <th colspan="1" class="text-center">1</th>
-                <th colspan="1" class="text-center">2</th>
-                <th colspan="1" class="text-center">3</th>
-                <th colspan="1" class="text-center">4</th>
-                <th colspan="1" class="text-center">5</th>
+                <th colspan="1" class="text-center">Muy bien</th>
+                <th colspan="1" class="text-center">Bien</th>
+                <th colspan="1" class="text-center">Regular</th>
+                <th colspan="1" class="text-center">Malo</th>
+                <th colspan="1" class="text-center">No aplica</th>
             </tr>
             <tbody v-for="(seccion, indexSecccion) in Access">
                 <tr>
-                    <td colspan="6">{{ seccion.nombre }}</td>
+                    <td class="bg-primary-light m-3" colspan="6">{{ seccion.nombre }}</td>
                 </tr>
                 <tr v-for="(pregunta, indexPregunta) in seccion.preguntas">
                     <th colspan="1" style="width: 60%;">{{ pregunta.pregunta }}</th>
                     <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="1" />
+                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="1" title="Muy bien" />
                     </td>
                     <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="2" />
+                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="2" title="Bien" />
                     </td>
                     <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="3" />
+                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="3" title="Regular" />
                     </td>
                     <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="4" />
+                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="4" title="Malo" />
                     </td>
                     <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="5" />
+                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="5" title="Considero que esta pregunta no aplica" />
                     </td>
                     <td colspan="5" v-if="pregunta.tipo == 2" class="text-center">
                         <textarea class="form-control" v-model="pregunta.respuesta.respuesta"></textarea>
@@ -58,7 +58,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="form-group row mg-b-0">
+        <div class="form-group row mg-b-0 mt-5">
             <div class="col-sm-12 text-right">
                 <a asp-action="MisEvaluaciones" class="btn btn-sm btn-secondary">Cancelar</a>
                 <button type="button" v-on:click="Save()" class="btn btn-sm btn-primary">Guardar evaluación</button>
@@ -106,7 +106,8 @@
                     console.log(datos)
                     await axios.post('@Url.Action("DataResponders", "Evaluacion")', datos, null).then(response => {
                         console.log(response.data)
-                        this.Access = response.data;
+                        //this.Access = response.data;
+                        document.getElementById("btn_refrescar").click()
                     }).catch(error => {
                         if (error.response) {
                             if (error.response.status === 400) {
@@ -127,8 +128,15 @@
 }
 else
 {
-    <div class="alert alert-warning mg-b-0" role="alert">
-        Esta evaluación ya ha sido respondida
-    </div>
+    <div class="content content-fixed content-auth-alt">
+        <div class="container ht-100p tx-center">
+            <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
+                <div class="wd-70p wd-sm-250 wd-lg-300 mg-b-15"><img src="https://image.freepik.com/vector-gratis/empresario-sosteniendo-documento_1325-411.jpg" class="img-fluid" alt=""></div>
+                <h1 class="tx-color-01 tx-24 tx-sm-32 tx-lg-36 mg-xl-b-5">Gestión de personal</h1>
+                <h5 class="tx-16 tx-sm-18 tx-lg-20 tx-normal mg-b-20">Esta evauación ya fue respondida</h5>
+            </div>
+        </div><!-- container -->
+    </div><!-- content -->
+
 }
 

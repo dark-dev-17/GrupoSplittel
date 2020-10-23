@@ -1,120 +1,134 @@
 ﻿@model GestionPersonal.Models.Incidencias
 @{
-    ViewData["Title"] = "Permisos y vacaciones";
+    ViewData["Title"] = "Mis solicitudes";
 
     List<GPSInformation.Models.VacionesPeriodo> periodos = ViewBag.Periodos;
 }
-@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.persona.IdPersona  })
-    <hr />
-    <div id="app_incidencias">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Permisos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Vacaciones</a>
-            </li>
-        </ul>
-        <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
-                    <div class="d-flex align-items-center justify-content-between mg-b-30">
-                        <h4 class="tx-15 mg-b-0">Lista de permisos</h4>
-                        <a href="@Url.Action("Create","IncidenciaPermiso", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
-                    </div>
-                </div>
-                <div id="table-permisos">
-                    <partial name="../IncidenciaPermiso/Index" model="Model.permisos" />
+
+<!--<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h2 class="">@ViewData["Title"]</h2>
+    <div class="btn-group" role="group" aria-label="Basic example">-->
+        @*<a href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm btn-white d-flex align-items-center">?</a>*@
+    <!--</div>
+</div>
+<hr />-->
+<div class="alert alert-success" role="alert">
+    <h4 class="alert-heading">Hola!</h4>
+    <p>Gracias por utilizar GPS, en esta sección podrás solicitar permisos y vacaciones, recuerda que tu solicitud pasará por un proceso de autoización por tu <strong>jefe inmediato</strong> y el área de <strong>Gestión de Personal</strong> </p>
+    <hr>
+    <p class="mb-0">Sistema Gestión de Personal</p>
+</div>
+@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.persona.IdPersona })
+<hr />
+<div id="app_incidencias">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Permisos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Vacaciones</a>
+        </li>
+    </ul>
+    <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
+                <div class="d-flex align-items-center justify-content-between mg-b-30">
+                    <h4 class="tx-15 mg-b-0">Lista de permisos</h4>
+                    <a href="@Url.Action("Create","IncidenciaPermiso", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
                 </div>
             </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
-                    <div class="d-flex align-items-center justify-content-between mg-b-30">
-                        <h4 class="tx-15 mg-b-0">Lista de vacaciones</h4>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <a href="#modalActividadVacacionesPeriodos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>ver periodos</a>
-                            <a href="@Url.Action("Create","IncidenciaVacacion", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
-                        </div>
-                    </div>
-                </div>
-                <div id="table-permisos">
-                    <partial name="../IncidenciaVacacion/Index" model="Model.vacaciones" />
-                </div>
+            <div id="table-permisos">
+                <partial name="../IncidenciaPermiso/Index" model="Model.permisos" />
             </div>
         </div>
-        <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacacionesPeriodos" role="dialog" data-backdrop="false" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body pd-20 pd-sm-30">
-                        <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"><i data-feather="x"></i></span>
-                        </button>
-                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Periodos de vacaciones</h5>
-
-                        <div id="content_vacacionesAcitivitdssdfsdf">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Periodo</th>
-                                        <th>Dias</th>
-                                    </tr>
-                                </thead>
-                                
-                                <tbody>
-                                    @foreach (var item in periodos)
-                                    {
-                                        <tr>
-                                            <td>@item.NumeroPeriodo</td>
-                                            <td><strong>@item.DiasAprobadors</strong><span> / </span>@item.DiasUsados</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div><!-- modal-body -->
-                    <div class="modal-footer">
-                        <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
-                    </div><!-- modal-footer -->
-                </div><!-- modal-content -->
-            </div><!-- modal-dialog -->
-        </div><!-- modal -->
-
-        <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacaciones" role="dialog" data-backdrop="false" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body pd-20 pd-sm-30">
-                        <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"><i data-feather="x"></i></span>
-                        </button>
-                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad solicitud de vacaciones</h5>
-
-                        <div id="content_vacacionesAcitivit"></div>
-                    </div><!-- modal-body -->
-                    <div class="modal-footer">
-                        <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
-                    </div><!-- modal-footer -->
-                </div><!-- modal-content -->
-            </div><!-- modal-dialog -->
-        </div><!-- modal -->
-
-        <div class="modal calendar-modal-create fade effect-scale" id="modalActividadPermisos" role="dialog" data-backdrop="false" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body pd-20 pd-sm-30">
-                        <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"><i data-feather="x"></i></span>
-                        </button>
-                        <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad solicitud de permiso</h5>
-
-                        <div id="content_permisoAcitivit"></div>
-                    </div><!-- modal-body -->
-                    <div class="modal-footer">
-                        <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
-                    </div><!-- modal-footer -->
-                </div><!-- modal-content -->
-            </div><!-- modal-dialog -->
-        </div><!-- modal -->
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div id="contactLogs" class="tab-pane pd-20 pd-xl-25 active">
+                <div class="d-flex align-items-center justify-content-between mg-b-30">
+                    <h4 class="tx-15 mg-b-0">Lista de vacaciones</h4>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a href="#modalActividadVacacionesPeriodos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>ver periodos</a>
+                        <a href="@Url.Action("Create","IncidenciaVacacion", new { id = Model.persona.IdPersona })" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Crear nuevo</a>
+                    </div>
+                </div>
+            </div>
+            <div id="table-permisos">
+                <partial name="../IncidenciaVacacion/Index" model="Model.vacaciones" />
+            </div>
+        </div>
     </div>
+    <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacacionesPeriodos" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Periodos de vacaciones</h5>
+
+                    <div id="content_vacacionesAcitivitdssdfsdf">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Periodo</th>
+                                    <th>Dias</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in periodos)
+                                {
+                                    <tr>
+                                        <td>@item.NumeroPeriodo</td>
+                                        <td><strong>@item.DiasAprobadors</strong><span> / </span>@item.DiasUsados</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+
+    <div class="modal calendar-modal-create fade effect-scale" id="modalActividadVacaciones" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad solicitud de vacaciones</h5>
+
+                    <div id="content_vacacionesAcitivit"></div>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+
+    <div class="modal calendar-modal-create fade effect-scale" id="modalActividadPermisos" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Actividad solicitud de permiso</h5>
+
+                    <div id="content_permisoAcitivit"></div>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <a href="" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                </div><!-- modal-footer -->
+            </div><!-- modal-content -->
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+</div>
 @section Scripts {
     <script>
         var app_incidencias = new Vue({
@@ -131,7 +145,7 @@
                     }).catch(error => {
                         if (error.response) {
                             if (error.response.status === 400) {
-                                
+
                             }
                         }
                         console.error(error);
@@ -148,7 +162,7 @@
                     }).catch(error => {
                         if (error.response) {
                             if (error.response.status === 400) {
-                                
+
                             }
                         }
                         console.error(error);

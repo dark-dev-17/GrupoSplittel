@@ -18,6 +18,8 @@ namespace GPSInformation.Controllers
         {
             this.IdUsuario = IdUsuario;
             this.darkManager = darkManager;
+            this.darkManager.LoadObject(GpsManagerObjects.DiaFeriado);
+            this.darkManager.LoadObject(GpsManagerObjects.VacacionesDiasRegla);
         }
         #endregion
 
@@ -27,11 +29,42 @@ namespace GPSInformation.Controllers
         {
             return darkManager.VacionesPeriodo.Get(IdUsuario + "","IdPersona" );
         }
+
         public void ProcPeridosVac(int IdPersona)
         {
             darkManager.StartTransaction();
             try
             {
+                ProcPeridosVacUs(IdPersona);
+                darkManager.Commit();
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                throw ex;
+            }
+        }
+        public void ProcPeridosVacAll()
+        {
+            darkManager.StartTransaction();
+            try
+            {
+                darkManager.View_empleado.Get().ForEach( emp => {
+                    ProcPeridosVacUs(emp.IdPersona);
+                });
+               
+                darkManager.Commit();
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                throw ex;
+            }
+        }
+
+        private void ProcPeridosVacUs(int IdPersona)
+        {
+
                 var Empleado_re = darkManager.Empleado.GetByColumn("" + IdPersona, "IdPersona");
                 if (Empleado_re == null)
                 {
@@ -47,10 +80,11 @@ namespace GPSInformation.Controllers
                         var peridod_re = darkManager.VacionesPeriodo.Get("IdPersona", IdPersona + "", "NumeroPeriodo", i + "");
                         if (peridod_re == null)
                         {
+                            var diaPeridodo = darkManager.VacacionesDiasRegla.GetByColumn("" + i, "NoAnio");
                             VacionesPeriodo vacionesPeriodo = new VacionesPeriodo();
                             vacionesPeriodo.IdPersona = IdPersona;
                             vacionesPeriodo.NumeroPeriodo = i;
-                            vacionesPeriodo.DiasAprobadors = darkManager.VacacionesDiasRegla.GetByColumn("" + i, "NoAnio").NoDias;
+                            vacionesPeriodo.DiasAprobadors = diaPeridodo != null ? diaPeridodo.NoDias : darkManager.VacacionesDiasRegla.Get(darkManager.VacacionesDiasRegla.GetLastId()).NoDias;
                             vacionesPeriodo.DiasUsados = 0;
                             vacionesPeriodo.Creado = DateTime.Now;
                             vacionesPeriodo.Actualizado = DateTime.Now;
@@ -65,8 +99,8 @@ namespace GPSInformation.Controllers
                         {
                             if (!peridod_re.Completo)
                             {
-                                int dias = darkManager.VacacionesDiasRegla.GetByColumn("" + i, "NoAnio").NoDias;
-                                peridod_re.DiasAprobadors = dias;
+                                var diaPeridodo = darkManager.VacacionesDiasRegla.GetByColumn("" + i, "NoAnio");
+                                peridod_re.DiasAprobadors = diaPeridodo != null ? diaPeridodo.NoDias : darkManager.VacacionesDiasRegla.Get(darkManager.VacacionesDiasRegla.GetLastId()).NoDias; ;
                                 peridod_re.Actualizado = DateTime.Now;
                                 peridod_re.Completo = true;
                                 darkManager.VacionesPeriodo.Element = peridod_re;
@@ -81,9 +115,10 @@ namespace GPSInformation.Controllers
                     if (fechaLast <= DateTime.Now && darkManager.VacionesPeriodo.Get("IdPersona", IdPersona + "", "NumeroPeriodo", (Antiguedad + 1) + "") == null)
                     {
                         VacionesPeriodo vacionesPeriodo = new VacionesPeriodo();
+                        var diaPeridodo = darkManager.VacacionesDiasRegla.GetByColumn("" + (Antiguedad + 1), "NoAnio");
                         vacionesPeriodo.IdPersona = IdPersona;
                         vacionesPeriodo.NumeroPeriodo = Antiguedad + 1;
-                        vacionesPeriodo.DiasAprobadors = darkManager.VacacionesDiasRegla.GetByColumn("" + (Antiguedad + 1), "NoAnio").NoDias / 2;
+                        vacionesPeriodo.DiasAprobadors = (diaPeridodo != null ? diaPeridodo.NoDias : darkManager.VacacionesDiasRegla.Get(darkManager.VacacionesDiasRegla.GetLastId()).NoDias) / 2;
                         vacionesPeriodo.DiasUsados = 0;
                         vacionesPeriodo.Completo = false;
                         vacionesPeriodo.Creado = DateTime.Now;
@@ -117,13 +152,7 @@ namespace GPSInformation.Controllers
                     }
                 }
                 //darkManager.VacionesPeriodo.Get();
-                darkManager.Commit();
-            }
-            catch (GPSInformation.Exceptions.GpExceptions ex)
-            {
-                darkManager.RolBack();
-                throw ex;
-            }
+
         }
 
         private int GetDiff(DateTime fechaInicio)

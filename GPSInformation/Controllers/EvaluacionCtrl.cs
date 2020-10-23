@@ -100,8 +100,7 @@ namespace GPSInformation.Controllers
                 Evaluacion_re.PersonaName = darkManager.View_empleado.Get(Evaluacion_re.IdPersona).NombreCompleto;
                 Evaluacion_re.ModeloName = darkManager.EvaluacionTemplate.Get(Evaluacion_re.IdEvaluacionTemplate).Nombre;
                 Evaluacion_re.ModalidadName = darkManager.CatalogoOpcionesValores.Get(Evaluacion_re.IdModalidad).Descripcion;
-
-
+                Evaluacion_re.EvaluacionEmpleado = darkManager.EvaluacionEmpleado.Get("IdPersona", "" + IdPersona, "IdEvaluacion", a.IdEvaluacion + "");
                 evaluacions.Add(Evaluacion_re);
             });
 
@@ -221,18 +220,18 @@ namespace GPSInformation.Controllers
             try
             {
                 var Evaluacion_re = darkManager.Evaluacion.Get(IdEvaluacion);
-                var Emplead_re = darkManager.View_empleado.Get(Evaluacion_re.IdPersona);
+                var Emplead_re = darkManager.View_empleado.Get(IdPersona);
                 darkManager.EmailServ_.AddListTO(Emplead_re.Correo);
                 darkManager.EmailServ_.Send(body, string.Format("Evaluacion: {0}", Evaluacion_re.Nombre));
                 darkManager.RestartEmail();
             }
             catch (SmtpException ex)
             {
-                //throw;
+                throw ex;
             }
             catch (Exception ex)
             {
-                //throw;
+                throw ex;
             }
         }
 

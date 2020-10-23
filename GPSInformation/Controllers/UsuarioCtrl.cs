@@ -122,7 +122,23 @@ namespace GPSInformation.Controllers
                 throw ex;
             }
         }
+        public void ProcessAllusersPermis()
+        {
+            darkManager.StartTransaction();
+            try
+            {
+                darkManager.Usuario.Get().ForEach(emp => {
+                    AddPermisos(emp.IdUsuario, emp.IdRol);
+                });
 
+                darkManager.Commit();
+            }
+            catch (Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                throw ex;
+            }
+}
         private void AddPermisos(int IdUsuario, int IdPermiso)
         {
             if (IdUsuario == 0)

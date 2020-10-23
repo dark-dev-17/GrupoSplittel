@@ -437,7 +437,23 @@ namespace GestionPersonal.Controllers
             vacacionesCtrl.ProcPeridosVac((int)HttpContext.Session.GetInt32("user_id"));
             return Ok("asasdasdasdasda");
         }
-
+        
+        [HttpGet]
+        [AccessMultipleView(IdAction = new int[] { 30, 32, 36 })]
+        public ActionResult GenerarPeridosAll()
+        {
+            try
+            {
+                VacacionesCtrl vacacionesCtrl = new VacacionesCtrl((int)HttpContext.Session.GetInt32("user_id"), darkManager);
+                vacacionesCtrl.ProcPeridosVacAll();
+                return Ok("Periodos completos");
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
         private async Task SendEmailAsync(int mode, int id)
         {
             try

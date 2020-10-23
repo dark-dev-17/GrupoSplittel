@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="FiltersMethodsWeb\" />
+    <Folder Include="Middleware\" />
   </ItemGroup>
 
   <ItemGroup>

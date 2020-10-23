@@ -59,6 +59,19 @@ namespace GestionPersonal.Controllers
             _viewRenderService = viewRenderService;
         }
 
+        public IActionResult ProcessUsersRols()
+        {
+            try
+            {
+                usuarioCtrl.ProcessAllusersPermis();
+                return Ok("Roles asignados");
+            }
+            catch (GpExceptions ex)
+            {
+                return BadRequest("Roles no asignados");
+            }
+        }
+
         [AccessView]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -265,6 +278,10 @@ namespace GestionPersonal.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(Usuario);
             }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
         }
 
         // GET: Empleado/Edit
@@ -320,6 +337,9 @@ namespace GestionPersonal.Controllers
             ViewData["PersonaContacto"] = PersonaContacto;
             ViewData["Parentezcos"] = GetDictionary(9, 0);
 
+
+
+            darkManager.CloseConnection();
             return View(result);
         }
 

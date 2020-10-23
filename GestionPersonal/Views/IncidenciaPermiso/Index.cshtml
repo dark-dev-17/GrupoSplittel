@@ -70,7 +70,7 @@ else
                         }
                     </td>
                     <td>
-                        @Html.ActionLink("Details", "Details", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso }) |
+                        @Html.ActionLink("Detalles", "Details", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso }) |
                         @if (item.Estatus == 1)
                         {
                             @Html.ActionLink("Cancelar", "Cancel", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso })<span>|</span>

@@ -9,6 +9,13 @@
     List<string> Indices;
     List<string> Valores;
     List<string> Limites;
+
+
+    int Respondidas = view_Empleados.Count(a => a.Respondio);
+
+
+
+
 }
 
 <div class="d-sm-flex align-items-center justify-content-between">
@@ -23,16 +30,43 @@
     </div>
 </div>
 <hr />
-
+<div class="card mg-b-10">
+    <div class="card-header pd-t-20 d-sm-flex align-items-start justify-content-between bd-b-0 pd-b-0">
+        
+    </div><!-- card-header -->
+    <div class="card-body pd-y-30">
+        <div class="d-sm-flex">
+            <div class="media col-lg-3">
+                <div class="wd-40 wd-md-50 ht-40 ht-md-50 bg-teal tx-white mg-r-10 mg-md-r-10 d-flex align-items-center justify-content-center rounded op-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                </div>
+                <div class="media-body">
+                    <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold tx-nowrap mg-b-5 mg-md-b-8">Evaluaciones Contestadas</h6>
+                    <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0" style="margin-top: auto;">
+                        @Respondidas
+                    </h4>
+                </div>
+            </div>
+            <div class="media mg-t-20 mg-sm-t-0 mg-sm-l-15 mg-md-l-40 col-lg-3">
+                <div class="wd-40 wd-md-50 ht-40 ht-md-50 bg-pink tx-white mg-r-10 mg-md-r-10 d-flex align-items-center justify-content-center rounded op-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                </div>
+                <div class="media-body">
+                    <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8">Evaluaciones sin Contestar</h6>
+                    <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0" style="margin-top: auto;">
+                        @view_Empleados.Count(a => a.Respondio == false)
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div><!-- card-body -->
+</div>
 <div data-label="Preguntas dashboard" class="df-example demo-forms" id="app_createPermiso">
     @foreach (var seccion in secciones)
     {
         <div class="card mg-b-20 mg-lg-b-25">
             <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
                 <h6 class="tx-uppercase tx-semibold mg-b-0">@seccion.Nombre</h6>
-                @*<nav class="nav nav-with-icon tx-13">
-                        <a href="" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add New</a>
-                    </nav>*@
             </div><!-- card-header -->
             <div class="card-body pd-25 row">
                 <div class="col-lg-8">
@@ -43,8 +77,35 @@
                             {
                                 <a href="#" class="nav-link">
                                     @Preguntas .- <span>@pregunta.Pregunta</span>
-                                    <span class="badge">
-                                        @Html.Raw(respuestas.Where(a => a.IdEvaluacionSeccionPregnts == pregunta.IdEvaluacionSeccionPregnts).Sum(a => Int32.Parse(a.Respuesta)))/<strong>@Html.Raw(pregunta.MaxCalificacion * view_Empleados.Count)</strong>
+                                    <span class="badge text-black-50">
+                                        @{
+                                            double Calificacion = 0;
+                                        }
+                                        @foreach (var item in respuestas.Where(a => a.IdEvaluacionSeccionPregnts == pregunta.IdEvaluacionSeccionPregnts).ToList())
+                                        {
+                                            if (item.Respuesta == "1")
+                                            {
+                                                Calificacion = Calificacion + 10;
+                                            }
+                                            else if (item.Respuesta == "2")
+                                            {
+                                                Calificacion = Calificacion + 7.5f;
+                                            }
+                                            else if (item.Respuesta == "3")
+                                            {
+                                                Calificacion = Calificacion + 5;
+                                            }
+                                            else if (item.Respuesta == "4")
+                                            {
+                                                Calificacion = Calificacion + 2.5f;
+                                            }
+                                            else if (item.Respuesta == "5")
+                                            {
+
+                                            }
+                                        }
+
+                                        <strong>@Calificacion</strong>
                                     </span>
                                 </a>
                             }
@@ -163,24 +224,42 @@
         Valores = new List<string>();
         @foreach (var pregunta in seccion.Preguntas)
         {
-            if(pregunta.Tipo == 1)
+            if (pregunta.Tipo == 1)
             {
-                var valor = respuestas.Where(a => a.IdEvaluacionSeccionPregnts == pregunta.IdEvaluacionSeccionPregnts).Sum(a => Int32.Parse(a.Respuesta));
-                Indices.Add(string.Format("{0}", Preguntas));
-                Valores.Add(string.Format("{0}", valor));
-                Limites.Add(string.Format("{0}", (pregunta.MaxCalificacion * view_Empleados.Count)));
-                if(pregunta.MaxCalificacion * view_Empleados.Count > Max)
+                double Calificacion = 0;
+                @foreach (var item in respuestas.Where(a => a.IdEvaluacionSeccionPregnts == pregunta.IdEvaluacionSeccionPregnts).ToList())
                 {
-                    Max = pregunta.MaxCalificacion * view_Empleados.Count;
+                    if (item.Respuesta == "1")
+                    {
+                        Calificacion = Calificacion + 10;
+                    }
+                    else if (item.Respuesta == "2")
+                    {
+                        Calificacion = Calificacion + 7.5f;
+                    }
+                    else if (item.Respuesta == "3")
+                    {
+                        Calificacion = Calificacion + 5;
+                    }
+                    else if (item.Respuesta == "4")
+                    {
+                        Calificacion = Calificacion + 2.5f;
+                    }
+                    else if (item.Respuesta == "5")
+                    {
+
+                    }
                 }
+                Valores.Add(Calificacion + "");
+
             }
+            Indices.Add(Preguntas + "");
             Preguntas++;
         }
-<script>
+        <script>
 
             var ctxLabel = [@string.Join(",", Indices)];
             var ctxData1 = [@string.Join(",", Valores)];
-            var ctxData2 = [@string.Join(",", Limites)];
     var ctx1 = document.getElementById('@Html.Raw(seccion.IdEvaluacioSeccion+"_Seccion")').getContext('2d');
     new Chart(ctx1, {
         type: 'horizontalBar',
@@ -190,10 +269,6 @@
                 {
                     data: ctxData1,
                     backgroundColor: '#69b2f8'
-                },
-                {
-                    data: ctxData2,
-                    backgroundColor: '#d1e6fa'
                 }
             ]
         },
@@ -228,13 +303,13 @@
                         beginAtZero: true,
                         fontSize: 10,
                         fontColor: '#8392a5',
-                        max: @Max
+                        max: 10
                     }
                 }]
             }
         }
     });
-</script>
+        </script>
     }
 
 

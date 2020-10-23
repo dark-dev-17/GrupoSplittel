@@ -81,6 +81,10 @@ namespace GPSInformation.Models
         
         [ColumnDB(IsMapped = false, IsKey = false)]
         public List<EvaluacioSeccion> secciones { get; set; }
+
+
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public EvaluacionEmpleado EvaluacionEmpleado { get; set; }
     }
 
     [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]

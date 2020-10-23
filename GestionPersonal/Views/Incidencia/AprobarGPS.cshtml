@@ -3,8 +3,19 @@
 @{
     ViewData["Title"] = "Aprobación de solictudes nivel 2 ";
 }
-<h2>@ViewData["Title"]</h2>
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h2 class="">@ViewData["Title"]</h2>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        @*<a href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm btn-white d-flex align-items-center">?</a>*@
+    </div>
+</div>
 <hr />
+<div class="alert alert-success" role="alert">
+    <h4 class="alert-heading">Hola!</h4>
+    <p>Gracias por utilizar GPS, en esta sección podrás autorizar las solicitudes de vacaciones y permisos a nivel <strong>Gestión de Personal</strong></p>
+    <hr>
+    <p class="mb-0">Sistema Gestión de Personal</p>
+</div>
 <div id="app_incidencias">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
@@ -92,7 +103,7 @@
                                             var nive2 = item.Proceso.Find(a => a.Nivel == 3);
 
                                         }
-                                        @Html.ActionLink("Details", "Details", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso }) |
+                                        @Html.ActionLink("Detalles", "Details", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso }) |
                                         @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
                                         {
                                             @Html.ActionLink("Aprobar", "Aprobar", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso, Mode = 2 })<span>|</span>
@@ -180,13 +191,13 @@
                                     </td>
                                     <td>
                                         @{
-                                                var nive2 = item.Proceso.Find(a => a.Nivel == 3);
-                                            }
-                                            @Html.ActionLink("Details", "Details", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion })|
-                                            @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
-                                            {
-                                                @Html.ActionLink("Aprobar", "Aprobar", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion, Mode = 2 })<span>|</span>
-                                            }
+                                            var nive2 = item.Proceso.Find(a => a.Nivel == 3);
+                                        }
+                                        @Html.ActionLink("Detalles", "Details", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion })|
+                                        @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
+                                        {
+                                            @Html.ActionLink("Aprobar", "Aprobar", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion, Mode = 2 })<span>|</span>
+                                        }
                                         <a href="#modalActividadVacaciones" data-toggle="modal" onclick="app_incidencias.ActividadVacacion(@item.IdIncidenciaVacacion)">Actividad</a>
                                     </td>
                                 </tr>

@@ -32,10 +32,19 @@
             <td>@item.PuestoNombre</td>
             <td>@item.TipoNomina</td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.IdPersona })|
-                @Html.ActionLink("Acceso", "Create","Usuario", new { id = item.IdPersona })|
-                @Html.ActionLink("Contrato", "Index", "Contrato", new { id = item.IdPersona })|
-                @Html.ActionLink("Expediente", "Expediente", "Expediente", new { id = item.IdPersona })
+
+
+                <div class="dropdown">
+                    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropleftMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Opciones
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropleftMenuButton">
+                        @Html.ActionLink("Editar", "Edit", new { id = item.IdPersona }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Acceso", "Create", "Usuario", new { id = item.IdPersona }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Contrato", "Index", "Contrato", new { id = item.IdPersona }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Expediente", "Expediente", "Expediente", new { id = item.IdPersona }, new { @class = "dropdown-item" })
+                    </div>
+                </div>
             </td>
         </tr>
         }

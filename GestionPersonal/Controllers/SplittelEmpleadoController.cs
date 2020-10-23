@@ -153,6 +153,8 @@ namespace GestionEmpleadol.Controllers
                 }
                 darkManager.Empleado.Element = Empleado;
                 darkManager.Empleado.Element.Egreso = DateTime.Now;
+                darkManager.Empleado.Element.Actualizado = DateTime.Now;
+                darkManager.Empleado.Element.Creado = DateTime.Now;
                 bool result = darkManager.Empleado.Update();
                 if (result)
                 {
@@ -165,7 +167,7 @@ namespace GestionEmpleadol.Controllers
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                ModelState.AddModelError("Error", ex.Message);
+                ModelState.AddModelError("", ex.Message);
                 return PartialView(Empleado);
             }
         }

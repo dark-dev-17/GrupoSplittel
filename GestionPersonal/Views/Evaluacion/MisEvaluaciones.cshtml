@@ -36,9 +36,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.IdModalidad)
             </th>
-            @*<th>
+            <th>
                     @Html.DisplayNameFor(model => model.Actualizada)
-                </th>*@
+                </th>
             <th></th>
         </tr>
     </thead>
@@ -70,11 +70,22 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ModalidadName)
                 </td>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.Actualizada)
-                    </td>*@
                 <td>
-                    @Html.ActionLink("Responder", "Responder", new { id = item.IdEvaluacion }) 
+                    @if (item.EvaluacionEmpleado.Respondio)
+                    {
+                        <span class="badge badge-primary">Respondida</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">Sin responder</span>
+                    }
+                </td>
+                <td>
+                    @if (!item.EvaluacionEmpleado.Respondio)
+                    {
+                        @Html.ActionLink("Responder", "Responder", new { id = item.IdEvaluacion })
+                    }
+
                 </td>
             </tr>
         }

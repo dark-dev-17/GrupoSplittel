@@ -15,7 +15,7 @@
 <div class="col-sm-12 text-right">
     <a class="btn btn-primary btn-sm" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true" aria-controls="collapseExample">Filtro</a>
 </div>
-<div data-label="Filtro @firstDayWeek" class="df-example demo-forms collapse mg-t-5" id="collapseExample">
+<div data-label="Filtro" class="df-example demo-forms collapse mg-t-5" id="collapseExample">
     <form asp-action="Prenomina" id="btn_refrescar">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
@@ -157,9 +157,13 @@
             </tbody>
         </table>
     </div>
-}
+                        }
+                        else
+                        {
+                            <h2>Sin registros, has un filtrado primero!</h2>
+                        }
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Regresar</a>
 </div>
 

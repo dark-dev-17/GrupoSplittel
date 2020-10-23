@@ -156,7 +156,7 @@ namespace GestionPersonal.Controllers
             darkManager.OrganigramaStructura.Element.DPU = puestoChild.DPU;
             darkManager.OrganigramaStructura.Element.Descripcion = puestoChild.Descripcion;
 
-            if (darkManager.OrganigramaStructura.Get("" + IdPuesto, "IdPuesto").Count > 0)
+            if (darkManager.OrganigramaStructura.Get("IdPuesto","" + IdPuesto, "IdOrganigramaVersion", IdVersion + "") != null)
             {
                 return BadRequest("ya existe este puesto en el organigrama");
             }
@@ -201,6 +201,8 @@ namespace GestionPersonal.Controllers
             result.Where(a => a.Autirizada == 2 && a.IdOrganigramaVersion != IdVersion).ToList().ForEach(organigrama => {
                 darkManager.OrganigramaVersion.Element = organigrama;
                 darkManager.OrganigramaVersion.Element.Autirizada = 1; // estatus de version no autorizada
+
+                darkManager.OrganigramaVersion.Update();
             });
 
             result = darkManager.OrganigramaVersion.Get();
