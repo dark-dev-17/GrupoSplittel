@@ -1,0 +1,41 @@
+﻿@model GPSInformation.Models.Usuario
+
+@{
+    ViewData["Title"] = "Cambiar mi contraseña";
+}
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <h2 class="tx-15 mg-b-0"></h2>
+    </div>
+</div>
+<hr />
+@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
+
+<div data-label="Informacion" class="df-example demo-forms">
+    <form asp-action="CambioPass">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <label asp-for="Pass" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input type="hidden" asp-for="IdPersona" placeholder="Nombre" class="form-control" />
+                <input type="hidden" asp-for="IdRol" placeholder="Nombre" class="form-control" />
+                <input type="hidden" asp-for="Activo" placeholder="Nombre" class="form-control" />
+                <input type="hidden" asp-for="IdUsuario" placeholder="Nombre" class="form-control" />
+                <input asp-for="Pass" type="password" placeholder="Contraseña" class="form-control" />
+                <span asp-validation-for="Pass" class="text-danger"></span>
+            </div>
+            <label asp-for="Pass2" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-4">
+                <input asp-for="Pass2"  type="password" placeholder="Contraseña" class="form-control" />
+                <span asp-validation-for="Pass2" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row mg-b-0">
+            <div class="col-sm-12 text-right">
+                <a asp-action="Perfil" asp-controller="Usuario" class="btn btn-sm btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+            </div>
+        </div>
+    </form>
+</div>

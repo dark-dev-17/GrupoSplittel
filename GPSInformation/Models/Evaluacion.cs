@@ -20,28 +20,28 @@ namespace GPSInformation.Models
         public string Nombre { get; set; }
 
         [Required]
-        [Display(Name = "IdPersona")]
+        [Display(Name = "Ponente")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public int IdPersona { get; set; }
 
         [Required]
-        [Display(Name = "InicioFecha")]
+        [Display(Name = "Fe.Inicio")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = false)]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public DateTime InicioFecha { get; set; }
 
         [Required]
-        [Display(Name = "InicioHora")]
+        [Display(Name = "Hora de inicio")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public TimeSpan InicioHora { get; set; }
 
         [Required]
-        [Display(Name = "FinFecha")]
+        [Display(Name = "Fe.Termino")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public DateTime FinFecha { get; set; }
 
         [Required]
-        [Display(Name = "FinHora")]
+        [Display(Name = "Hora de termino")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public TimeSpan FinHora { get; set; }
 

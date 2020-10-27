@@ -69,7 +69,15 @@ namespace GestionPersonal.Controllers
                 darkManager.Usuario.Update();
 
                 StartSessions(ResultUser);
-                return RedirectToAction("Index","Home");
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("url_next")))
+                {
+                    return RedirectToAction("Index","Home");
+                }
+                else
+                {
+                    return Redirect(HttpContext.Session.GetString("url_next"));
+                }
+                
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {

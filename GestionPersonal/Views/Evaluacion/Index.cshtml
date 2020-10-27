@@ -94,8 +94,8 @@
                         @Html.DisplayFor(modelItem => item.Actualizada)
                     </td>*@
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.IdEvaluacion }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.IdEvaluacion }) 
+                    @Html.ActionLink("Editar", "Edit", new { id = item.IdEvaluacion }) |
+                    @Html.ActionLink("Dashboard", "Details", new { id = item.IdEvaluacion } , new { title="Administrar evaluación" }) 
                 </td>
             </tr>
         }

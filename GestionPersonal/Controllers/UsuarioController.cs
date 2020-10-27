@@ -135,6 +135,7 @@ namespace GestionPersonal.Controllers
                 }
                 HttpContext.Session.SetString("user_imagenPerfil", Usuario_re.ImagenPerfil);
                 darkManager.Commit();
+                darkManager.CloseConnection();
                 return RedirectToAction("Perfil");
             }
             catch (GpExceptions ex)
@@ -231,6 +232,59 @@ namespace GestionPersonal.Controllers
             Personas = GetDictionary(1018, usuario.IdRol);
             ViewData["Roles"] = Personas;
             return View(usuario);
+        }
+
+        [AccessView]
+        public IActionResult CambioPass()
+        {
+            
+            int UsuarioIdPer = (int)HttpContext.Session.GetInt32("user_id_permiss");
+            var usuario = darkManager.Usuario.GetByColumn("" + UsuarioIdPer, "IdUsuario");
+
+            if (usuario is null)
+            {
+                return NotFound();
+            }
+            //Personas = GetDictionary(1018, usuario.IdRol);
+            //ViewData["Roles"] = Personas;
+            return View(usuario);
+        }
+
+        [AccessView]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CambioPass(Usuario Usuario)
+        {
+            darkManager.StartTransaction();
+            try
+            {
+                int UsuarioIdPer = (int)HttpContext.Session.GetInt32("user_id_permiss");
+                var usuario_ = darkManager.Usuario.GetByColumn("" + UsuarioIdPer, "IdUsuario");
+
+                if (Usuario.Pass != Usuario.Pass2)
+                {
+                    ModelState.AddModelError("Pass", "Deben de ser iguales ambas contraseñas");
+                    ModelState.AddModelError("Pass2", "Deben de ser iguales ambas contraseñas");
+
+                    return View(Usuario);
+                }
+
+                usuario_.Pass = Usuario.Pass;
+                usuario_.Pass2 = Usuario.Pass2;
+                darkManager.Usuario.Element = usuario_;
+                if (!darkManager.Usuario.Update())
+                {
+                    throw new GpExceptions("Error al guardar");
+                }
+                darkManager.Commit();
+                return RedirectToAction(nameof(Perfil));
+            }
+            catch (GpExceptions ex)
+            {
+                darkManager.RolBack();
+                ModelState.AddModelError("", ex.Message);
+                return View(Usuario);
+            }
         }
 
         [AccessMultipleView(IdAction = new int[] { 20 })]

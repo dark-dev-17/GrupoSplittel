@@ -7,7 +7,10 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title | Gestión de personal</title>
-    @if (controllerName == "Contrato" && controllerAction == "Determinado" || controllerName == "Contrato" && controllerAction == "Indeterminado" || controllerName == "Evaluacion" && controllerAction == "EmailDetails")
+    @if (controllerName == "Contrato" && controllerAction == "Determinado" || 
+        controllerName == "Contrato" && controllerAction == "Indeterminado" || 
+        controllerName == "Usuario" && controllerAction == "DetailsEmail" || 
+        controllerName == "Evaluacion" && controllerAction == "EmailDetails")
     {
 <style>
             @@import url('https://fonts.googleapis.com/css?family=Open+Sans');

@@ -20,7 +20,7 @@
 
 <div class="d-sm-flex align-items-center justify-content-between">
     <div>
-        <h2 class="mg-b-5">@Html.DisplayNameFor(model => model.Nombre)</h2>  <small>@Html.DisplayFor(model => model.PersonaName)</small>
+        <h2 class="mg-b-5">Tema: @Html.DisplayNameFor(model => model.Nombre)</h2>  <small>@Html.DisplayFor(model => model.PersonaName)</small>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.InicioHora)<span>-</span>@Html.DisplayFor(model => model.FinHora)</p>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.ModalidadName)</p>
     </div>
@@ -32,7 +32,7 @@
 <hr />
 <div class="card mg-b-10">
     <div class="card-header pd-t-20 d-sm-flex align-items-start justify-content-between bd-b-0 pd-b-0">
-        
+
     </div><!-- card-header -->
     <div class="card-body pd-y-30">
         <div class="d-sm-flex">
@@ -80,32 +80,40 @@
                                     <span class="badge text-black-50">
                                         @{
                                             double Calificacion = 0;
+                                            int countas = 0;
                                         }
                                         @foreach (var item in respuestas.Where(a => a.IdEvaluacionSeccionPregnts == pregunta.IdEvaluacionSeccionPregnts).ToList())
                                         {
                                             if (item.Respuesta == "1")
                                             {
                                                 Calificacion = Calificacion + 10;
+                                                countas++;
                                             }
                                             else if (item.Respuesta == "2")
                                             {
                                                 Calificacion = Calificacion + 7.5f;
+                                                countas++;
                                             }
                                             else if (item.Respuesta == "3")
                                             {
                                                 Calificacion = Calificacion + 5;
+                                                countas++;
                                             }
                                             else if (item.Respuesta == "4")
                                             {
                                                 Calificacion = Calificacion + 2.5f;
+                                                countas++;
                                             }
                                             else if (item.Respuesta == "5")
                                             {
 
                                             }
+                                        }@{
+                                            double total = Calificacion / countas;
+
                                         }
 
-                                        <strong>@Calificacion</strong>
+                                        <strong>@total.ToString("0.00")</strong>
                                     </span>
                                 </a>
                             }
@@ -136,11 +144,12 @@
 
     }
 </div>
-<div data-label="Participantes" class="df-example demo-forms mt-3" id="app_createPermiso">
+<div data-label="Participantes" class="df-example demo-forms mt-3" id="participantes">
     <div class="d-flex align-items-center justify-content-between mg-b-30 ">
         <h2 class="tx-15 mg-b-0">Lista de participantes</h2>
         <div class="btn-group text-right" role="group" aria-label="Basic example">
-            <a href="#modalActividadVacacionesPeriodos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar nuevo participante</a>
+            <a href="#modalActividadVacacionesPeriodos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar nuevos participantes</a>
+            <a href="#modal_addDepartamentos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar por departamentos</a>
         </div>
     </div>
     <hr />
@@ -150,6 +159,7 @@
                 <th>Empleado</th>
                 <th>Correo</th>
                 <th>Antiguedad</th>
+                <th>Departamento</th>
                 <th>Contestó</th>
                 <th></th>
             </tr>
@@ -161,6 +171,7 @@
                     <td>@emp.EmpleadoDatos.NombreCompleto</td>
                     <td>@emp.EmpleadoDatos.Correo</td>
                     <td>@emp.EmpleadoDatos.Antiguedad.ToString("0.0 año(s)")</td>
+                    <td>@emp.EmpleadoDatos.NombreDepartamento</td>
                     <td>
                         @if (@emp.Respondio)
                         {
@@ -172,7 +183,7 @@
                         }
                     </td>
                     <td>
-                        @Html.ActionLink("Delete", "DeleteParticipante", "Evaluacion", new { IdEvaluacion = Model.IdEvaluacion, IdPersona = emp.IdPersona })
+                        @Html.ActionLink("Quitar", "DeleteParticipante", "Evaluacion", new { IdEvaluacion = Model.IdEvaluacion, IdPersona = emp.IdPersona })
                     </td>
                 </tr>
             }
@@ -186,14 +197,44 @@
                 <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i data-feather="x"></i></span>
                 </button>
-                <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Periodos de vacaciones</h5>
+                <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Agregar nuevos participantes</h5>
 
                 <div id="content_vacacionesAcitivit">
-                    <form asp-action="AddParticipante">
+                    <form asp-action="AddParticipantes">
                         <div class="form-group">
-                            <label>Empleado</label>
+                            <label>selecciona uno o mas participantes</label>
                             <input type="hidden" name="IdEvaluacion" value="@Model.IdEvaluacion" />
-                            <select name="IdPersona" asp-items="ViewBag.Empleados" class="form-control select2">
+                            <select name="Participantes" multiple="multiple" asp-items="ViewBag.Empleados" class="form-control select2">
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                        </div>
+                        <div class="form-group row mg-b-0">
+                            <div class="col-sm-12 text-right">
+                                <a data-dismiss="modal" class="btn btn-sm btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-sm btn-primary">Agregar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- modal-body -->
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+<div class="modal calendar-modal-create fade effect-scale" id="modal_addDepartamentos" role="dialog" data-backdrop="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body pd-20 pd-sm-30">
+                <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i data-feather="x"></i></span>
+                </button>
+                <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Agregar por departamentos</h5>
+
+                <div id="content_vacacionesAcitivit">
+                    <form asp-action="AddDepartamentos">
+                        <div class="form-group">
+                            <label>selecciona uno o mas departamentos</label>
+                            <input type="hidden" name="IdEvaluacion" value="@Model.IdEvaluacion" />
+                            <select name="Departamentos" multiple="multiple" asp-items="ViewBag.Departamentos" class="form-control select2">
                                 <option value="0">Selecciona una opción</option>
                             </select>
                         </div>
@@ -227,35 +268,41 @@
             if (pregunta.Tipo == 1)
             {
                 double Calificacion = 0;
+                int countas = 0;
                 @foreach (var item in respuestas.Where(a => a.IdEvaluacionSeccionPregnts == pregunta.IdEvaluacionSeccionPregnts).ToList())
                 {
                     if (item.Respuesta == "1")
                     {
                         Calificacion = Calificacion + 10;
+                        countas++;
                     }
                     else if (item.Respuesta == "2")
                     {
                         Calificacion = Calificacion + 7.5f;
+                        countas++;
                     }
                     else if (item.Respuesta == "3")
                     {
                         Calificacion = Calificacion + 5;
+                        countas++;
                     }
                     else if (item.Respuesta == "4")
                     {
                         Calificacion = Calificacion + 2.5f;
+                        countas++;
                     }
                     else if (item.Respuesta == "5")
                     {
 
                     }
                 }
-                Valores.Add(Calificacion + "");
+                        double total = Calificacion / countas;
+                        Valores.Add(total.ToString("0.00"));
 
-            }
-            Indices.Add(Preguntas + "");
-            Preguntas++;
-        }
+                    }
+                    Indices.Add(Preguntas + "");
+                    Preguntas++;
+                }
         <script>
 
             var ctxLabel = [@string.Join(",", Indices)];

@@ -1,5 +1,6 @@
 ﻿using GPSInformation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
@@ -110,6 +111,11 @@ namespace GestionPersonal.Models
             }
             else
             {
+                var isHtps = filterContext.HttpContext.Request.IsHttps;
+                var Host = filterContext.HttpContext.Request.Host;
+                var Path = filterContext.HttpContext.Request.Path;
+                string url = string.Format("{0}//{1}{2}",(isHtps ? "https:" : "http:"), Host, Path);
+                filterContext.HttpContext.Session.SetString("url_next",url);
                 filterContext.Result = new RedirectResult("~/");
                 return;
             }

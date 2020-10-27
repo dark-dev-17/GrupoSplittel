@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -298,6 +299,21 @@ namespace GPSInformation.Tools
             return Num2Text;
 
         }
-        
+        public static void EscribeLog(string mensaje)
+        {
+            try
+            {
+                if (!Directory.Exists("C:\\Splittel\\GestionPersonal\\Log\\"))
+                    Directory.CreateDirectory("C:\\Splittel\\GestionPersonal\\Log\\");
+                StreamWriter sw = new StreamWriter("C:\\Splittel\\GestionPersonal\\Log\\Log_" + DateTime.Today.ToString("MM_dd_yyyy") + ".log", true);
+                sw.WriteLine(DateTime.Now.ToString() + " - " + mensaje);
+                sw.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+
+        }
     }
 }

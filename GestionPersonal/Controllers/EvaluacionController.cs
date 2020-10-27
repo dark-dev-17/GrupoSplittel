@@ -52,6 +52,7 @@ namespace GestionPersonal.Controllers
                 ViewData["Participantes"] = EvaluacionCtrl.GetParticipantes(id).ToList();
                 ViewData["Respuestas"] = EvaluacionCtrl.GetRespuestas(id).ToList();
                 ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto");
+                ViewData["Departamentos"] = new SelectList(EvaluacionCtrl.GetDepartamentos().ToList(), "IdDepartamento", "Nombre");
                 
                 return View(EvaluacionCtrl.Get(id));
             }
@@ -200,6 +201,39 @@ namespace GestionPersonal.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 37 })]
+        public async Task<ActionResult> AddParticipantes(EvaluacionEmpleado evaluacionEmpleado)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(evaluacionEmpleado);
+                }
+                EvaluacionCtrl.AddParticupantes(evaluacionEmpleado);
+
+
+                evaluacionEmpleado.Participantes.ForEach(async parti => 
+                {
+                    var result = await _viewRenderService.RenderToStringAsync("Evaluacion/EmailDetails", new EvaluacionEmpleados
+                    {
+                        View_empleado = EvaluacionCtrl.GetEmpleado(parti),
+                        Evaluacion = EvaluacionCtrl.Get(evaluacionEmpleado.IdEvaluacion)
+                    });
+                    EvaluacionCtrl.EnviarCorreo(result, evaluacionEmpleado.IdEvaluacion, evaluacionEmpleado.IdPersona);
+                });
+
+                return RedirectToAction(nameof(Details), new { id = evaluacionEmpleado.IdEvaluacion });
+            }
+            catch (GpExceptions ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(evaluacionEmpleado);
+            }
+        }
+
         [HttpGet]
         [AccessMultipleView(IdAction = new int[] { 37 })]
         public ActionResult DeleteParticipante(int IdEvaluacion, int IdPersona)
@@ -296,6 +330,31 @@ namespace GestionPersonal.Controllers
             {
                 EvaluacionCtrl.AddRespuestas(evaluacionEmp.list, evaluacionEmp.IdEvaluacion, (int)HttpContext.Session.GetInt32("user_id"));
                 return Ok("Evaluacion respondida existosamente");
+            }
+            catch (GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [AccessMultipleView(IdAction = new int[] { 37 })]
+        public ActionResult AddDepartamentos(List<int> Departamentos, int IdEvaluacion)
+        {
+            try
+            {
+                var empleados = EvaluacionCtrl.Adddepartamentos(Departamentos, IdEvaluacion);
+                empleados.ForEach(async parti =>
+                {
+                    var result = await _viewRenderService.RenderToStringAsync("Evaluacion/EmailDetails", new EvaluacionEmpleados
+                    {
+                        View_empleado = EvaluacionCtrl.GetEmpleado(parti.IdPersona),
+                        Evaluacion = EvaluacionCtrl.Get(IdEvaluacion)
+                    });
+                    EvaluacionCtrl.EnviarCorreo(result, IdEvaluacion, parti.IdPersona);
+                });
+
+                return RedirectToAction(nameof(Details), new { id = IdEvaluacion });
             }
             catch (GpExceptions ex)
             {

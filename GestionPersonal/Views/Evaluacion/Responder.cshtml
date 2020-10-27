@@ -7,64 +7,67 @@
 
 <div class="d-sm-flex align-items-center justify-content-between">
     <div>
-        <h2 class="mg-b-5">@Html.DisplayFor(model => model.Nombre)</h2>  <small>@Html.DisplayFor(model => model.PersonaName)</small>
+        <h2 class="mg-b-5">Tema: @Html.DisplayFor(model => model.Nombre)</h2>  <small>@Html.DisplayFor(model => model.PersonaName)</small>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.ModeloName)</p>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.InicioHora)<span>-</span>@Html.DisplayFor(model => model.FinHora)</p>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.ModalidadName)</p>
 
     </div>
     <div class="mg-t-20 mg-sm-t-0">
-        <button class="btn btn-sm btn-primary mg-l-5" id="btn_refrescar" onclick="window.location.reload()">Refrecar</button>
+        <button class="btn btn-sm btn-primary mg-l-5" id="btn_refrescar" onclick="window.location.reload()">Refrescar</button>
     </div>
 </div>
 <hr />
 @if (!Evaluacion.Respondio)
 {
 
-    <div id="AppEvaluacionRes" data-label="Preguntas" class="df-example demo-forms">
-        <table class="table table-bordered table-hover">
+<div id="AppEvaluacionRes" data-label="Preguntas" class="df-example demo-forms">
+    <div class="alert alert-success mg-b-0 mb-5" role="alert">
+        <h4>“Siéntete libre de participar ya que tus respuestas son confidenciales. Son empleadas en la mejora del contenido, la retroalimentación y la logística de los eventos de Formación y Desarrollo”</h4>
+    </div>
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th colspan="1" style="width: 60%;"></th>
+            <th colspan="1" class="text-center">Muy bien</th>
+            <th colspan="1" class="text-center">Bien</th>
+            <th colspan="1" class="text-center">Regular</th>
+            <th colspan="1" class="text-center">Malo</th>
+            <th colspan="1" class="text-center">No aplica</th>
+        </tr>
+        <tbody v-for="(seccion, indexSecccion) in Access">
             <tr>
-                <th colspan="1" style="width: 60%;"></th>
-                <th colspan="1" class="text-center">Muy bien</th>
-                <th colspan="1" class="text-center">Bien</th>
-                <th colspan="1" class="text-center">Regular</th>
-                <th colspan="1" class="text-center">Malo</th>
-                <th colspan="1" class="text-center">No aplica</th>
+                <td class="bg-primary-light m-3" colspan="6">{{ seccion.nombre }}</td>
             </tr>
-            <tbody v-for="(seccion, indexSecccion) in Access">
-                <tr>
-                    <td class="bg-primary-light m-3" colspan="6">{{ seccion.nombre }}</td>
-                </tr>
-                <tr v-for="(pregunta, indexPregunta) in seccion.preguntas">
-                    <th colspan="1" style="width: 60%;">{{ pregunta.pregunta }}</th>
-                    <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="1" title="Muy bien" />
-                    </td>
-                    <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="2" title="Bien" />
-                    </td>
-                    <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="3" title="Regular" />
-                    </td>
-                    <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="4" title="Malo" />
-                    </td>
-                    <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                        <input type="radio" v-model="pregunta.respuesta.respuesta" value="5" title="Considero que esta pregunta no aplica" />
-                    </td>
-                    <td colspan="5" v-if="pregunta.tipo == 2" class="text-center">
-                        <textarea class="form-control" v-model="pregunta.respuesta.respuesta"></textarea>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="form-group row mg-b-0 mt-5">
-            <div class="col-sm-12 text-right">
-                <a asp-action="MisEvaluaciones" class="btn btn-sm btn-secondary">Cancelar</a>
-                <button type="button" v-on:click="Save()" class="btn btn-sm btn-primary">Guardar evaluación</button>
-            </div>
+            <tr v-for="(pregunta, indexPregunta) in seccion.preguntas">
+                <th colspan="1" style="width: 60%;">{{ pregunta.pregunta }}<span class="text-danger field-validation-valid" v-bind:id="'validac_'+pregunta.idEvaluacionSeccionPregnts" data-valmsg-for="Nombre" data-valmsg-replace="true"> </span> </th>
+                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="1" title="Muy bien" />
+                </td>
+                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="2" title="Bien" />
+                </td>
+                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="3" title="Regular" />
+                </td>
+                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="4" title="Malo" />
+                </td>
+                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="5" title="Considero que esta pregunta no aplica" />
+                </td>
+                <td colspan="5" v-if="pregunta.tipo == 2" class="text-center">
+                    <textarea class="form-control" v-model="pregunta.respuesta.respuesta"></textarea>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="form-group row mg-b-0 mt-5">
+        <div class="col-sm-12 text-right">
+            <a asp-action="MisEvaluaciones" class="btn btn-sm btn-secondary">Cancelar</a>
+            <button type="button" v-on:click="Save()" class="btn btn-sm btn-primary">Guardar evaluación</button>
         </div>
     </div>
+</div>
     @section Scripts {
 
         <script>
@@ -103,23 +106,44 @@
                         list : this.Access
                     }
 
-                    console.log(datos)
-                    await axios.post('@Url.Action("DataResponders", "Evaluacion")', datos, null).then(response => {
-                        console.log(response.data)
-                        //this.Access = response.data;
-                        document.getElementById("btn_refrescar").click()
-                    }).catch(error => {
-                        if (error.response) {
-                            if (error.response.status === 400) {
-                                ShowMessageErrorShort(error.response.data, "error")
+                    let validate = await this.validar()
+                    if (validate == false) {
+                        ShowMessageErrorShort("Por favor responde todas las preguntas", "error")
+                    } else {
+                         await axios.post('@Url.Action("DataResponders", "Evaluacion")', datos, null).then(response => {
+                            console.log(response.data)
+                            //this.Access = response.data;
+                            document.getElementById("btn_refrescar").click()
+                        }).catch(error => {
+                            if (error.response) {
+                                if (error.response.status === 400) {
+                                    ShowMessageErrorShort(error.response.data, "error")
+                                }
+                                if (error.response.status === 404) {
+                                    ShowMessageErrorShort(error.response.data, "error")
+                                }
                             }
-                            if (error.response.status === 404) {
-                                ShowMessageErrorShort(error.response.data, "error")
-                            }
-                        }
-                        console.error(error)
+                            console.error(error)
 
-                    }).finally()
+                        }).finally() 
+                    }
+                },
+                validar: async function () {
+                    var valido = true;
+                    await this.Access.forEach(async (es, is) => {
+                        //console.log(es)
+                        await es.preguntas.forEach((ep, ip) => {
+                            if (ep.respuesta.respuesta == null && ep.tipo == 1) {
+                                document.getElementById('validac_' + ep.idEvaluacionSeccionPregnts).innerHTML = "<br />Por favor responde está pregunta "
+                                valido = false
+                            } else {
+                                document.getElementById('validac_' + ep.idEvaluacionSeccionPregnts).innerHTML = ""
+                            }
+                                
+                        });
+                    });
+                    console.log(valido)
+                    return valido;
                 }
             }
         });
@@ -132,8 +156,8 @@ else
         <div class="container ht-100p tx-center">
             <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
                 <div class="wd-70p wd-sm-250 wd-lg-300 mg-b-15"><img src="https://image.freepik.com/vector-gratis/empresario-sosteniendo-documento_1325-411.jpg" class="img-fluid" alt=""></div>
-                <h1 class="tx-color-01 tx-24 tx-sm-32 tx-lg-36 mg-xl-b-5">Gestión de personal</h1>
-                <h5 class="tx-16 tx-sm-18 tx-lg-20 tx-normal mg-b-20">Esta evauación ya fue respondida</h5>
+                <h1 class="tx-color-01 tx-24 tx-sm-32 tx-lg-36 mg-xl-b-5">Formación y Desarrollo agradece tu tiempo y participación, estamos trabajando para ti</h1>
+                <h4 class="tx-16 tx-sm-18 tx-lg-20 tx-normal mg-b-20">Esta evaluación ya fue respondida</h4>
             </div>
         </div><!-- container -->
     </div><!-- content -->

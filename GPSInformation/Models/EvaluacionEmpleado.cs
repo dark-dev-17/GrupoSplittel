@@ -39,5 +39,8 @@ namespace GPSInformation.Models
         [ColumnDB(IsMapped = false, IsKey = false)]
         public View_empleado EmpleadoDatos { get; set; }
 
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public List<int> Participantes { get; set; }
+
     }
 }
