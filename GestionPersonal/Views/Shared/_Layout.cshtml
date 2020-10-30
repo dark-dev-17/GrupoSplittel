@@ -36,8 +36,21 @@ body {
 </head>
 <body class="pos-relative" data-spy="scroll" data-target="#navSection" data-offset="120">
 
-    @if (controllerName == "Login" || controllerName == "Contrato" && controllerAction == "Determinado" || controllerName == "Contrato" && controllerAction == "Indeterminado" || controllerName == "Evaluacion" && controllerAction == "EmailDetails")
+    @if (controllerName == "Login" || 
+        controllerName == "Contrato" && controllerAction == "Determinado" || 
+        controllerName == "Contrato" && controllerAction == "Indeterminado" || 
+        controllerName == "QuejaPersona" && controllerAction == "Create" || 
+        controllerName == "QuejaPersona" && controllerAction == "Complete" || 
+        controllerName == "Evaluacion" && controllerAction == "EmailDetails")
     {
+        if (controllerName == "Login" || controllerName == "QuejaPersona" && controllerAction == "Create" || controllerName == "QuejaPersona" && controllerAction == "Complete")
+        {
+            <partial name="_NavBarSinLogin" />
+        }
+        else
+        {
+
+        }
         @RenderBody()
     }
     else

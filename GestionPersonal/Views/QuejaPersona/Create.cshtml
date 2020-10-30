@@ -1,0 +1,47 @@
+﻿@model GPSInformation.Models.QuejaPersona
+
+@{
+    ViewData["Title"] = "Registrar conflicto";
+}
+<div class="content content-fixed content-auth">
+    <div class="container">
+        <div class="media align-items-stretch justify-content-center ht-100p pos-relative" >
+            <div class="media-body align-items-center d-none d-lg-flex">
+                <div class="mx-wd-500">
+                    <img src="https://image.freepik.com/vector-gratis/fondo-megafono-plano_23-2148152286.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="pos-absolute b-0 l-0 tx-12 tx-center">
+                    @*Workspace design vector is created by <a href="https://www.freepik.com/pikisuperstar" target="_blank">pikisuperstar (freepik.com)</a>*@
+                </div>
+            </div><!-- media-body -->
+            <div class="sign-wrapper mg-lg-l-50 mg-xl-l-60" style="align-items: center;display: flex;">
+                <div class="wd-100p">
+                    <h1 class="tx-color-01 mg-b-5 text-center">Grupo Splittel</h1>
+                    <p class="tx-color-03 tx-16 mg-b-40 mt-5">Bienvenido a GPS, por favor inicia sesión para continuar.</p>
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group ">
+                            <label asp-for="IdPersona" class=""></label>
+                            <input type="hidden" asp-for="IdQuejaPersona" class="form-control" />
+                            <select asp-for="IdPersona" class="custom-select select2" asp-items="ViewBag.Empleados">
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                            <span asp-validation-for="IdPersona" class="text-danger"></span>
+                        </div>
+                        <div class="form-group ">
+                            <label asp-for="Comentario" class=""></label>
+                            <textarea asp-for="Comentario" rows="10" class="form-control"></textarea>
+                            <span asp-validation-for="Comentario" class="text-danger"></span>
+                        </div>
+                        <div class="form-group row mg-b-0">
+                            <div class="col-sm-12 text-right">
+                                @*<a href="@Url.Action("Index","Incidencia", new { id = Model.IdPersona })" class="btn btn-sm btn-secondary">Cancelar</a>*@
+                                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- sign-wrapper -->
+        </div><!-- media -->
+    </div><!-- container -->
+</div><!-- content -->

@@ -9,12 +9,12 @@ namespace GPSInformation.Models
     [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]
     public class Evaluacion
     {
+        [Display(Name = "Clave")]
         [DisplayFormat(DataFormatString = "E{0:0000}", ApplyFormatInEditMode = false)]
         [ColumnDB(IsMapped = true, IsKey = true)]
         public int IdEvaluacion { get; set; }
 
         [Required]
-        
         [Display(Name = "Nombre")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public string Nombre { get; set; }
