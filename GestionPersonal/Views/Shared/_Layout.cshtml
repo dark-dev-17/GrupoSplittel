@@ -39,11 +39,11 @@ body {
     @if (controllerName == "Login" || 
         controllerName == "Contrato" && controllerAction == "Determinado" || 
         controllerName == "Contrato" && controllerAction == "Indeterminado" || 
-        controllerName == "QuejaPersona" && controllerAction == "Create" || 
-        controllerName == "QuejaPersona" && controllerAction == "Complete" || 
+        controllerName == "BuzonQueja" && controllerAction == "Create" || 
+        controllerName == "BuzonQueja" && controllerAction == "Complete" || 
         controllerName == "Evaluacion" && controllerAction == "EmailDetails")
     {
-        if (controllerName == "Login" || controllerName == "QuejaPersona" && controllerAction == "Create" || controllerName == "QuejaPersona" && controllerAction == "Complete")
+        if (controllerName == "Login" || controllerName == "BuzonQueja" && controllerAction == "Create" || controllerName == "BuzonQueja" && controllerAction == "Complete")
         {
             <partial name="_NavBarSinLogin" />
         }

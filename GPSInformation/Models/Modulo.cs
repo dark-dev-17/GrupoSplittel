@@ -86,6 +86,9 @@ namespace GPSInformation.Models
 
         [ColumnDB(IsMapped = true, IsKey = false)]
         public DateTime Modificado { get; set; }
+        
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public bool Forzado { get; set; }
 
     }
 }

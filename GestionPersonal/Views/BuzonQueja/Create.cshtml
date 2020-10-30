@@ -1,0 +1,25 @@
+﻿@model GPSInformation.Models.BuzonQueja
+
+@{
+    ViewData["Title"] = "Registrar conflicto";
+}
+<div class="content content-fixed content-auth">
+    <div class="container border p-5">
+        <h1 class="tx-color-01 mg-b-5 text-center">Grupo Splittel</h1>
+        <p class="tx-color-03 tx-16 mg-b-40 mt-5">Bienvenido a GPS, por favor inicia sesión para continuar.</p>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group ">
+                <label asp-for="Comentario" class=""></label>
+                <textarea asp-for="Comentario" rows="15" class="form-control"></textarea>
+                <span asp-validation-for="Comentario" class="text-danger"></span>
+            </div>
+            <div class="form-group row mg-b-0">
+                <div class="col-sm-12 text-right">
+                    <a href="#" onclick="history.go(-1);" class="btn btn-sm btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- container -->
+</div><!-- content -->

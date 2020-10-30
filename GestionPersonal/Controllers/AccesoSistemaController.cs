@@ -98,6 +98,7 @@ namespace GestionPersonal.Controllers
                 {
                     a.SubModulos.ForEach(b =>
                     {
+                        b.AccesosSistema.Forzado = true;
                         b.AccesosSistema.Modificado = DateTime.Now;
                         darkManager.AccesosSistema.Element = b.AccesosSistema;
 

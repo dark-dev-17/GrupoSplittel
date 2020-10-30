@@ -70,7 +70,7 @@ namespace GPSInformation
         public virtual DarkAttributes<Nomina> Nomina { get; set; }
         public virtual DarkAttributes<InformacionCompania> InformacionCompania { get; set; }
         public virtual DarkAttributes<EmpleadoContrato> EmpleadoContrato { get; set; }
-        public virtual DarkAttributes<QuejaPersona> QuejaPersona { get; set; }
+        public virtual DarkAttributes<BuzonQueja> BuzonQueja { get; set; }
 
 
         private string CorreosBCC { get; set; }
@@ -296,9 +296,9 @@ namespace GPSInformation
             {
                 EmpleadoContrato = new DarkAttributes<EmpleadoContrato>(dBConnection);
             }
-            else if (gpsManagerObjects == GpsManagerObjects.QuejaPersona)
+            else if (gpsManagerObjects == GpsManagerObjects.BuzonQueja)
             {
-                QuejaPersona = new DarkAttributes<QuejaPersona>(dBConnection);
+                BuzonQueja = new DarkAttributes<BuzonQueja>(dBConnection);
             }
         }
         public void OpenConnection()
@@ -396,6 +396,6 @@ namespace GPSInformation
         Nomina = 44,
         InformacionCompania = 45,
         EmpleadoContrato = 46,
-        QuejaPersona = 47,
+        BuzonQueja = 47,
     }
 }

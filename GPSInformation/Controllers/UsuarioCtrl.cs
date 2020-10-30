@@ -193,14 +193,17 @@ namespace GPSInformation.Controllers
                 }
                 else
                 {
-                    //actualizar
-                    acces.Modificado = DateTime.Now;
-                    acces.TieneAcceso = Permisos.Contains(Act.IdSubModulo);
-
-                    darkManager.AccesosSistema.Element = acces;
-                    if (!darkManager.AccesosSistema.Update())
+                    if (!acces.Forzado)
                     {
-                        throw new GPSInformation.Exceptions.GpExceptions("Error al actualizar permiso");
+                        //actualizar
+                        acces.Modificado = DateTime.Now;
+                        acces.TieneAcceso = Permisos.Contains(Act.IdSubModulo);
+
+                        darkManager.AccesosSistema.Element = acces;
+                        if (!darkManager.AccesosSistema.Update())
+                        {
+                            throw new GPSInformation.Exceptions.GpExceptions("Error al actualizar permiso");
+                        }
                     }
                 }
 
