@@ -148,7 +148,7 @@
     <div class="d-flex align-items-center justify-content-between mg-b-30 ">
         <h2 class="tx-15 mg-b-0">Lista de participantes</h2>
         <div class="btn-group text-right" role="group" aria-label="Basic example">
-            <a href="#modalActividadVacacionesPeriodos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar nuevos participantes</a>
+            <a href="#modalActividadVacacionesPeriodos" onclick="document.getElementById('inpt_newPart').focus()" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar nuevos participantes</a>
             <a href="#modal_addDepartamentos" data-toggle="modal" class="btn btn-sm btn-white d-flex align-items-center"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar por departamentos</a>
         </div>
     </div>
@@ -204,7 +204,7 @@
                         <div class="form-group">
                             <label>selecciona uno o mas participantes</label>
                             <input type="hidden" name="IdEvaluacion" value="@Model.IdEvaluacion" />
-                            <select name="Participantes" multiple="multiple" asp-items="ViewBag.Empleados" class="form-control select2">
+                            <select name="Participantes" id="inpt_newPart" multiple="multiple" asp-items="ViewBag.Empleados" class="form-control select2">
                                 <option value="0">Selecciona una opción</option>
                             </select>
                         </div>

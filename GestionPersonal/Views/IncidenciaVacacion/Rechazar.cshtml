@@ -2,7 +2,7 @@
 
 
 @{
-    ViewData["Title"] = "aprobar solicitud de vacaciones";
+    ViewData["Title"] = "Rechazar de solicitud de vacaciones";
 }
 
 @if (Model.Estatus == 1)
@@ -18,12 +18,12 @@ else
     </div>
 
 }
-<h1>¿Deseas aprobar esta solicitud</h1>
+<h1>¿Deseas rechazar esta solicitud</h1>
 <div data-label="Crear Nuevo Permiso" class="df-example demo-forms" id="app_createPermiso">
     <h4>I. Solicitante</h4>
     <hr />
     @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
-
+    
     <h4>II. Detalle de solicitud</h4>
     <hr />
     <form>
@@ -52,21 +52,20 @@ else
 
         </div>
         @*<div class="form-group row mg-b-0">
-                <div class="col-sm-12 text-right">
-                    <a href="@Url.Action("Index","Incidencia", new { id = Model.IdPersona })" class="btn btn-sm btn-secondary">Regresar</a>
-                </div>
-            </div>*@
+            <div class="col-sm-12 text-right">
+                <a href="@Url.Action("Index","Incidencia", new { id = Model.IdPersona })" class="btn btn-sm btn-secondary">Regresar</a>
+            </div>
+        </div>*@
     </form>
 
 </div>
 
-
 <div data-label="Acciones" class="df-example demo-forms">
-    <form asp-action="Aprobar">
+    <form asp-action="Rechazar">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <label class="col-sm-2 col-form-label">Comentarios: </label>
         <div class="col-sm-12 mb-3">
-            <textarea class="form-control" name="comentario"></textarea>
+            <textarea required class="form-control" name="comentario"></textarea>
             <input type="hidden" name="mode" value="@ViewBag.ModeAprobar" />
             <input type="hidden" name="id" value="@Model.IdIncidenciaVacacion" />
             <span asp-validation-for="NoDias" class="text-danger"></span>
@@ -82,9 +81,8 @@ else
                     <a href="@Url.Action("AprobarGPS","Incidencia")" class="btn btn-sm btn-secondary">Atras</a>
                 }
 
-                <input type="submit" name="name" class="btn btn-sm btn-primary" value="Aprobar" />
+                <input type="submit" name="name" class="btn btn-sm btn-primary" value="Rechazar" />
             </div>
         </div>
     </form>
 </div>
-

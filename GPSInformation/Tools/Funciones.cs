@@ -315,5 +315,48 @@ namespace GPSInformation.Tools
             }
 
         }
+
+        public static string ValidateEmail(string dataset)
+        {
+            string Malo = "";
+            foreach (var a in GetEmails(dataset))
+            {
+                if (!IsValidEmail(a))
+                {
+                    Malo = a;
+                    break;
+                }
+            }
+
+            return Malo;
+        }
+
+        private static bool IsValidEmail(string email)
+        {
+            bool errorStatus = false;
+            string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                              @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                              @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+            Regex re = new Regex(strRegex);
+            if (!re.IsMatch(email.Trim()))
+                errorStatus = false;
+            else
+            {
+                errorStatus = true;
+            }
+            return errorStatus;
+        }
+        private static List<string> GetEmails(string dataset)
+        {
+            List<string> list = new List<string>();
+            string[] allAddresses = dataset.Split(";,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string emailAddress in allAddresses)
+            {
+                list.Add(emailAddress);
+            }
+
+            return list;
+        }
     }
 }

@@ -43,39 +43,79 @@ namespace GestionPersonal.Controllers
         [AccessMultipleView(IdAction = new int[] { 30 })]
         public ActionResult DetailsEmail(int id)
         {
-            IncidenciaVacaRe incidenciaVacaRe = new IncidenciaVacaRe();
-            incidenciaVacaRe.IncidenciaVacacion = darkManager.IncidenciaVacacion.Get(id);
-            incidenciaVacaRe.view_Empleado = darkManager.View_empleado.Get(incidenciaVacaRe.IncidenciaVacacion.IdPersona);
-            incidenciaVacaRe.IncidenciaVacacion.Proceso = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
-            
+            try
+            {
+                IncidenciaVacaRe incidenciaVacaRe = new IncidenciaVacaRe();
+                incidenciaVacaRe.IncidenciaVacacion = darkManager.IncidenciaVacacion.Get(id);
+                incidenciaVacaRe.view_Empleado = darkManager.View_empleado.Get(incidenciaVacaRe.IncidenciaVacacion.IdPersona);
+                incidenciaVacaRe.IncidenciaVacacion.Proceso = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+                return View(incidenciaVacaRe);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
 
-            return View(incidenciaVacaRe);
+            
         }
 
         // GET: IncidenciaVacacion
         public ActionResult Index()
         {
-            var result = darkManager.IncidenciaVacacion.Get();
-            return View(result);
+            try
+            {
+                var result = darkManager.IncidenciaVacacion.Get();
+                return View(result);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
         }
 
         [AccessMultipleView(IdAction = new int[] { 30 })]
         // GET: IncidenciaVacacion/Details/5
         public ActionResult Details(int id)
         {
-            //var result = darkManager.IncidenciaVacacion.Get(""+ id,nameof(darkManager.IncidenciaVacacion.Element.IdPersona));
+            try
+            {
+                //var result = darkManager.IncidenciaVacacion.Get(""+ id,nameof(darkManager.IncidenciaVacacion.Element.IdPersona));
 
-            var result = darkManager.IncidenciaVacacion.Get(id);
+                var result = darkManager.IncidenciaVacacion.Get(id);
 
-            ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
-            return View(result);
+                ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+                return View(result);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
+           
         }
 
         [AccessMultipleView(IdAction = new int[] { 30 })]
         // GET: IncidenciaVacacion/Create
         public ActionResult Create(int id)
         {
-            return View(new IncidenciaVacacion { IdPersona = id, Inicio= DateTime.Now, Fin = DateTime.Now });
+            return View(new IncidenciaVacacion { IdPersona = (int)HttpContext.Session.GetInt32("user_id"), Inicio= DateTime.Now, Fin = DateTime.Now });
         }
 
         // POST: IncidenciaVacacion/Create
@@ -144,15 +184,34 @@ namespace GestionPersonal.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(IncidenciaVacacion);
             }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
         }
 
         // GET: IncidenciaVacacion/Delete/5
         [AccessMultipleView(IdAction = new int[] { 30 })]
         public ActionResult Cancel(int id)
         {
-            var result = darkManager.IncidenciaVacacion.Get(id);
-            ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
-            return View(result);
+            try
+            {
+                var result = darkManager.IncidenciaVacacion.Get(id);
+                ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+                return View(result);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
+            
         }
 
         // POST: IncidenciaVacacion/Delete/5
@@ -182,11 +241,17 @@ namespace GestionPersonal.Controllers
             {
                 return NotFound(ex.Message);
             }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
         }
 
         [AccessMultipleView(IdAction = new int[] { 32, 36 })]
-        [HttpGet]
-        public ActionResult AprobarInc(int id, int Mode)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Aprobar(int id, int Mode)
         {
             darkManager.StartTransaction();
             try
@@ -252,11 +317,17 @@ namespace GestionPersonal.Controllers
                 darkManager.RolBack();
                 return PartialView(ex.Message);
             }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
         }
 
         [AccessMultipleView(IdAction = new int[] { 32, 36 })]
-        [HttpGet]
-        public ActionResult RechazarInc(int id, int Mode)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Rechazar(int id, int Mode, string Comentario)
         {
             darkManager.StartTransaction();
             try
@@ -273,6 +344,7 @@ namespace GestionPersonal.Controllers
                     nivel.NombreEmpleado = Persona.NombreCompelto;
                     nivel.Revisada = true;
                     nivel.IdIncidenciaVacacion = id;
+                    nivel.Comentarios = Comentario;
                     darkManager.IncidenciaProcess.Element = nivel;
 
                     if (darkManager.IncidenciaProcess.Update())
@@ -296,6 +368,7 @@ namespace GestionPersonal.Controllers
                     nivel.IdPersona = (int)HttpContext.Session.GetInt32("user_id");
                     nivel.NombreEmpleado = Persona.NombreCompelto;
                     nivel.Revisada = true;
+                    nivel.Comentarios = Comentario;
                     nivel.IdIncidenciaVacacion = id;
                     darkManager.IncidenciaProcess.Element = nivel;
 
@@ -319,7 +392,12 @@ namespace GestionPersonal.Controllers
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
                 darkManager.RolBack();
-                return PartialView(ex.Message);
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
             }
         }
 
@@ -336,11 +414,24 @@ namespace GestionPersonal.Controllers
         [AccessMultipleView(IdAction = new int[] { 32, 36 })]
         public ActionResult Rechazar(int id, string Mode)
         {
-            var result = darkManager.IncidenciaVacacion.Get(id);
+            try
+            {
+                var result = darkManager.IncidenciaVacacion.Get(id);
 
-            ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
-            ViewData["ModeAprobar"] = Mode;
-            return View(result);
+                ViewData["Actividades"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaVacacion));
+                ViewData["ModeAprobar"] = Mode;
+                return View(result);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
+            
         }
 
         // POST: IncidenciaVacacion/Delete/5
@@ -357,7 +448,12 @@ namespace GestionPersonal.Controllers
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                return PartialView(ex.Message);
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
             }
         }
 
@@ -434,23 +530,42 @@ namespace GestionPersonal.Controllers
         public ActionResult GenerarPeridos()
         {
             VacacionesCtrl vacacionesCtrl = new VacacionesCtrl((int)HttpContext.Session.GetInt32("user_id"),darkManager);
-            vacacionesCtrl.ProcPeridosVac((int)HttpContext.Session.GetInt32("user_id"));
-            return Ok("asasdasdasdasda");
+            try
+            {
+                vacacionesCtrl.ProcPeridosVac((int)HttpContext.Session.GetInt32("user_id"));
+                return Ok("asasdasdasdasda");
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                vacacionesCtrl.Terminar();
+                vacacionesCtrl = null;
+            }
+            
         }
         
         [HttpGet]
         [AccessMultipleView(IdAction = new int[] { 30, 32, 36 })]
         public ActionResult GenerarPeridosAll()
         {
+            VacacionesCtrl vacacionesCtrl = new VacacionesCtrl((int)HttpContext.Session.GetInt32("user_id"), darkManager);
             try
             {
-                VacacionesCtrl vacacionesCtrl = new VacacionesCtrl((int)HttpContext.Session.GetInt32("user_id"), darkManager);
+                
                 vacacionesCtrl.ProcPeridosVacAll();
                 return Ok("Periodos completos");
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
                 return BadRequest(ex.Message);
+            }
+            finally
+            {
+                vacacionesCtrl.Terminar();
+                vacacionesCtrl = null;
             }
             
         }

@@ -69,8 +69,9 @@
             </div>
             <label asp-for="Email" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
-                <input type="email" asp-for="Email" class="form-control" />
+                <input type="email" asp-for="Email" class="form-control" placeholder="correo@@ejemplo.com;correo2@@ejemplo.com" />
                 <span asp-validation-for="Email" class="text-danger"></span>
+                <span class="text-primary">Usa <strong>punto y coma</strong> para separar cada correo</span>
             </div>
         </div>
         <div class="row form-group">
