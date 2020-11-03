@@ -43,7 +43,8 @@
             <div class="activity-body">
                 <p class="mg-b-2">
                     <h4 class="tx-19 mg-b-2">@Html.DisplayFor(modelItem => item.Titulo)</h4>
-                    @Html.DisplayFor(modelItem => item.NombreEmpleado)
+                    @Html.DisplayFor(modelItem => item.NombreEmpleado) <br />
+                    @Html.DisplayFor(modelItem => item.Comentarios)
                 </p>
                 <small class="tx-color-03">
                     @if (item.Fecha != null)
@@ -61,3 +62,9 @@
     }
 
 </ul>
+@if (Model.Where(a => a.Autorizada == false && a.Revisada == true).ToList().Count > 0)
+{
+    <div class="alert alert-warning mg-b-0" role="alert">
+        Esta solicitud fue rechazda por alguno de los involucrados
+    </div>
+}

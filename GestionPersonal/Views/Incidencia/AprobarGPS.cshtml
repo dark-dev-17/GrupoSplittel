@@ -103,12 +103,20 @@
                                             var nive2 = item.Proceso.Find(a => a.Nivel == 3);
 
                                         }
-                                        @Html.ActionLink("Detalles", "Details", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso }) |
-                                        @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
-                                        {
-                                            @Html.ActionLink("Aprobar", "Aprobar", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso, Mode = 2 })<span>|</span>
-                                        }
-                                        <a href="#modalActividadPermisos" data-toggle="modal" onclick="app_incidencias.ActividadPermisos(@item.IdIncidenciaPermiso)">Actividad</a>
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="dropleftMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Opciones
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropleftMenuButton">
+                                                <a class="dropdown-item" href="@Url.Action("Details", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso })">Detalle</a>
+                                                @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
+                                                {
+                                                    <a class="dropdown-item" href="@Url.Action("Aprobar", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso, Mode = 2 })">Aprobar</a>
+                                                    <a class="dropdown-item" href="@Url.Action("Rechazar", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso, Mode = 2 })">Rechazar</a>
+                                                }
+                                                <a class="dropdown-item" href="#modalActividadPermisos" data-toggle="modal" onclick="app_incidencias.ActividadPermisos(@item.IdIncidenciaPermiso)">Actividad</a>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }
@@ -164,7 +172,7 @@
                                         @Html.DisplayFor(modelItem => item.Folio)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.IdPersona)
+                                        @Html.DisplayFor(modelItem => item.EmpleadoNombre)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Inicio)
@@ -193,12 +201,20 @@
                                         @{
                                             var nive2 = item.Proceso.Find(a => a.Nivel == 3);
                                         }
-                                        @Html.ActionLink("Detalles", "Details", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion })|
-                                        @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
-                                        {
-                                            @Html.ActionLink("Aprobar", "Aprobar", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion, Mode = 2 })<span>|</span>
-                                        }
-                                        <a href="#modalActividadVacaciones" data-toggle="modal" onclick="app_incidencias.ActividadVacacion(@item.IdIncidenciaVacacion)">Actividad</a>
+                                        <div class="dropdown">
+                                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropleftMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Opciones
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropleftMenuButton">
+                                                <a class="dropdown-item" href="@Url.Action("Details", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion })">Detalle</a>
+                                                @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
+                                                {
+                                                    <a class="dropdown-item" href="@Url.Action("Aprobar", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion, Mode = 2 })">Aprobar</a>
+                                                    <a class="dropdown-item" href="@Url.Action("Rechazar", "IncidenciaVacacion", new { id = item.IdIncidenciaVacacion, Mode = 2 })">Rechazar</a>
+                                                }
+                                                <a class="dropdown-item" href="#modalActividadVacaciones" data-toggle="modal" onclick="app_incidencias.ActividadVacacion(@item.IdIncidenciaVacacion)">Actividad</a>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }

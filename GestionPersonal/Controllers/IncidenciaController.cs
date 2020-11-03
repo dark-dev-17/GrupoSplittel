@@ -79,12 +79,14 @@ namespace GestionPersonal.Controllers
                     incidencias.persona = darkManager.Persona.GetByColumn("" + solicitante.IdPersona, "IdPersona");
                     var permisos = darkManager.IncidenciaPermiso.Get("" + solicitante.IdPersona, "IdPersona");
                     permisos.ForEach(permiso => {
-                        var empleado = darkManager.Persona.Get(permiso.IdPersona);
-                        permiso.EmpleadoNombre = string.Format("{0} {1} {2}", empleado.Nombre, empleado.ApellidoPaterno, empleado.ApellidoMaterno);
+                        permiso.EmpleadoNombre = solicitante.NombreCompelto;
                         var YipoAsunto = darkManager.CatalogoOpcionesValores.Get(permiso.IdAsunto);
                         permiso.DEscripcionTipo = YipoAsunto.Descripcion;
                     });
                     var vacaciones = darkManager.IncidenciaVacacion.Get("" + solicitante.IdPersona, "IdPersona");
+                    vacaciones.ForEach(ass => {
+                        ass.EmpleadoNombre = solicitante.NombreCompelto;
+                    });
                     permisos.ForEach(p => incidencias.permisos.Add(p));
                     vacaciones.ForEach(p => incidencias.vacaciones.Add(p));
 
@@ -114,6 +116,11 @@ namespace GestionPersonal.Controllers
                 permiso.DEscripcionTipo = YipoAsunto.Descripcion;
             });
             var vacaciones = darkManager.IncidenciaVacacion.Get("1", "Estatus");
+            vacaciones.ForEach(a => {
+                var empleado = darkManager.Persona.Get(a.IdPersona);
+
+                a.EmpleadoNombre = empleado != null ? empleado.NombreCompelto : "";
+            });
             permisos.ForEach(p => incidencias.permisos.Add(p));
             vacaciones.ForEach(p => incidencias.vacaciones.Add(p));
 

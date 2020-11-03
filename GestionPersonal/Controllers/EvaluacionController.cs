@@ -222,7 +222,7 @@ namespace GestionPersonal.Controllers
                         View_empleado = EvaluacionCtrl.GetEmpleado(parti),
                         Evaluacion = EvaluacionCtrl.Get(evaluacionEmpleado.IdEvaluacion)
                     });
-                    EvaluacionCtrl.EnviarCorreo(result, evaluacionEmpleado.IdEvaluacion, evaluacionEmpleado.IdPersona);
+                    EvaluacionCtrl.EnviarCorreo(result, evaluacionEmpleado.IdEvaluacion, parti);
                 });
 
                 return RedirectToAction(nameof(Details), new { id = evaluacionEmpleado.IdEvaluacion });
@@ -253,10 +253,11 @@ namespace GestionPersonal.Controllers
 
         [HttpGet]
         [AccessMultipleView(IdAction = new int[] { 39 })]
-        public ActionResult MisEvaluaciones()
+        public ActionResult MisEvaluaciones(string Mode)
         {
             try
             {
+                ViewData["Mode"] = string.IsNullOrEmpty(Mode) ? "list" : "card";
                 return View(EvaluacionCtrl.GetEvaluacions((int)HttpContext.Session.GetInt32("user_id")));
             }
             catch (GpExceptions ex)

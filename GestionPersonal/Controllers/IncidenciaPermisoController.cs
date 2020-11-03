@@ -47,41 +47,80 @@ namespace GestionIncidenciaPermisol.Controllers
         [AccessMultipleView(IdAction = new int[] { 30 })]
         public ActionResult DetailsEmail(int id)
         {
-            IncidenciaPermisoRe incidenciaPermisoRe = new IncidenciaPermisoRe();
-            incidenciaPermisoRe.IncidenciaPermiso = darkManager.IncidenciaPermiso.Get(id);
-            incidenciaPermisoRe.view_Empleado = darkManager.View_empleado.Get(incidenciaPermisoRe.IncidenciaPermiso.IdPersona);
-            incidenciaPermisoRe.IncidenciaPermiso.Proceso = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaPermiso));
-            incidenciaPermisoRe.Asunto = darkManager.CatalogoOpcionesValores.Get(incidenciaPermisoRe.IncidenciaPermiso.IdAsunto).Descripcion;
-            
-            if(incidenciaPermisoRe.IncidenciaPermiso.IdPagoPermiso != 0)
+            try
             {
-                incidenciaPermisoRe.PagoPermiso = darkManager.CatalogoOpcionesValores.Get(incidenciaPermisoRe.IncidenciaPermiso.IdPagoPermiso).Descripcion;
-            }
+                IncidenciaPermisoRe incidenciaPermisoRe = new IncidenciaPermisoRe();
+                incidenciaPermisoRe.IncidenciaPermiso = darkManager.IncidenciaPermiso.Get(id);
+                incidenciaPermisoRe.view_Empleado = darkManager.View_empleado.Get(incidenciaPermisoRe.IncidenciaPermiso.IdPersona);
+                incidenciaPermisoRe.IncidenciaPermiso.Proceso = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaPermiso));
+                incidenciaPermisoRe.Asunto = darkManager.CatalogoOpcionesValores.Get(incidenciaPermisoRe.IncidenciaPermiso.IdAsunto).Descripcion;
 
-            return View(incidenciaPermisoRe);
+                if (incidenciaPermisoRe.IncidenciaPermiso.IdPagoPermiso != 0)
+                {
+                    incidenciaPermisoRe.PagoPermiso = darkManager.CatalogoOpcionesValores.Get(incidenciaPermisoRe.IncidenciaPermiso.IdPagoPermiso).Descripcion;
+                }
+
+                return View(incidenciaPermisoRe);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
+            
         }
 
         [AccessMultipleView(IdAction = new int[] { 30 })]
         public ActionResult Create(int id)
         {
-            TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TiposPermisos"] = TiposPermisos;
-            ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
-            return View(new IncidenciaPermiso() { IdPersona = id, Fecha = DateTime.Now });
+            try
+            {
+                TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                ViewData["TiposPermisos"] = TiposPermisos;
+                ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
+                return View(new IncidenciaPermiso() { IdPersona = (int)HttpContext.Session.GetInt32("user_id"), Fecha = DateTime.Now });
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
+            
         }
 
         [AccessMultipleView(IdAction = new int[] { 30,32,36 })]
         public ActionResult Details(int id)
         {
-            TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TiposPermisos"] = TiposPermisos;
-            ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
-            ViewData["Procesos"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaPermiso)); ;
+            try
+            {
+                TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                ViewData["TiposPermisos"] = TiposPermisos;
+                ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
+                ViewData["Procesos"] = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaPermiso)); ;
 
-            var response = darkManager.IncidenciaPermiso.Get(id);
-            return View(response);
+                var response = darkManager.IncidenciaPermiso.Get(id);
+                return View(response);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
+            
         }
 
         // POST: IncidenciaPermiso/Create
@@ -139,44 +178,85 @@ namespace GestionIncidenciaPermisol.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(IncidenciaPermiso);
             }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
         }
 
         [AccessMultipleView(IdAction = new int[] { 30 })]
         public ActionResult Cancel(int id)
         {
-            TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TiposPermisos"] = TiposPermisos;
-            ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
+            try
+            {
+                TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                ViewData["TiposPermisos"] = TiposPermisos;
+                ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
 
-            var response = darkManager.IncidenciaPermiso.Get(id);
-            return View(response);
+                var response = darkManager.IncidenciaPermiso.Get(id);
+                return View(response);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
         }
         
         [AccessMultipleView(IdAction = new int[] { 32,36 })]
         public ActionResult Aprobar(int id, string Mode)
         {
-            TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TiposPermisos"] = TiposPermisos;
-            ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
+            try
+            {
+                TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                ViewData["TiposPermisos"] = TiposPermisos;
+                ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
 
-            var response = darkManager.IncidenciaPermiso.Get(id);
-            ViewData["ModeAprobar"] = Mode;
-            return View(response);
+                var response = darkManager.IncidenciaPermiso.Get(id);
+                ViewData["ModeAprobar"] = Mode;
+                return View(response);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
         }
         
         [AccessMultipleView(IdAction = new int[] { 32, 36 })]
         public ActionResult Rechazar(int id, string Mode)
         {
-            TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["TiposPermisos"] = TiposPermisos;
-            ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
+            try
+            {
+                TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                ViewData["TiposPermisos"] = TiposPermisos;
+                ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
 
-            var response = darkManager.IncidenciaPermiso.Get(id);
-            ViewData["ModeAprobar"] = Mode;
-            return View(response);
+                var response = darkManager.IncidenciaPermiso.Get(id);
+                ViewData["ModeAprobar"] = Mode;
+                return View(response);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
+            
         }
         
         // POST: IncidenciaVacacion/Delete/5
@@ -209,6 +289,10 @@ namespace GestionIncidenciaPermisol.Controllers
                 darkManager.RolBack();
                 return NotFound(ex.Message);
             }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
         }
         
         // POST: IncidenciaVacacion/Delete/5
@@ -228,11 +312,16 @@ namespace GestionIncidenciaPermisol.Controllers
             {
                 return PartialView(ex.Message);
             }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
         }
         
         [AccessMultipleView(IdAction = new int[] { 32, 36 })]
-        [HttpGet]
-        public ActionResult AprobarInc(int id, int Mode)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Aprobar(int id, int Mode, string Comentario)
         {
             darkManager.StartTransaction();
             try
@@ -249,7 +338,7 @@ namespace GestionIncidenciaPermisol.Controllers
                     nivel.NombreEmpleado = Persona.NombreCompelto;
                     nivel.Revisada = true;
                     nivel.IdIncidenciaPermiso = id;
-
+                    nivel.Comentarios = Comentario;
                     darkManager.IncidenciaProcess.Element = nivel;
 
                     if (darkManager.IncidenciaProcess.Update())
@@ -274,6 +363,7 @@ namespace GestionIncidenciaPermisol.Controllers
                     nivel.NombreEmpleado = Persona.NombreCompelto;
                     nivel.Revisada = true;
                     nivel.IdIncidenciaPermiso = id;
+                    nivel.Comentarios = Comentario;
                     darkManager.IncidenciaProcess.Element = nivel;
 
                     if (darkManager.IncidenciaProcess.Update())
@@ -296,13 +386,18 @@ namespace GestionIncidenciaPermisol.Controllers
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
                 darkManager.RolBack();
-                return PartialView(ex.Message);
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
             }
         }
         
         [AccessMultipleView(IdAction = new int[] { 32, 36 })]
-        [HttpGet]
-        public ActionResult RechazarInc(int id, int Mode)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Rechazar(int id, int Mode, string Comentario)
         {
             darkManager.StartTransaction();
             try
@@ -319,6 +414,7 @@ namespace GestionIncidenciaPermisol.Controllers
                     nivel.NombreEmpleado = Persona.NombreCompelto;
                     nivel.Revisada = true;
                     nivel.IdIncidenciaPermiso = id;
+                    nivel.Comentarios = Comentario;
                     darkManager.IncidenciaProcess.Element = nivel;
 
                     if (darkManager.IncidenciaProcess.Update())
@@ -343,6 +439,7 @@ namespace GestionIncidenciaPermisol.Controllers
                     nivel.NombreEmpleado = Persona.NombreCompelto;
                     nivel.Revisada = true;
                     nivel.IdIncidenciaPermiso = id;
+                    nivel.Comentarios = Comentario;
                     darkManager.IncidenciaProcess.Element = nivel;
 
                     if (darkManager.IncidenciaProcess.Update())
@@ -365,7 +462,11 @@ namespace GestionIncidenciaPermisol.Controllers
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
                 darkManager.RolBack();
-                return PartialView(ex.Message);
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
             }
         }
 

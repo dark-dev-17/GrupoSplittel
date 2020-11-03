@@ -31,7 +31,7 @@
                         <div class="custom-control custom-checkbox">
                             <input type="hidden" class="custom-control-input" asp-for="TipoNominas[IndiceExcel].IdTipoNomina">
                             <input type="hidden" class="custom-control-input" asp-for="TipoNominas[IndiceExcel].Nombre">
-                            <input type="hidden" class="custom-control-input" asp-for="TipoNominas[IndiceExcel].Selected" id="checTn_@IndiceExcel">
+                            <input type="hidden" class="custom-control-input" asp-for="TipoNominas[IndiceExcel].Selected" id="RchecTn_@IndiceExcel">
                         </div>
 
                         IndiceExcel++;
@@ -44,7 +44,7 @@
                         <div class="custom-control custom-checkbox col-lg-4">
                             <input type="hidden" class="custom-control-input" asp-for="Departamentos[IndiceExcel2].IdDepartamento">
                             <input type="hidden" class="custom-control-input" asp-for="Departamentos[IndiceExcel2].Nombre">
-                            <input type="hidden" class="custom-control-input" asp-for="Departamentos[IndiceExcel2].Selected" id="checDep_@IndiceExcel2">
+                            <input type="hidden" class="custom-control-input" asp-for="Departamentos[IndiceExcel2].Selected" id="RchecDep_@IndiceExcel2">
                         </div>
                         IndiceExcel2++;
                     }

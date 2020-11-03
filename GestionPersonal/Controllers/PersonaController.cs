@@ -80,6 +80,7 @@ namespace GestionPersonal.Controllers
                     ViewData["EstadosCiviles"] = EstadosCiviles;
                     return PartialView(Persona);
                 }
+
                 Persona.Creado = DateTime.Now;
                 Persona.Actualizado = DateTime.Now;
                 darkManager.Persona.Element = Persona;

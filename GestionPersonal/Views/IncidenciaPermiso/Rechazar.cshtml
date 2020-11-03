@@ -1,9 +1,9 @@
 ﻿@model GPSInformation.Models.IncidenciaPermiso
 
 @{
-    ViewData["Title"] = "Detalle del permiso";
+    ViewData["Title"] = "rechazar permiso";
 }
-<h1>¿Deseas aprobar esta solicitud</h1>
+<h1>¿Deseas rechazar esta solicitud</h1>
     <div data-label="Detalle del permiso" class="df-example demo-forms">
         @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
         <hr />
@@ -77,11 +77,11 @@
         </form>
     </div>
     <div data-label="Acciones" class="df-example demo-forms">
-        <form asp-action="Aprobar">
+        <form asp-action="Rechazar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <label class="col-sm-2 col-form-label">Comentarios: </label>
             <div class="col-sm-12 mb-3">
-                <textarea  class="form-control" name="comentario"></textarea>
+                <textarea required class="form-control" name="comentario"></textarea>
                 <input type="hidden" name="mode" value="@ViewBag.ModeAprobar" />
                 <input type="hidden" name="id" value="@Model.IdIncidenciaPermiso" />
             </div>
@@ -96,7 +96,7 @@
                         <a href="@Url.Action("AprobarGPS","Incidencia")" class="btn btn-sm btn-secondary">Atras</a>
                     }
 
-                    <input type="submit" name="name" class="btn btn-sm btn-primary" value="Aprobar" />
+                    <input type="submit" name="name" class="btn btn-sm btn-primary" value="Rechazar" />
                 </div>
             </div>
         </form>

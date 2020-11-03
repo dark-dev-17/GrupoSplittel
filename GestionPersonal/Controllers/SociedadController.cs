@@ -30,20 +30,44 @@ namespace GestionPersonal.Controllers
         [AccessMultipleView(IdAction = new int[] { 10,11 })]
         public ActionResult Index()
         {
-            var result = darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList();
-            return View(result);
+            try
+            {
+                var result = darkManager.Sociedad.Get().OrderBy(a => a.Descripcion).ToList();
+                return View(result);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
+           
         }
 
         // GET: Sociedad/Details/5
         [AccessMultipleView(IdAction = new int[] { 10, 11 })]
         public ActionResult Details(int id)
         {
-            var result = darkManager.Sociedad.Get(id);
-            if(result == null)
+            try
             {
-                return NotFound();
+                var result = darkManager.Sociedad.Get(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return View(result);
             }
-            return View(result);
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
+            
         }
 
         // GET: Sociedad/Create
@@ -85,18 +109,34 @@ namespace GestionPersonal.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(Sociedad);
             }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
         }
 
         // GET: Sociedad/Edit/5
         [AccessMultipleView(IdAction = new int[] { 11 })]
         public ActionResult Edit(int id)
         {
-            var result = darkManager.Sociedad.Get(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = darkManager.Sociedad.Get(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return View(result);
             }
-            return View(result);
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+            }
+            
         }
 
         // POST: Sociedad/Edit/5
@@ -130,6 +170,10 @@ namespace GestionPersonal.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
                 return View(Sociedad);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
             }
         }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GestionPersonal.Models;
 using GPSInformation;
 using GPSInformation.Models;
+using GPSInformation.Tools;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -74,6 +75,13 @@ namespace GestionEmpleadol.Controllers
                     return PartialView(Empleado);
                 }
 
+                string emailValid = Funciones.ValidateEmail(Empleado.Email);
+                if (emailValid != "")
+                {
+                    ModelState.AddModelError("Email", string.Format("El correo: '{0}', no es valido", emailValid));
+                    return PartialView(Empleado);
+                }
+
                 if (Empleado.NumeroNomina == 0)
                 {
                     int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "NumeroNomina", Empleado.TipoNomina + "");
@@ -106,7 +114,7 @@ namespace GestionEmpleadol.Controllers
             }
             catch(GPSInformation.Exceptions.GpExceptions ex)
             {
-                ModelState.AddModelError("Error", ex.Message);
+                ModelState.AddModelError("", ex.Message);
                 return PartialView(Empleado);
             }
         }
@@ -133,6 +141,13 @@ namespace GestionEmpleadol.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    return PartialView(Empleado);
+                }
+
+                string emailValid = Funciones.ValidateEmail(Empleado.Email);
+                if (emailValid != "")
+                {
+                    ModelState.AddModelError("Email", string.Format("El correo: '{0}', no es valido", emailValid));
                     return PartialView(Empleado);
                 }
                 if (Empleado.NumeroNomina == 0)

@@ -57,6 +57,9 @@ namespace GPSInformation.Models
 
         [ColumnDB(IsMapped = false, IsKey = false)]
         public string Folio { get { return string.Format("P-{0:0000}", IdIncidenciaVacacion); } }
+
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public string EmpleadoNombre { get; set; }
     }
 
     [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]

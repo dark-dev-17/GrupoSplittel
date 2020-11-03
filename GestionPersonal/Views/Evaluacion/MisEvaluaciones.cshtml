@@ -5,89 +5,165 @@
 }
 <div class="d-flex align-items-center justify-content-between mg-b-30">
     <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
-    <div class="btn-group" role="group" aria-label="Basic example">
+    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+        <a href="@Url.Action("MisEvaluaciones", new { Mode = "Card" })" title="Ver evaluaciones por tarjetas" type="button" class="btn btn-sm  @Html.Raw(ViewBag.Mode != "list" ? "disabled btn-primary" : "btn-light")">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        </a>
+        <a href="@Url.Action("MisEvaluaciones")" title="Ver evaluaciones por lista" type="button" class="btn btn-sm  @Html.Raw(ViewBag.Mode == "list" ? "disabled btn-primary" : "btn-light")">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        </a>
     </div>
 </div>
 <hr />
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdEvaluacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPersona)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InicioFecha)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InicioHora)
-            </th>
-            @*<th>
-                    @Html.DisplayNameFor(model => model.FinFecha)
-                </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.FinHora)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdModalidad)
-            </th>
-            <th>
+
+@if (ViewBag.Mode == "list")
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdEvaluacion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdPersona)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InicioFecha)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InicioHora)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FinHora)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdModalidad)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Actualizada)
                 </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdEvaluacion)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PersonaName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InicioFecha)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InicioHora)
-                </td>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.FinFecha)
-                    </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.FinHora)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ModalidadName)
-                </td>
-                <td>
-                    @if (item.EvaluacionEmpleado.Respondio)
-                    {
-                        <span class="badge badge-primary">Respondida</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-danger">Sin responder</span>
-                    }
-                </td>
-                <td>
-                    @if (!item.EvaluacionEmpleado.Respondio)
-                    {
-                        @Html.ActionLink("Responder", "Responder", new { id = item.IdEvaluacion })
-                    }
-
-                </td>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdEvaluacion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PersonaName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InicioFecha)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InicioHora)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FinHora)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ModalidadName)
+                    </td>
+                    <td>
+                        @if (item.EvaluacionEmpleado.Respondio)
+                        {
+                            <span class="badge badge-primary">Respondida</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">Sin responder</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!item.EvaluacionEmpleado.Respondio)
+                        {
+                            @Html.ActionLink("Responder", "Responder", new { id = item.IdEvaluacion })
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">Sin responder</div>
+        <div class="card-body">
+            @if (Model.Where(a => a.EvaluacionEmpleado.Respondio == false).ToList().Count == 0)
+            {
+                <div class="alert alert-success d-flex align-items-center" role="alert">
+                    <i data-feather="alert-circle" class="mg-r-10"></i> No hay ninguna evaluación pendiente de responder
+                </div>
+            }
+            <div class="row card-deck">
+                @foreach (var item in Model.Where(a => a.EvaluacionEmpleado.Respondio == false))
+                {
+                    <div class="card col-lg-2">
+                        <div class="card-body">
+                            <h5 class="card-title">@Html.DisplayFor(modelItem => item.ModeloName)</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(modelItem => item.PersonaName)</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">Modalidad: @Html.DisplayFor(modelItem => item.ModalidadName)</h6>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Nombre)</p>
+                            @*<h6 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h6>
+        <p class="card-text">
+            Ponente: @Html.DisplayFor(modelItem => item.PersonaName) <br />
+            Fecha: @Html.DisplayFor(modelItem => item.InicioFecha) <br />
+            Hora: @Html.DisplayFor(modelItem => item.InicioHora)  -  @Html.DisplayFor(modelItem => item.FinHora) <br />
+            Modalidad: @Html.DisplayFor(modelItem => item.ModalidadName) <br />
+        </p>*@
+                        </div>
+                        <div class="card-footer">
+                            @if (!item.EvaluacionEmpleado.Respondio)
+                            {
+                                <a href="@Url.Action("Responder", "Responder", new { id = item.IdEvaluacion })" title="responder esta evaluación" class="btn btn-sm btn-primary">Responder</a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="card-header">Respondidas</div>
+        <div class="card-body">
+            <div class="row card-deck">
+                @foreach (var item in Model.Where(a => a.EvaluacionEmpleado.Respondio == true))
+                {
+                    <div class="card col-lg-2">
+                        <div class="card-body">
+                            <h5 class="card-title">@Html.DisplayFor(modelItem => item.ModeloName)</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(modelItem => item.PersonaName)</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">Modalidad: @Html.DisplayFor(modelItem => item.ModalidadName)</h6>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Nombre)</p>
+                            @*<h6 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h6>
+                        <p class="card-text">
+                            Ponente: @Html.DisplayFor(modelItem => item.PersonaName) <br />
+                            Fecha: @Html.DisplayFor(modelItem => item.InicioFecha) <br />
+                            Hora: @Html.DisplayFor(modelItem => item.InicioHora)  -  @Html.DisplayFor(modelItem => item.FinHora) <br />
+                            Modalidad: @Html.DisplayFor(modelItem => item.ModalidadName) <br />
+                        </p>*@
+                        </div>
+                        <div class="card-footer">
+                            @if (!item.EvaluacionEmpleado.Respondio)
+                            {
+                                <a href="@Url.Action("Responder", "Responder", new { id = item.IdEvaluacion })" class="btn btn-primary">Responder</a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>  
+
+}
