@@ -81,16 +81,21 @@ namespace GPSInformation
         #region Constructtores
         public DarkManager(IConfiguration Configuration)
         {
-            this.StringConnectionDb = Configuration.GetConnectionString("Default");
-            this.DefaultAccess = Configuration.GetConnectionString("DefaultAccess");
-            Server = Configuration.GetSection("Smtp").GetSection("Server").Value;
-            Port = Configuration.GetSection("Smtp").GetSection("Port").Value;
-            From = Configuration.GetSection("Smtp").GetSection("account").Value;
-            User = Configuration.GetSection("Smtp").GetSection("User").Value;
-            Password = Configuration.GetSection("Smtp").GetSection("Password").Value;
-            UserSSL = Configuration.GetSection("Smtp").GetSection("Ssl").Value == "true" ? true : false;
+            bool ModeProduction = Configuration.GetSection("ModeProduction").Value == "true" ? true : false;
 
-            CorreosBCC = Configuration.GetSection("Smtp").GetSection("Bcc").Value;
+            this.StringConnectionDb = ModeProduction ? Configuration.GetConnectionString("Production") : Configuration.GetConnectionString("Test");
+            this.DefaultAccess = Configuration.GetConnectionString("DefaultAccess");
+
+            string SMTP = ModeProduction ? "Smtp" : "SmtpTest";
+
+            Server = Configuration.GetSection(SMTP).GetSection("Server").Value;
+            Port = Configuration.GetSection(SMTP).GetSection("Port").Value;
+            From = Configuration.GetSection(SMTP).GetSection("account").Value;
+            User = Configuration.GetSection(SMTP).GetSection("User").Value;
+            Password = Configuration.GetSection(SMTP).GetSection("Password").Value;
+            UserSSL = Configuration.GetSection(SMTP).GetSection("Ssl").Value == "true" ? true : false;
+
+            CorreosBCC = Configuration.GetSection(SMTP).GetSection("Bcc").Value;
             EmailServ_ = new EmailServ(Server, From,Port,User,Password,UserSSL);
             EmailServ_.AddListBCC(CorreosBCC);
         }
