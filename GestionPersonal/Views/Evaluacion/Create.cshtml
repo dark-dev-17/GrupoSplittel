@@ -18,10 +18,10 @@
         <div class="form-group row">
             <label asp-for="IdPersona" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-6">
-                <select asp-for="IdPersona" asp-items="ViewBag.Empleados" v-on:change="ValidateForm()" class="form-control select2">
+                <select asp-for="IdEmpleados" multiple="multiple" asp-items="ViewBag.Empleados" v-on:change="ValidateForm()" class="form-control form-control-sm select2">
                     <option value="0">Selecciona una opción</option>
                 </select>
-                <span asp-validation-for="IdPersona" class="text-danger"></span>
+                <span asp-validation-for="IdEmpleados" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">
