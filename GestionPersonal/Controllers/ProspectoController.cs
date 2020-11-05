@@ -84,6 +84,7 @@ namespace GestionPersonal.Controllers
                 }
                 Persona.Creado = DateTime.Now;
                 Persona.Actualizado = DateTime.Now;
+                Persona.Empleado = 4;
                 darkManager.Persona.Element = Persona;
 
                 if (!darkManager.Persona.Add())

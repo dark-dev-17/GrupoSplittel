@@ -89,7 +89,7 @@ namespace GestionEmpleadol.Controllers
                 }
                 else
                 {
-                    var emple = darkManager.Empleado.GetByColumn("NumeroNomina", Empleado.TipoNomina + "");
+                    var emple = darkManager.Empleado.Get("NumeroNomina", Empleado.NumeroNomina + "", "TipoNomina", Empleado.TipoNomina + "");
                     if (emple != null)
                     {
                         int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "NumeroNomina", Empleado.TipoNomina + "");
@@ -101,7 +101,8 @@ namespace GestionEmpleadol.Controllers
 
                 darkManager.Empleado.Element = Empleado;
                 darkManager.Empleado.Element.Egreso = DateTime.Now;
-
+                darkManager.Empleado.Element.Actualizado = DateTime.Now;
+                darkManager.Empleado.Element.Creado = DateTime.Now;
                 bool result = darkManager.Empleado.Add();
                 if (result)
                 {
@@ -157,7 +158,7 @@ namespace GestionEmpleadol.Controllers
                 }
                 else
                 {
-                    var emple = darkManager.Empleado.GetByColumn( Empleado.NumeroNomina + "", "NumeroNomina");
+                    var emple = darkManager.Empleado.Get("NumeroNomina", Empleado.NumeroNomina + "", "TipoNomina", Empleado.TipoNomina + "");
                     if (emple != null && emple.IdEmpleado != Empleado.IdEmpleado)
                     {
                         int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "TipoNomina", Empleado.TipoNomina + "");

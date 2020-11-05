@@ -57,6 +57,7 @@ namespace GestionPersonal.Controllers
         public ActionResult Index()
         {
             var result = darkManager.View_empleado.Get().OrderBy(a => a.NombreCompleto).ToList();
+            darkManager.CloseConnection();
             //ViewData["Puestos"] = darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList();
             //ViewData["Empleados"] = darkManager.Empleado.Get().OrderBy(a => a.NumeroNomina).ToList();
             return View(result);
@@ -66,18 +67,31 @@ namespace GestionPersonal.Controllers
         [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Create()
         {
-            GetSelects();
-            ViewData["Generos"] = Generos;
-            ViewData["EstadosCiviles"] = EstadosCiviles;
-            ViewData["Alergias"] = Alergias;
-            ViewData["TiposSangre"] = TiposSangre;
-            ViewData["TipoNomina"] = TipoNomina;
-            ViewData["EstatusEmpleado"] = EstatusEmpleado;
-            ViewData["Departamentos"] = Departamentos;
-            ViewData["Puestos"] = Puestos;
-            ViewData["Sociedades"] = Sociedades;
-            ViewData["Parentezcos"] = Parentezcos;
-            return View();
+            try
+            {
+                GetSelects();
+                ViewData["Generos"] = Generos;
+                ViewData["EstadosCiviles"] = EstadosCiviles;
+                ViewData["Alergias"] = Alergias;
+                ViewData["TiposSangre"] = TiposSangre;
+                ViewData["TipoNomina"] = TipoNomina;
+                ViewData["EstatusEmpleado"] = EstatusEmpleado;
+                ViewData["Departamentos"] = Departamentos;
+                ViewData["Puestos"] = Puestos;
+                ViewData["Sociedades"] = Sociedades;
+                ViewData["Parentezcos"] = Parentezcos;
+                return View();
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
+            
         }
         // POST: Persona/Create
         [HttpPost]
@@ -99,6 +113,7 @@ namespace GestionPersonal.Controllers
 
                 Persona.Creado = DateTime.Now;
                 Persona.Actualizado = DateTime.Now;
+                Persona.Empleado = 1;
                 darkManager.Persona.Element = Persona;
                 bool result = darkManager.Persona.Add();
                 if (result)
@@ -121,35 +136,53 @@ namespace GestionPersonal.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(Persona);
             }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
         }
         // GET: Empleado/Edit
         [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Edit(int id)
         {
-            GetSelects();
-            var result = darkManager.Persona.Get(id);
-            if (result == null)
-                return NotFound();
-            ViewData["Generos"] = Generos;
-            ViewData["EstadosCiviles"] = EstadosCiviles;
-            ViewData["Alergias"] = Alergias;
-            ViewData["TiposSangre"] = TiposSangre;
-            ViewData["TipoNomina"] = TipoNomina;
-            ViewData["EstatusEmpleado"] = EstatusEmpleado;
-            ViewData["Departamentos"] = Departamentos;
-            ViewData["Puestos"] = Puestos;
-            ViewData["Sociedades"] = Sociedades;
-            ViewData["Parentezcos"] = Parentezcos;
-            var InforMedica = darkManager.InformacionMedica.GetByColumn("" + result.IdPersona, "IdPersona");
-            ViewData["InfoMedica"] = InforMedica;
+            try
+            {
+                GetSelects();
+                var result = darkManager.Persona.Get(id);
+                if (result == null)
+                    return NotFound();
+                ViewData["Generos"] = Generos;
+                ViewData["EstadosCiviles"] = EstadosCiviles;
+                ViewData["Alergias"] = Alergias;
+                ViewData["TiposSangre"] = TiposSangre;
+                ViewData["TipoNomina"] = TipoNomina;
+                ViewData["EstatusEmpleado"] = EstatusEmpleado;
+                ViewData["Departamentos"] = Departamentos;
+                ViewData["Puestos"] = Puestos;
+                ViewData["Sociedades"] = Sociedades;
+                ViewData["Parentezcos"] = Parentezcos;
+                var InforMedica = darkManager.InformacionMedica.GetByColumn("" + result.IdPersona, "IdPersona");
+                ViewData["InfoMedica"] = InforMedica;
 
-            var InforEmpleado = darkManager.Empleado.GetByColumn("" + result.IdPersona, "IdPersona");
-            ViewData["InforEmpleado"] = InforEmpleado;
+                var InforEmpleado = darkManager.Empleado.GetByColumn("" + result.IdPersona, "IdPersona");
+                ViewData["InforEmpleado"] = InforEmpleado;
 
-            var PersonaContacto = darkManager.PersonaContacto.Get("" + result.IdPersona, "IdPersona");
-            ViewData["PersonaContacto"] = PersonaContacto;
+                var PersonaContacto = darkManager.PersonaContacto.Get("" + result.IdPersona, "IdPersona");
+                ViewData["PersonaContacto"] = PersonaContacto;
 
-            return View(result);
+                return View(result);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
+            
         }
         private void GetSelects()
         {

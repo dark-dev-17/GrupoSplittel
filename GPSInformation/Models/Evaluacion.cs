@@ -7,6 +7,20 @@ using System.Text;
 namespace GPSInformation.Models
 {
     [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]
+    public class EvaluacionInstructor
+    {
+        [Display(Name = "Clave")]
+        [DisplayFormat(DataFormatString = "E{0:0000}", ApplyFormatInEditMode = false)]
+        [ColumnDB(IsMapped = true, IsKey = true)]
+        public int IdEvaluacionInstructor { get; set; }
+
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public int IdEvaluacion { get; set; }
+
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public int IdPersona { get; set; }
+    }
+    [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]
     public class Evaluacion
     {
         [Display(Name = "Clave")]
@@ -19,7 +33,6 @@ namespace GPSInformation.Models
         [ColumnDB(IsMapped = true, IsKey = false)]
         public string Nombre { get; set; }
 
-        [Required]
         [Display(Name = "Ponente")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public int IdPersona { get; set; }
@@ -85,6 +98,9 @@ namespace GPSInformation.Models
 
         [ColumnDB(IsMapped = false, IsKey = false)]
         public EvaluacionEmpleado EvaluacionEmpleado { get; set; }
+
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public List<int> IdEmpleados { get; set; }
     }
 
     [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]

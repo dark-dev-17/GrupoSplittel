@@ -27,6 +27,7 @@ namespace GPSInformation.Controllers
             this.darkManager.LoadObject(GpsManagerObjects.EvaluacionTemplate);
             this.darkManager.LoadObject(GpsManagerObjects.EvaluacioSeccion);
             this.darkManager.LoadObject(GpsManagerObjects.CatalogoOpcionesValores);
+            this.darkManager.LoadObject(GpsManagerObjects.EvaluacionInstructor);
         }
         public EvaluacionCtrl( DarkManager darkManager)
         {
@@ -41,6 +42,7 @@ namespace GPSInformation.Controllers
             this.darkManager.LoadObject(GpsManagerObjects.EvaluacionRespuestas);
             this.darkManager.LoadObject(GpsManagerObjects.EvaluacionEmpleado);
             this.darkManager.LoadObject(GpsManagerObjects.Departamento);
+            this.darkManager.LoadObject(GpsManagerObjects.EvaluacionInstructor);
         }
         #endregion
 
@@ -108,10 +110,19 @@ namespace GPSInformation.Controllers
             var EvaEmp_re = darkManager.EvaluacionEmpleado.Get("" + IdPersona, "IdPersona");
             EvaEmp_re.ForEach(a => {
                 var Evaluacion_re = darkManager.Evaluacion.Get(a.IdEvaluacion);
-                Evaluacion_re.PersonaName = darkManager.View_empleado.Get(Evaluacion_re.IdPersona).NombreCompleto;
+                Evaluacion_re.PersonaName = "";
                 Evaluacion_re.ModeloName = darkManager.EvaluacionTemplate.Get(Evaluacion_re.IdEvaluacionTemplate).Nombre;
                 Evaluacion_re.ModalidadName = darkManager.CatalogoOpcionesValores.Get(Evaluacion_re.IdModalidad).Descripcion;
                 Evaluacion_re.EvaluacionEmpleado = darkManager.EvaluacionEmpleado.Get("IdPersona", "" + IdPersona, "IdEvaluacion", a.IdEvaluacion + "");
+
+                //extraer instructores
+                Evaluacion_re.IdEmpleados = new List<int>();
+                darkManager.EvaluacionInstructor.Get("" + Evaluacion_re.IdEvaluacion, "IdEvaluacion").ForEach(emp => {
+                    Evaluacion_re.IdEmpleados.Add(emp.IdPersona);
+                    Evaluacion_re.PersonaName += darkManager.View_empleado.Get(emp.IdPersona).NombreCompleto + ", ";
+                });
+
+
                 evaluacions.Add(Evaluacion_re);
             });
 
@@ -138,9 +149,18 @@ namespace GPSInformation.Controllers
         {
             var List_re = darkManager.Evaluacion.Get();
             List_re.ForEach(Evaluacion_re => {
-                Evaluacion_re.PersonaName = darkManager.View_empleado.Get(Evaluacion_re.IdPersona).NombreCompleto;
+                Evaluacion_re.PersonaName = "";
                 Evaluacion_re.ModeloName = darkManager.EvaluacionTemplate.Get(Evaluacion_re.IdEvaluacionTemplate).Nombre;
                 Evaluacion_re.ModalidadName = darkManager.CatalogoOpcionesValores.Get(Evaluacion_re.IdModalidad).Descripcion;
+
+                //extraer instructores
+                Evaluacion_re.IdEmpleados = new List<int>();
+                darkManager.EvaluacionInstructor.Get("" + Evaluacion_re.IdEvaluacion, "IdEvaluacion").ForEach(emp => {
+                    Evaluacion_re.IdEmpleados.Add(emp.IdPersona);
+                    Evaluacion_re.PersonaName += darkManager.View_empleado.Get(emp.IdPersona).NombreCompleto + ", ";
+                });
+
+
             });
             return List_re.OrderBy(a => a.Creada);
         }
@@ -156,9 +176,15 @@ namespace GPSInformation.Controllers
         public Evaluacion Get(int idEvaluacion)
         {
             var Evaluacion_re = darkManager.Evaluacion.Get(idEvaluacion);
-            Evaluacion_re.PersonaName = darkManager.View_empleado.Get(Evaluacion_re.IdPersona).NombreCompleto;
+            Evaluacion_re.PersonaName = "";
             Evaluacion_re.ModeloName = darkManager.EvaluacionTemplate.Get(Evaluacion_re.IdEvaluacionTemplate).Nombre;
             Evaluacion_re.ModalidadName = darkManager.CatalogoOpcionesValores.Get(Evaluacion_re.IdModalidad).Descripcion;
+            //extraer instructores
+            Evaluacion_re.IdEmpleados = new List<int>();
+            darkManager.EvaluacionInstructor.Get("" + Evaluacion_re.IdEvaluacion, "IdEvaluacion").ForEach(emp => {
+                Evaluacion_re.IdEmpleados.Add(emp.IdPersona);
+                Evaluacion_re.PersonaName += darkManager.View_empleado.Get(emp.IdPersona).NombreCompleto + ", ";
+                });
             return Evaluacion_re;
         }
 
@@ -172,6 +198,9 @@ namespace GPSInformation.Controllers
                 darkManager.Evaluacion.Element = evaluacion;
                 if (!darkManager.Evaluacion.Add())
                     throw new Exceptions.GpExceptions("Error al crear la evaluación");
+
+
+                AddParticipantes(darkManager.Evaluacion.GetLastId(), evaluacion.IdEmpleados);
 
                 darkManager.Commit();
             }
@@ -191,6 +220,8 @@ namespace GPSInformation.Controllers
                 darkManager.Evaluacion.Element = evaluacion;
                 if (!darkManager.Evaluacion.Update())
                     throw new Exceptions.GpExceptions("Error al crear la evaluación");
+
+                AddParticipantes(evaluacion.IdEvaluacion, evaluacion.IdEmpleados);
 
                 darkManager.Commit();
             }
@@ -267,6 +298,51 @@ namespace GPSInformation.Controllers
                 throw ex;
             }
         }
+        public void Deleteparticipantes(List<int> Empleados, int IdEvaluacion)
+        {
+            darkManager.StartTransaction();
+            try
+            {
+                if (Empleados == null)
+                {
+                    throw new Exceptions.GpExceptions("Por favor selecciona a los participantes");
+                }
+                Empleados.ForEach(parti => {
+                    var Participantes_re = darkManager.EvaluacionEmpleado.Get(
+                        "IdEvaluacion", "" + IdEvaluacion,
+                        "IdPersona", "" + parti);
+                    if (Participantes_re != null)
+                    {
+                        darkManager.EvaluacionEmpleado.Element = Participantes_re;
+                        if (!darkManager.EvaluacionEmpleado.Delete())
+                        {
+                            throw new Exceptions.GpExceptions("Error al eliminar evaluación");
+                        }
+
+                        var respuestas = darkManager.EvaluacionRespuestas.GetList(
+                        "IdEvaluacion", "" + IdEvaluacion,
+                        "IdPersona", "" + parti);
+
+                        respuestas.ForEach(re =>
+                        {
+                            darkManager.EvaluacionRespuestas.Element = re;
+                            if (!darkManager.EvaluacionRespuestas.Delete())
+                            {
+                                throw new Exceptions.GpExceptions("Error al eliminar respuestas");
+                            }
+                        });
+                    }
+
+                });
+
+                darkManager.Commit();
+            }
+            catch (Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                throw ex;
+            }
+        }
         public List<View_empleado> Adddepartamentos(List<int> Departamentos, int IdEvaluacion)
         {
             darkManager.StartTransaction();
@@ -325,6 +401,23 @@ namespace GPSInformation.Controllers
                 var Evaluacion_re = darkManager.Evaluacion.Get(IdEvaluacion);
                 var Emplead_re = darkManager.View_empleado.Get(IdPersona);
                 darkManager.EmailServ_.AddListTO(Emplead_re.Correo);
+
+                this.darkManager.LoadObject(GpsManagerObjects.Usuario);
+                this.darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
+
+                var acceos = darkManager.AccesosSistema.GetList("IdSubModulo", "45", "TieneAcceso", "1");
+                acceos.ForEach(acc => {
+                    var usuario = darkManager.Usuario.Get(acc.IdUsuario);
+
+                    if (usuario != null)
+                    {
+                        var empleado = darkManager.View_empleado.Get(usuario.IdPersona);
+                        if (empleado != null)
+                        {
+                            darkManager.EmailServ_.AddListCC(empleado.Correo);
+                        }
+                    }
+                });
                 darkManager.EmailServ_.Send(body, string.Format("Evaluacion: {0}", Evaluacion_re.Nombre));
                 darkManager.RestartEmail();
             }
@@ -445,6 +538,43 @@ namespace GPSInformation.Controllers
                 throw ex;
             }
 
+        }
+
+        private void AddParticipantes(int IdEvaluacion, List<int> Partcipantes)
+        {
+            
+
+
+            darkManager.EvaluacionInstructor.Get("" + IdEvaluacion, "IdEvaluacion").ForEach(emp => {
+                darkManager.EvaluacionInstructor.Element = emp;
+                darkManager.EvaluacionInstructor.Delete();
+            });
+
+            Partcipantes.ForEach(IdPersona => {
+                var EvaluacionInstructor = new EvaluacionInstructor();
+                EvaluacionInstructor.IdEvaluacion = IdEvaluacion;
+                EvaluacionInstructor.IdPersona = IdPersona;
+                darkManager.EvaluacionInstructor.Element = EvaluacionInstructor;
+                if (!darkManager.EvaluacionInstructor.Add())
+                {
+                    throw new Exceptions.GpExceptions("Error al agregar respuestas");
+                }
+            });
+
+
+            
+        }
+
+        public void Terminar(bool closeDark = true)
+        {
+            darkManager.CloseConnection();
+            if (closeDark)
+            {
+                darkManager = null;
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
         #endregion
     }

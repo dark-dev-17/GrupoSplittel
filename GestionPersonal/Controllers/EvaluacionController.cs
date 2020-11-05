@@ -39,6 +39,11 @@ namespace GestionPersonal.Controllers
             {
                 return View(ex.Message);
             }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
            
         }
 
@@ -60,6 +65,11 @@ namespace GestionPersonal.Controllers
             {
                 return View(ex.Message);
             }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
         }
 
         public ActionResult EmailDetails(int id, int IdPersona)
@@ -76,16 +86,34 @@ namespace GestionPersonal.Controllers
             {
                 return View(ex.Message);
             }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
         }
 
         // GET: EvaluacionController/Create
         [AccessMultipleView(IdAction = new int[] { 37 })]
         public ActionResult Create()
         {
-            ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion");
-            ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre");
-            ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto");
-            return View();
+            try
+            {
+                ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion");
+                ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre");
+                ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto");
+                return View();
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
+            
         }
 
         // POST: EvaluacionController/Create
@@ -101,6 +129,12 @@ namespace GestionPersonal.Controllers
                     return View(Evaluacion);
                 }
 
+                if(Evaluacion.IdEmpleados == null || Evaluacion.IdEmpleados != null && Evaluacion.IdEmpleados.Count == 0)
+                {
+                    ModelState.AddModelError("IdEmpleados", "Por favor selecciona al menos un instructor");
+                    return View(Evaluacion);
+                }
+
                 EvaluacionCtrl.Create(Evaluacion);
                 return RedirectToAction(nameof(Index));
             }
@@ -108,6 +142,11 @@ namespace GestionPersonal.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
                 return View(Evaluacion);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
             }
         }
 
@@ -127,6 +166,11 @@ namespace GestionPersonal.Controllers
             {
                 return View(ex.Message);
             }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
         }
 
         // POST: EvaluacionController/Edit/5
@@ -141,7 +185,11 @@ namespace GestionPersonal.Controllers
                 {
                     return View(Evaluacion);
                 }
-
+                if (Evaluacion.IdEmpleados == null || Evaluacion.IdEmpleados != null && Evaluacion.IdEmpleados.Count == 0)
+                {
+                    ModelState.AddModelError("IdEmpleados", "Por favor selecciona al menos un instructor");
+                    return View(Evaluacion);
+                }
                 EvaluacionCtrl.Update(Evaluacion);
                 return RedirectToAction(nameof(Index));
             }
@@ -149,6 +197,11 @@ namespace GestionPersonal.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
                 return View(Evaluacion);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
             }
         }
 
@@ -167,6 +220,11 @@ namespace GestionPersonal.Controllers
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
                 return View(ex.Message);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
             }
         }
 
@@ -199,6 +257,11 @@ namespace GestionPersonal.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(evaluacionEmpleado);
             }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
         }
 
         [HttpPost]
@@ -213,7 +276,6 @@ namespace GestionPersonal.Controllers
                     return View(evaluacionEmpleado);
                 }
                 EvaluacionCtrl.AddParticupantes(evaluacionEmpleado);
-
 
                 evaluacionEmpleado.Participantes.ForEach(async parti => 
                 {
@@ -232,6 +294,37 @@ namespace GestionPersonal.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(evaluacionEmpleado);
             }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        [AccessDataSession(IdAction = new int[] { 37 })]
+        public async Task<ActionResult> DeleteParticipantes([FromBody] EvaluacionEmple evaluacionEmpleado)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Algunos campos estan vacios");
+                }
+                EvaluacionCtrl.Deleteparticipantes(evaluacionEmpleado.Empleados, evaluacionEmpleado.IdEvaluacion);
+
+                return Ok("PArticipantes eliminados");
+            }
+            catch (GpExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
         }
 
         [HttpGet]
@@ -249,6 +342,11 @@ namespace GestionPersonal.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View();
             }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
         }
 
         [HttpGet]
@@ -263,6 +361,11 @@ namespace GestionPersonal.Controllers
             catch (GpExceptions ex)
             {
                 return View(ex.Message);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
             }
         }
 
@@ -295,6 +398,11 @@ namespace GestionPersonal.Controllers
             {
                 return NotFound(ex.Message);
             }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
         }
 
         [HttpGet]
@@ -321,6 +429,11 @@ namespace GestionPersonal.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
         }
 
         [HttpPost]
@@ -335,6 +448,11 @@ namespace GestionPersonal.Controllers
             catch (GpExceptions ex)
             {
                 return NotFound(ex.Message);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
             }
         }
 
@@ -360,6 +478,11 @@ namespace GestionPersonal.Controllers
             catch (GpExceptions ex)
             {
                 return NotFound(ex.Message);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
             }
         }
     }
