@@ -60,7 +60,7 @@
             </div>
             <label asp-for="IdEvaluacionTemplate" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4">
-                <select asp-for="IdEvaluacionTemplate" asp-items="ViewBag.Modelos" v-on:change="ValidateForm()" class="form-control select2">
+                <select disabled asp-for="IdEvaluacionTemplate" asp-items="ViewBag.Modelos" v-on:change="ValidateForm()" class="form-control disabled">
                     <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="IdEvaluacionTemplate" class="text-danger"></span>

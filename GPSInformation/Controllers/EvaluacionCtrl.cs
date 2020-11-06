@@ -139,9 +139,18 @@ namespace GPSInformation.Controllers
                 throw new Exceptions.GpExceptions(string.Format("La evaluacion E{0:0000} no fue encontrada", IdEvaluacion));
             }
             var Evaluacion_re = darkManager.Evaluacion.Get(IdEvaluacion);
-            Evaluacion_re.PersonaName = darkManager.View_empleado.Get(Evaluacion_re.IdPersona).NombreCompleto;
+            Evaluacion_re.PersonaName = "";
             Evaluacion_re.ModeloName = darkManager.EvaluacionTemplate.Get(Evaluacion_re.IdEvaluacionTemplate).Nombre;
             Evaluacion_re.ModalidadName = darkManager.CatalogoOpcionesValores.Get(Evaluacion_re.IdModalidad).Descripcion;
+
+            //extraer instructores
+            Evaluacion_re.IdEmpleados = new List<int>();
+            darkManager.EvaluacionInstructor.Get("" + Evaluacion_re.IdEvaluacion, "IdEvaluacion").ForEach(emp => {
+                Evaluacion_re.IdEmpleados.Add(emp.IdPersona);
+                Evaluacion_re.PersonaName += darkManager.View_empleado.Get(emp.IdPersona).NombreCompleto + ", ";
+            });
+
+
             return Evaluacion_re;
         }
 
