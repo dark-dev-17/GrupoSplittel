@@ -322,6 +322,12 @@ namespace EcomDataProccess
                 objeto.SetConnection(Ecom_DBEcommerce);
                 return objeto;
             }
+            else if (objectSource == ObjectSource.Ecom_ConsultConsult)
+            {
+                Ecom_ConsultConsult objeto = (Ecom_ConsultConsult)Modelo;
+                objeto.SetConnection(Ecom_DBEcommerce);
+                return objeto;
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));
@@ -456,6 +462,10 @@ namespace EcomDataProccess
             else if (objectSource == ObjectSource.Ecom_RespuestaPregunta)
             {
                 return new Ecom_RespuestaPregunta(Ecom_DBEcommerce);
+            }
+            else if (objectSource == ObjectSource.Ecom_ConsultConsult)
+            {
+                return new Ecom_ConsultConsult(Ecom_DBEcommerce);
             }
             else
             {

@@ -33,7 +33,7 @@ namespace GPSInformation.Models
         [ColumnDB(IsMapped = true, IsKey = false)]
         public string Nombre { get; set; }
 
-        [Display(Name = "Ponente")]
+        [Display(Name = "Ponente(s) interno(s)")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public int IdPersona { get; set; }
 
@@ -77,6 +77,15 @@ namespace GPSInformation.Models
         [Display(Name = "Creada")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public DateTime Creada { get; set; }
+
+        [Required]
+        [Display(Name = "Evaluación impartida por externos")]
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public bool IsInterno { get; set; }
+
+        [Display(Name = "Ponente(s) externo(s)")]
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public string PonenteNameExt { get; set; }
 
         [Required]
         [Display(Name = "Actualizada")]

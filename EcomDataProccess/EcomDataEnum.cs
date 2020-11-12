@@ -42,6 +42,7 @@ namespace EcomDataProccess
         ContentFileType = 28,
         Ecom_Pregunta = 29,
         Ecom_RespuestaPregunta = 30,
+        Ecom_ConsultConsult = 31,
     }
     public enum FiltroProducto
     {

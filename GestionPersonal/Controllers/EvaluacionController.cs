@@ -129,17 +129,37 @@ namespace GestionPersonal.Controllers
                     return View(Evaluacion);
                 }
 
-                if(Evaluacion.IdEmpleados == null || Evaluacion.IdEmpleados != null && Evaluacion.IdEmpleados.Count == 0)
+                
+                if (Evaluacion.IsInterno)
                 {
-                    ModelState.AddModelError("IdEmpleados", "Por favor selecciona al menos un instructor");
-                    return View(Evaluacion);
+                    if (string.IsNullOrEmpty(Evaluacion.PonenteNameExt))
+                    {
+                        ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion", Evaluacion.IdModalidad);
+                        ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre", Evaluacion.IdEvaluacionTemplate);
+                        ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto", Evaluacion.IdPersona);
+                        ModelState.AddModelError("PonenteNameExt", "Por favor introduce nombre(s) de instructor(es)");
+                        return View(Evaluacion);
+                    }
                 }
-
+                else
+                {
+                    if (Evaluacion.IdEmpleados == null || Evaluacion.IdEmpleados != null && Evaluacion.IdEmpleados.Count == 0)
+                    {
+                        ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion", Evaluacion.IdModalidad);
+                        ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre", Evaluacion.IdEvaluacionTemplate);
+                        ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto", Evaluacion.IdPersona);
+                        ModelState.AddModelError("IdEmpleados", "Por favor selecciona al menos un instructor");
+                        return View(Evaluacion);
+                    }
+                }
                 EvaluacionCtrl.Create(Evaluacion);
                 return RedirectToAction(nameof(Index));
             }
             catch (GpExceptions ex)
             {
+                ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion", Evaluacion.IdModalidad);
+                ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre", Evaluacion.IdEvaluacionTemplate);
+                ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto", Evaluacion.IdPersona);
                 ModelState.AddModelError("", ex.Message);
                 return View(Evaluacion);
             }
@@ -185,16 +205,37 @@ namespace GestionPersonal.Controllers
                 {
                     return View(Evaluacion);
                 }
-                if (Evaluacion.IdEmpleados == null || Evaluacion.IdEmpleados != null && Evaluacion.IdEmpleados.Count == 0)
+                if (Evaluacion.IsInterno)
                 {
-                    ModelState.AddModelError("IdEmpleados", "Por favor selecciona al menos un instructor");
-                    return View(Evaluacion);
+                    if (string.IsNullOrEmpty(Evaluacion.PonenteNameExt))
+                    {
+                        ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion", Evaluacion.IdModalidad);
+                        ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre", Evaluacion.IdEvaluacionTemplate);
+                        ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto", Evaluacion.IdPersona);
+                        ModelState.AddModelError("PonenteNameExt", "Por favor introduce nombre(s) de instructor(es)");
+                        return View(Evaluacion);
+                    }
                 }
+                else
+                {
+                    if (Evaluacion.IdEmpleados == null || Evaluacion.IdEmpleados != null && Evaluacion.IdEmpleados.Count == 0)
+                    {
+                        ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion", Evaluacion.IdModalidad);
+                        ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre", Evaluacion.IdEvaluacionTemplate);
+                        ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto", Evaluacion.IdPersona);
+                        ModelState.AddModelError("IdEmpleados", "Por favor selecciona al menos un instructor");
+                        return View(Evaluacion);
+                    }
+                }
+
                 EvaluacionCtrl.Update(Evaluacion);
                 return RedirectToAction(nameof(Index));
             }
             catch (GpExceptions ex)
             {
+                ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion", Evaluacion.IdModalidad);
+                ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre", Evaluacion.IdEvaluacionTemplate);
+                ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto", Evaluacion.IdPersona);
                 ModelState.AddModelError("", ex.Message);
                 return View(Evaluacion);
             }

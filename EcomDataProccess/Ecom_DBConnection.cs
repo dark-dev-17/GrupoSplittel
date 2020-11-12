@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace EcomDataProccess
@@ -25,6 +26,206 @@ namespace EcomDataProccess
         public Ecom_DBConnection(string ConnectionString)
         {
             this.ConnectionString = ConnectionString;
+        }
+        #endregion
+
+        #region Nuevos
+        public void StartInsert(string statement, List<ProcedureModel> DataModel)
+        {
+            string Evaluando = "";
+            try
+            {
+                if (DataModel == null)
+                {
+                    throw new Ecom_Exception("Sin parametros SP");
+                }
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter();
+
+                Comando = new MySqlCommand(statement, Connection);
+
+                DataModel.ForEach(param => {
+                    Evaluando = param.Namefield;
+                    if (param.value != null)
+                    {
+                        if (typeof(int) == param.value.GetType())
+                        {
+                            if ((int)param.value == 0)
+                            {
+                                MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, DBNull.Value);
+                                sqlParameter.Direction = ParameterDirection.Input;
+                                Comando.Parameters.Add(sqlParameter);
+                            }
+                            else
+                            {
+                                MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, param.value);
+                                sqlParameter.Direction = ParameterDirection.Input;
+                                Comando.Parameters.Add(sqlParameter);
+                            }
+                        }
+                        else if (typeof(DateTime?) == param.value.GetType())
+                        {
+                            MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, DBNull.Value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Comando.Parameters.Add(sqlParameter);
+                        }
+                        else
+                        {
+                            MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, param.value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Comando.Parameters.Add(sqlParameter);
+                        }
+                    }
+                    else
+                    {
+                        MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, DBNull.Value);
+                        sqlParameter.Direction = ParameterDirection.Input;
+                        Comando.Parameters.Add(sqlParameter);
+                    }
+                });
+
+                adapter.InsertCommand = Comando;
+                adapter.InsertCommand.ExecuteNonQuery();
+                Message = "Registro guardado";
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("SqlException - {0}", ex.Message));
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("SAP_Excepcion - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
+            }
+        }
+        public void StartUpdate(string statement, List<ProcedureModel> DataModel)
+        {
+
+            string Evaluando = "";
+            try
+            {
+                if (DataModel == null)
+                {
+                    throw new Ecom_Exception("Sin parametros SP");
+                }
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter();
+
+                Comando = new MySqlCommand(statement, Connection);
+
+                DataModel.ForEach(param => {
+                    Evaluando = param.Namefield;
+                    if (param.value != null)
+                    {
+                        if (typeof(int) == param.value.GetType())
+                        {
+                            if ((int)param.value == 0)
+                            {
+                                MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, DBNull.Value);
+                                sqlParameter.Direction = ParameterDirection.Input;
+                                Comando.Parameters.Add(sqlParameter);
+                            }
+                            else
+                            {
+                                MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, param.value);
+                                sqlParameter.Direction = ParameterDirection.Input;
+                                Comando.Parameters.Add(sqlParameter);
+                            }
+                        }
+                        else if (typeof(DateTime?) == param.value.GetType())
+                        {
+                            MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, DBNull.Value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Comando.Parameters.Add(sqlParameter);
+                        }
+                        else
+                        {
+                            MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, param.value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Comando.Parameters.Add(sqlParameter);
+                        }
+                    }
+                    else
+                    {
+                        MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, DBNull.Value);
+                        sqlParameter.Direction = ParameterDirection.Input;
+                        Comando.Parameters.Add(sqlParameter);
+                    }
+                });
+
+                adapter.UpdateCommand = Comando;
+                adapter.UpdateCommand.ExecuteNonQuery();
+                Message = "Registro actualizado";
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("SqlException - {0}", ex.Message));
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("SAP_Excepcion - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
+            }
+        }
+        public void StartDelete(string statement, List<ProcedureModel> DataModel)
+        {
+            try
+            {
+                if (DataModel == null)
+                {
+                    throw new Ecom_Exception("Sin parametros SP");
+                }
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter();
+
+                Comando = new MySqlCommand(statement, Connection);
+
+                DataModel.ForEach(param => {
+                    if (typeof(int) == param.value.GetType())
+                    {
+                        if ((int)param.value == 0)
+                        {
+                            MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, DBNull.Value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Comando.Parameters.Add(sqlParameter);
+                        }
+                        else
+                        {
+                            MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, param.value);
+                            sqlParameter.Direction = ParameterDirection.Input;
+                            Comando.Parameters.Add(sqlParameter);
+                        }
+                    }
+                    else
+                    {
+                        MySqlParameter sqlParameter = new MySqlParameter("@" + param.Namefield, param.value);
+                        sqlParameter.Direction = ParameterDirection.Input;
+                        Comando.Parameters.Add(sqlParameter);
+                    }
+                });
+
+                adapter.DeleteCommand = Comando;
+                adapter.DeleteCommand.ExecuteNonQuery();
+                Message = "Registro eliminado";
+            }
+            catch (MySqlException ex)
+            {
+                throw new Ecom_Exception(string.Format("SqlException - {0}", ex.Message));
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("SAP_Excepcion - {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Ecom_Exception(string.Format("Exception - {0}", ex.Message));
+            }
         }
         #endregion
 
@@ -448,5 +649,11 @@ namespace EcomDataProccess
             }
         }
         #endregion
+    }
+
+    public class ProcedureModel
+    {
+        public string Namefield { get; set; }
+        public object value { get; set; }
     }
 }

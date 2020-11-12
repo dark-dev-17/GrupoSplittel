@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using EcomDataProccess;
 using EcommerceAdmin.Models.Filters;
 using Microsoft.AspNetCore.Http;
@@ -83,6 +84,7 @@ namespace EcommerceAdmin.Controllers
             Ecom_DBConnection Ecom_DBConnection_ = null;
             try
             {
+                //id = HttpUtility.UrlDecode(id);
                 if(string.IsNullOrEmpty(id) || string.IsNullOrWhiteSpace(id))
                 {
                     Ecom_Producto Ecom_Producto_ = new Ecom_Producto();

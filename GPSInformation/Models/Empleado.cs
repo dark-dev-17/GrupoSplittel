@@ -18,8 +18,7 @@ namespace GPSInformation.Models
         public int IdPersona { get; set; }
 
         [Display(Name = "No.Nomina")]
-        [Required]
-        [DisplayFormat(DataFormatString = "{0:000000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:000000}", ApplyFormatInEditMode = false)]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public int NumeroNomina { get; set; }
 

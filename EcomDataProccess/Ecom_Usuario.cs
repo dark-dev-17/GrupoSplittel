@@ -170,6 +170,19 @@ namespace EcomDataProccess
                 throw ex;
             }
         }
+        public List<Ecom_Usuario> GetConsultor()
+        {
+            string Statement = string.Format("SELECT ID,username,email,nombre,apaterno,amaterno,id_area,sociedad,foto,password FROM signup where E_ConsulActive = '1'");
+            try
+            {
+
+                return ReaderData(Statement);
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+        }
         public List<Ecom_Usuario> Get()
         {
             string Statement = string.Format("SELECT ID,username,email,nombre,apaterno,amaterno,id_area,sociedad,foto,password FROM signup");

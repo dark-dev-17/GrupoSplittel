@@ -7,11 +7,29 @@
 
 <div class="d-sm-flex align-items-center justify-content-between">
     <div>
-        <h2 class="mg-b-5">Tema: @Html.DisplayFor(model => model.Nombre)</h2>  <small>@Html.DisplayFor(model => model.PersonaName)</small>
-        <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.ModeloName)</p>
+        <h2 class="mg-b-5">Tema: @Html.DisplayFor(model => model.Nombre)</h2>
+        <small class="tx-uppercase">
+            @if (Model.IsInterno)
+            {
+                @Html.DisplayFor(model => model.PonenteNameExt)
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.PersonaName)
+            }
+        </small>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.InicioHora)<span>-</span>@Html.DisplayFor(model => model.FinHora)</p>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.ModalidadName)</p>
-
+        <p class="mg-b-0 tx-color-03">
+            @if (Model.IsInterno)
+            {
+                <span class="badge badge-success">Ponente(s) Externo(s)</span>
+            }
+            else
+            {
+                <span class="badge badge-primary">Ponente(s) Interno(s)</span>
+            }
+        </p>
     </div>
     <div class="mg-t-20 mg-sm-t-0">
         <button class="btn btn-sm btn-primary mg-l-5" id="btn_refrescar" onclick="window.location.reload()">Refrescar</button>
@@ -20,62 +38,78 @@
 <hr />
 @if (!Evaluacion.Respondio)
 {
-
-<div id="AppEvaluacionRes" data-label="Preguntas" class="df-example demo-forms">
-    <div class="alert alert-success mg-b-0 mb-5" role="alert">
-        <h4>“Siéntete libre de participar ya que tus respuestas son confidenciales. Son empleadas en la mejora del contenido, la retroalimentación y la logística de los eventos de Formación y Desarrollo”</h4>
-    </div>
-    <table class="table table-bordered table-hover">
-        <tr>
-            <th colspan="1" style="width: 60%;"></th>
-            <th colspan="1" class="text-center">Muy bien</th>
-            <th colspan="1" class="text-center">Bien</th>
-            <th colspan="1" class="text-center">Regular</th>
-            <th colspan="1" class="text-center">Malo</th>
-            <th colspan="1" class="text-center">No aplica</th>
-        </tr>
-        <tbody v-for="(seccion, indexSecccion) in Access">
-            <tr>
-                <td class="bg-primary-light m-3" colspan="6">{{ seccion.nombre }}</td>
-            </tr>
-            <tr v-for="(pregunta, indexPregunta) in seccion.preguntas">
-                <th colspan="1" style="width: 60%;">{{ pregunta.pregunta }}<span class="text-danger field-validation-valid" v-bind:id="'validac_'+pregunta.idEvaluacionSeccionPregnts" data-valmsg-for="Nombre" data-valmsg-replace="true"> </span> </th>
-                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="1" title="Muy bien" />
-                </td>
-                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="2" title="Bien" />
-                </td>
-                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="3" title="Regular" />
-                </td>
-                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="4" title="Malo" />
-                </td>
-                <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
-                    <input type="radio" v-model="pregunta.respuesta.respuesta" value="5" title="Considero que esta pregunta no aplica" />
-                </td>
-                <td colspan="5" v-if="pregunta.tipo == 2" class="text-center">
-                    <textarea class="form-control" v-model="pregunta.respuesta.respuesta"></textarea>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="form-group row mg-b-0 mt-5">
-        <div class="col-sm-12 text-right">
-            <a asp-action="MisEvaluaciones" class="btn btn-sm btn-secondary">Cancelar</a>
-            <button type="button" v-on:click="Save()" class="btn btn-sm btn-primary">Guardar evaluación</button>
+    @if (Model.Activa == false)
+    {
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">Estimado usuario!</h4>
+            <p>La evaluación "@Html.DisplayFor(model => model.Nombre)" ha sido desactivada temporalmente y no puede ser respondida</p>
+            <hr>
+            <p class="mb-0">Atte: Sistema Gestión de Personal.</p>
         </div>
-    </div>
-</div>
-    @section Scripts {
 
-        <script>
-            $(document).ready(function () {
+        <div class="form-group row mg-b-0 mt-5">
+            <div class="col-sm-12 text-right">
+                <a asp-action="MisEvaluaciones" class="btn btn-sm btn-secondary">Regresar</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="AppEvaluacionRes" data-label="Preguntas" class="df-example demo-forms">
+            <div class="alert alert-success mg-b-0 mb-5" role="alert">
+                <h4>“Siéntete libre de participar ya que tus respuestas son confidenciales. Son empleadas en la mejora del contenido, la retroalimentación y la logística de los eventos de Formación y Desarrollo”</h4>
+            </div>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th colspan="1" style="width: 60%;"></th>
+                    <th colspan="1" class="text-center">Muy bien</th>
+                    <th colspan="1" class="text-center">Bien</th>
+                    <th colspan="1" class="text-center">Regular</th>
+                    <th colspan="1" class="text-center">Malo</th>
+                    <th colspan="1" class="text-center">No aplica</th>
+                </tr>
+                <tbody v-for="(seccion, indexSecccion) in Access">
+                    <tr>
+                        <td class="bg-primary-light m-3" colspan="6">{{ seccion.nombre }}</td>
+                    </tr>
+                    <tr v-for="(pregunta, indexPregunta) in seccion.preguntas">
+                        <th colspan="1" style="width: 60%;">{{ pregunta.pregunta }}<span class="text-danger field-validation-valid" v-bind:id="'validac_'+pregunta.idEvaluacionSeccionPregnts" data-valmsg-for="Nombre" data-valmsg-replace="true"> </span> </th>
+                        <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                            <input type="radio" v-model="pregunta.respuesta.respuesta" value="1" title="Muy bien" />
+                        </td>
+                        <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                            <input type="radio" v-model="pregunta.respuesta.respuesta" value="2" title="Bien" />
+                        </td>
+                        <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                            <input type="radio" v-model="pregunta.respuesta.respuesta" value="3" title="Regular" />
+                        </td>
+                        <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                            <input type="radio" v-model="pregunta.respuesta.respuesta" value="4" title="Malo" />
+                        </td>
+                        <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
+                            <input type="radio" v-model="pregunta.respuesta.respuesta" value="5" title="Considero que esta pregunta no aplica" />
+                        </td>
+                        <td colspan="5" v-if="pregunta.tipo == 2" class="text-center">
+                            <textarea class="form-control" v-model="pregunta.respuesta.respuesta"></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-group row mg-b-0 mt-5">
+                <div class="col-sm-12 text-right">
+                    <a asp-action="MisEvaluaciones" class="btn btn-sm btn-secondary">Cancelar</a>
+                    <button type="button" v-on:click="Save()" class="btn btn-sm btn-primary">Guardar evaluación</button>
+                </div>
+            </div>
+        </div>
+        @section Scripts {
 
-            });
-        </script>
-        <script>
+            <script>
+                $(document).ready(function () {
+
+                });
+            </script>
+            <script>
         var AppEvaluacionRes = new Vue({
             el: "#AppEvaluacionRes",
             data: {
@@ -125,7 +159,7 @@
                             }
                             console.error(error)
 
-                        }).finally() 
+                        }).finally()
                     }
                 },
                 validar: async function () {
@@ -139,7 +173,7 @@
                             } else {
                                 document.getElementById('validac_' + ep.idEvaluacionSeccionPregnts).innerHTML = ""
                             }
-                                
+
                         });
                     });
                     console.log(valido)
@@ -147,7 +181,8 @@
                 }
             }
         });
-        </script>
+            </script>
+        }
     }
 }
 else

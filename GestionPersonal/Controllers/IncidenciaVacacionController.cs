@@ -40,6 +40,68 @@ namespace GestionPersonal.Controllers
 
         }
 
+        [AccessMultipleView(IdAction = new int[] { 46 })]
+        public ActionResult Periodos(string id)
+        {
+            try
+            {
+                var View_empleado = darkManager.View_empleado.GetByColumn("" + id, nameof(darkManager.View_empleado.Element.NumeroNomina));
+                var Result = darkManager.VacionesPeriodo.Get("" + View_empleado.IdPersona, nameof(darkManager.VacionesPeriodo.Element.IdPersona));
+                ViewData["IdPersona"] = View_empleado.IdPersona;
+                ViewData["Modo"] = string.IsNullOrEmpty(id) ? "Formulario" : "Modificar";
+                return View(Result);
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return NotFound(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
+        }
+
+        [AccessDataSession(IdAction = new int[] { 46 })]
+        [HttpPost]
+        public ActionResult UpdatePeriodo(int id, int dias, int idPersona)
+        {
+            try
+            {
+                var Result = darkManager.VacionesPeriodo.Get(id);
+                if(Result == null)
+                {
+                    throw new GpExceptions("No fue encontrado el periodo");
+                }
+                if(Result.IdPersona != idPersona)
+                {
+                    throw new GpExceptions("El periodo pertenece a otra persona");
+                }
+
+                if(Result.DiasAprobadors < dias)
+                {
+                    throw new GpExceptions("Solo puedes agregar un máximo de '"+ Result.DiasAprobadors + "' dias");
+                }
+
+                Result.DiasUsados = dias;
+                darkManager.VacionesPeriodo.Element = Result;
+                if (!darkManager.VacionesPeriodo.Update())
+                {
+                    throw new GpExceptions("error al actualizar");
+                }
+                return Ok("Periodo actualizado");
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
+        }
+
         [AccessMultipleView(IdAction = new int[] { 30 })]
         public ActionResult DetailsEmail(int id)
         {

@@ -1,0 +1,240 @@
+﻿@model IEnumerable<EcomDataProccess.Ecom_Pregunta>
+@{
+    ViewData["Title"] = "Asignar preguntas";
+}
+<div id="App_Preguntas">
+    <div class="br-section-wrapper">
+        <div class="table-wrapper">
+            <table class="table display responsive nowrap table-sm" id="table_cotizacion" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NombreCreador)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Titulo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdCategoria)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Pregunta)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Creado)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Active)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.HasRespuesta)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NombreCreador)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Titulo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CategoriaNombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Pregunta)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Creado)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Active)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HasRespuesta)
+                            </td>
+                            <td>
+
+                                @*@if (item.Active)
+                                    {
+                                        <a href="#" v-on:click="">Asignar</a>
+                                    }*@
+                                <a href="#" v-on:click="Asignar(@item.IdPregunta);">Asignar</a>
+
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="modal_DireccionFacturacion" class="modal fade">
+        <div class="modal-dialog" style="width: 30%; max-width:30%;" role="document">
+            <div class="modal-content tx-size-sm">
+                <div class="modal-header pd-x-20">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">asignar consultores</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="CloseModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-20" id="modal_DireccionFacturacion_body">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Asignar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                List<EcomDataProccess.Ecom_Usuario> Consultores = (List<EcomDataProccess.Ecom_Usuario>)ViewBag.Consultores;
+                            }
+                            @if (Consultores.Count > 0)
+                            {
+                                
+                                    @foreach (var item in (List<EcomDataProccess.Ecom_Usuario>)ViewBag.Consultores)
+                                    {
+                                        <tr>
+                                            <td>@item.Nombre @item.ApellidoPaterno @item.Apellidomaterno</td>
+                                            <td>
+                                                <input class="form-control" v-on:change="Marcar(@item.IdSplinnet)" type="checkbox" id="consultor_@item.IdSplinnet" value="@item.IdSplinnet" />
+                                            </td>
+                                        </tr>
+                                    }
+                                
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="alert alert-info" role="alert">
+                                            <div class="d-flex align-items-center justify-content-start">
+                                                <i class="icon ion-ios-information alert-icon tx-24 mg-t-5 mg-xs-t-0"></i>
+                                                <span><strong>Info!</strong> No se encontrarón consultores.</span>
+                                            </div><!-- d-flex -->
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm pd-x-20" data-dismiss="modal" v-on:click="CloseModal()">cancelar</button>
+                    <button type="button" class="btn btn-success btn-sm pd-x-20"  v-on:click="Save()">Guardar</button>
+                </div>
+            </div>
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+</div>
+@section Scripts {
+    <script>
+        var App_Preguntas = new Vue({
+            el: "#App_Preguntas",
+            data: {
+                serverToken: {
+                    'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
+                },
+                Selected: {
+                    IdPregunta: 0,
+                    IdConsultores:[]
+                },
+            },
+            mounted() {
+
+            },
+            methods: {
+                CloseModal: function(){
+                    $("#modal_DireccionFacturacion").modal("hide");
+                },
+                Asignar: async function (id) {
+                    this.Selected.IdPregunta = id;
+                    await this.Selected.IdConsultores.forEach((parti, index) => {
+                        let chek = document.getElementById("consultor_" + parti)
+                        chek.checked = false;
+                    });
+                    this.Selected.IdConsultores = [];
+
+                    await this.Getasignados(id)
+                    await this.Selected.IdConsultores.forEach((parti, index) => {
+                        let chek = document.getElementById("consultor_" + parti)
+                        chek.checked = true;
+                    });
+                    $("#modal_DireccionFacturacion").modal("show");
+                },
+                Getasignados: async function (id) {
+                    var params = new URLSearchParams();
+                    params.append('id', id);
+                    return axios.post('@Url.Action("GetConsultores", "ConsultorPregunta")', params, null).then(response => {
+                        this.Selected.IdConsultores = response.data
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    })
+                },
+                Save: async function () {
+                    return axios.post('@Url.Action("AddConsultores", "ConsultorPregunta")', this.Selected, null).then(response => {
+                        this.ShowMessageErrorShort(response.data, 'success')
+                    }).catch(error => {
+                        this.ShowMessageErrorShort(error.response.data,'error')
+                    })
+                },
+                Marcar: async function (idCheck) {
+                    let chek = document.getElementById("consultor_"+idCheck)
+                    if (chek.checked == true) {
+                        if (this.Selected.IdConsultores.length == 0) {
+                            this.Selected.IdConsultores.push(parseInt(chek.value))
+                        } else {
+                            let active = false;
+                            await this.Selected.IdConsultores.forEach((parti, index) => {
+                                if (parseInt(parti) == parseInt(chek.value)) {
+                                    active = false;
+                                } else {
+                                    active = true;
+                                }
+                            });
+                            if (active == true) {
+                                this.Selected.IdConsultores.push(parseInt(chek.value))
+                            }
+                        }
+                    } else {
+                        await this.Selected.IdConsultores.forEach((parti, index) => {
+                            if (parseInt(parti) == parseInt(chek.value)) {
+                                this.Selected.IdConsultores.splice(index, 1);
+                            }
+                        });
+                    }
+                    console.log(this.Selected.IdConsultores)
+                },
+                ShowMessageErrorShort: function (text, icon) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: icon,
+                        title: text
+                    })
+                },
+            },
+
+        });
+
+    </script>
+
+}
+
+
+

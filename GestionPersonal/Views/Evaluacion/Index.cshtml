@@ -63,8 +63,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PersonaName)
+                <td class="tx-uppercase">
+                    @if (item.IsInterno)
+                    {
+                        @Html.DisplayFor(modelItem => item.PonenteNameExt)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.PersonaName)
+                    }
+
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.InicioFecha)

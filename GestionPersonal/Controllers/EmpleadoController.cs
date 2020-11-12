@@ -63,6 +63,15 @@ namespace GestionPersonal.Controllers
             return View(result);
         }
 
+        public ActionResult Buscador(string patron)
+        {
+            var result = darkManager.View_empleado.Get().OrderBy(a => a.NombreCompleto).ToList();
+            darkManager.CloseConnection();
+            //ViewData["Puestos"] = darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList();
+            //ViewData["Empleados"] = darkManager.Empleado.Get().OrderBy(a => a.NumeroNomina).ToList();
+            return Ok(result);
+        }
+
         // GET: Empleado/Create
         [AccessMultipleView(IdAction = new int[] { 20 })]
         public ActionResult Create()

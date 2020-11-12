@@ -75,16 +75,22 @@ namespace GestionEmpleadol.Controllers
                     return PartialView(Empleado);
                 }
 
-                string emailValid = Funciones.ValidateEmail(Empleado.Email);
-                if (emailValid != "")
+                if (!string.IsNullOrEmpty(Empleado.Email))
                 {
-                    ModelState.AddModelError("Email", string.Format("El correo: '{0}', no es valido", emailValid));
-                    return PartialView(Empleado);
+                    string emailValid = Funciones.ValidateEmail(Empleado.Email);
+                    if (emailValid != "")
+                    {
+                        ModelState.AddModelError("Email", string.Format("El correo: '{0}', no es valido", emailValid));
+                        return PartialView(Empleado);
+                    }
                 }
+
+                
 
                 if (Empleado.NumeroNomina == 0)
                 {
-                    int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "NumeroNomina", Empleado.TipoNomina + "");
+                    var maxOb = darkManager.Empleado.GetMax("NumeroNomina", "TipoNomina", Empleado.TipoNomina + "");
+                    int max = maxOb is System.DBNull ? 0 : (int)maxOb;
                     Empleado.NumeroNomina = max + 1;
                 }
                 else
@@ -145,15 +151,19 @@ namespace GestionEmpleadol.Controllers
                     return PartialView(Empleado);
                 }
 
-                string emailValid = Funciones.ValidateEmail(Empleado.Email);
-                if (emailValid != "")
+                if (!string.IsNullOrEmpty(Empleado.Email))
                 {
-                    ModelState.AddModelError("Email", string.Format("El correo: '{0}', no es valido", emailValid));
-                    return PartialView(Empleado);
+                    string emailValid = Funciones.ValidateEmail(Empleado.Email);
+                    if (emailValid != "")
+                    {
+                        ModelState.AddModelError("Email", string.Format("El correo: '{0}', no es valido", emailValid));
+                        return PartialView(Empleado);
+                    }
                 }
                 if (Empleado.NumeroNomina == 0)
                 {
-                    int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "TipoNomina", Empleado.TipoNomina + "");
+                    var maxOb = darkManager.Empleado.GetMax("NumeroNomina", "TipoNomina", Empleado.TipoNomina + "");
+                    int max = maxOb is System.DBNull ? 0 : (int)maxOb;
                     Empleado.NumeroNomina = max + 1;
                 }
                 else
@@ -161,7 +171,8 @@ namespace GestionEmpleadol.Controllers
                     var emple = darkManager.Empleado.Get("NumeroNomina", Empleado.NumeroNomina + "", "TipoNomina", Empleado.TipoNomina + "");
                     if (emple != null && emple.IdEmpleado != Empleado.IdEmpleado)
                     {
-                        int max = (int)darkManager.Empleado.GetMax("NumeroNomina", "TipoNomina", Empleado.TipoNomina + "");
+                        var maxOb = darkManager.Empleado.GetMax("NumeroNomina", "TipoNomina", Empleado.TipoNomina + "");
+                        int max = maxOb is System.DBNull ? 0 : (int)maxOb;
                         ModelState.AddModelError("NumeroNomina", string.Format("El número de nomina '{0}' ya esta siendo utilizado por otro empleado, número disponible: '{1}'",
                             Empleado.NumeroNomina, max + 1));
                         return PartialView(Empleado);

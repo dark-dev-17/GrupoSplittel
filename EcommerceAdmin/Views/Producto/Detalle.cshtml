@@ -450,7 +450,7 @@ else
                     isGettingFichas: false
                 },
                 item: {
-                    Code: "@Model.ItemCode",
+                    Code: "@Html.Raw(Model.ItemCode)",
                     largeDescription: "@Html.Raw(DescripcioProduto)",
                     largeDescription2: "@Html.Raw(DescripcioProduto)",
                     isActiveEcomerce: ("@Model.IsActiveEcomerce" == "True" ? true : false),

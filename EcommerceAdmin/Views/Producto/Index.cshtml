@@ -40,7 +40,7 @@
                     {
                         <tr>
                             <td>
-                                @Html.ActionLink(item.ItemCode, "Detalle", "Producto", new { id = item.ItemCode }, new { @class = "btn btn-sm btn-outline-success" })
+                                <a class="btn btn-sm btn-outline-success" href="Producto/Detalle?id=@System.Web.HttpUtility.UrlEncode(item.ItemCode)">@item.ItemCode</a>
                             </td>
                             <td>
                                 @item.Description

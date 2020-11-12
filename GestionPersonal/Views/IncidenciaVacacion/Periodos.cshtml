@@ -1,0 +1,122 @@
+﻿@model IEnumerable<GPSInformation.Models.VacionesPeriodo>
+
+@{
+    ViewData["Title"] = (string)ViewBag.Modo == "Formulario" ? "Busqueda de periodos" : "Ver periodos";
+}
+
+@if ((string)ViewBag.Modo == "Formulario")
+{
+    <h2>Buscar periodos</h2>
+    <hr />
+    <form asp-action="periodos">
+        <div class="input-group input-group-sm col-lg-4">
+            <input type="text" class="form-control form-control-sm" id="id" name="id" value="" placeholder="No. de nomina" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-sm btn-outline-light" v-on:click="" title="Actualizar dias gastados" type="submit" id="button-addon2">Cambiar</button>
+            </div>
+        </div>
+    </form>
+
+}
+else
+{
+
+    <h2>Periodos</h2>
+    <hr />
+    @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = ViewBag.IdPersona })
+    <hr />
+    <div id="app_periodos">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NumeroPeriodo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DiasAprobadors)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DiasUsados)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Completo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Actualizado)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NumeroPeriodo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DiasAprobadors)
+                        </td>
+                        <td>
+                            <div class="input-group input-group-sm">
+                                <input type="number" class="form-control form-control-sm" id="inp_Usado_@item.IdVacionesPeriodo" value="@item.DiasUsados" placeholder="No. de dias gastados" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-outline-light" v-on:click="Save('@item.IdVacionesPeriodo')" title="Actualizar dias gastados" type="button" id="button-addon2">Cambiar</button>
+                                </div>
+                            </div>
+                            <span id="span_Usado_@item.IdVacionesPeriodo" class="text-danger"></span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Completo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Actualizado)
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @section Scripts {
+
+        <script>
+            $(document).ready(function () {
+
+            });
+        </script>
+        <script>
+        var app_periodos = new Vue({
+            el: "#app_periodos",
+            data: {
+                Access: null
+            },
+            mounted() {
+            },
+            methods: {
+                Save: function (id) {
+                    const inp_dias = document.getElementById("inp_Usado_" + id)
+
+                    const params = new URLSearchParams([['id', id], ['dias', inp_dias.value], ['idPersona', '@ViewBag.IdPersona']]);
+                    axios.post('@Url.Action("UpdatePeriodo", "IncidenciaVacacion")', params, null).then(response => {
+                        console.log(response.data)
+                        //this.Access = response.data;
+                        ShowMessageErrorShort(response.data, "success")
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data, "error")
+                                document.getElementById("span_Usado_" + id).innerHTML = error.response.data
+                            }
+                        }
+                    }).finally()
+                },
+            }
+        });
+        </script>
+    }
+
+}
+
+

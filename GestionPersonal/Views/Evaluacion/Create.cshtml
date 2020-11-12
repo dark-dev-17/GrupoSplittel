@@ -16,9 +16,23 @@
             </div>
         </div>
         <div class="form-group row">
+            <label asp-for="IsInterno" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-1">
+                <input type="checkbox" v-on:change="Exextern()" title="Evaluación por ponente externo?" asp-for="IsInterno" class="form-control" />
+                <span asp-validation-for="IsInterno" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="div_externo">
+            <label asp-for="PonenteNameExt" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="PonenteNameExt" class="form-control" />
+                <span asp-validation-for="PonenteNameExt" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="div_interno">
             <label asp-for="IdPersona" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-6">
-                <select asp-for="IdEmpleados" multiple="multiple" asp-items="ViewBag.Empleados" v-on:change="ValidateForm()" class="form-control form-control-sm select2">
+            <div class="col-sm-10">
+                <select asp-for="IdEmpleados" multiple="multiple" asp-items="ViewBag.Empleados" class="form-control form-control-sm select2">
                     <option value="0">Selecciona una opción</option>
                 </select>
                 <span asp-validation-for="IdEmpleados" class="text-danger"></span>
@@ -79,4 +93,36 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+
+    <script>
+        var app_accessystem = new Vue({
+            el: "#app_createPermiso",
+            data: {
+                isExterno: false
+
+            },
+            mounted() {
+                this.Exextern();
+            },
+            methods: {
+                Exextern: async function () {
+                    if (document.getElementById("IsInterno").checked  == true) {
+                        document.getElementById("div_externo").style.display = "";
+                        document.getElementById("div_interno").style.display = "none";
+                    }
+                    else {
+                        document.getElementById("div_externo").style.display = "none";
+                        document.getElementById("div_interno").style.display = "";
+                    }
+                    //$('#IdEmpleados').select2({
+                    //    placeholder: 'Seleccióna una opción',
+                    //    searchInputPlaceholder: 'Search options'
+                    //})
+                }
+            }
+        });
+    </script>
+}
 
