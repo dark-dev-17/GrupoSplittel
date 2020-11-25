@@ -14,10 +14,12 @@ namespace EcomDataProccess
         public string TipoCreador { get; set; }
         public string Respuesta { get; set; }
         public int IdPregunta { get; set; }
+        public int IdConsultor { get; set; }
         public DateTime Creado { get; set; }
         public DateTime Actualizado { get; set; }
         public IFormFile Adjunto { get; set; }
         public string RutaArchivo { get; set; }
+        public string NombreConsultor { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         #endregion
 
@@ -44,6 +46,7 @@ namespace EcomDataProccess
                 Ecom_DBConnection_.StartProcedure("Admin_ConsultectPreguntaRespuesta");
                 Ecom_DBConnection_.AddParameter(IdRespuesta, "IdRespuesta", "INT");
                 Ecom_DBConnection_.AddParameter(IdPregunta, "IdPregunta", "INT");
+                Ecom_DBConnection_.AddParameter(IdConsultor, "IdConsultor_", "INT");
                 Ecom_DBConnection_.AddParameter(TipoCreador, "TipoCreador", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(Respuesta, "Respuesta", "VARCHAR");
                 Ecom_DBConnection_.AddParameter(Creado, "Creado", "DATETIME");
@@ -105,9 +108,22 @@ namespace EcomDataProccess
                             Creado = Data.IsDBNull(4) ? DateTime.Today : Data.GetDateTime(4),
                             Actualizado = Data.IsDBNull(5) ? DateTime.Today : Data.GetDateTime(5),
                             RutaArchivo = Data.IsDBNull(6) ? "" : Data.GetString(6),
+                            IdConsultor = Data.IsDBNull(7) ? 0 : (int)Data.GetUInt32(7),
                         });
                     }
                     Data.Close();
+
+                    List.ForEach(a => { 
+                        if(a.TipoCreador == "FIBREMEX")
+                        {
+                            EcomDataProccess.Foro.Ecom_InternosUser Ecom_Usuario = new Foro.Ecom_InternosUser(Ecom_DBConnection_);
+                            var res = Ecom_Usuario.GetConsultore(a.IdConsultor);
+                            if(res != null)
+                            {
+                                a.NombreConsultor = res.NombreCompleto;
+                            }
+                        }
+                    });
                 }
                 else
                 {

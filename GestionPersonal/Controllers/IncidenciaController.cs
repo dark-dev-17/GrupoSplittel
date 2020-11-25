@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionPersonal.Models;
 using GPSInformation;
 using GPSInformation.Controllers;
+using GPSInformation.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using OfficeOpenXml;
 
 namespace GestionPersonal.Controllers
 {
@@ -139,6 +143,93 @@ namespace GestionPersonal.Controllers
             return Ok("Ok");
         }
 
+        public ActionResult ProccessFilePeriodos()
+        {
+            string file = "";
+            darkManager.StartTransaction();
+            try
+            {
+                darkManager.LoadObject(GpsManagerObjects.View_empleado);
+                using (var package = new ExcelPackage(new FileInfo(@"C:\Users\Luis Martinez\Desktop\Copia de VACACIONES SPLITTEL 2020_copia.xlsx")))
+                {
+                    List<string> Hojas = new List<string> { "semanal optronics", "quincenal optronics", "QUINCENAL FIBREMEX", "SEMANAL FIBREMEX" };
+
+                    foreach (ExcelWorksheet worksheet in package.Workbook.Worksheets)
+                    {
+                        if (Hojas.Contains(worksheet.Name.Trim()))
+                        {
+                            for (int row = 3; row < worksheet.Dimension.Rows; row++)
+                            {
+                                var celda = worksheet.Cells[row, 1];
+                                var NoNomina = worksheet.Cells[row, 2];
+
+                                if (celda == null)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    if (NoNomina.Value == null || NoNomina.Value.ToString() == "" || NoNomina.Value.ToString() == "FINBLOQUE")
+                                        break;
+                                }
+
+                                var emp_res = darkManager.View_empleado.GetByColumn(NoNomina.Value.ToString().Trim(), "NumeroNomina");
+                                if(emp_res != null)
+                                {
+                                    
+                                    for (int col = 6; col < 50; col++)
+                                    {
+                                        file = $"Persona: {emp_res.NumeroNomina}, col: {col}";
+                                        var Restante1s = worksheet.Cells[row, col].Value;
+                                        if (worksheet.Cells[row, col].Value != null && !string.IsNullOrEmpty(Restante1s.ToString())&& !string.IsNullOrWhiteSpace(Restante1s.ToString()))
+                                        {
+                                            var periodo = darkManager.VacionesPeriodo.GetOpenquerys($"where IdPersona = {emp_res.IdPersona} and NumeroPeriodo = '{(col - 5)}'");
+                                            if (periodo != null)
+                                            {
+                                                var Restantes = worksheet.Cells[row, col].Value;
+                                                string valor = Restantes.ToString();
+                                                periodo.DiasUsados = periodo.DiasAprobadors - double.Parse(valor, CultureInfo.InvariantCulture);
+
+                                                darkManager.VacionesPeriodo.Element = periodo;
+                                                if (!darkManager.VacionesPeriodo.Update())
+                                                {
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                    celda.Value = "Proccesed";
+                                }
+                                else
+                                {
+                                    celda.Value = "Not found";
+                                }
+                            }
+                        }
+                    }
+                    package.Save();
+                }
+                darkManager.Commit();
+                return Ok("Ok");
+                
+            }
+            catch (FormatException ex)
+            {
+                darkManager.RolBack();
+                return BadRequest($"mensaje: {ex.Message} fila {file}");
+            }
+            catch (GpExceptions ex)
+            {
+                darkManager.RolBack();
+                return BadRequest(ex.ToString());
+            }
+            finally
+            {
+                darkManager.CloseConnection();
+                darkManager = null;
+            }
+           
+        }
 
     }
 }

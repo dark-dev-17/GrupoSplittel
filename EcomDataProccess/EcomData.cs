@@ -467,6 +467,10 @@ namespace EcomDataProccess
             {
                 return new Ecom_ConsultConsult(Ecom_DBEcommerce);
             }
+            else if (objectSource == ObjectSource.Ecom_InternosUser)
+            {
+                return new Ecom_InternosUser(Ecom_DBEcommerce);
+            }
             else
             {
                 throw new Ecom_Exception(string.Format("Objeto no valido"));

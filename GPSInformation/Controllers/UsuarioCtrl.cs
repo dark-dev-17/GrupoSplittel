@@ -87,10 +87,16 @@ namespace GPSInformation.Controllers
                 var Usuario_re = darkManager.Usuario.GetByColumn("" + Usuario.IdPersona, nameof(darkManager.Usuario.Element.IdPersona));
                 if(Usuario_re is null)
                 {
-                    Usuario.UltimoIngreso = DateTime.Now;
+                    Usuario_re = new Usuario();
+                    Usuario_re.UltimoIngreso = DateTime.Now;
+                    Usuario_re.Pass = Usuario.Pass;
+                    Usuario_re.UserName = Usuario.UserName;
+                    Usuario_re.IdPersona = Usuario.IdPersona;
+                    Usuario_re.Activo = Usuario.Activo;
+                    Usuario_re.IdRol = Usuario.IdRol;
                     Usuario_re.ImagenDefault = true;
                     Usuario_re.ImagenPerfil = "";
-                    darkManager.Usuario.Element = Usuario;
+                    darkManager.Usuario.Element = Usuario_re;
                     if (!darkManager.Usuario.Add())
                     {
                         throw new Exceptions.GpExceptions(string.Format("Error al guardar el acceso"));

@@ -65,7 +65,7 @@ namespace GestionPersonal.Controllers
 
         public ActionResult Buscador(string patron)
         {
-            var result = darkManager.View_empleado.Get().OrderBy(a => a.NombreCompleto).ToList();
+            var result = darkManager.View_empleado.GetOpenquery(string.Format("where NombreCompleto like '%{0}%'",patron)).OrderBy(a => a.NombreCompleto).ToList();
             darkManager.CloseConnection();
             //ViewData["Puestos"] = darkManager.Puesto.Get().OrderBy(a => a.Nombre).ToList();
             //ViewData["Empleados"] = darkManager.Empleado.Get().OrderBy(a => a.NumeroNomina).ToList();

@@ -30,7 +30,13 @@
             <td>@item.NombreCompleto</td>
             <td>@item.NombreDepartamento</td>
             <td>@item.PuestoNombre</td>
-            <td>@item.TipoNomina</td>
+            <td>
+                @item.TipoNomina
+                @if (item.IdEstatus != 19)
+                {
+                    <span class="badge badge-danger">@item.EstatusDescripcion</span>
+                }
+            </td>
             <td>
 
 

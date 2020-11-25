@@ -31,7 +31,7 @@ namespace GPSInformation.Models
         [Required]
         [Display(Name = "DiasUsados")]
         [ColumnDB(IsMapped = true, IsKey = false)]
-        public int DiasUsados { get; set; }
+        public double DiasUsados { get; set; }
         
         [Required]
         [Display(Name = "Completo")]

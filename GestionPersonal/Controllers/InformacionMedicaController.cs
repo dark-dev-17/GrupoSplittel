@@ -74,6 +74,7 @@ namespace GestionInformacionMedical.Controllers
                 {
                     ViewData["Alergias"] = Alergias;
                     ViewData["TiposSangre"] = TiposSangre;
+                    ModelState.AddModelError("", "Error a guardar información medica");
                     return PartialView(InformacionMedica);
                 }
                 
@@ -82,7 +83,7 @@ namespace GestionInformacionMedical.Controllers
             {
                 ViewData["Alergias"] = Alergias;
                 ViewData["TiposSangre"] = TiposSangre;
-                ModelState.AddModelError("Error", ex.Message);
+                ModelState.AddModelError("", ex.Message);
                 return PartialView(InformacionMedica);
             }
         }
@@ -117,6 +118,7 @@ namespace GestionInformacionMedical.Controllers
                 {
                     ViewData["Alergias"] = Alergias;
                     ViewData["TiposSangre"] = TiposSangre;
+                    ModelState.AddModelError("", "Error a guardar información medica");
                     return PartialView(InformacionMedica);
                 }
 
@@ -125,7 +127,7 @@ namespace GestionInformacionMedical.Controllers
             {
                 ViewData["Alergias"] = Alergias;
                 ViewData["TiposSangre"] = TiposSangre;
-                ModelState.AddModelError("Error", ex.Message);
+                ModelState.AddModelError("", ex.Message);
                 return PartialView(InformacionMedica);
             }
         }

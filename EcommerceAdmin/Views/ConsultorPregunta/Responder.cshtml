@@ -1,4 +1,4 @@
-﻿@model EcomDataProccess.Ecom_Pregunta
+﻿ @model EcomDataProccess.Ecom_Pregunta
 @{
     ViewData["Title"] = "Pregunta: " + @Model.Titulo;
 }
@@ -46,7 +46,8 @@
                 serverToken: {
                     'RequestVerificationToken': document.querySelector("input[name=__RequestVerificationToken]").value
                 },
-                comments: []
+                comments: [],
+                idUser: '@ViewBag.IdUsuario'
             },
             async mounted() {
                 await this.GetComentarios();
@@ -111,7 +112,7 @@
                     }).catch(error => {
 
                         this.ShowMessageErrorShort(error.response.data, 'error')
-                        
+
                     }).finally(() => this.newName = "")
                     window.location.reload();
                 },
@@ -193,10 +194,10 @@
                            "content": e.respuesta,
                            "pings": [],
                            "creator": 1,
-                           "fullname": e.nombreCliente,
+                            "fullname": (e.tipoCreador == "FIBREMEX") ? e.nombreConsultor : 'Cliente E-commerce',
                             "profile_picture_url": (e.tipoCreador == "FIBREMEX") ? "http://fibremex.co/fibra-optica/public/images/img_spl/usuarios/Us_1136.png" :"https://fibremex.co//fibra-optica/public/images/Otros/user_.jpg",
-                           "created_by_admin": false,
-                           "created_by_current_user": (e.tipoCreador == "FIBREMEX") ? true : false,
+                            "created_by_admin": (e.idConsultor+'' == this.idUser) ? true : false,
+                            "created_by_current_user": (e.idConsultor + '' == this.idUser) ? true : false,
                            "upvote_count": "",
                            "user_has_upvoted": false,
                             "is_new": false,
@@ -218,11 +219,11 @@
                         popularText: 'Populares',
                         oldestText: 'Antiguos',
                         newestText: 'Recientes',
-                        youText: 'Soporte Fibremex',
+                        //youText: 'Soporte Fibremex',
                         enableUpvoting: false,
                         enableAttachments: true,
-                        enableEditing: true,
-                        "currentUserIsAdmin": true,
+                        enableEditing: false,
+                        "currentUserIsAdmin": ( '33' == this.idUser) ? true : false,
                         "enableReplying": false,
                         enableDeletingCommentWithReplies: false,
                         getComments: function(success, error) {

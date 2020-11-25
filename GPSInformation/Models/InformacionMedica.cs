@@ -17,11 +17,13 @@ namespace GPSInformation.Models
 
         [Display(Name = "Tipo sangre")]
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción")]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public int TipoSangre { get; set; }
 
         [Display(Name = "Alergias")]
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción")]
         [ColumnDB(Name = "Nombre", IsMapped = true, IsKey = false)]
         public int Alergias { get; set; }
 

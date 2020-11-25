@@ -10,8 +10,10 @@ namespace EcomDataProccess
         #region Propiedades
         private string ConnectionString;
         public string Message { get; set; }
+        private bool IsTracsactionActive { get; set; }
         public MySqlConnection Connection { get; private set; }
         public MySqlCommand Comando { get; private set; }
+        private MySqlTransaction tran;
         #endregion
 
         #region Constructores
@@ -30,6 +32,28 @@ namespace EcomDataProccess
         #endregion
 
         #region Nuevos
+        public void StartTransaction()
+        {
+            tran = Connection.BeginTransaction();
+            IsTracsactionActive = true;
+        }
+        public void Commit()
+        {
+            if (IsTracsactionActive == false)
+            {
+                throw new Ecom_Exception("Transactios are inactive");
+            }
+            tran.Commit();
+        }
+        public void RolBack()
+        {
+            if (IsTracsactionActive == false)
+            {
+                throw new Ecom_Exception("Transactios are inactive");
+            }
+            tran.Rollback();
+            CloseConnection();
+        }
         public void StartInsert(string statement, List<ProcedureModel> DataModel)
         {
             string Evaluando = "";
@@ -41,8 +65,14 @@ namespace EcomDataProccess
                 }
 
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-                Comando = new MySqlCommand(statement, Connection);
+                if (IsTracsactionActive)
+                {
+                    Comando = new MySqlCommand(statement, Connection, tran);
+                }
+                else
+                {
+                    Comando = new MySqlCommand(statement, Connection);
+                }
 
                 DataModel.ForEach(param => {
                     Evaluando = param.Namefield;
@@ -113,8 +143,14 @@ namespace EcomDataProccess
                 }
 
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-                Comando = new MySqlCommand(statement, Connection);
+                if (IsTracsactionActive)
+                {
+                    Comando = new MySqlCommand(statement, Connection, tran);
+                }
+                else
+                {
+                    Comando = new MySqlCommand(statement, Connection);
+                }
 
                 DataModel.ForEach(param => {
                     Evaluando = param.Namefield;
@@ -183,8 +219,14 @@ namespace EcomDataProccess
                 }
 
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-                Comando = new MySqlCommand(statement, Connection);
+                if (IsTracsactionActive)
+                {
+                    Comando = new MySqlCommand(statement, Connection, tran);
+                }
+                else
+                {
+                    Comando = new MySqlCommand(statement, Connection);
+                }
 
                 DataModel.ForEach(param => {
                     if (typeof(int) == param.value.GetType())

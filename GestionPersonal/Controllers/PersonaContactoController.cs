@@ -69,7 +69,7 @@ namespace GestionPersonaContactol.Controllers
             }
             catch(GPSInformation.Exceptions.GpExceptions ex)
             {
-                ModelState.AddModelError("Error", ex.Message);
+                ModelState.AddModelError("", ex.Message);
                 return PartialView(PersonaContacto);
             }
         }
@@ -103,7 +103,7 @@ namespace GestionPersonaContactol.Controllers
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                ModelState.AddModelError("Error", ex.Message);
+                ModelState.AddModelError("", ex.Message);
                 return PartialView(PersonaContacto);
             }
         }

@@ -85,6 +85,8 @@ namespace EcommerceAdmin.Controllers
                 Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
                 Ecom_RespuestaPregunta_.Actualizado = DateTime.Now;
                 Ecom_RespuestaPregunta_.Creado = DateTime.Now;
+                Ecom_RespuestaPregunta_.IdConsultor = (int)HttpContext.Session.GetInt32("USR_IdSplinnet");
+
                 Ecom_RespuestaPregunta_ = (Ecom_RespuestaPregunta)Ecommerce_.ecomData.SetObjectConnection(Ecom_RespuestaPregunta_, ObjectSource.Ecom_RespuestaPregunta);
 
                 if (Ecom_RespuestaPregunta_.Adjunto != null)
@@ -198,6 +200,7 @@ namespace EcommerceAdmin.Controllers
                 Ecom_RespuestaPregunta_ = (Ecom_RespuestaPregunta)Ecommerce_.ecomData.SetObjectConnection(Ecom_RespuestaPregunta_, ObjectSource.Ecom_RespuestaPregunta);
                 Ecom_RespuestaPregunta_.Actualizado = DateTime.Now;
                 Ecom_RespuestaPregunta_.Creado = DateTime.Now;
+                Ecom_RespuestaPregunta_.IdConsultor = respuesta.IdConsultor;
                 if (Ecom_RespuestaPregunta_.Actions(Ecom_RespuestaPreguntaActions.Update))
                 {
                     Ecom_RespuestaPregunta_.Get(Ecom_RespuestaPregunta_.LastId());
@@ -303,6 +306,33 @@ namespace EcommerceAdmin.Controllers
         [AccessView(IdAction = 56)]
         public ActionResult Index()
         {
+            //try
+            //{
+            //    Ecommerce_ = new Ecommerce(HttpContext.Session);
+            //    Ecommerce_.StartLib(LibraryEcommerce.Ecommerce);
+            //    Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
+            //    Ecommerce_.ecomData.Connect(ServerSource.Splitnet);
+            //    Ecom_Pregunta Ecom_Pregunta = (Ecom_Pregunta)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_Pregunta);
+            //    Ecom_Usuario Ecom_Usuario = (Ecom_Usuario)Ecommerce_.ecomData.GetObject(ObjectSource.Usuario);
+            //    EcomDataProccess.Foro.Ecom_ConsultConsult Ecom_ConsultConsult = (EcomDataProccess.Foro.Ecom_ConsultConsult)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_ConsultConsult);
+            //    var list = Ecom_Pregunta.Get();
+
+            //    ViewData["Consultores"] = Ecom_Usuario.GetConsultor();
+
+            //    return View(list.OrderByDescending(a => a.Creado));
+            //}
+            //catch (Ecom_Exception ex)
+            //{
+            //    return RedirectToAction("Error", "ErrorPages", new { id = ex.Message });
+            //}
+            //finally
+            //{
+            //    if (Ecommerce_ != null)
+            //    {
+            //        Ecommerce_.ecomData.Disconect(ServerSource.Ecommerce);
+            //        Ecommerce_.ecomData.Disconect(ServerSource.Splitnet);
+            //    }
+            //}
             try
             {
                 Ecommerce_ = new Ecommerce(HttpContext.Session);
@@ -314,11 +344,12 @@ namespace EcommerceAdmin.Controllers
                 int USR_IdSplinnet = (int)HttpContext.Session.GetInt32("USR_IdSplinnet");
 
                 EcomDataProccess.Foro.Ecom_ConsultConsult Ecom_ConsultConsult = (EcomDataProccess.Foro.Ecom_ConsultConsult)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_ConsultConsult);
-                Ecom_ConsultConsult.getByConsultorr(USR_IdSplinnet).ForEach(a => {
+                Ecom_ConsultConsult.getByConsultorr(USR_IdSplinnet).ForEach(a =>
+                {
                     Ecom_Pregunta Ecom_Pregunta = (Ecom_Pregunta)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_Pregunta);
                     list.Add(Ecom_Pregunta.Get(a));
                 });
-                if(list.Count > 0)
+                if (list.Count > 0)
                 {
                     return View(list.OrderByDescending(a => a.Creado));
                 }
@@ -348,13 +379,14 @@ namespace EcommerceAdmin.Controllers
                 Ecommerce_ = new Ecommerce(HttpContext.Session);
                 Ecommerce_.StartLib(LibraryEcommerce.Ecommerce);
                 Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
-                Ecommerce_.ecomData.Connect(ServerSource.Splitnet);
                 Ecom_Pregunta Ecom_Pregunta = (Ecom_Pregunta)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_Pregunta);
-                Ecom_Usuario Ecom_Usuario = (Ecom_Usuario)Ecommerce_.ecomData.GetObject(ObjectSource.Usuario);
+                EcomDataProccess.Foro.Ecom_InternosUser Ecom_Usuario = (EcomDataProccess.Foro.Ecom_InternosUser)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_InternosUser);
                 EcomDataProccess.Foro.Ecom_ConsultConsult Ecom_ConsultConsult = (EcomDataProccess.Foro.Ecom_ConsultConsult)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_ConsultConsult);
                 var list = Ecom_Pregunta.Get();
-
-                ViewData["Consultores"] = Ecom_Usuario.GetConsultor();
+                list.ForEach(a => {
+                    a.NumberConsut = Ecom_ConsultConsult.GetConsultores(a.IdPregunta).Count;
+                });
+                ViewData["Consultores"] = Ecom_Usuario.GetConsultores();
 
                 return View(list.OrderByDescending(a => a.Creado));
             }
@@ -407,6 +439,35 @@ namespace EcommerceAdmin.Controllers
                 Ecommerce_.ecomData.Connect(ServerSource.Ecommerce);
                 EcomDataProccess.Foro.Ecom_ConsultConsult Ecom_ConsultConsult = (EcomDataProccess.Foro.Ecom_ConsultConsult)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_ConsultConsult);
                 Ecom_ConsultConsult.Agregar(consultorConsultorEco.IdConsultores, consultorConsultorEco.IdPregunta);
+
+                Ecom_Pregunta Ecom_Pregunta = (Ecom_Pregunta)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_Pregunta);
+                var result = Ecom_Pregunta.Get(consultorConsultorEco.IdPregunta);
+
+                consultorConsultorEco.IdConsultores.ForEach(a =>
+                {
+
+                    EcomDataProccess.Foro.Ecom_InternosUser Ecom_Usuario = (EcomDataProccess.Foro.Ecom_InternosUser)Ecommerce_.ecomData.GetObject(ObjectSource.Ecom_InternosUser);
+                    var resulta = Ecom_Usuario.GetConsultore(a);
+                    Ecommerce_.ecomData.Ecom_Email_ = new Ecom_Email(SMTP_Server, SMTP_account, Int32.Parse(SMTP_Port), SMTP_user, SMTP_pass, (SMTP_ssl == "true" ? true : false));
+                    
+                    string htmls = string.Format("" +
+                        "<p align='left'>Estimado: <strong>{0}</strong></p>" +
+                        " Usted ha sido asignado como consultor dentro de nuestro E-commerce <br>" +
+                        " <br>" +
+                        " <strong>Pregunta: </strong> {1} <br>" +
+                        " <strong>Categoria: </strong> {2} " +
+                        " <br>" +
+                        " Por favor ingresa a <a href='192.168.2.29:2622'>Administrador E-commerce</a> en la seccion <strong>Consultor Técnico</strong> <br>" +
+                        " <br>" +
+                        " <br>" +
+                        " Gracias!", resulta.NombreCompleto, result.Pregunta, result.CategoriaNombre);
+
+                    Ecommerce_.ecomData.SendMailNotification(4, htmls, resulta.Correo);
+                });
+               
+
+
+
                 return Ok("Información guardada");
             }
             catch (Ecom_Exception ex)
@@ -439,6 +500,7 @@ namespace EcommerceAdmin.Controllers
                     {
                         return View("../ErrorPages/Error", new { id = string.Format("La pregunta fue eliminada", id) });
                     }
+                    ViewData["IdUsuario"] = (int)HttpContext.Session.GetInt32("USR_IdSplinnet");
                     return View(result);
                 }
                 else

@@ -131,6 +131,7 @@ namespace GPSInformation.DBManagers
             }
             return Lista.ElementAt(0);
         }
+       
 
         public List<T> Get(Predicate<T> match)
         {
@@ -239,7 +240,19 @@ namespace GPSInformation.DBManagers
         {
             return DataReader(SqlStatements);
         }
-
+        public List<T> GetOpenquery(string where = "", string Order = "")
+        {
+            return DataReader(string.Format("select * from {0} {1} {2}", Nametable, where, Order));
+        }
+        public T GetOpenquerys(string where = "")
+        {
+            List<T> Lista = DataReader(string.Format("select * from {0} {1}", Nametable, where));
+            if (Lista.Count == 0)
+            {
+                return default(T);
+            }
+            return Lista.ElementAt(0);
+        }
         private List<T> DataReader(string SqlStatements)
         {
             TableDB tableDefinifiton = GetClassAttribute();

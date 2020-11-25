@@ -40,6 +40,7 @@ namespace GestionPersonal.Controllers
                 "IdSubModulo", "35");
             bool access = AccesoAdmin != null ? AccesoAdmin.TieneAcceso : false;
             ViewData["access"] = access;
+            ViewData["IdPersona"] = (int)HttpContext.Session.GetInt32("user_id"); ;
             return View();
         }
 

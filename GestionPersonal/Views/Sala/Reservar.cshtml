@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Reservaciones de salas";
     bool AccesoAdmin = (bool)ViewBag.access;
+    int IdPersona = (int)ViewBag.IdPersona;
 }
 <link href="~/template/lib/fullcalendar/fullcalendar.min.css" rel="stylesheet">
 <link rel="stylesheet" href="~/template/assets/css/dashforge.calendar.css">
@@ -22,12 +23,10 @@
                 <button href="#modalCreateEvent" data-toggle="modal" class="btn btn-primary btn-block" title="agregar nueva sala">Nueva Reservación</button>
             </div>
             <div class="pd-y-20 pd-x-15">
-                <label class="tx-uppercase tx-sans tx-10 tx-medium tx-spacing-1 tx-color-03 pd-l-10 mg-b-10">Mis Salas</label>
-
-                <nav class="calendar-nav" v-if="Salas.length" v-for="(item, index) in Salas">
-                    <div class="pd-y-20 pd-x-10 contact-list">
+                <nav class="calendar-nav" v-if="Salas.length" >
+                    <div class="pd-y-20 pd-x-10 contact-list" >
                         <label id="contactA" class="contact-list-divider">Lista de salas</label>
-                        <div class="media active">
+                        <div class="media active" v-for="(item, index) in Salas">
                             <div class="media-body mg-l-10">
                                 <h6 class="tx-13 mg-b-3">{{ item.nombre }}</h6>
                             </div><!-- media-body -->
@@ -253,7 +252,9 @@
                                 start: e.fechaInicio.substring(0,10)+"T"+e.horaIncio,
                                 end: e.fechaInicio.substring(0,10)+"T"+e.horaFin,
                                 title: e.motivo,
-                                description: e.comentarios
+                                description: e.comentarios,
+                                idSala: e.idSala,
+                                idPersona: e.idPersona
                             }
                             this.Reservaciones.events.push(reservacion);
                         })
@@ -382,21 +383,22 @@
 
                         ////styling
                         //modal.find('.modal-header').css('backgroundColor', (calEvent.source.borderColor)? calEvent.source.borderColor : calEvent.borderColor);
-                        console.log(calEvent.id);
+                        if (calEvent.idPersona + "" == "@IdPersona") {
+                            console.log(calEvent);
                             Swal.fire({
-                                    title: "¿Deseas eliminar esta reservación?",
-                                    text: "",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Si!'
-                                }).then((result) => {
-                                    if (result.value) {
-                                     App_calendar.IsMine(calEvent.id)
-                                    }
+                                title: "¿Deseas eliminar esta reservación?",
+                                text: "",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Si!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    App_calendar.IsMine(calEvent.id)
+                                }
                             })
-                        
+                        }
                     });
 
                     //this.StartCalendar();

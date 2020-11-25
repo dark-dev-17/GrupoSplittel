@@ -6,17 +6,63 @@
 
 @if ((string)ViewBag.Modo == "Formulario")
 {
-    <h2>Buscar periodos</h2>
-    <hr />
-    <form asp-action="periodos">
-        <div class="input-group input-group-sm col-lg-4">
-            <input type="text" class="form-control form-control-sm" id="id" name="id" value="" placeholder="No. de nomina" aria-label="Recipient's username" aria-describedby="button-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-sm btn-outline-light" v-on:click="" title="Actualizar dias gastados" type="submit" id="button-addon2">Cambiar</button>
+    <div id="app_periodosBus" class="col-lg-4">
+        <h2>Buscar periodos</h2>
+        <hr />
+        <form asp-action="periodos">
+            <div class="input-group input-group-sm ">
+                <input type="text" class="form-control form-control-sm" v-on:keyup="Save()" id="id" name="id" value="" placeholder="Buscar" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-outline-light" v-on:click="" title="Actualizar dias gastados" type="submit" id="button-addon2">Ver periodos</button>
+                </div>
             </div>
-        </div>
-    </form>
+            <div class="list-group" v-if="empleados.length > 0" v-for="(item, index) in  empleados">
+                <a v-bind:href="'@Url.Action("Periodos","IncidenciaVacacion")'+'/?id='+item.numeroNomina"
+                   v-bind:title="'Ver peridos de '+item.nombreCompleto"
+                   target="_blank"
+                   class = "list-group-item d-flex align-items-center">
+                    <div>
+                        <h6 class="tx-13 tx-inverse tx-semibold mg-b-0">{{ item.nombreCompleto }} - {{item.numeroNomina}}</h6>
+                        <span class="d-block tx-11 text-muted">{{ item.puestoNombre }}<span v-if="item.idEstatus == 20" class="badge badge-danger">{{item.estatusDescripcion}}</span></span>
+                    </div>
+                </a>
+            </div>
+        </form>
+    </div>
+    @section Scripts {
 
+        <script>
+            $(document).ready(function () {
+
+            });
+        </script>
+        <script>
+        var app_periodos = new Vue({
+            el: "#app_periodosBus",
+            data: {
+                empleados: []
+            },
+            mounted() {
+            },
+            methods: {
+                Save: function (id) {
+                    const NoNomina = document.getElementById("id")
+                    const params = new URLSearchParams([['patron', NoNomina.value]]);
+                    axios.post('@Url.Action("Buscador", "Empleado")', params, null).then(response => {
+                        this.empleados = response.data;
+                        console.log(this.empleados)
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data, "error")
+                            }
+                        }
+                    }).finally()
+                },
+            }
+        });
+        </script>
+    }
 }
 else
 {
@@ -59,7 +105,7 @@ else
                         </td>
                         <td>
                             <div class="input-group input-group-sm">
-                                <input type="number" class="form-control form-control-sm" id="inp_Usado_@item.IdVacionesPeriodo" value="@item.DiasUsados" placeholder="No. de dias gastados" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <input type="number" class="form-control form-control-sm" id="inp_Usado_@item.IdVacionesPeriodo" value="@Html.DisplayFor(modelItem => item.DiasUsados)" placeholder="No. de dias gastados" aria-label="Recipient's username" aria-describedby="button-addon2">
                                 <div class="input-group-append">
                                     <button class="btn btn-sm btn-outline-light" v-on:click="Save('@item.IdVacionesPeriodo')" title="Actualizar dias gastados" type="button" id="button-addon2">Cambiar</button>
                                 </div>

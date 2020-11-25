@@ -31,6 +31,8 @@ namespace EcomDataProccess
         public bool HasRespuesta { get; set; }
         private Ecom_DBConnection Ecom_DBConnection_;
         public string CategoriaNombre { get; set; }
+        [Display(Name = "No.Consultores")]
+        public int NumberConsut { get; set; }
         #endregion
 
         #region Constructores
@@ -130,6 +132,8 @@ namespace EcomDataProccess
                         var respuestas = ecom_RespuestaPregunta.Get(a.IdPregunta);
 
                         a.HasRespuesta = respuestas.Where(c => c.TipoCreador == "FIBREMEX").ToList().Count > 0 ? true : false;
+
+                       
                     });
                 }
                 else

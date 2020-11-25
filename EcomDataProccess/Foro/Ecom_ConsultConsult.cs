@@ -2,10 +2,130 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 
 namespace EcomDataProccess.Foro
 {
+    public class Ecom_InternosUser
+    {
+        #region Atributos
+        [Display(Name = "Id")]
+        public int IdInternosUser { get; set; }
+
+        [Required]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required]
+        [Display(Name = "Apellido")]
+        public string Apellido { get; set; }
+
+        [Required]
+        [Display(Name = "Imagen")]
+        public string Imagen { get; set; }
+
+        [Required]
+        [Display(Name = "IdSplitnet")]
+        public int IdSplitnet { get; set; }
+
+
+        [Required]
+        [Display(Name = "Correo")]
+        public string Correo { get; set; }
+
+        public string NombreCompleto { get { return Nombre + " " + Apellido; } }
+
+        private Ecom_DBConnection Ecom_DBConnection_;
+        #endregion
+
+        #region Constructor
+        ~Ecom_InternosUser()
+        {
+
+        }
+        public Ecom_InternosUser()
+        {
+
+        }
+        public Ecom_InternosUser(Ecom_DBConnection Ecom_DBConnection_)
+        {
+            this.Ecom_DBConnection_ = Ecom_DBConnection_;
+        }
+        #endregion
+
+        #region Metodos
+        public Ecom_InternosUser GetConsultore(int ID)
+        {
+            List<Ecom_InternosUser> result = ReadDatReader(String.Format("SELECT * FROM t43_usuarios_internos WHERE IdSplitnet = '{0}'",ID));
+
+            if(result.Count == 1)
+            {
+                return result.ElementAt(0);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public List<Ecom_InternosUser> GetConsultores()
+        {
+            var result = ReadDatReader("SELECT * FROM t43_usuarios_internos;");
+            return result;
+        }
+        private List<Ecom_InternosUser> ReadDatReader(string Statement)
+        {
+            List<Ecom_InternosUser> List = null;
+            MySqlDataReader Data = null;
+            try
+            {
+                Ecom_Tools.ValidDBobject(Ecom_DBConnection_);
+                Data = Ecom_DBConnection_.DoQuery(Statement);
+                List = new List<Ecom_InternosUser>();
+                if (Data.HasRows)
+                {
+                    while (Data.Read())
+                    {
+                        List.Add(new Ecom_InternosUser
+                        {
+                            IdInternosUser = Data.IsDBNull(0) ? 0 : (int)Data.GetUInt32(0),
+                            Nombre = Data.IsDBNull(1) ? "" : Data.GetString(1),
+                            Apellido = Data.IsDBNull(2) ? "" : Data.GetString(2),
+                            Imagen = Data.IsDBNull(3) ? "" : Data.GetString(3),
+                            IdSplitnet = Data.IsDBNull(4) ? 0 : Data.GetInt32(4),
+                            Correo = Data.IsDBNull(5) ? "" : Data.GetString(5),
+                        });
+                    }
+                    Data.Close();
+                }
+                else
+                {
+                    Ecom_DBConnection_.Message = "Registro no encontrado";
+                }
+                return List;
+            }
+            catch (Ecom_Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (Data != null)
+                {
+                    Data.Close();
+                }
+            }
+        }
+        public void SetConnection(Ecom_DBConnection Ecom_DBConnection_)
+        {
+            this.Ecom_DBConnection_ = Ecom_DBConnection_;
+        }
+        #endregion
+    }
+
+
+
+
     public class Ecom_ConsultConsult
     {
         #region Atributos
@@ -55,22 +175,33 @@ namespace EcomDataProccess.Foro
         }
         public void Agregar(List<int> lista, int IdPregunta_)
         {
-            if(lista is null)
+            Ecom_DBConnection_.StartTransaction();
+            try
             {
+                if (lista is null)
+                {
 
+                }
+                else
+                {
+                    ReadDatReader(string.Format("select * from consultor_consultor where IdPregunta = '{0}'", IdPregunta_)).ForEach(a => {
+                        Delete(a.IdConsultConsult);
+                    });
+
+                    lista.ForEach(a => {
+                        IdPregunta = IdPregunta_;
+                        IdConsultor = a;
+                        Add();
+                    });
+                }
+                Ecom_DBConnection_.Commit();
             }
-            else
+            catch (Ecom_Exception ex)
             {
-                ReadDatReader(string.Format("select * from consultor_consultor where IdPregunta = '{0}'", IdPregunta_)).ForEach(a => {
-                    Delete(a.IdConsultConsult);
-                });
-
-                lista.ForEach(a => {
-                    IdPregunta = IdPregunta_;
-                    IdConsultor = a;
-                    Add();
-                });
+                Ecom_DBConnection_.RolBack();
+                throw ex;
             }
+            
         }
         private void Delete(int IdConsultConsult_)
         {

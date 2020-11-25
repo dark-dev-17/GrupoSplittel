@@ -60,10 +60,18 @@
                             <td>
 
                                 @*@if (item.Active)
-                                    {
-                                        <a href="#" v-on:click="">Asignar</a>
-                                    }*@
-                                <a href="#" v-on:click="Asignar(@item.IdPregunta);">Asignar</a>
+        {
+            <a href="#" v-on:click="">Asignar</a>
+        }*@
+                                @if (item.NumberConsut > 0)
+                                {
+                                    <a href="#" v-on:click="Asignar(@item.IdPregunta);">Re-asignar</a>
+                                }
+                                else
+                                {
+                                    <a href="#" v-on:click="Asignar(@item.IdPregunta);">Asignar</a>
+                                }
+
 
                             </td>
 
@@ -92,17 +100,17 @@
                         </thead>
                         <tbody>
                             @{
-                                List<EcomDataProccess.Ecom_Usuario> Consultores = (List<EcomDataProccess.Ecom_Usuario>)ViewBag.Consultores;
+                                List<EcomDataProccess.Foro.Ecom_InternosUser> Consultores = (List<EcomDataProccess.Foro.Ecom_InternosUser>)ViewBag.Consultores;
                             }
                             @if (Consultores.Count > 0)
                             {
                                 
-                                    @foreach (var item in (List<EcomDataProccess.Ecom_Usuario>)ViewBag.Consultores)
+                                    @foreach (var item in Consultores)
                                     {
                                         <tr>
-                                            <td>@item.Nombre @item.ApellidoPaterno @item.Apellidomaterno</td>
+                                            <td>@item.NombreCompleto</td>
                                             <td>
-                                                <input class="form-control" v-on:change="Marcar(@item.IdSplinnet)" type="checkbox" id="consultor_@item.IdSplinnet" value="@item.IdSplinnet" />
+                                                <input class="form-control" v-on:change="Marcar(@item.IdSplitnet)" type="checkbox" id="consultor_@item.IdSplitnet" value="@item.IdSplitnet" />
                                             </td>
                                         </tr>
                                     }
@@ -156,14 +164,19 @@
                     this.Selected.IdPregunta = id;
                     await this.Selected.IdConsultores.forEach((parti, index) => {
                         let chek = document.getElementById("consultor_" + parti)
-                        chek.checked = false;
+                        if (chek != null) {
+                            chek.checked = false;
+                        }
+                        
                     });
                     this.Selected.IdConsultores = [];
 
                     await this.Getasignados(id)
                     await this.Selected.IdConsultores.forEach((parti, index) => {
                         let chek = document.getElementById("consultor_" + parti)
-                        chek.checked = true;
+                        if (chek != null) {
+                            chek.checked = true;
+                        }
                     });
                     $("#modal_DireccionFacturacion").modal("show");
                 },
@@ -172,6 +185,7 @@
                     params.append('id', id);
                     return axios.post('@Url.Action("GetConsultores", "ConsultorPregunta")', params, null).then(response => {
                         this.Selected.IdConsultores = response.data
+                        console.log(response.data)
                     }).catch(error => {
                         this.ShowMessageErrorShort(error.response.data,'error')
                     })

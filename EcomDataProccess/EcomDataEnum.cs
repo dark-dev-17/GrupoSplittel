@@ -43,6 +43,7 @@ namespace EcomDataProccess
         Ecom_Pregunta = 29,
         Ecom_RespuestaPregunta = 30,
         Ecom_ConsultConsult = 31,
+        Ecom_InternosUser = 32,
     }
     public enum FiltroProducto
     {
