@@ -1,5 +1,6 @@
 ﻿using GPSInformation.DBManagers;
 using GPSInformation.Models;
+using GPSInformation.Models.Produccion;
 using GPSInformation.Tools;
 using GPSInformation.Views;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ namespace GPSInformation
         protected DBConnection dBConnection { get; set; }
         protected DBConnection dBConnectionAccess { get; set; }
         public EmailServ EmailServ_ { get; set; }
+        public string IpPublic { get; internal set; }
         protected string DefaultAccess { get; set; }
         protected string StringConnectionDb { get; set; }
         protected string Server { get; set; }
@@ -72,6 +74,9 @@ namespace GPSInformation
         public virtual DarkAttributes<EmpleadoContrato> EmpleadoContrato { get; set; }
         public virtual DarkAttributes<BuzonQueja> BuzonQueja { get; set; }
         public virtual DarkAttributes<EvaluacionInstructor> EvaluacionInstructor { get; set; }
+        public virtual DarkAttributes<View_gps_ensambleSinFiltro> View_gps_ensambleSinFiltro { get; set; }
+        public virtual DarkAttributes<GrupoProduccion> GrupoProduccion { get; set; }
+        public virtual DarkAttributes<GrupoHorario> GrupoHorario { get; set; }
 
 
         private string CorreosBCC { get; set; }
@@ -82,7 +87,7 @@ namespace GPSInformation
         public DarkManager(IConfiguration Configuration)
         {
             bool ModeProduction = Configuration.GetSection("ModeProduction").Value == "true" ? true : false;
-
+            IpPublic = Configuration.GetSection("IpPublic").Value;
             this.StringConnectionDb = ModeProduction ? Configuration.GetConnectionString("Production") : Configuration.GetConnectionString("Test");
             this.DefaultAccess = Configuration.GetConnectionString("DefaultAccess");
 
@@ -120,6 +125,13 @@ namespace GPSInformation
             return dBConnection.mensaje;
         }
 
+        public void LoadObject(GpsControlAcceso gpsManagerObjects)
+        {
+            if (gpsManagerObjects == GpsControlAcceso.View_gps_ensambleSinFiltro)
+            {
+                View_gps_ensambleSinFiltro = new DarkAttributes<View_gps_ensambleSinFiltro>(dBConnectionAccess);
+            }
+        }
         public void LoadObject(GpsManagerObjects gpsManagerObjects)
         {
             if (gpsManagerObjects == GpsManagerObjects.CatalogoOpciones)
@@ -310,6 +322,14 @@ namespace GPSInformation
             {
                 EvaluacionInstructor = new DarkAttributes<EvaluacionInstructor>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.GrupoProduccion)
+            {
+                GrupoProduccion = new DarkAttributes<GrupoProduccion>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.GrupoHorario)
+            {
+                GrupoHorario = new DarkAttributes<GrupoHorario>(dBConnection);
+            }
         }
         public void OpenConnection()
         {
@@ -358,7 +378,10 @@ namespace GPSInformation
         
         #endregion
     }
-
+    public enum GpsControlAcceso
+    {
+        View_gps_ensambleSinFiltro = 1
+    }
     public enum GpsManagerObjects
     {
         CatalogoOpciones = 1,
@@ -408,5 +431,7 @@ namespace GPSInformation
         EmpleadoContrato = 46,
         BuzonQueja = 47,
         EvaluacionInstructor = 48,
+        GrupoProduccion = 49,
+        GrupoHorario = 50,
     }
 }

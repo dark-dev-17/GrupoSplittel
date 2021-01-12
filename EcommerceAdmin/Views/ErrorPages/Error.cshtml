@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Error";
     ViewData["messsage"] = Model;
-    string data = ViewData["messsage"].ToString();
+    string data = ViewData["messsage"] != null ? ViewData["messsage"].ToString() : "";
     data = data.Replace("{", "").Replace("}", "");
 }
 

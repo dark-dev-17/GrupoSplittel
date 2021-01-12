@@ -9,5 +9,6 @@ namespace GPSInformation.Reportes
     {
         public Evaluacion Evaluacion { get; set; }
         public Views.View_empleado View_empleado { get; set; }
+        public string Ippublic { get; set; }
     }
 }

@@ -103,7 +103,7 @@
                     </td>*@
                 <td>
                     @Html.ActionLink("Editar", "Edit", new { id = item.IdEvaluacion }) |
-                    @Html.ActionLink("Dashboard", "Details", new { id = item.IdEvaluacion } , new { title="Administrar evaluación" }) 
+                    @Html.ActionLink("Dashboard", "Details", new { id = item.IdEvaluacion } , new { title="Administrar evaluación", target = "_blank" }) 
                 </td>
             </tr>
         }

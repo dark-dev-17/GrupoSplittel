@@ -3819,11 +3819,11 @@ namespace ServiceReference1
         {
             if ((endpointConfiguration == EndpointConfiguration.WS_BussinesPartnerSoap))
             {
-                return new System.ServiceModel.EndpointAddress("http://192.168.2.28:64615/WS_BussinesPartner.asmx");
+                return new System.ServiceModel.EndpointAddress("http://192.168.2.28:64616/WS_BussinesPartner.asmx");
             }
             if ((endpointConfiguration == EndpointConfiguration.WS_BussinesPartnerSoap12))
             {
-                return new System.ServiceModel.EndpointAddress("http://192.168.2.28:64615/WS_BussinesPartner.asmx");
+                return new System.ServiceModel.EndpointAddress("http://192.168.2.28:64616/WS_BussinesPartner.asmx");
             }
             throw new System.InvalidOperationException(string.Format("No se pudo encontrar un punto de conexión con el nombre \"{0}\".", endpointConfiguration));
         }

@@ -37,6 +37,10 @@ namespace GPSInformation.Models
         [ColumnDB(IsMapped = true, IsKey = false)]
         public int IdPuestoParent { get; set; }
 
+        [Display(Name = "Nivel")]
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public int Nivel { get; set; }
+
     }
 
     

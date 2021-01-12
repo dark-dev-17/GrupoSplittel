@@ -14,7 +14,7 @@ namespace GPSInformation.Models
 
         [ColumnDB(IsMapped = true, IsKey = false)]
         [Required]
-        [Display(Name = "Número de nomina")]
+        [Display(Name = "Usuario")]
         public string UserName { get; set; }
 
         [Required]

@@ -1,4 +1,5 @@
 ﻿using GPSInformation.Attributes;
+using GPSInformation.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -91,10 +92,17 @@ namespace GPSInformation.Models
         [Display(Name = "Actualizada")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public DateTime Actualizada { get; set; }
+        
+        [Required]
+        [Display(Name = "Duración(hrs) del curso o evaluación")]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor introduce la duración en hrs del curso")]
+        [ColumnDB(IsMapped = true, IsKey = false)]
+        public float Duracion { get; set; }
 
         [ColumnDB(IsMapped = false, IsKey = false)]
         public string PersonaName { get; set; }
 
+        [Display(Name = "Modalidad del curso o evaluación")]
         [ColumnDB(IsMapped = false, IsKey = false)]
         public string ModalidadName { get; set; }
 
@@ -110,6 +118,10 @@ namespace GPSInformation.Models
 
         [ColumnDB(IsMapped = false, IsKey = false)]
         public List<int> IdEmpleados { get; set; }
+
+        [Display(Name = "Folio")]
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public string EncriptId { get { return EncryptData.Encrypt(IdEvaluacion + ""); } }
     }
 
     [TableDB(IsMappedByLabels = false, IsStoreProcedure = false)]

@@ -13,7 +13,7 @@ namespace GPSInformation.Controllers
     {
         #region Atributos
         private int IdUsuario;
-        private DarkManager darkManager;
+        public DarkManager darkManager { get; internal set; }
         #endregion
 
         #region Constructores
@@ -64,7 +64,10 @@ namespace GPSInformation.Controllers
         {
             return darkManager.Departamento.Get().OrderBy(a => a.Nombre);
         }
-
+        public EvaluacionRespuestas GetRespuesta(int Idevaluacion, int IdPersona, int Idpregunta)
+        {
+            return darkManager.EvaluacionRespuestas.GetOpenquerys($"where IdEvaluacion = '{Idevaluacion}' and IdPersona = '{IdPersona}' and IdEvaluacionSeccionPregnts = '{Idpregunta}'");
+        }
         public View_empleado GetEmpleado(int idPersona)
         {
             return darkManager.View_empleado.Get(idPersona);
@@ -376,17 +379,21 @@ namespace GPSInformation.Controllers
                         "IdPersona", "" + parti.IdPersona);
                     if (Participantes_re == null)
                     {
-                        EvaluacionEmpleado evaluacionEmpleado = new EvaluacionEmpleado
+
+                        if(parti.IdEstatus != 20)
                         {
-                            Enviada = DateTime.Now,
-                            Respondio = false,
-                            IdPersona = parti.IdPersona,
-                            IdEvaluacion = IdEvaluacion
-                        };
-                        darkManager.EvaluacionEmpleado.Element = evaluacionEmpleado;
-                        if (!darkManager.EvaluacionEmpleado.Add())
-                        {
-                            throw new Exceptions.GpExceptions("Error al enviar evaluación");
+                            EvaluacionEmpleado evaluacionEmpleado = new EvaluacionEmpleado
+                            {
+                                Enviada = DateTime.Now,
+                                Respondio = false,
+                                IdPersona = parti.IdPersona,
+                                IdEvaluacion = IdEvaluacion
+                            };
+                            darkManager.EvaluacionEmpleado.Element = evaluacionEmpleado;
+                            if (!darkManager.EvaluacionEmpleado.Add())
+                            {
+                                throw new Exceptions.GpExceptions("Error al enviar evaluación");
+                            }
                         }
                     }
 
@@ -549,6 +556,32 @@ namespace GPSInformation.Controllers
 
         }
 
+        public void Reactivar(int IdEvaluacion, List<int> Partcipantes)
+        {
+            darkManager.StartTransaction();
+            try
+            {
+                Partcipantes.ForEach(parti => {
+                    var result = darkManager.EvaluacionEmpleado.GetOpenquerys($"where IdEvaluacion = '{IdEvaluacion}' and IdPersona = '{parti}'");
+                    if (result != null)
+                    {
+                        darkManager.EvaluacionEmpleado.Element = result;
+                        darkManager.EvaluacionEmpleado.Element.Respondio = false;
+                        if (!darkManager.EvaluacionEmpleado.Update())
+                        {
+                            throw new Exceptions.GpExceptions("Error al reactivar la evaluacion");
+                        }
+                    }
+                });
+                darkManager.Commit();
+            }
+            catch (Exceptions.GpExceptions ex)
+            {
+                darkManager.RolBack();
+                throw ex;
+            }
+            
+        }
         private void AddParticipantes(int IdEvaluacion, List<int> Partcipantes)
         {
             

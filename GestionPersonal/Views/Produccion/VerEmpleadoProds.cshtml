@@ -1,0 +1,180 @@
+﻿@model IEnumerable<GPSInformation.Reportes.EmpleadoProd>
+
+@{
+    ViewData["Title"] = "VerEmpleadoProds";
+    DateTime Inicio = DateTime.Parse("2021-01-04");
+    DateTime Corte = Inicio;
+    DateTime Fin = Inicio.AddDays(7);
+}
+<div id="app_turnosProd">
+    <table class="table">
+        <thead>
+            <tr>
+                <th width="40">
+                    @Html.DisplayNameFor(model => model.NumeroNomina)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>@Html.DisplayNameFor(model => model.Puesto)</th>
+                <th>@Html.DisplayNameFor(model => model.Antiguedad)</th>
+                <th>@Html.DisplayNameFor(model => model.GrupoName)</th>
+                <th>Hrs.Trabajdas / Hrs.Meta</th>
+                <th></th>
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumeroNomina)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Puesto)
+                    </td>
+                    <td>
+                        @String.Format("{0:00.0}", item.Antiguedad)
+                    </td>
+                    <td>
+                        <span class="badge @Html.Raw(item.GrupoName == "Gris" ? "badge-secondary" : item.GrupoName == "Rojo" ? "badge-danger" : item.GrupoName == "Verde" ? "badge-success" : "badge-warning")">
+                            @if (item.GrupoName == "")
+                            {
+                                @Html.Raw("Sin asginar")
+                            }
+                            else
+                            {
+                                @item.GrupoName
+                            }
+                        </span>
+                    </td>
+                    <td>
+                        @*@String.Format("{0:00.0}", item.HorasTrabajadas) <span>/</span> @String.Format("{0:00.0}", item.HorasMeta)*@
+
+
+                        @if (item.Diferencia <= 0)
+                        {
+                            <span class="tx-success">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-up"></i></span>
+                        }
+                        else
+                        {
+                            <span class="tx-danger">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-down"></i></span>
+                        }
+                    </td>
+                    <td>
+                        <a href="#mod_app_detailsWeek" data-toggle="modal" v-on:click="Details(@item.IdPersona)" title="Ver detalles de horarios y turnos">Ver detalles</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <!--<div class="modal calendar-modal-create fade effect-scale" id="mod_app_detailsWeek" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-body pd-20 pd-sm-30">
+                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Detalles</h5>
+                    <div id="mod_app_detailsWeek_res"></div>
+                </div>--><!-- modal-body -->
+            <!--</div>--><!-- modal-content -->
+        <!--</div>--><!-- modal-dialog -->
+    <!--</div>--><!-- modal -->
+    <div class="modal fade" id="mod_app_detailsWeek" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel3">Details</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="mod_app_detailsWeek_res">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary tx-13">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mod_addHorarioExcep" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel">Agregar horario de trabajo</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="text" name="inp_puesto" id="inp_fecha" disabled class="form-control" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label>Hora entrada</label>
+                        <input type="time" name="inp_puesto" id="inp_entrada" class="form-control" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label>Hora salida</label>
+                        <input type="time" name="inp_puesto" id="inp_salida" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
+                    <button type="button" v-on:click="saveEdit()" class="btn btn-primary tx-13">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var app_turnosProd = new Vue({
+            el: "#app_turnosProd",
+            data: {
+                IdPersona: 0
+            },
+            async mounted() { },
+            methods: {
+                Details: async function (id) {
+                    document.getElementById("mod_app_detailsWeek_res").innerHTML = "<div class='text-center'><div class='spinner-border text-primary' role='status'> <span class='sr-only'>Cargando...</span></div></div>"
+                    this.IdPersona = id;
+                    let params = new URLSearchParams();
+                    params.append('IdPersona', id);
+                    await axios.post('@Url.Action("DetailsWeek", "Produccion")', params, null).then(response => {
+                        document.getElementById("mod_app_detailsWeek_res").innerHTML = response.data
+                        var evento1 = document.getElementsByClassName("diaDescanso");
+
+                        for (var i = 0; i < evento1.length; i++) {
+                            evento1[i].addEventListener("click", function () {
+                                console.log(this.getAttribute('data-fecha'))
+                                document.getElementById("inp_fecha").value = this.getAttribute('data-fecha')
+                            });
+                        }
+                    }).catch(error => {
+                        console.error(error)
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                console.log(error.response)
+                                ShowMessageErrorShort(error.response.data,"error")
+                            }
+                        }
+                    }).finally()
+                    
+                        
+
+                }
+            }
+        });
+    </script>
+}

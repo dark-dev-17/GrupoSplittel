@@ -5,12 +5,12 @@
 }
 
     <h2>@ViewData["Title"]</h2>
-
+    <button href="#mod_editSubleves" data-toggle="modal" type="button" class="btn btn-white" style="display:none" id="btn_mod_editSubleves"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Editar</button>
     <div id="app_organigrama">
         @if (Model.Autirizada == 2)
         {
             <div class="alert alert-primary mg-b-0" role="alert">
-              Esta versión de organigrama se encuentra activa por  ello no se podrá modificar a menos que se aprueve otra
+                Esta versión de organigrama se encuentra activa
             </div>
         }
         <a href="#puestosselect" style="display: none" id="element" data-toggle="modal">content</a>
@@ -22,13 +22,15 @@
 
                     @if (Model.Autirizada == 1)
                     {
+
                         <button v-if="Node.length == 0" href="#addprimero" data-toggle="modal" type="button" class="btn btn-white"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Agregar primer nodo</button>
-                        <button href="#" onclick="window.location.reload()" id="btn_refrescar" type="button" class="btn btn-white"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Refrescar</button>
+
                         <form asp-action="Autorizar">
                             <input type="hidden" name="IdVersion" value="@Model.IdOrganigramaVersion" />
                             <button type="submit" class="btn btn-white">Autorizar esta versión</button>
                         </form>
                     }
+                    <button href="#" onclick="window.location.reload()" id="btn_refrescar" type="button" class="btn btn-white"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Refrescar</button>
                 </div>
             </div>
         </div>
@@ -55,11 +57,51 @@
                                     {{ option.dpu }} - {{ option.descripcion }}
                                 </option>
                             </select>
+                            <div class="form-group">
+                                <label>No.Niveles debajo</label>
+                                <select class="form-control select2 " id="Cmb_Nivel">
+                                    <option value="1">Nivel 1</option>
+                                    <option value="2">Nivel 2</option>
+                                    <option value="3">Nivel 3</option>
+                                    <option value="4">Nivel 4</option>
+                                    <option value="5">Nivel 5</option>
+                                    <option value="6">Nivel 6</option>
+                                    <option value="7">Nivel 7</option>
+                                    <option value="8">Nivel 8</option>
+                                    <option value="9">Nivel 9</option>
+                                    <option value="10">Nivel 10</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
                         <button type="button" v-on:click="AddNode()" class="btn btn-primary tx-13">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="mod_editSubleves" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content tx-14">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="exampleModalLabel">Subir o bajar niveles apartir del puesto padre</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+
+                            <label>No.Niveles a bajar o subir</label>
+                            <input type="hidden" name="inp_puesto" id="inp_puesto" class="form-control" value="" />
+                            <input type="number" name="inp_sublevels" id="inp_sublevels" class="form-control" value="" />
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
+                        <button type="button" v-on:click="saveEdit()" class="btn btn-primary tx-13">Guardar cambios</button>
                     </div>
                 </div>
             </div>
@@ -83,6 +125,7 @@
                                 </option>
                             </select>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
@@ -94,8 +137,9 @@
     </div>
 
 @section Scripts {
-    <script src="~/js/getorgchart1.js"></script>
-    @*<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>*@
+    @*<script src="~/js/getorgchart1.js"></script>*@
+    <script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
+
     <script>
         var app_organigrama = new Vue({
             el: "#app_organigrama",
@@ -122,9 +166,46 @@
                     searchInputPlaceholder: 'Search options',
                     dropdownParent: $('#puestosselect')
                 });
-                
+
             },
             methods: {
+                saveEdit: function () {
+                    Swal.fire({
+                        title: "¿Deseas actualizar este registro?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, adelante!'
+                    }).then((result) => {
+                        if (result.value) {
+                            let params = new URLSearchParams();
+                            params.append('IdPuesto', document.getElementById("inp_puesto").value);
+                            params.append('IdVersion', '@Model.IdOrganigramaVersion');
+                            params.append('Subleves', document.getElementById("inp_sublevels").value);
+                            axios.post('@Url.Action("AddSubLevels", "Organigrama")', params, null).then(response => {
+                                ShowMessageErrorShort("Puesto actualizado","success")
+                                //this.GetEstructura();
+                                ShowMessageErrorShort("Recargando pagina", "success")
+                                document.getElementById("btn_refrescar").click();
+                                //this.chart.remove(a);
+                            }).catch(error => {
+                                console.error(error)
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        console.log(error.response)
+                                        ShowMessageErrorShort(error.response.data,"error")
+                                    }
+                                }
+                            }).finally()
+                        }
+                    })
+                },
+                EditLevels: async function (a, e) {
+                    document.getElementById("inp_puesto").value = a;
+                    document.getElementById("btn_mod_editSubleves").click()
+                },
                 AddFirstNode: async function () {
                     var selected = document.getElementById("ListFisrt").value
                     let params = new URLSearchParams();
@@ -162,11 +243,12 @@
                     let params = new URLSearchParams();
                     params.append('IdVersion', '@Model.IdOrganigramaVersion');
                     await axios.post('@Url.Action("GetNodes","Organigrama")', params, null).then(response => {
-                        response.data.forEach((e,i) => {
+                        response.data.forEach((e, i) => {
+                            var nivel = "sub level " + (e.nivel - 1);
                             if (e.idPuestoParent == 0) {
-                                this.Node.push({ id: e.idPuesto, Puesto: e.descripcion, DPU: e.dpu });
+                                this.Node.push({ id: e.idPuesto, Puesto: e.descripcion, DPU: e.dpu, tags: [nivel] });
                             } else {
-                                this.Node.push({ id: e.idPuesto, pid: e.idPuestoParent, Puesto: e.descripcion, DPU: e.dpu });
+                                this.Node.push({ id: e.idPuesto, pid: e.idPuestoParent, Puesto: e.descripcion, DPU: e.dpu, tags: [nivel] });
                             }
                         })
                         //this.chart.draw(OrgChart.action.init);
@@ -183,14 +265,14 @@
                 StartChartOrg: async function () {
                     //this.chart.draw(OrgChart.action.init);
                     // alert(""+expand_limit)
-                    // OrgChart.templates.ula.field_0 = 
+                    // OrgChart.templates.ula.field_0 =
                     //     '<text class="field_0" style="font-size: 20px;" fill="#000000" x="125" y="30" text-anchor="middle">{val}</text>';
-                    // OrgChart.templates.ula.field_1 = 
+                    // OrgChart.templates.ula.field_1 =
                     //     '<text class="field_1" style="font-size: 14px;" fill="#000000" x="125" y="50" text-anchor="middle">{val}</text>';
                     this.chart = new OrgChart(document.getElementById("tree"), {
                         template: "ula",
                         scaleInitial: 0.8,
-                        mouseScroolBehaviour: BALKANGraph.action.zoom,
+                        //mouseScroolBehaviour: BALKANGraph.action.zoom,
                         /*siblingSeparation: 200,
                         subtreeSeparation: 200,*/
                         // mixedHierarchyNodesSeparation: 500,
@@ -217,27 +299,49 @@
                         nodeMenu: {
                             //details: { text: "Detalles" },
                             add: { text: "Agregar nuevo", onClick: this.ShowAdd },
-                            //edit: { text: "Editar" },
+                            edit: { text: "Subir o bajar nivel", onClick: this.EditLevels },
                             remove: { text: "Remover", onClick: this.Remove },
                         },
                         tags: {
-                            "assistant": {
-                                template: "ula"
+                            "sub level 0": {
+                                subLevels: 0,
+                            },
+                            "sub level 1": {
+                                subLevels: 1
+                            },
+                            "sub level 2": {
+                                subLevels: 2
+                            },
+                            "sub level 3": {
+                                subLevels: 3
+                            },
+                            "sub level 4": {
+                                subLevels: 4
+                            },
+                            "sub level 5": { subLevels: 5 },
+                            "sub level 6": { subLevels: 6 },
+                            "sub level 7": { subLevels: 7 },
+                            "sub level 8": { subLevels: 8 },
+                            "sub level 9": { subLevels: 9 },
+                            "sub level 10": { subLevels: 10 },
+                            "no menu": {
+                                template: "noMenuTemplate"
                             }
                         },
-                        
+                        nodes: this.Node
+
                     });
 
                     OrgChart.templates.ula.field_0 = '<text style="font-size: 18px; font-weight: bold;" fill="#DA4453" x="60" y="55">{val}</text>';
                     OrgChart.templates.ula.field_1 = '<text style="font-size: 12px; font-weight: bold;" fill="#626567" x="10" y="76">{val}</text>';
 
-                    this.Node.forEach((e, i) => {
-                        //console.log(e)
-                        this.chart.addNode(e);
-                    });
+                    //this.Node.forEach((e, i) => {
+                    //    console.log(e)
+                    //    this.chart.addNode(e);
+                    //});
 
-                    this.chart.draw(BALKANGraph.action.init);
-                    
+                    //this.chart.draw(BALKANGraph.action.init);
+
 
                     ORg_chart = this.chart;
                 },
@@ -282,14 +386,15 @@
                 },
                 AddNode:  function () {
                     var selected = document.getElementById("ListSecond").value
-                    
+
                     let params = new URLSearchParams();
                     params.append('IdPuesto', selected);
                     params.append('IdPuestoParent', this.selected);
                     params.append('IdVersion', '@Model.IdOrganigramaVersion');
+                    params.append('Nivel', document.getElementById("Cmb_Nivel").value);
                     axios.post('@Url.Action("AddNode","Organigrama")', params, null).then(response => {
                         document.getElementById("element").click();
-                        
+
                         ShowMessageErrorShort("Nuevo puesto agregado","success")
                         ShowMessageErrorShort("Recargando pagina", "success")
                         document.getElementById("btn_refrescar").click();

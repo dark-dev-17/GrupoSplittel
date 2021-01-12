@@ -4,8 +4,8 @@
 { 
     if (item.SubModulos.Count > 0 && item.SubModulos.Where(a => a.AccesosSistema.TieneAcceso).ToList().Count > 0)
     {
-        <li class="nav-item @Html.Raw(item.SubModulos.Where(a => a.Activemenu).ToList().Count > 0 ? "show" : "")">
-            <a href="" class="nav-link with-sub @Html.Raw(item.SubModulos.Where(a => a.Activemenu).ToList().Count > 0 ? "active" : "")">
+        <li class="nav-item @Html.Raw(item.SubModulos.Where(a => a.Activemenu).ToList().Count > 0 ? "show" : "show")">
+            <a href="#" class="nav-link with-sub @Html.Raw(item.SubModulos.Where(a => a.Activemenu).ToList().Count > 0 ? "active" : "")">
                 @Html.Raw(item.Icono)  @item.Nombre
             </a>
             <nav class="nav">

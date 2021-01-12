@@ -19,7 +19,11 @@ namespace GPSInformation.Tools
         "setecientos ", "ochocientos ", "novecientos "};
 
         private static Regex r;
-
+        public static double DifFechashoras(DateTime end, DateTime start) 
+        {
+            var hours = (end - start).TotalHours;
+            return hours;
+        }
         public static string Convertir(String numero, bool mayusculas, string moneda = "PESOS")
         {
 

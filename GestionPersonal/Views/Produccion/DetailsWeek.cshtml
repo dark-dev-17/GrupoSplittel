@@ -1,0 +1,167 @@
+﻿@model GPSInformation.Reportes.EmpleadoProd
+
+@{
+    ViewData["Title"] = "DetailsWeek";
+    DateTime Corte = Model.Inicio;
+}
+
+@await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.GrupoName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GrupoName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.HorasTrabajadas)
+        </dt>
+        <dd>
+            @String.Format("{0:00.0}", Model.HorasTrabajadas)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.HorasMeta) hrs
+        </dt>
+        <dd>
+            @String.Format("{0:00.0}", Model.HorasMeta) hrs
+        </dd>
+    </dl>
+</div>
+<hr />
+<table border="1" class="table">
+    <tr>
+        <th colspan="2">Lunes</th>
+        <th colspan="2">Martes</th>
+        <th colspan="2">Miercoles</th>
+        <th colspan="2">Jueves</th>
+        <th colspan="2">Viernes</th>
+        <th colspan="2">Sabado</th>
+        <th colspan="2">Domingo</th>
+    </tr>
+    <tr>
+        @if (Model.GrupoName == "Gris")
+        {
+            <td colspan="2" class="">
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-icon btn-white btn-uppercase mg-l-5 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="more-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item diaDescanso"  data-fecha="@Model.Inicio.ToString("dd/MM/yyyy")" data-idPersona="@Model.IdPersona" href="#mod_addHorarioExcep" data-toggle="modal">Asignar horario por excepción</a>
+                    </div>
+                </div>
+            </td>
+            <td colspan="1"></td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[1].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[1].HorasMeta) hrs
+                <ul class="">
+
+                    @foreach (var item in Model.Dias[1].Logs)
+                    {
+                        <li class="">@item</li>
+                    }
+                </ul>
+            </td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[2].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[2].HorasMeta) hrs
+            </td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[3].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[3].HorasMeta) hrs
+            </td>
+            <td colspan="1"></td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[5].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[5].HorasMeta) hrs
+            </td>
+            <td colspan="2" class="bg-secondary">
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-icon btn-white btn-uppercase mg-l-5 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="more-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item diaDescanso" data-fecha="@Model.Inicio.AddDays(6).ToString("dd/MM/yyyy")" data-idPersona="@Model.IdPersona" href="#">Asiggar horario por excepción</a>
+                    </div>
+                </div>
+            </td>
+        }
+        else if (Model.GrupoName == "Rojo")
+        {
+            <td colspan="1"></td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[0].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[0].HorasMeta) hrs
+            </td>
+            <td colspan="1"></td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[2].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[2].HorasMeta) hrs
+            </td>
+            <td colspan="1"></td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[3].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[3].HorasMeta) hrs
+            </td>
+            <td colspan="1"></td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[5].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[5].HorasMeta) hrs
+            </td>
+            <td colspan="2" class="bg-secondary">
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-icon btn-white btn-uppercase mg-l-5 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="more-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item diaDescanso" data-fecha="@Model.Inicio.ToString("dd/MM/yyyy")" data-idPersona="@Model.IdPersona" href="#">Asiggar horario por excepción</a>
+                    </div>
+                </div>
+            </td>
+        }
+        else if (Model.GrupoName == "Verde")
+        {
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[0].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[0].HorasMeta) hrs
+            </td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[1].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[1].HorasMeta) hrs
+            </td>
+            <td colspan="2" class="bg-secondary">
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-icon btn-white btn-uppercase mg-l-5 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="more-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item diaDescanso" data-fecha="@Model.Inicio.AddDays(2).ToString("dd/MM/yyyy")" data-idPersona="@Model.IdPersona" href="#">Asiggar horario por excepción</a>
+                    </div>
+                </div>
+            </td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[3].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[3].HorasMeta) hrs
+            </td>
+            <td colspan="2" class="">
+                @String.Format("{0:00.0}", Model.Dias[4].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[4].HorasMeta) hrs
+            </td>
+            <td colspan="2" class="bg-secondary">
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-icon btn-white btn-uppercase mg-l-5 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="more-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item diaDescanso" data-fecha="@Model.Inicio.AddDays(5).ToString("dd/MM/yyyy")" data-idPersona="@Model.IdPersona" href="#">Asiggar horario por excepción</a>
+                    </div>
+                </div>
+            </td>
+            <td colspan="2" class="bg-secondary">
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-icon btn-white btn-uppercase mg-l-5 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="more-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item diaDescanso" data-fecha="@Model.Inicio.AddDays(6).ToString("dd/MM/yyyy")" data-idPersona="@Model.IdPersona" href="#">Asiggar horario por excepción</a>
+                    </div>
+                </div>
+            </td>
+        }
+        else
+        {
+        }
+    </tr>
+
+</table>

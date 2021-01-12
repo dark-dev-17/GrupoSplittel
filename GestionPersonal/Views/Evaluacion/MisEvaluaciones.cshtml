@@ -18,7 +18,7 @@
 
 @if (ViewBag.Mode == "list")
 {
-    <table class="table">
+    <table class="table" id="table-eva-mis">
         <thead>
             <tr>
                 <th>
@@ -94,6 +94,24 @@
             }
         </tbody>
     </table>
+    @*@section Scripts {
+        <script>
+            $(document).ready(function () {
+                var table = $('#table-eva-mis').DataTable({
+                    language: {
+                        searchPlaceholder: 'Search...',
+                        sSearch: '',
+                        lengthMenu: '_MENU_ items/page',
+                    },
+                    "ordering": false
+                });
+                table
+                    .column('0:visible')
+                    .order('desc')
+                    .draw();
+            });
+        </script>
+    }*@
 }
 else
 {
@@ -167,3 +185,5 @@ else
     </div>  
 
 }
+
+

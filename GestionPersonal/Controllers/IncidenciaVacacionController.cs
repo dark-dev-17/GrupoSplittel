@@ -194,7 +194,7 @@ namespace GestionPersonal.Controllers
                     return View(IncidenciaVacacion);
                 }
 
-                if(IncidenciaVacacion.Inicio >= IncidenciaVacacion.Fin)
+                if(IncidenciaVacacion.Inicio > IncidenciaVacacion.Fin)
                 {
                     ModelState.AddModelError("Inicio", "La fecha de inicio es mayor o igual a la fecha de termino");
                     return View(IncidenciaVacacion);
@@ -202,18 +202,18 @@ namespace GestionPersonal.Controllers
 
                 var vacaciones = darkManager.IncidenciaVacacion.Get(IncidenciaVacacion.IdPersona + "", "IdPersona");
 
-                if (vacaciones.Where(a=>  IncidenciaVacacion.Inicio >= a.Inicio  && IncidenciaVacacion.Inicio <= a.Fin).ToList().Count > 0)
+                if (vacaciones.Where(a=>  IncidenciaVacacion.Inicio >= a.Inicio  && IncidenciaVacacion.Inicio <= a.Fin  && a.Estatus != 2).ToList().Count > 0)
                 {
                     ModelState.AddModelError("Inicio", "La fecha de inicio coinside en otras solicitudes de vacaciones");
                     return View(IncidenciaVacacion);
                 }
-                if (vacaciones.Where(a => IncidenciaVacacion.Fin >= a.Inicio && IncidenciaVacacion.Fin <= a.Fin).ToList().Count > 0)
+                if (vacaciones.Where(a => IncidenciaVacacion.Fin >= a.Inicio && IncidenciaVacacion.Fin <= a.Fin && a.Estatus != 2).ToList().Count > 0)
                 {
                     ModelState.AddModelError("Fin", "La fecha de termino coinside en otras solicitudes de vacaciones");
                     return View(IncidenciaVacacion);
                 }
 
-                if (vacaciones.Where(a => a.Inicio >= IncidenciaVacacion.Inicio && a.Fin <= IncidenciaVacacion.Fin).ToList().Count > 0)
+                if (vacaciones.Where(a => a.Inicio >= IncidenciaVacacion.Inicio && a.Fin <= IncidenciaVacacion.Fin && a.Estatus != 2).ToList().Count > 0)
                 {
                     ModelState.AddModelError("", "La fechas de tu solicitud abarcan solicitudes de vacaciones");
                     return View(IncidenciaVacacion);
@@ -576,7 +576,7 @@ namespace GestionPersonal.Controllers
             {
                 if (inicio.DayOfWeek != DayOfWeek.Saturday && inicio.DayOfWeek != DayOfWeek.Sunday)
                 {
-                    var result = darkManager.DiaFeriado.GetByColumn("", nameof(darkManager.DiaFeriado.Element.Fecha));
+                    var result = darkManager.DiaFeriado.GetByColumn(inicio.ToString("yyyy-MM-dd"), nameof(darkManager.DiaFeriado.Element.Fecha));
                     if (result == null)
                     {
                         dias++;

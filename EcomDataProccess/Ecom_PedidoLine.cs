@@ -145,7 +145,48 @@ namespace EcomDataProccess
         }
         public List<Ecom_PedidoLine> GetByPedido(int DocNumEcommerce)
         {
-            string Statement = string.Format("SELECT * FROM Admin_CotizacionesDetalle  where id_cotizacion = '{0}';", DocNumEcommerce);
+            string Statement = string.Format("" +
+                "   SELECT  " +
+                "       t01.id_cotizacion AS id_cotizacion, " +
+                "       t01.codigo AS codigo, " +
+                "       (CASE " +
+                "           WHEN " +
+                "               ISNULL(t02.desc_producto) " +
+                "           THEN " +
+                "               (SELECT  " +
+                "                       t17_nombres_productos_configurables.t17_f003 " +
+                "                   FROM " +
+                "                       t17_nombres_productos_configurables " +
+                "                   WHERE " +
+                "                       (t17_nombres_productos_configurables.t17_f001 = t01.codigo)) " +
+                "           ELSE t02.desc_producto " +
+                "       END) AS desc_producto, " +
+                "       t01.cantidad AS cantidad, " +
+                "       (CASE " +
+                "           WHEN (t03.moneda_pago <> 'USD') THEN (t01.subtotal * t03.tipoCambio) " +
+                "           ELSE t01.subtotal " +
+                "       END) AS subtotal, " +
+                "       (CASE " +
+                "           WHEN (t03.moneda_pago <> 'USD') THEN (t01.total * t03.tipoCambio) " +
+                "           ELSE t01.total " +
+                "       END) AS total, " +
+                "       (CASE " +
+                "           WHEN ISNULL(t03.moneda_pago) THEN 'USD' " +
+                "           ELSE t03.moneda_pago " +
+                "       END) AS Currency, " +
+                "       t01.descuento AS descuento, " +
+                "       (CASE " +
+                "           WHEN (t03.moneda_pago <> 'USD') THEN (t01.iva * t03.tipoCambio) " +
+                "           ELSE t01.iva " +
+                "       END) AS iva, " +
+                "       t03.activo AS activo, " +
+                "       t02.img_principal AS img_principal " +
+                "   FROM " +
+                "       ((cotizacion_detalle t01 " +
+                "       LEFT JOIN catalogo_productos t02 ON ((t01.codigo = t02.codigo))) " +
+                "       LEFT JOIN cotizacion_encabezado t03 ON ((t01.id_cotizacion = t03.id))) " +
+                "   WHERE " +
+                "       (t01.activo = 'si') and t01.id_cotizacion = '{0}' ", DocNumEcommerce);
             try
             {
                 return ReadDatReader(Statement);

@@ -9,8 +9,8 @@
         <div id="tree"></div>
     </div>
     @section Scripts {
-        <script src="~/js/getorgchart1.js"></script>
-        @*<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>*@
+        @*<script src="~/js/getorgchart1.js"></script>*@
+        <script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
         <script>
         var app_organigrama = new Vue({
             el: "#app_organigrama",
@@ -40,10 +40,11 @@
                     params.append('IdVersion', '@Model.IdOrganigramaVersion');
                     await axios.post('@Url.Action("GetNodes","Organigrama")', params, null).then(response => {
                         response.data.forEach((e,i) => {
+                            var nivel = "sub level " + (e.nivel - 1);
                             if (e.idPuestoParent == 0) {
-                                this.Node.push({ id: e.idPuesto, Puesto: e.descripcion, DPU: e.dpu });
+                                this.Node.push({ id: e.idPuesto, Puesto: e.descripcion, DPU: e.dpu, tags: [nivel] });
                             } else {
-                                this.Node.push({ id: e.idPuesto, pid: e.idPuestoParent, Puesto: e.descripcion, DPU: e.dpu });
+                                this.Node.push({ id: e.idPuesto, pid: e.idPuestoParent, Puesto: e.descripcion, DPU: e.dpu, tags: [nivel] });
                             }
                         })
                         //this.chart.draw(OrgChart.action.init);
@@ -67,7 +68,7 @@
                     this.chart = new OrgChart(document.getElementById("tree"), {
                         template: "ula",
                         scaleInitial: 0.8,
-                        mouseScroolBehaviour: BALKANGraph.action.zoom,
+                        //mouseScroolBehaviour: BALKANGraph.action.zoom,
                         /*siblingSeparation: 200,
                         subtreeSeparation: 200,*/
                         // mixedHierarchyNodesSeparation: 500,
@@ -98,22 +99,44 @@
                         //    remove: { text: "Remover", onClick: this.Remove },
                         //},
                         tags: {
-                            "assistant": {
-                                template: "ula"
+                            "sub level 0": {
+                                subLevels: 0,
+                            },
+                            "sub level 1": {
+                                subLevels: 1
+                            },
+                            "sub level 2": {
+                                subLevels: 2
+                            },
+                            "sub level 3": {
+                                subLevels: 3
+                            },
+                            "sub level 4": {
+                                subLevels: 4
+                            },
+                            "sub level 5": { subLevels: 5 },
+                            "sub level 6": { subLevels: 6 },
+                            "sub level 7": { subLevels: 7 },
+                            "sub level 8": { subLevels: 8 },
+                            "sub level 9": { subLevels: 9 },
+                            "sub level 10": { subLevels: 10 },
+                            "no menu": {
+                                template: "noMenuTemplate"
                             }
                         },
+                        nodes: this.Node
 
                     });
 
                     OrgChart.templates.ula.field_0 = '<text style="font-size: 18px; font-weight: bold;" fill="#DA4453" x="60" y="55">{val}</text>';
                     OrgChart.templates.ula.field_1 = '<text style="font-size: 12px; font-weight: bold;" fill="#626567" x="10" y="76">{val}</text>';
 
-                    this.Node.forEach((e, i) => {
-                        //console.log(e)
-                        this.chart.addNode(e);
-                    });
+                    //this.Node.forEach((e, i) => {
+                    //    //console.log(e)
+                    //    this.chart.addNode(e);
+                    //});
 
-                    this.chart.draw(BALKANGraph.action.init);
+                    //this.chart.draw(BALKANGraph.action.init);
 
 
                     ORg_chart = this.chart;

@@ -33,7 +33,7 @@ namespace GestionPersonal.Controllers
         {
             try
             {
-                return View(EvaluacionCtrl.Get());
+                return View(EvaluacionCtrl.Get().OrderByDescending(a => a.Creada));
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
@@ -126,6 +126,9 @@ namespace GestionPersonal.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion", Evaluacion.IdModalidad);
+                    ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre", Evaluacion.IdEvaluacionTemplate);
+                    ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto", Evaluacion.IdPersona);
                     return View(Evaluacion);
                 }
 
@@ -203,6 +206,9 @@ namespace GestionPersonal.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    ViewData["Modalidades"] = new SelectList(EvaluacionCtrl.GetModalidades().ToList(), "IdCatalogoOpcionesValores", "Descripcion", Evaluacion.IdModalidad);
+                    ViewData["Modelos"] = new SelectList(EvaluacionCtrl.GetModelos().ToList(), "IdEvaluacionTemplate", "Nombre", Evaluacion.IdEvaluacionTemplate);
+                    ViewData["Empleados"] = new SelectList(EvaluacionCtrl.GetEmpleados().ToList(), "IdPersona", "NombreCompleto", Evaluacion.IdPersona);
                     return View(Evaluacion);
                 }
                 if (Evaluacion.IsInterno)
@@ -287,7 +293,8 @@ namespace GestionPersonal.Controllers
                 var result = await _viewRenderService.RenderToStringAsync("Evaluacion/EmailDetails", new EvaluacionEmpleados
                 {
                     View_empleado = EvaluacionCtrl.GetEmpleado(evaluacionEmpleado.IdPersona),
-                    Evaluacion = EvaluacionCtrl.Get(evaluacionEmpleado.IdEvaluacion)
+                    Evaluacion = EvaluacionCtrl.Get(evaluacionEmpleado.IdEvaluacion),
+                    Ippublic = EvaluacionCtrl.darkManager.IpPublic,
                 });
                 EvaluacionCtrl.EnviarCorreo(result, evaluacionEmpleado.IdEvaluacion, evaluacionEmpleado.IdPersona);
 
@@ -323,10 +330,76 @@ namespace GestionPersonal.Controllers
                     var result = await _viewRenderService.RenderToStringAsync("Evaluacion/EmailDetails", new EvaluacionEmpleados
                     {
                         View_empleado = EvaluacionCtrl.GetEmpleado(parti),
-                        Evaluacion = EvaluacionCtrl.Get(evaluacionEmpleado.IdEvaluacion)
+                        Evaluacion = EvaluacionCtrl.Get(evaluacionEmpleado.IdEvaluacion),
+                        Ippublic = EvaluacionCtrl.darkManager.IpPublic,
                     });
                     EvaluacionCtrl.EnviarCorreo(result, evaluacionEmpleado.IdEvaluacion, parti);
                 });
+
+                return RedirectToAction(nameof(Details), new { id = evaluacionEmpleado.IdEvaluacion });
+            }
+            catch (GpExceptions ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(evaluacionEmpleado);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 37 })]
+        public async Task<ActionResult> ResendEmail([FromBody] EvaluacionEmple evaluacionEmpleado)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(evaluacionEmpleado);
+                }
+
+                evaluacionEmpleado.Empleados.ForEach(async parti =>
+                {
+                    var result = await _viewRenderService.RenderToStringAsync("Evaluacion/EmailDetails", new EvaluacionEmpleados
+                    {
+                        View_empleado = EvaluacionCtrl.GetEmpleado(parti),
+                        Evaluacion = EvaluacionCtrl.Get(evaluacionEmpleado.IdEvaluacion),
+                        Ippublic = EvaluacionCtrl.darkManager.IpPublic,
+                    });
+                    EvaluacionCtrl.EnviarCorreo(result, evaluacionEmpleado.IdEvaluacion, parti);
+                });
+
+                return RedirectToAction(nameof(Details), new { id = evaluacionEmpleado.IdEvaluacion });
+            }
+            catch (GpExceptions ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(evaluacionEmpleado);
+            }
+            finally
+            {
+                EvaluacionCtrl.Terminar();
+                EvaluacionCtrl = null;
+            }
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        [AccessMultipleView(IdAction = new int[] { 37 })]
+        public async Task<ActionResult> Reactivar([FromBody] EvaluacionEmple evaluacionEmpleado)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(evaluacionEmpleado);
+                }
+
+                EvaluacionCtrl.Reactivar(evaluacionEmpleado.IdEvaluacion, evaluacionEmpleado.Empleados);
 
                 return RedirectToAction(nameof(Details), new { id = evaluacionEmpleado.IdEvaluacion });
             }
@@ -367,6 +440,8 @@ namespace GestionPersonal.Controllers
                 EvaluacionCtrl = null;
             }
         }
+
+
 
         [HttpGet]
         [AccessMultipleView(IdAction = new int[] { 37 })]
@@ -456,11 +531,13 @@ namespace GestionPersonal.Controllers
                 var preguntas_red = EvaluacionCtrl.GetPreguntas(id).ToList();
                 preguntas_red.ForEach(a => {
                     a.Preguntas.ForEach(p => {
+                        var respuesta = EvaluacionCtrl.GetRespuesta(id, (int)HttpContext.Session.GetInt32("user_id"), p.IdEvaluacionSeccionPregnts);
                         p.Respuesta = new EvaluacionRespuestas
                         {
                             IdPersona = (int)HttpContext.Session.GetInt32("user_id"),
                             IdEvaluacion = id,
-                            IdEvaluacionSeccionPregnts = p.IdEvaluacionSeccionPregnts
+                            IdEvaluacionSeccionPregnts = p.IdEvaluacionSeccionPregnts,
+                            Respuesta = respuesta is null ? "" : respuesta.Respuesta
                         };
                     });
                 });

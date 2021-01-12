@@ -99,14 +99,14 @@
                     <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"><i data-feather="x"></i></span>
                     </button>
-                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Periodos de vacaciones</h5>
+                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Cambio de foto de perfil</h5>
 
                     <div id="content_vacacionesAcitivitdssdfsdf">
                         <form asp-action="FotoPerfil" enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group">
                                 <label  class="control-label">Foto</label>
-                                <input type="file" name="foto" id="foto" class="form-control" />
+                                <input type="file" accept=".png,.jpg,.jpeg,.gif" name="foto" id="foto" class="form-control" />
                             </div>
                             <div class="form-group row mg-b-0">
                                 <div class="col-sm-12 text-right">

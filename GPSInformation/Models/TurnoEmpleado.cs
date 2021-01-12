@@ -69,4 +69,26 @@ namespace GPSInformation.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaFin { get; set; }
     }
+    public class TurnoProdForm
+    {
+        [Required]
+        [Display(Name = "Empleado")]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción")]
+        public int IdPersona { get; set; }
+
+        [Required]
+        [Display(Name = "Grupo")]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor selecciona una opción")]
+        public int IdGrupo{ get; set; }
+
+        [Required]
+        [Display(Name = "Inicio")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime FechaInicio { get; set; }
+
+        [Required]
+        [Display(Name = "Inicio")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime FechaFin { get; set; }
+    }
 }

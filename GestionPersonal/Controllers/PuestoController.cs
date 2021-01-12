@@ -97,8 +97,9 @@ namespace GestionPersonal.Controllers
                 }
                 if(Puesto.NumeroDPU != 0)
                 {
-                    var puesto_re = darkManager.Puesto.GetByColumn("" + Puesto.NumeroDPU, "NumeroDPU");
-                    if(puesto_re != null)
+                    //var puesto_re = darkManager.Puesto.GetByColumn("" + Puesto.NumeroDPU, "NumeroDPU");
+                    var puesto_re = darkManager.Puesto.GetOpenquerys($"where NumeroDPU = '{Puesto.NumeroDPU}' and IdDepartamento = '{Puesto.IdDepartamento}'");
+                    if (puesto_re != null)
                     {
                         int max = (int)darkManager.Puesto.GetMax("NumeroDPU", "IdDepartamento", Puesto.IdDepartamento + "");
                         ModelState.AddModelError("NumeroDPU", string.Format("El numero de DPU {0} ya esta siendo usado en otro puesto, numero DPU dispobible {1}", Puesto.NumeroDPU, max));
@@ -188,7 +189,7 @@ namespace GestionPersonal.Controllers
 
                 if (Puesto.NumeroDPU != 0)
                 {
-                    var puesto_re = darkManager.Puesto.GetByColumn("" + Puesto.NumeroDPU, "NumeroDPU");
+                    var puesto_re = darkManager.Puesto.GetOpenquerys($"where NumeroDPU = '{Puesto.NumeroDPU}' and IdDepartamento = '{Puesto.IdDepartamento}'");
                     if (puesto_re != null && puesto_re.IdPuesto != Puesto.IdPuesto)
                     {
                         int max = (int)darkManager.Puesto.GetMax("NumeroDPU", "IdDepartamento", Puesto.IdDepartamento + "");

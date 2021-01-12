@@ -1,0 +1,60 @@
+﻿@model IEnumerable<GPSInformation.Reportes.ColaboradorEnsamble>
+
+@{
+    ViewData["Title"] = "ProduccionHoras";
+    DateTime Inicio = DateTime.Parse("2020-12-02 00:00:00");
+    DateTime Fin = Inicio.AddDays(6);
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nomina)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreCompleto)
+            </th>
+            @while (Inicio <= Fin)
+            {
+                <th colspan="2">@Inicio.DayOfWeek.ToString()</th>
+                Inicio = Inicio.AddDays(1);
+            }
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nomina)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreCompleto)
+            </td>
+            @{
+                Inicio = DateTime.Parse("2020-12-02 00:00:00");
+            }
+            @while (Inicio <= Fin)
+            {
+                GPSInformation.Reportes.TurnoDia Turnogris = item.DefTurno[0].DiasHorarios.Find(a => a.FechaDia == Inicio);
+                GPSInformation.Reportes.TurnoDia TurnoRojo = item.DefTurno[1].DiasHorarios.Find(a => a.FechaDia == Inicio);
+                GPSInformation.Reportes.TurnoDia TurnoVerde = item.DefTurno[2].DiasHorarios.Find(a => a.FechaDia == Inicio);
+                Inicio = Inicio.AddDays(1);
+            <td colspan="2">
+                <ul class="list-group">
+                    <li class="list-group-item @Html.Raw((item.SelectGroup == 0 ? "active" : ""))">
+                        <a href="#" class="badge badge-secondary">@Html.DisplayFor(modelItem => Turnogris.Infordia.Entrada) <span>/</span> @Html.DisplayFor(modelItem => Turnogris.Infordia.Salida) <span> - </span> @Html.DisplayFor(modelItem => Turnogris.Accesos.Count)</a>
+                    </li>
+                    <li class="list-group-item @Html.Raw((item.SelectGroup == 1 ? "active" : ""))">
+                        <a href="#" class="badge badge-danger">@Html.DisplayFor(modelItem => TurnoRojo.Infordia.Entrada) <span>/</span> @Html.DisplayFor(modelItem => TurnoRojo.Infordia.Salida) <span> - </span> @Html.DisplayFor(modelItem => TurnoRojo.Accesos.Count)</a>
+                    </li>
+                    <li class="list-group-item @Html.Raw((item.SelectGroup == 2 ? "active" : ""))">
+                        <a href="#" class="badge badge-success">@Html.DisplayFor(modelItem => TurnoVerde.Infordia.Entrada) <span>/</span> @Html.DisplayFor(modelItem => TurnoVerde.Infordia.Salida) <span> - </span> @Html.DisplayFor(modelItem => TurnoVerde.Accesos.Count)</a>
+                    </li>
+                </ul>
+            </td>
+            }
+        </tr>
+}
+    </tbody>
+</table>

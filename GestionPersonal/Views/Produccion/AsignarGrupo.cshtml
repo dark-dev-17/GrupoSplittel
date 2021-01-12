@@ -1,0 +1,63 @@
+﻿@model GPSInformation.Models.TurnoProdForm
+
+@{
+    ViewData["Title"] = "AsignarGrupo";
+}
+
+@if (Model != null && Model.IdPersona != 0)
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="">
+                <div id="calendar" class="calendar-content-body"></div>
+            </div><!-- calendar-content -->
+        </div>
+        <div class="col-lg-4" id="">
+            <div data-label="Empleado" class="df-example demo-forms">
+                @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
+            </div>
+            <div data-label="Turno" class="df-example demo-forms">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form asp-action="AsignarGrupo" id="formAsignargrupo">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="FechaInicio" class="control-label"></label>
+                                <input type="hidden" asp-for="IdPersona" class="form-control" />
+                                <input type="date" asp-for="FechaInicio" class="form-control" />
+                                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="FechaFin" class="control-label"></label>
+                                <input type="date" asp-for="FechaFin" class="form-control" />
+                                <span asp-validation-for="FechaFin" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="IdGrupo" class="control-label"></label>
+                                <select asp-for="IdGrupo" class="form-control" asp-items="ViewBag.Turnos">
+                                    <option value="0">Selecciona una opción</option>
+                                </select>
+                                <span asp-validation-for="IdGrupo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="button" onclick="app_turnos.Save()" value="Guardar" class="btn btn-sm btn-primary btn-block" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <p>Por favor selecciona un colaborador del area de producción para poder continuar</p>
+        <hr>
+        <p class="mb-0">Sistema Gestión de Personal</p>
+    </div>
+}
+
+
+

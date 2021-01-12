@@ -19,7 +19,8 @@
             }
         </small>
         <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.InicioHora)<span>-</span>@Html.DisplayFor(model => model.FinHora)</p>
-        <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.ModalidadName)</p>
+        <p class="mg-b-0 tx-color-03">@Html.DisplayNameFor(model => model.ModalidadName) :  @Html.DisplayFor(model => model.ModalidadName)</p>
+            <p class="mg-b-0 tx-color-03">@Html.DisplayNameFor(model => model.Duracion) :  @Html.DisplayFor(model => model.Duracion) Hrs</p>
         <p class="mg-b-0 tx-color-03">
             @if (Model.IsInterno)
             {
@@ -73,7 +74,7 @@
                         <td class="bg-primary-light m-3" colspan="6">{{ seccion.nombre }}</td>
                     </tr>
                     <tr v-for="(pregunta, indexPregunta) in seccion.preguntas">
-                        <th colspan="1" style="width: 60%;">{{ pregunta.pregunta }}<span class="text-danger field-validation-valid" v-bind:id="'validac_'+pregunta.idEvaluacionSeccionPregnts" data-valmsg-for="Nombre" data-valmsg-replace="true"> </span> </th>
+                        <th colspan="1" style="width: 60%;"><div v-html="span(pregunta.pregunta)" /><span class="text-danger field-validation-valid" v-bind:id="'validac_'+pregunta.idEvaluacionSeccionPregnts" data-valmsg-for="Nombre" data-valmsg-replace="true"> </span> </th>
                         <td colspan="1" v-if="pregunta.tipo == 1" class="text-center">
                             <input type="radio" v-model="pregunta.respuesta.respuesta" value="1" title="Muy bien" />
                         </td>
@@ -120,6 +121,9 @@
                 this.Details();
             },
             methods: {
+                span(text) {
+                    return `<span> ${text} </span>`
+                },
                 Details: function () {
                     axios.get('@Url.Action("DataResponder","Evaluacion", new { id = Model.IdEvaluacion })', null, null).then(response => {
                         console.log(response.data)

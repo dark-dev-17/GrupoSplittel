@@ -97,44 +97,86 @@ namespace GestionPersonal.Controllers
 
         [HttpPost]
         [AccessDataSession(IdAction = new int[] { 5 })]
-        public ActionResult AddFirstNode(int IdPuesto, int IdVersion)
+        public ActionResult AddSubLevels(int IdVersion, int IdPuesto, int Subleves)
         {
-
-            List<PuestoOrg> puestoOrgs = ListPuestos();
-
-
-            var puestoChild = puestoOrgs.Find( a=> a.IdPuesto == IdPuesto);
-            if(puestoChild == null)
-                return BadRequest("El puesto hijo no existe");
-
-
-            darkManager.OrganigramaStructura.Element = new OrganigramaStructura();
-            darkManager.OrganigramaStructura.Element.FechaCreacion = DateTime.Now;
-            darkManager.OrganigramaStructura.Element.IdOrganigramaVersion = IdVersion;
-            darkManager.OrganigramaStructura.Element.IdPuesto = IdPuesto;
-            darkManager.OrganigramaStructura.Element.IdPuestoParent = 0; // add null to the database
-            darkManager.OrganigramaStructura.Element.DPU = puestoChild.DPU;
-            darkManager.OrganigramaStructura.Element.Descripcion = puestoChild.Descripcion;
-
-            if(darkManager.OrganigramaStructura.Get("IdPuesto", "" + IdPuesto, "IdOrganigramaVersion", IdVersion+"") != null)
+            try
             {
-                return BadRequest("ya existe este puesto en el organigrama");
+                var result = darkManager.OrganigramaStructura.GetOpenquerys($"where IdOrganigramaVersion = {IdVersion} and IdPuesto = {IdPuesto}");
+                if(result == null)
+                {
+                    return BadRequest("El existe el puesto dentro del organigrama seleccionado");
+                }
+
+                if(result.IdPuestoParent == 0)
+                {
+                    return BadRequest("NOse pueden agregar o quitar subniveles a los puestos raiz del organigrama");
+                }
+
+                result.Nivel += Subleves;
+                darkManager.OrganigramaStructura.Element = result;
+                if (!darkManager.OrganigramaStructura.Update())
+                {
+                    return BadRequest("Error, no se actualizaron los subniveles");
+                }
+
+                return Ok("Puesto actualizado!");
             }
-
-            var result = darkManager.OrganigramaStructura.Add();
-            if (result)
+            catch (GPSInformation.Exceptions.GpExceptions ex)
             {
-                return Ok("Puesto agregado!");
-            }
-            else
-            {
-                return BadRequest("Puesto no agregado");
+                darkManager.CloseConnection();
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost]
         [AccessDataSession(IdAction = new int[] { 5 })]
-        public ActionResult AddNode(int IdPuesto, int IdPuestoParent, int IdVersion)
+        public ActionResult AddFirstNode(int IdPuesto, int IdVersion)
+        {
+            try
+            {
+                List<PuestoOrg> puestoOrgs = ListPuestos();
+
+
+                var puestoChild = puestoOrgs.Find(a => a.IdPuesto == IdPuesto);
+                if (puestoChild == null)
+                    return BadRequest("El puesto hijo no existe");
+
+
+                darkManager.OrganigramaStructura.Element = new OrganigramaStructura();
+                darkManager.OrganigramaStructura.Element.FechaCreacion = DateTime.Now;
+                darkManager.OrganigramaStructura.Element.IdOrganigramaVersion = IdVersion;
+                darkManager.OrganigramaStructura.Element.IdPuesto = IdPuesto;
+                darkManager.OrganigramaStructura.Element.IdPuestoParent = 0; // add null to the database
+                darkManager.OrganigramaStructura.Element.DPU = puestoChild.DPU;
+                darkManager.OrganigramaStructura.Element.Nivel = 1;
+                darkManager.OrganigramaStructura.Element.Descripcion = puestoChild.Descripcion;
+
+                if (darkManager.OrganigramaStructura.Get("IdPuesto", "" + IdPuesto, "IdOrganigramaVersion", IdVersion + "") != null)
+                {
+                    return BadRequest("ya existe este puesto en el organigrama");
+                }
+
+                var result = darkManager.OrganigramaStructura.Add();
+                if (result)
+                {
+                    return Ok("Puesto agregado!");
+                }
+                else
+                {
+                    return BadRequest("Puesto no agregado");
+                }
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                darkManager.CloseConnection();
+                return BadRequest(ex.Message);
+            }
+            
+        }
+
+        [HttpPost]
+        [AccessDataSession(IdAction = new int[] { 5 })]
+        public ActionResult AddNode(int IdPuesto, int IdPuestoParent, int IdVersion, int Nivel)
         {
 
             List<PuestoOrg> puestoOrgs = ListPuestos();
@@ -154,6 +196,7 @@ namespace GestionPersonal.Controllers
             darkManager.OrganigramaStructura.Element.IdPuesto = IdPuesto;
             darkManager.OrganigramaStructura.Element.IdPuestoParent = IdPuestoParent;
             darkManager.OrganigramaStructura.Element.DPU = puestoChild.DPU;
+            darkManager.OrganigramaStructura.Element.Nivel = Nivel;
             darkManager.OrganigramaStructura.Element.Descripcion = puestoChild.Descripcion;
 
             if (darkManager.OrganigramaStructura.Get("IdPuesto","" + IdPuesto, "IdOrganigramaVersion", IdVersion + "") != null)

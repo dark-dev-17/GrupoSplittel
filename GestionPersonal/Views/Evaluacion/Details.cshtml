@@ -17,11 +17,19 @@
 
 
 }
+<nav aria-label="breadcrumb mb-4">
+    <ol class="breadcrumb mg-b-0">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Inicio</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Evaluaciones</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Detalle</li>
+    </ol>
+</nav>
+<hr />
 <button id="bt_refress" onclick="location.reload();" style="display:none"></button>
 <div id="app_det_eval">
     <div class="d-sm-flex align-items-center justify-content-between">
         <div>
-            <h2 class="mg-b-5">Tema: @Html.DisplayFor(model => model.Nombre)</h2>
+            <h2 class="mg-b-5">@Html.DisplayFor(model => model.Nombre)</h2>
             <small class="tx-uppercase">
                 @if (Model.IsInterno)
                 {
@@ -33,7 +41,8 @@
                 }
             </small>
             <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.InicioHora)<span>-</span>@Html.DisplayFor(model => model.FinHora)</p>
-            <p class="mg-b-0 tx-color-03">@Html.DisplayFor(model => model.ModalidadName)</p>
+            <p class="mg-b-0 tx-color-03">@Html.DisplayNameFor(model => model.ModalidadName) :  @Html.DisplayFor(model => model.ModalidadName)</p>
+            <p class="mg-b-0 tx-color-03">@Html.DisplayNameFor(model => model.Duracion) :  @Html.DisplayFor(model => model.Duracion) Hrs</p>
             <p class="mg-b-0 tx-color-03">
                 @if (Model.IsInterno)
                 {
@@ -97,7 +106,7 @@
                                 @if (pregunta.Tipo == 1)
                                 {
                                     <a href="#" class="nav-link">
-                                        @Preguntas .- <span>@pregunta.Pregunta</span>
+                                        @Preguntas .- <span>@Html.Raw(pregunta.Pregunta)</span>
                                         <span class="badge text-black-50">
                                             @{
                                                 double Calificacion = 0;
@@ -147,14 +156,14 @@
                                 else
                                 {
                                     <a href="#" class="nav-link">
-                                        @Preguntas .- <span>@pregunta.Pregunta</span>
+                                        @Preguntas .- <span>@Html.Raw(pregunta.Pregunta)</span>
                                     </a>
                                     <br />
                                     <ul>
                                         @foreach (var a in respuestas.Where(a => a.IdEvaluacionSeccionPregnts == pregunta.IdEvaluacionSeccionPregnts && a.Respuesta != "").ToList())
                                         {
                                             <li>
-                                                @Html.Raw(string.IsNullOrEmpty(a.Respuesta) ? "Sin respuesta" : a.Respuesta)
+                                                <span title="Comentario por : @view_Empleados.Find( ass => ass.IdPersona == a.IdPersona).EmpleadoDatos.NombreCompleto">@Html.Raw(string.IsNullOrEmpty(a.Respuesta) ? "Sin respuesta" : a.Respuesta)</span>
                                             </li>
                                         }
                                     </ul>
@@ -192,11 +201,13 @@
                     <th align="center">
                         <div class="dropdown">
                             <button v-bind:class="(Eliminados.length > 0 ? 'btn-outline-danger' : 'btn-outline-success') + ' btn btn-sm dropdown-toggle'" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i data-feather="trash-2"></i> - {{ Eliminados.length }}
+                                <i data-feather="more-vertical"></i> - {{ Eliminados.length }}
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a v-bind:class="(Eliminados.length > 0 ? '' : 'disabled') + ' dropdown-item'" href="#participantes" id="btn_det_del" v-on:click="Eliminar" title="Quitar seleccionados">Eliminar seleccionados</a>
-                                <a class="dropdown-item" href="#participantes" id="btn_det_del" v-on:click="MarcarTodos" title="Quitar seleccionados">Marcar todos</a>
+                                <a v-bind:class="(Eliminados.length > 0 ? '' : 'disabled') + ' dropdown-item'" href="#participantes" id="btn_det_del" v-on:click="Eliminar" title="Quitar seleccionados"><i data-feather="options"></i>Eliminar seleccionados</a>
+                                <a v-bind:class="(Eliminados.length > 0 ? '' : 'disabled') + ' dropdown-item'" href="#participantesResend" id="btn_det_del" v-on:click="ReEnviar" title="Reenviar correo a participantes seleccionados"><i data-feather="options"></i>Reenviar correo</a>
+                                <a v-bind:class="(Eliminados.length > 0 ? '' : 'disabled') + ' dropdown-item'" href="#participantesResend" id="btn_det_del" v-on:click="Reactivar" title="Reactivar evaluación a participantes seleccionados"><i data-feather="options"></i>Reactivar evaluación</a>
+                                <a class="dropdown-item" href="#participantes" id="btn_det_del" v-on:click="MarcarTodos" title="Marcar todos">Marcar todos</a>
                                 <a class="dropdown-item" href="#participantes" title="Cancelar" v-on:click="Cancelar()">Cancelar</a>
                             </div>
                         </div>
@@ -206,26 +217,30 @@
             <tbody>
                 @foreach (var emp in view_Empleados)
                 {
-                    <tr id="row_emp_@emp.IdPersona">
-                        <td class="tx-uppercase">@emp.EmpleadoDatos.NombreCompleto</td>
-                        <td>@emp.EmpleadoDatos.Correo</td>
-                        <td>@emp.EmpleadoDatos.Antiguedad.ToString("0.0 año(s)")</td>
-                        <td>@emp.EmpleadoDatos.NombreDepartamento</td>
-                        <td>
-                            @if (@emp.Respondio)
-                            {
-                                <span class="badge badge-success">Contestada</span>
-                            }
-                            else
-                            {
-                                <span class="badge badge-danger">Sin responder</span>
-                            }
-                        </td>
-                        <td align="center">
-                            @*@Html.ActionLink("Quitar", "DeleteParticipante", "Evaluacion", new { IdEvaluacion = Model.IdEvaluacion, IdPersona = emp.IdPersona })*@
-                            <input type="checkbox" v-on:click="Marcar('chec_det_del_@emp.IdPersona')" name="chec_det_del_@emp.IdPersona" id="chec_det_del_@emp.IdPersona" value="@emp.IdPersona" class="Eve_remove" title="Marcar para quitar a @emp.EmpleadoDatos.NombreCompleto" />
-                        </td>
-                    </tr>
+                    if (emp != null && emp.EmpleadoDatos != null)
+                    {
+                        <tr id="row_emp_@emp.IdPersona">
+                            <td class="tx-uppercase">@emp.EmpleadoDatos.NombreCompleto</td>
+                            <td>@emp.EmpleadoDatos.Correo</td>
+                            <td>@emp.EmpleadoDatos.Antiguedad.ToString("0.0 año(s)")</td>
+                            <td>@emp.EmpleadoDatos.NombreDepartamento</td>
+                            <td>
+                                @if (@emp.Respondio)
+                                {
+                                    <span class="badge badge-success">Contestada</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">Sin responder</span>
+                                }
+                            </td>
+                            <td align="center">
+                                @*@Html.ActionLink("Quitar", "DeleteParticipante", "Evaluacion", new { IdEvaluacion = Model.IdEvaluacion, IdPersona = emp.IdPersona })*@
+                                <input type="checkbox" v-on:click="Marcar('chec_det_del_@emp.IdPersona')" name="chec_det_del_@emp.IdPersona" id="chec_det_del_@emp.IdPersona" value="@emp.IdPersona" class="Eve_remove" title="Marcar a @emp.EmpleadoDatos.NombreCompleto" />
+                            </td>
+                        </tr>
+                    }
+
                 }
             </tbody>
         </table>
@@ -291,7 +306,7 @@
         </div><!-- modal-dialog -->
     </div><!-- modal -->
     <div>
-        <a asp-action="Index">Back to List</a>
+        <a class="btn btn-danger" asp-action="Index">Regresar</a>
     </div>
 </div>
 
@@ -303,9 +318,54 @@
                 Eliminados: []
             },
             mounted() {
+                // Initialize PerfectScrollbar for sidebar menu
+                if ($('#sidebarMenu').length) {
+                    const psSidebar = new PerfectScrollbar('#sidebarMenu', {
+                        suppressScrollX: true
+                    });
 
+
+                    // Showing sub menu in sidebar
+                    $('.sidebar-nav .with-sub').on('click', function (e) {
+                        e.preventDefault();
+                        $(this).parent().toggleClass('show');
+
+                        psSidebar.update();
+                    })
+                }
+
+                $('#mainMenuOpen').on('click touchstart', function (e) {
+                    e.preventDefault();
+                    $('body').addClass('navbar-nav-show');
+                })
+
+                $('#sidebarMenuClose').on('click', function (e) {
+                    e.preventDefault();
+                    $('body').removeClass('sidebar-show');
+                })
+
+                // hide sidebar when clicking outside of it
+                $(document).on('click touchstart', function (e) {
+                    e.stopPropagation();
+
+                    // closing of sidebar menu when clicking outside of it
+                    if (!$(e.target).closest('.burger-menu').length) {
+                        var sb = $(e.target).closest('.sidebar').length;
+                        var nb = $(e.target).closest('.navbar-menu-wrapper').length;
+                        if (!sb && !nb) {
+                            if ($('body').hasClass('navbar-nav-show')) {
+                                $('body').removeClass('navbar-nav-show');
+                            } else {
+                                $('body').removeClass('sidebar-show');
+                            }
+                        }
+                    }
+                });
             },
             methods: {
+                span(text) {
+                    return `<span> ${text} </span>`
+                },
                 MarcarTodos: async function () {
                     var Eve_removes = document.getElementsByClassName("Eve_remove");
                     for (i = 0; i < Eve_removes.length; i++) {
@@ -330,6 +390,64 @@
                     }).then(async(result) => {
                         if (result.value) {
                             await axios.post('@Url.Action("DeleteParticipantes", "Evaluacion")', request, null).then(response => {
+                                document.getElementById("bt_refress").click();
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+
+                                    }
+                                }
+                                ShowMessageErrorShort("error al extraer información", "error")
+                            }).finally()
+                        }
+                    })
+                },
+                ReEnviar: async function () {
+                    let request = {
+                        IdEvaluacion : @Model.IdEvaluacion,
+                        Empleados : this.Eliminados
+                    }
+
+                    Swal.fire({
+                        title: "¿Deseas reenviar notificación a " + (this.Eliminados.length) +" participante(s)?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then(async(result) => {
+                        if (result.value) {
+                            await axios.post('@Url.Action("ResendEmail", "Evaluacion")', request, null).then(response => {
+                                document.getElementById("bt_refress").click();
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+
+                                    }
+                                }
+                                ShowMessageErrorShort("error al extraer información", "error")
+                            }).finally()
+                        }
+                    })
+                },
+                Reactivar: async function () {
+                    let request = {
+                        IdEvaluacion : @Model.IdEvaluacion,
+                        Empleados : this.Eliminados
+                    }
+
+                    Swal.fire({
+                        title: "¿Deseas reactivar evaluación a " + (this.Eliminados.length) +" participante(s)?",
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si!'
+                    }).then(async(result) => {
+                        if (result.value) {
+                            await axios.post('@Url.Action("Reactivar", "Evaluacion")', request, null).then(response => {
                                 document.getElementById("bt_refress").click();
                             }).catch(error => {
                                 if (error.response) {
