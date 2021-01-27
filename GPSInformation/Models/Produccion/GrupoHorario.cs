@@ -31,5 +31,38 @@ namespace GPSInformation.Models.Produccion
         public bool EsCruce { get; set; }
         [ColumnDB(IsMapped = true, IsKey = false)]
         public double Horas { get; set; }
+
+
+
+        [ColumnDB(IsMapped = false, IsKey = false)]
+        public string TipoDia { get { return GetTipoDia(); } }
+
+        private string GetTipoDia()
+        {
+            string Tipo = "";
+            if (EsCruce)
+            {
+                Tipo = "Cambio de turno";
+            }
+            else
+            {
+                if (Descanso)
+                {
+                    Tipo = "Descanso";
+                }
+                else
+                {
+                    if (EsNoche)
+                    {
+                        Tipo = "Noche";
+                    }
+                    else
+                    {
+                        Tipo = "Dia";
+                    }
+                }
+            }
+            return Tipo;
+        }
     }
 }

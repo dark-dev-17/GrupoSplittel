@@ -211,8 +211,10 @@ namespace GPSInformation.Controllers
                 if (!darkManager.Evaluacion.Add())
                     throw new Exceptions.GpExceptions("Error al crear la evaluación");
 
-
-                AddParticipantes(darkManager.Evaluacion.GetLastId(), evaluacion.IdEmpleados);
+                if(evaluacion.IsInterno == false)
+                {
+                    AddParticipantes(darkManager.Evaluacion.GetLastId(), evaluacion.IdEmpleados);
+                }
 
                 darkManager.Commit();
             }
@@ -233,7 +235,11 @@ namespace GPSInformation.Controllers
                 if (!darkManager.Evaluacion.Update())
                     throw new Exceptions.GpExceptions("Error al crear la evaluación");
 
-                AddParticipantes(evaluacion.IdEvaluacion, evaluacion.IdEmpleados);
+               
+                if (evaluacion.IsInterno == false)
+                {
+                    AddParticipantes(evaluacion.IdEvaluacion, evaluacion.IdEmpleados);
+                }
 
                 darkManager.Commit();
             }

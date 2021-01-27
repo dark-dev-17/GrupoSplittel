@@ -62,12 +62,16 @@
                                 <th>
                                     Estatus
                                 </th>
+                                <th>
+                                    Revisada
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.permisos)
                             {
+                                var nive2 = item.Proceso.Find(a => a.Nivel == 3);
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Folio)
@@ -99,10 +103,17 @@
                                         }
                                     </td>
                                     <td>
-                                        @{
-                                            var nive2 = item.Proceso.Find(a => a.Nivel == 3);
-
+                                        @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
+                                        {
+                                            <span class="badge badge-warning">Sin revisar</span>
                                         }
+                                        else
+                                        {
+                                            <span class="badge badge-success">Ok</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        
                                         <div class="dropdown">
                                             <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="dropleftMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 Opciones
@@ -112,7 +123,7 @@
                                                 @if (item.Estatus == 1 && nive2 != null && nive2.Revisada == false)
                                                 {
                                                     <a class="dropdown-item" href="@Url.Action("Aprobar", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso, Mode = 2 })">Aprobar</a>
-                                                    <a class="dropdown-item" href="@Url.Action("Rechazar", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso, Mode = 2 })">Rechazar</a>
+                                                    @*<a class="dropdown-item" href="@Url.Action("Rechazar", "IncidenciaPermiso", new { id = item.IdIncidenciaPermiso, Mode = 2 })">Rechazar</a>*@
                                                 }
                                                 <a class="dropdown-item" href="#modalActividadPermisos" data-toggle="modal" onclick="app_incidencias.ActividadPermisos(@item.IdIncidenciaPermiso)">Actividad</a>
                                             </div>

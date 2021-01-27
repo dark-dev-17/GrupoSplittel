@@ -97,7 +97,7 @@ namespace GPSInformation.Models
         [Display(Name = "Duración(hrs) del curso o evaluación")]
         [Range(1, int.MaxValue, ErrorMessage = "Por favor introduce la duración en hrs del curso")]
         [ColumnDB(IsMapped = true, IsKey = false)]
-        public float Duracion { get; set; }
+        public double Duracion { get; set; }
 
         [ColumnDB(IsMapped = false, IsKey = false)]
         public string PersonaName { get; set; }

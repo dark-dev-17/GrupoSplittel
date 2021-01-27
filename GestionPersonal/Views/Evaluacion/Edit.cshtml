@@ -87,7 +87,7 @@
         <div class="form-group row">
             <label asp-for="Duracion" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-4 text-right">
-                <input type="number" asp-for="Duracion" class="form-control" />
+                <input type="number" asp-for="Duracion" value="@Model.Duracion" class="form-control" />
                 <span asp-validation-for="Duracion" class="text-danger"></span>
             </div>
             <label asp-for="Activa" class="col-sm-2 col-form-label"></label>

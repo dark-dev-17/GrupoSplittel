@@ -1,91 +1,195 @@
-﻿@model IEnumerable<GPSInformation.Reportes.EmpleadoProd>
-
+﻿@model GPSInformation.Reportes.WeekEmpleadoProd
+@using System.Globalization
 @{
-    ViewData["Title"] = "VerEmpleadoProds";
-    DateTime Inicio = DateTime.Parse("2021-01-04");
-    DateTime Corte = Inicio;
-    DateTime Fin = Inicio.AddDays(7);
+    ViewData["Title"] = "Produccion turnos";
+    System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("es-ES");
+    System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("es-ES");
+    System.Globalization.DateTimeFormatInfo dfi = DateTimeFormatInfo.CurrentInfo;
+    Calendar cal = dfi.Calendar;
 }
+<div class="d-sm-flex align-items-center justify-content-between mg-b-20 mg-lg-b-30">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-style1 mg-b-10">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+            </ol>
+        </nav>
+        <h4 class="mg-b-0 tx-spacing--1">@ViewData["Title"]</h4>
+    </div>
+    <div class="d-none d-md-block">
+        <button class="btn btn-sm pd-x-15 btn-white btn-uppercase" title="semana atras"><i data-feather="chevron-left" class="wd-10 mg-r-5"></i> </button>
+        <button class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5" title="semana adelante"><i data-feather="chevron-right" class="wd-10 mg-r-5"></i> </button>
+    </div>
+</div>
 <div id="app_turnosProd">
-    <table class="table">
-        <thead>
-            <tr>
-                <th width="40">
-                    @Html.DisplayNameFor(model => model.NumeroNomina)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>@Html.DisplayNameFor(model => model.Puesto)</th>
-                <th>@Html.DisplayNameFor(model => model.Antiguedad)</th>
-                <th>@Html.DisplayNameFor(model => model.GrupoName)</th>
-                <th>Hrs.Trabajdas / Hrs.Meta</th>
-                <th></th>
-                <th></th>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Inicio)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Inicio)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Fin)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Fin)
+        </dd>
+        <dt>
+            No.Semana
+        </dt>
+        <dd>
+            @cal.GetWeekOfYear(Model.Inicio, dfi.CalendarWeekRule, dfi.FirstDayOfWeek)
+        </dd>
+    </dl>
+    <hr />
+    <div class="row row-xs mt-3 mb-3">
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-profile">
+                <div class="card-body tx-13">
+                    <div>
+                        <a href="">
+                            <div class="avatar avatar-lg"><span class="avatar-initial rounded-circle bg-secondary">G</span></div>
+                        </a>
+                        <h5><a href="">Grupo gris</a></h5>
 
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumeroNomina)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Puesto)
-                    </td>
-                    <td>
-                        @String.Format("{0:00.0}", item.Antiguedad)
-                    </td>
-                    <td>
-                        <span class="badge @Html.Raw(item.GrupoName == "Gris" ? "badge-secondary" : item.GrupoName == "Rojo" ? "badge-danger" : item.GrupoName == "Verde" ? "badge-success" : "badge-warning")">
-                            @if (item.GrupoName == "")
-                            {
-                                @Html.Raw("Sin asginar")
-                            }
-                            else
-                            {
-                                @item.GrupoName
-                            }
-                        </span>
-                    </td>
-                    <td>
-                        @*@String.Format("{0:00.0}", item.HorasTrabajadas) <span>/</span> @String.Format("{0:00.0}", item.HorasMeta)*@
+                        <div class="mg-b-25"><span class="tx-12 tx-color-03">@Model.Empleados.Count(a => a.GrupoName == "Gris") colaborador(s)</span></div>
+
+                        <button class="btn btn-block btn-white" v-on:click="Personas = []" href="#mod_app_gris" data-toggle="modal">Administrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-profile">
+                <div class="card-body tx-13">
+                    <div>
+                        <a href="">
+                            <div class="avatar avatar-lg"><span class="avatar-initial rounded-circle bg-danger">R</span></div>
+                        </a>
+                        <h5><a href="">Grupo rojo</a></h5>
+
+                        <div class="mg-b-25"><span class="tx-12 tx-color-03">@Model.Empleados.Count(a => a.GrupoName == "Rojo") colaborador(s)</span></div>
+
+                        <button class="btn btn-block btn-white" v-on:click="Personas = []" href="#mod_app_rojo" data-toggle="modal">Administrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-profile">
+                <div class="card-body tx-13">
+                    <div>
+                        <a href="">
+                            <div class="avatar avatar-lg"><span class="avatar-initial rounded-circle bg-success">V</span></div>
+                        </a>
+                        <h5><a href="">Grupo verde</a></h5>
+
+                        <div class="mg-b-25"><span class="tx-12 tx-color-03">@Model.Empleados.Count(a => a.GrupoName == "Verde") colaborador(s)</span></div>
+
+                        <button class="btn btn-block btn-white" v-on:click="Personas = []" href="#mod_app_verde" data-toggle="modal">Administrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-profile">
+                <div class="card-body tx-13">
+                    <div>
+                        <a href="">
+                            <div class="avatar avatar-lg"><span class="avatar-initial rounded-circle bg-warning">ST</span></div>
+                        </a>
+                        <h5><a href="">Sin grupo operativo</a></h5>
+
+                        <div class="mg-b-25"><span class="tx-12 tx-color-03">@Model.Empleados.Count(a => a.GrupoName == "Sin turno") colaborador(s)</span></div>
+
+                        <button class="btn btn-block btn-white" v-on:click="Personas = []" href="#mod_app_sngrupo" data-toggle="modal">Administrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="">
+
+        </div>
+        <div class="col-lg-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="40">
+                            No.Nomina
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Puesto
+                        </th>
+                        <th>
+                            Antiguedad
+                        </th>
+                        <th>
+                            Grupo produccion
+                        </th>
+                        <th>Hrs.Trabajdas / Hrs.Meta</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Empleados)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumeroNomina)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Puesto)
+                            </td>
+                            <td>
+                                @String.Format("{0:00.0}", item.Antiguedad)
+                            </td>
+                            <td>
+                                <span class="badge @Html.Raw(item.GrupoName == "Gris" ? "badge-secondary" : item.GrupoName == "Rojo" ? "badge-danger" : item.GrupoName == "Verde" ? "badge-success" : "badge-warning")">
+                                    @if (item.GrupoName == "")
+                                    {
+                                        @Html.Raw("Sin asginar")
+                                    }
+                                    else
+                                    {
+                                        @item.GrupoName
+                                    }
+                                </span>
+                            </td>
+                            <td>
+                                @*@String.Format("{0:00.0}", item.HorasTrabajadas) <span>/</span> @String.Format("{0:00.0}", item.HorasMeta)*@
 
 
-                        @if (item.Diferencia <= 0)
-                        {
-                            <span class="tx-success">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-up"></i></span>
-                        }
-                        else
-                        {
-                            <span class="tx-danger">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-down"></i></span>
-                        }
-                    </td>
-                    <td>
-                        <a href="#mod_app_detailsWeek" data-toggle="modal" v-on:click="Details(@item.IdPersona)" title="Ver detalles de horarios y turnos">Ver detalles</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <!--<div class="modal calendar-modal-create fade effect-scale" id="mod_app_detailsWeek" role="dialog" data-backdrop="false" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-            <div class="modal-content">
-                <div class="modal-body pd-20 pd-sm-30">
-                    <button type="button" class="close pos-absolute t-20 r-20" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i data-feather="x"></i></span>
-                    </button>
-                    <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Detalles</h5>
-                    <div id="mod_app_detailsWeek_res"></div>
-                </div>--><!-- modal-body -->
-            <!--</div>--><!-- modal-content -->
-        <!--</div>--><!-- modal-dialog -->
-    <!--</div>--><!-- modal -->
+                                @if (item.Diferencia <= 0)
+                                {
+                                    <span class="tx-success">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-up"></i></span>
+                                }
+                                else
+                                {
+                                    <span class="tx-danger">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-down"></i></span>
+                                }
+                            </td>
+                            <td>
+                                <a href="#mod_app_detailsWeek" data-toggle="modal" v-on:click="Details(@item.IdPersona)" title="Ver detalles de horarios y turnos">Ver detalles</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="modal fade" id="mod_app_detailsWeek" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" data-backdrop="false" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content tx-14">
@@ -98,8 +202,341 @@
                 <div class="modal-body" id="mod_app_detailsWeek_res">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary tx-13">Save changes</button>
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SaveTurnos()" >Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mod_app_gris" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel3">Details</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="40">
+                                    No.Nomina
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Puesto
+                                </th>
+                                <th>
+                                    Antiguedad
+                                </th>
+                                <th>
+                                    Grupo produccion
+                                </th>
+                                <th>Hrs.Trabajdas / Hrs.Meta</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Empleados.Where(a => a.GrupoName == "Gris"))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumeroNomina)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Nombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Puesto)
+                                    </td>
+                                    <td>
+                                        @String.Format("{0:00.0}", item.Antiguedad)
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">Grupo gris</span>
+                                    </td>
+                                    <td>
+
+                                        @if (item.Diferencia <= 0)
+                                        {
+                                            <span class="tx-success">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-up"></i></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="tx-danger">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-down"></i></span>
+                                        }
+                                    </td>
+                                    <td>
+                                       <select class="form-control selcGrupoSho" id="selc_@item.IdPersona" v-on:change="AddEmpleadoUpdate('@item.IdPersona')">
+                                            <option value="86" selected>Gris</option>
+                                            <option value="87">Rojo</option>
+                                            <option value="88">Verde</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SaveTurnos()" >Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mod_app_rojo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel3">Details</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="40">
+                                    No.Nomina
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Puesto
+                                </th>
+                                <th>
+                                    Antiguedad
+                                </th>
+                                <th>
+                                    Grupo produccion
+                                </th>
+                                <th>Hrs.Trabajdas / Hrs.Meta</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Empleados.Where(a => a.GrupoName == "Rojo"))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumeroNomina)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Nombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Puesto)
+                                    </td>
+                                    <td>
+                                        @String.Format("{0:00.0}", item.Antiguedad)
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-danger">Grupo rojo</span>
+                                    </td>
+                                    <td>
+
+                                        @if (item.Diferencia <= 0)
+                                        {
+                                            <span class="tx-success">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-up"></i></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="tx-danger">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-down"></i></span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <select class="form-control selcGrupoSho" id="selc_@item.IdPersona" v-on:change="AddEmpleadoUpdate('@item.IdPersona')">
+                                            <option value="86">Gris</option>
+                                            <option value="87" selected>Rojo</option>
+                                            <option value="88">Verde</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SaveTurnos()" >Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mod_app_verde" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel3">Details</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="40">
+                                    No.Nomina
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Puesto
+                                </th>
+                                <th>
+                                    Antiguedad
+                                </th>
+                                <th>
+                                    Grupo produccion
+                                </th>
+                                <th>Hrs.Trabajdas / Hrs.Meta</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Empleados.Where(a => a.GrupoName == "Verde"))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumeroNomina)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Nombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Puesto)
+                                    </td>
+                                    <td>
+                                        @String.Format("{0:00.0}", item.Antiguedad)
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">Grupo verde</span>
+                                    </td>
+                                    <td>
+
+                                        @if (item.Diferencia <= 0)
+                                        {
+                                            <span class="tx-success">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-up"></i></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="tx-danger">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-down"></i></span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <select class="form-control selcGrupoSho" id="selc_@item.IdPersona" v-on:change="AddEmpleadoUpdate('@item.IdPersona')">
+                                            <option value="86">Gris</option>
+                                            <option value="87">Rojo</option>
+                                            <option value="88" selected>Verde</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SaveTurnos()" >Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mod_app_sngrupo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3"  aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel3">Details</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="40">
+                                    No.Nomina
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Puesto
+                                </th>
+                                <th>
+                                    Antiguedad
+                                </th>
+                                <th>
+                                    Grupo produccion
+                                </th>
+                                <th>Hrs.Trabajdas / Hrs.Meta</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Empleados.Where(a => a.GrupoName == "Sin turno"))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumeroNomina)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Nombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Puesto)
+                                    </td>
+                                    <td>
+                                        @String.Format("{0:00.0}", item.Antiguedad)
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">Sin grupo</span>
+                                    </td>
+                                    <td>
+
+                                        @if (item.Diferencia <= 0)
+                                        {
+                                            <span class="tx-success">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-up"></i></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="tx-danger">@String.Format("{0:00.0}", item.Diferencia) hrs <i class="icon ion-md-arrow-down"></i></span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <select class="form-control selcGrupoSho" id="selc_@item.IdPersona" v-on:change="AddEmpleadoUpdate('@item.IdPersona')">
+                                            <option value="0" selected>Sin grupo</option>
+                                            <option value="86">Gris</option>
+                                            <option value="87">Rojo</option>
+                                            <option value="88">Verde</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SaveTurnos()" >Guardar cambios</button>
                 </div>
             </div>
         </div>
@@ -129,28 +566,75 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cerrar</button>
                     <button type="button" v-on:click="saveEdit()" class="btn btn-primary tx-13">Guardar cambios</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+<button href="#" onclick="window.location.reload()" id="btn_refrescar" type="button" class="btn btn-white"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Refrescar</button>
 @section Scripts {
     <script>
         var app_turnosProd = new Vue({
             el: "#app_turnosProd",
             data: {
-                IdPersona: 0
+                IdPersona: 0,
+                Personas: []
             },
             async mounted() { },
             methods: {
+                SaveTurnos: async function () {
+                    var data = {
+                        Personas: this.Personas,
+                        NoSemana: '@cal.GetWeekOfYear(Model.Inicio, dfi.CalendarWeekRule, dfi.FirstDayOfWeek)',
+                        year_ :'@Model.Inicio.Year'
+                    }
+                    await axios.post('@Url.Action("Change", "Produccion")', data, null).then(response => {
+                        ShowMessageErrorShort(response.data, "success")
+                        document.getElementById("btn_refrescar").click();
+                    }).catch(error => {
+                        console.error(error)
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                console.log(error.response)
+                                ShowMessageErrorShort(error.response.data,"error")
+                            }
+                        }
+                    }).finally()
+                },
+                AddEmpleadoUpdate: function (id) {
+                    var elemento = document.getElementById("selc_" + id)
+                    if (elemento != null) {
+                        var add = true;
+                        this.Personas.forEach((e, i) => {
+                            if (e.IdPersona == id) {
+                                e.IdGrupo = elemento.value
+                                add = false
+
+                            } else {
+                                add = true
+                            }
+
+                        });
+
+                        if (add == true) {
+                            this.Personas.push({
+                                IdPersona: id,
+                                IdGrupo: elemento.value
+                            })
+                        }
+                    }
+
+                    console.log(this.Personas)
+                },
                 Details: async function (id) {
                     document.getElementById("mod_app_detailsWeek_res").innerHTML = "<div class='text-center'><div class='spinner-border text-primary' role='status'> <span class='sr-only'>Cargando...</span></div></div>"
                     this.IdPersona = id;
                     let params = new URLSearchParams();
                     params.append('IdPersona', id);
+                    params.append('NoSemana', '@cal.GetWeekOfYear(Model.Inicio, dfi.CalendarWeekRule, dfi.FirstDayOfWeek)');
+                    params.append('Year', '@Model.Inicio.Year');
                     await axios.post('@Url.Action("DetailsWeek", "Produccion")', params, null).then(response => {
                         document.getElementById("mod_app_detailsWeek_res").innerHTML = response.data
                         var evento1 = document.getElementsByClassName("diaDescanso");
@@ -170,8 +654,8 @@
                             }
                         }
                     }).finally()
-                    
-                        
+
+
 
                 }
             }

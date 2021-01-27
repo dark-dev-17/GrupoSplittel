@@ -240,6 +240,15 @@ namespace GPSInformation.DBManagers
         {
             return DataReader(SqlStatements);
         }
+        public T GetUnicSatatment(string SqlStatements)
+        {
+            List<T> Lista = DataReader(SqlStatements);
+            if (Lista.Count == 0)
+            {
+                return default(T);
+            }
+            return Lista.ElementAt(0);
+        }
         public List<T> GetOpenquery(string where = "", string Order = "")
         {
             return DataReader(string.Format("select * from {0} {1} {2}", Nametable, where, Order));

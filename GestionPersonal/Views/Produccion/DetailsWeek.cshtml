@@ -30,20 +30,20 @@
     </dl>
 </div>
 <hr />
-<table border="1" class="table">
+<table  class="table">
     <tr>
-        <th colspan="2">Lunes</th>
-        <th colspan="2">Martes</th>
-        <th colspan="2">Miercoles</th>
-        <th colspan="2">Jueves</th>
-        <th colspan="2">Viernes</th>
-        <th colspan="2">Sabado</th>
-        <th colspan="2">Domingo</th>
+        <th colspan="2" class="border">Lunes</th>
+        <th colspan="2" class="border">Martes</th>
+        <th colspan="2" class="border">Miercoles</th>
+        <th colspan="2" class="border">Jueves</th>
+        <th colspan="2" class="border">Viernes</th>
+        <th colspan="2" class="border">Sabado</th>
+        <th colspan="2" class="border">Domingo</th>
     </tr>
     <tr>
         @if (Model.GrupoName == "Gris")
         {
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 <div class="dropdown">
                     <button class="btn btn-sm btn-icon btn-white btn-uppercase mg-l-5 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i data-feather="more-vertical"></i>
@@ -54,24 +54,24 @@
                 </div>
             </td>
             <td colspan="1"></td>
-            <td colspan="2" class="">
-                @String.Format("{0:00.0}", Model.Dias[1].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[1].HorasMeta) hrs
-                <ul class="">
+            <td colspan="2" class="bg-success-light">
+                @String.Format("{0:00.0}", Model.Dias[1].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[1].HorasMeta) hrs 
+                <ul class="bg-success-light">
 
                     @foreach (var item in Model.Dias[1].Logs)
                     {
-                        <li class="">@item</li>
+                        <li class="bg-success-light">@item</li>
                     }
                 </ul>
             </td>
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[2].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[2].HorasMeta) hrs
             </td>
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[3].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[3].HorasMeta) hrs
             </td>
             <td colspan="1"></td>
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[5].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[5].HorasMeta) hrs
             </td>
             <td colspan="2" class="bg-secondary">
@@ -88,19 +88,19 @@
         else if (Model.GrupoName == "Rojo")
         {
             <td colspan="1"></td>
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[0].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[0].HorasMeta) hrs
             </td>
             <td colspan="1"></td>
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[2].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[2].HorasMeta) hrs
             </td>
             <td colspan="1"></td>
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[3].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[3].HorasMeta) hrs
             </td>
             <td colspan="1"></td>
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[5].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[5].HorasMeta) hrs
             </td>
             <td colspan="2" class="bg-secondary">
@@ -116,10 +116,10 @@
         }
         else if (Model.GrupoName == "Verde")
         {
-            <td colspan="2" class="">
-                @String.Format("{0:00.0}", Model.Dias[0].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[0].HorasMeta) hrs
-            </td>
-            <td colspan="2" class="">
+    <td colspan="2" class="bg-success-light">
+        @String.Format("{0:00.0}", Model.Dias[0].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[0].HorasMeta) hrs
+    </td>
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[1].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[1].HorasMeta) hrs
             </td>
             <td colspan="2" class="bg-secondary">
@@ -132,10 +132,10 @@
                     </div>
                 </div>
             </td>
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[3].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[3].HorasMeta) hrs
             </td>
-            <td colspan="2" class="">
+            <td colspan="2" class="bg-success-light">
                 @String.Format("{0:00.0}", Model.Dias[4].Horas) hrs / @String.Format("{0:00.0}", Model.Dias[4].HorasMeta) hrs
             </td>
             <td colspan="2" class="bg-secondary">

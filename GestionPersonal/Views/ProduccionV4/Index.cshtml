@@ -1,0 +1,110 @@
+﻿@model GPSInformation.Reportes.ProduccionV3.ReporteProd
+
+@{
+    ViewData["Title"] = "Reporte: " + Model.Inicio.ToString("F");
+}
+<div class="d-flex align-items-center justify-content-between mg-b-30">
+    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <h2 class="tx-15 mg-b-0"></h2>
+        <a href="@Url.Action("Index", "produccionv4", new {Inicio = Model.Inicio.AddDays(-7)})" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="chevron-left"></i></a>
+        <a href="@Url.Action("Index", "produccionv4", new {Inicio = Model.Inicio.AddDays(7)})" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="chevron-right"></i></a>
+    </div>
+</div>
+<hr />
+@if (DateTime.Now >= Model.Inicio && DateTime.Now <= Model.Fin)
+{
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Hola!</h4>
+        <p>Semana en curso,</p>
+        <hr>
+        <p class="mb-0">Sistema Gestión de Personal</p>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Hola!</h4>
+        <p>Semana en fuera curso,</p>
+        <hr>
+        <p class="mb-0">Sistema Gestión de Personal</p>
+    </div>
+}
+<hr />
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Inicio)
+        </dt>
+        <dd>
+            @Model.Inicio.ToString("F")
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Fin)
+        </dt>
+        <dd>
+            @Model.Fin.ToString("F")
+        </dd>
+    </dl>
+    <hr />
+</div>
+<table class="table table-responsive-sm table-sm">
+    <thead>
+        <tr>
+            <th>
+                no.Nomina
+            </th>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Puesto
+            </th>
+            <th>
+                Hrs.Meta
+            </th>
+            <th>
+                Hrs.Reales
+            </th>
+            <th>
+
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.EmpleadoProds)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroNomina)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreCompleto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PuestoNombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HorasMeta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HorasReal)
+                </td>
+                <td>
+                    @if ((item.Accessos.Count(a => a.Activo) % 2) != 0)
+                    {
+                        <span class="badge badge-warning">Info</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-primary">Ok</span>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { IdPersona = item.IdPersona, Inicio = item.Incio })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

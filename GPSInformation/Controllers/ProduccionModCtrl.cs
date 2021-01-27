@@ -682,22 +682,28 @@ namespace GPSInformation.Controllers
         }
 
 
-        public List<EmpleadoProd> EmpleadoProds(DateTime Inicio)
+        public WeekEmpleadoProd EmpleadoProds(DateTime Inicio)
         {
             darkManager.OpenConnectionAcces();
             darkManager.LoadObject(GpsControlAcceso.View_gps_ensambleSinFiltro);
-            
 
-           
-            List<EmpleadoProd> Lista = new List<EmpleadoProd>(); ;
+            WeekEmpleadoProd weekEmpleadoProd = new WeekEmpleadoProd
+            {
+                Empleados = new List<EmpleadoProd>(),
+                Inicio = Inicio,
+                Fin = Inicio.AddDays(7)
+            };
+
             
             var re_empleados = darkManager.View_empleadoEnsamble.Get();
             re_empleados.ForEach(emp => {
                 var empleadoProd = ProcessEmpProd(emp, Inicio);
-                Lista.Add(empleadoProd);
+                weekEmpleadoProd.Empleados.Add(empleadoProd);
             });
             darkManager.CloseConnectionAccess();
-            return Lista.OrderBy(a => a.Nombre).ToList();
+
+            weekEmpleadoProd.Empleados = weekEmpleadoProd.Empleados.OrderBy(a => a.Nombre).ToList();
+            return weekEmpleadoProd;
         }
 
         public EmpleadoProd ProcessEmpProd(View_empleadoEnsamble emp, DateTime Inicio, int IdPersona = 0)

@@ -19,6 +19,18 @@ namespace GPSInformation.Tools
         "setecientos ", "ochocientos ", "novecientos "};
 
         private static Regex r;
+        public static DateTime GetFirtsDatWeek(DateTime dateTime)
+        {
+            while (dateTime.DayOfWeek != DayOfWeek.Monday)
+                dateTime = dateTime.AddDays(-1);
+            return dateTime;
+        }
+        public static DateTime GetLastDatWeek(DateTime dateTime)
+        {
+            while (dateTime.DayOfWeek != DayOfWeek.Sunday)
+                dateTime = dateTime.AddDays(1);
+            return dateTime;
+        }
         public static double DifFechashoras(DateTime end, DateTime start) 
         {
             var hours = (end - start).TotalHours;

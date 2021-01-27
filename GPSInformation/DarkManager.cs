@@ -77,6 +77,11 @@ namespace GPSInformation
         public virtual DarkAttributes<View_gps_ensambleSinFiltro> View_gps_ensambleSinFiltro { get; set; }
         public virtual DarkAttributes<GrupoProduccion> GrupoProduccion { get; set; }
         public virtual DarkAttributes<GrupoHorario> GrupoHorario { get; set; }
+        public virtual DarkAttributes<GrupoProduccionAsi> GrupoProduccionAsi { get; set; }
+        public virtual DarkAttributes<GrupoCambios> GrupoCambios { get; set; }
+        public virtual DarkAttributes<GrupoExcepcion> GrupoExcepcion { get; set; }
+        public virtual DarkAttributes<GrupoArreglo> GrupoArreglo { get; set; }
+        public virtual DarkAttributes<GrupoProdIncidencia> GrupoProdIncidencia { get; set; }
 
 
         private string CorreosBCC { get; set; }
@@ -330,6 +335,26 @@ namespace GPSInformation
             {
                 GrupoHorario = new DarkAttributes<GrupoHorario>(dBConnection);
             }
+            else if (gpsManagerObjects == GpsManagerObjects.GrupoProduccionAsi)
+            {
+                GrupoProduccionAsi = new DarkAttributes<GrupoProduccionAsi>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.GrupoCambios)
+            {
+                GrupoCambios = new DarkAttributes<GrupoCambios>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.GrupoExcepcion)
+            {
+                GrupoExcepcion = new DarkAttributes<GrupoExcepcion>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.GrupoArreglo)
+            {
+                GrupoArreglo = new DarkAttributes<GrupoArreglo>(dBConnection);
+            }
+            else if (gpsManagerObjects == GpsManagerObjects.GrupoProdIncidencia)
+            {
+                GrupoProdIncidencia = new DarkAttributes<GrupoProdIncidencia>(dBConnection);
+            }
         }
         public void OpenConnection()
         {
@@ -433,5 +458,10 @@ namespace GPSInformation
         EvaluacionInstructor = 48,
         GrupoProduccion = 49,
         GrupoHorario = 50,
+        GrupoProduccionAsi = 51,
+        GrupoCambios = 52,
+        GrupoExcepcion = 53,
+        GrupoArreglo = 54,
+        GrupoProdIncidencia = 55,
     }
 }

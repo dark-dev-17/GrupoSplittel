@@ -1,0 +1,139 @@
+﻿@model GPSInformation.Reportes.Produccion.ReporteProdEmp
+
+@{
+    ViewData["Title"] = "Index";
+    DateTime Inicio = Model.Inicio;
+}
+<div class="d-sm-flex align-items-center justify-content-between mg-b-20 mg-lg-b-30">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-style1 mg-b-10">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+            </ol>
+        </nav>
+        <h4 class="mg-b-0 tx-spacing--1">@ViewData["Title"]</h4>
+    </div>
+    <div class="d-none d-md-block">
+        <button class="btn btn-sm pd-x-15 btn-white btn-uppercase" title="semana atras"><i data-feather="chevron-left" class="wd-10 mg-r-5"></i> </button>
+        <button class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5" title="semana adelante"><i data-feather="chevron-right" class="wd-10 mg-r-5"></i> </button>
+    </div>
+</div>
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Inicio)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Inicio)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Fin)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Fin)
+    </dd>
+</dl>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                No.Nomina
+            </th>
+            <th>
+                Colaborador
+            </th>
+            @*<th>
+                Puesto
+            </th>
+            <th>
+                Antiguedad
+            </th>*@
+            @while (Inicio <= Model.Fin)
+            {
+        <th colspan="1">@Inicio.DayOfWeek.ToString() <br /> @Inicio.Day</th>
+                Inicio = Inicio.AddDays(1);
+            }
+            <th>Horas</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Empleados)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroNomina) - @Html.DisplayFor(modelItem => item.IdPersona)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Puesto)
+                </td>
+                <td>
+                    @String.Format("{0:00.0}", item.Antiguedad) año(s)
+                </td>*@
+                @foreach (var dia in item.Dias)
+                {
+                    @if (dia != null)
+                    {
+            <td>
+                @*DateTime.Parse("0001-01-01 00:00:00") != dia.Salida &&*@
+                @if (DateTime.Parse("0001-01-01 00:00:00") != dia.R_Entrada)
+                {
+                    <span class="badge @Html.Raw(dia.GrupoHorario.IdGrupo == 86 ? "badge-secondary" : dia.GrupoHorario.IdGrupo  == 87 ? "badge-danger" : dia.GrupoHorario.IdGrupo  == 88 ? "badge-success" : "badge-warning")">@dia.GrupoHorario.IdGrupo </span><br />
+                    <span class="badge badge-light">@dia.GrupoHorario.TipoDia</span><br />
+                    <span class="badge badge-light">@String.Format("{0:00.0}", dia.HorasAprobadas) / @String.Format("{0:00.0}", dia.HorasMeta)</span><br />
+                    <span class="badge badge-light">@String.Format("{0:00.0}", dia.HorasReal) </span><br />
+                    <span class="badge badge-warning">@dia.R_Entrada</span>
+                    <span class="badge badge-warning">@dia.R_Salida</span><br />
+                    <span class="badge badge-dark">@dia.Entrada</span>
+                    <span class="badge badge-dark">@dia.Salida</span>
+                    @if (dia.GrupoExcepcion != null)
+                    {
+                        <br />
+                        <span class="badge badge-success">@dia.GrupoExcepcion.Comentarios</span>
+                    }
+                    <br />
+                    @if (dia.Logs.Count > 0)
+                    {
+                        foreach (var item_log in dia.Logs)
+                        {
+                            <span class="badge badge-primary">@Html.Raw($"{item_log.dtEventReal.ToString("MM-dd HH:mm")} - {item_log.tDesc}")</span><br />
+                        }
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">No hay registros</span><br />
+                    }
+
+                }
+                else
+                {
+                    @if (dia.GrupoHorario.Descanso && !dia.GrupoHorario.EsCruce)
+                    {
+                        <span class="badge badge-light">Descanso</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-light">Descanso</span>
+                    }
+
+                }
+            </td>
+
+                    }
+                    else
+                    {
+                        <td style="background-color: red">Sin turno</td>
+                    }
+                }
+                <td>
+                    <span class="badge badge-light">@String.Format("{0:00.0}", item.HorasTrabajadas) / @String.Format("{0:00.0}", item.HorasMeta)</span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,681 @@
+﻿@model GPSInformation.Reportes.ProduccionV3.EmpleadoProd
+@using System.Globalization
+@{
+    ViewData["Title"] = "Detalle de horas trabajadas";
+    System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("es-ES");
+    System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("es-ES");
+}
+
+
+<div id="app_horariosEmp">
+    <div class="row">
+        <div class="col-lg-12">
+            @await Component.InvokeAsync("ValidPuestoEnOrganigrama", new { id = Model.IdPersona })
+        </div>
+    </div>
+    <hr />
+    <div class="d-flex align-items-center justify-content-between mg-b-30">
+        <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <h2 class="tx-15 mg-b-0"></h2>
+            <a href="@Url.Action("Index", "produccionv4", new {Inicio = Model.Incio})" class="btn btn-outline-primary btn-sm d-flex align-items-center">Lista</a>
+            <a href="@Url.Action("Details", "produccionv4", new {IdPersona = Model.IdPersona, Inicio = Model.Incio.AddDays(-7)})" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="chevron-left"></i></a>
+            <a href="@Url.Action("Details", "produccionv4", new {IdPersona = Model.IdPersona, Inicio = Model.Incio.AddDays(7)})" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="chevron-right"></i></a>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Incio)
+                </dt>
+                <dd>
+                    @Model.Incio.ToString("F")
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Fin)
+                </dt>
+                <dd>
+                    @Model.Fin.ToString("F")
+                </dd>
+            </dl>
+        </div>
+        <div class="col-lg-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.HorasMeta)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.HorasMeta)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.HorasReal)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.HorasReal)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-lg-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.HorasAprobadas)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.HorasAprobadas)
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <hr />
+    @if (DateTime.Now >= Model.Incio && DateTime.Now <= Model.Fin)
+    {
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Hola!</h4>
+            <p>Semana en curso,</p>
+            <hr>
+            <p class="mb-0">Sistema Gestión de Personal</p>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Hola!</h4>
+            <p>Semana en fuera curso,</p>
+            <hr>
+            <p class="mb-0">Sistema Gestión de Personal</p>
+        </div>
+    }
+    <div class="row">
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h6 class="mg-b-0">Control de accesos</h6>
+                    <div class="d-flex align-items-center tx-18">
+                        <div class="dropdown">
+                            <button class="btn btn-sm dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon ion-md-more"></i></button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#modal3" data-toggle="modal">Agregar registro</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pd-20" id="card_e">
+                    @if (Model.Accessos.Count > 0)
+                    {
+                        if ((Model.Accessos.Count(a => a.Activo) % 2) != 0)
+                        {
+                            <div class="alert alert-solid alert-primary" role="alert">
+                                Algo esta ocurriendo, probables causas: exceso de registros o falta de registros
+                            </div>
+                        }
+                        <ul class="activity tx-13">
+                            @foreach (var item in Model.Accessos)
+                            {
+                                @if (item.Activo)
+                                {
+                                    @if (item.TipoAcceso == GPSInformation.Reportes.ProduccionV3.TipoAcceso.Entrada)
+                                    {
+                                        <li class="activity-item">
+                                            <div class="activity-icon @Html.Raw(item.Forzado ? "bg-warning-light tx-warning" : "bg-success-light tx-success")"><i data-feather="clock"></i></div>
+                                            <div class="activity-body">
+                                                <p class="mg-b-2">
+                                                    <span class="badge badge-success">Entrada @Html.Raw(item.Forzado ? "Manual" : "")</span>
+                                                    @if (item.Forzado)
+                                                    {
+                                                        <a href="#card_e" v-on:click="DeleteArreglo(@item.IdAccessLog)" title="Eliminar este registro manual" class="link-03 lh-0"><i class="icon ion-ios-trash"></i></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="#modal2" data-toggle="modal" v-on:click="HideArreglo('@item.Fecha.ToString("yyyy-MM-dd HH:mm:ss")',@item.IdEventChec,'@item.Fecha.ToString("F")')" title="Omitir este registro" class="link-03 lh-0"><i class="icon ion-ios-eye-off"></i></a>
+                                                    }
+                                                </p>
+                                                <p class="mg-b-2">@item.Descripcion</p>
+                                                <small class="tx-color-03">@item.Fecha.ToString("F")</small>
+                                            </div><!-- activity-body -->
+                                        </li><!-- activity-item -->
+                                    }
+                                    else
+                                    {
+                                        <li class="activity-item">
+                                            <div class="activity-icon @Html.Raw(item.Forzado ? "bg-warning-light tx-warning" : "bg-success-light tx-success")"><i data-feather="clock"></i></div>
+                                            <div class="activity-body">
+                                                <p class="mg-b-2">
+                                                    <span class="badge badge-info">Salida @Html.Raw(item.Forzado ? "Manual" : "")</span>
+                                                    @if (item.Forzado)
+                                                    {
+                                                        <a href="#card_e" v-on:click="DeleteArreglo(@item.IdAccessLog)" title="Eliminar este registro manual" class="link-03 lh-0"><i class="icon ion-ios-trash"></i></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="#modal2" data-toggle="modal" v-on:click="HideArreglo('@item.Fecha.ToString("yyyy-MM-dd HH:mm:ss")',@item.IdEventChec,'@item.Fecha.ToString("F")')" title="Omitir este registro" class="link-03 lh-0"><i class="icon ion-ios-eye-off"></i></a>
+                                                    }
+                                                </p>
+                                                <p class="mg-b-2">@item.Descripcion</p>
+                                                <small class="tx-color-03">@item.Fecha.ToString("F")</small>
+                                            </div><!-- activity-body -->
+                                        </li><!-- activity-item -->
+                                    }
+
+                                }
+                                else
+                                {
+                                    <li class="activity-item">
+                                        <div class="activity-icon bg-pink-light tx-pink">
+                                            <i data-feather="clock"></i>
+                                        </div>
+                                        <div class="activity-body">
+                                            <p class="mg-b-2">
+                                                <span class="badge badge-danger">Se ha omitido este registro</span>
+                                                <a href="#card_e" v-on:click="DeleteArreglo(@item.IdGrupoArreglo)" title="Activar este registro" class="link-03 lh-0"><i class="icon ion-md-eye"></i></a>
+                                            </p>
+                                            <p class="mg-b-2">@item.Descripcion</p>
+                                            <small class="tx-color-03">@item.Fecha.ToString("F")</small>
+                                        </div><!-- activity-body -->
+                                    </li><!-- activity-item -->
+                                }
+                            }
+                        </ul><!-- activity -->
+                    }
+                    else
+                    {
+                        <div class="alert alert-solid alert-primary" role="alert">
+                            Sin registros de accesos
+                        </div>
+                    }
+
+                </div><!-- card-body -->
+            </div><!-- card -->
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h6 class="mg-b-0">Historico de turno durante la semana</h6>
+                    <div class="d-flex align-items-center tx-18">
+                        <div class="dropdown">
+                            <button class="btn btn-sm dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon ion-md-more"></i></button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#modal4" data-toggle="modal">Cambio de grupo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pd-20">
+
+                    <ul class="activity tx-13">
+                        @foreach (var item in Model.JornadaGrupos)
+                        {
+                            @if (item.TipoJornada != "Cambio de turno")
+                            {
+                                <li class="activity-item">
+                                    <div class="activity-icon bg-warning-light tx-warning">
+                                        <i data-feather="calendar"></i>
+                                    </div>
+                                    <div class="activity-body">
+                                        <p class="mg-b-2"><span class="badge badge-primary">Grupo @item.GrupoName</span></p>
+                                        @if (item.TipoJornada != "Descanso")
+                                        {
+                                            <p class="mg-b-2">Entrada:  @item.Fecha.ToString("F")</p>
+                                            <p class="mg-b-2">Salida:  @item.Salida.ToString("F")</p>
+                                            <p class="mg-b-2">Hrs:  @item.HorasMeta</p>
+                                        }
+
+                                        <small class="tx-color-03">@item.TipoJornada</small>
+                                    </div><!-- activity-body -->
+                                </li><!-- activity-item -->
+                            }
+
+                        }
+
+                    </ul><!-- activity -->
+                </div><!-- card-body -->
+            </div><!-- card -->
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h6 class="mg-b-0">Historico de incidencias durante la semana</h6>
+                    <div class="d-flex align-items-center tx-18">
+                        <div class="dropdown">
+                            <button class="btn btn-sm dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon ion-md-more"></i></button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#modal4" data-toggle="modal">Registrar nueva</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pd-20">
+                    <ul class="list-group list-group-flush tx-13">
+                        @foreach (var item in Model.GrupoProdIncidencias)
+                        {
+                            @if (item.TipoIncidecia == "Per")
+                            {
+                                <li class="list-group-item d-flex pd-sm-x-20">
+                                    <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-indigo op-5"><i class="icon ion-md-return-left"></i></span></div>
+                                    <div class="pd-sm-l-10">
+                                        <p class="tx-medium mg-b-2">
+                                            @item.NameTipoPermiso
+                                            @*<a href="#modal4" data-toggle="modal" v-on:click="DetailsIncidencia(@item.IdGrupoProdIncidencia)" title="Editar esta incidencia" class="link-03 lh-0"><i class="icon ion-ios-create"></i></a>*@
+                                            <a href="#card_e" v-on:click="DleteIncidencia(@item.IdGrupoProdIncidencia)" title="Eliminar esta incidencia" class="link-03 lh-0"><i class="icon ion-ios-trash"></i></a>
+                                        </p>
+                                        <p class="tx-medium mg-b-2">Comentarios: @item.Comentarios</p>
+                                        <small class="tx-12 tx-color-03 mg-b-0">@item.FechaPermiso.ToString("F")</small>
+                                    </div>
+                                    <div class="mg-l-auto text-right">
+                                        <p class="tx-medium mg-b-2">@item.HorasJustific (hrs)</p>
+                                        <small class="tx-12 tx-success mg-b-0"></small>
+                                    </div>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item d-flex pd-sm-x-20">
+                                    <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-orange op-5"><i class="icon ion-md-bus"></i></span></div>
+                                    <div class="pd-sm-l-10">
+                                        <p class="tx-medium mg-b-2">
+                                            Vacaciones
+                                            @*<a href="#modal4" data-toggle="modal" v-on:click="DetailsIncidencia(@item.IdGrupoProdIncidencia)" title="Editar esta incidencia" class="link-03 lh-0"><i class="icon ion-ios-create"></i></a>*@
+                                            <a href="#card_e" v-on:click="DleteIncidencia(@item.IdGrupoProdIncidencia)" title="Eliminar esta incidencia" class="link-03 lh-0"><i class="icon ion-ios-trash"></i></a>
+                                        </p>
+                                        <p class="tx-medium mg-b-2">Comentarios: @item.Comentarios</p>
+                                        <small class="tx-12 tx-color-03 mg-b-0">Salida: @item.FechaSalVac.ToString("F")</small>
+                                        <small class="tx-12 tx-color-03 mg-b-0">Regreso: @item.FechaRegVac.ToString("F")</small>
+                                    </div>
+                                    <div class="mg-l-auto text-right">
+                                        <p class="tx-medium mg-b-2">@item.HorasJustific (hrs)</p>
+                                        <small class="tx-12 tx-info mg-b-0"></small>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div><!-- card-body -->
+            </div><!-- card -->
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel2">Registrar omit log</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="text" disabled name="inp_idEvento" id="inp_idEvento" class="form-control" value="" />
+                        <input type="text" disabled name="inp_fechaArreglo" id="inp_fechaArreglo" class="form-control" value="" />
+                        <input type="text" disabled name="inp_fechaArreglotext" id="inp_fechaArreglotext" class="form-control" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label>Comentarios</label>
+                        <textarea name="inp_commArreglo" id="inp_commArreglo" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SaveHideArreglo()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel2">Registrar nuevo log</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Hola!</h4>
+                        <p>Recuerda que solo podrás insertar registros de forma manual de acuerdo al siguiente bloque de fechas:</p>
+                        <p>Inicio: @Model.Incio.ToString("F")</p>
+                        <p>Fin: @Model.Fin.ToString("F")</p>
+                        <hr>
+                        <p class="mb-0">Sistema Gestión de Personal</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="text" name="inp_fechaArrreglo_2" id="inp_fechaArrreglo_2" class="form-control" value="" />
+                        <span id="inp_fechaArrreglo_2_span" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Hora</label>
+                        <input type="text" name="inp_horaArrreglo_2" id="inp_horaArrreglo_2" class="form-control" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label>Comentarios</label>
+                        <textarea name="inp_commArreglo" id="inp_commArreglo_2" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SaveAddArreglo()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel2">Registrar cambiod de grupo</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Hola!</h4>
+                        <p>Recuerda que solo podrás insertar registros de forma manual de acuerdo al siguiente bloque de fechas:</p>
+                        <p>Inicio: @Model.Incio.ToString("F")</p>
+                        <p>Fin: @Model.Fin.ToString("F")</p>
+                        <hr>
+                        <p class="mb-0">Sistema Gestión de Personal</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="text" name="inp_fechaArrreglo_2" id="inp_fechaArrreglo_2" class="form-control" value="" />
+                        <span id="inp_fechaArrreglo_2_span" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Hora</label>
+                        <input type="text" name="inp_horaArrreglo_2" id="inp_horaArrreglo_2" class="form-control" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label>Comentarios</label>
+                        <textarea name="inp_commArreglo" id="inp_commArreglo_2" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SaveAddArreglo()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel2">Registrar cambio de grupo</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/" method="post">
+                        <div class="form-group ">
+                            <label>Tipo de incidencia</label>
+                            <select class="form-control" v-model="DatInc.tipoIncidecia">
+                                <option value="Per" selected>Permiso</option>
+                                <option value="Vac">Vacaciones</option>
+                            </select>
+                        </div>
+                        <div class="form-group " v-if="DatInc.tipoIncidecia == 'Per'">
+                            <label>Fecha del permiso</label>
+                            <input type="date" name="name" value="" id="date1" class="form-control" v-model="DatInc.fechaPermiso" />
+                            <span id="DatInc_fechaPermiso_span" class="text-danger"></span>
+                        </div>
+                        <div class="row" v-if="DatInc.tipoIncidecia == 'Vac'">
+                            <div class="form-group col-lg-6">
+                                <label>Salida</label>
+                                <input type="date" name="name" value="" class="form-control datepickerdate" v-model="DatInc.fechaSalVac" />
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Ultimo dia</label>
+                                <input type="date" name="name" value="" class="form-control datepickerdate" v-model="DatInc.fechaRegVac" />
+                            </div>
+                            <span id="DatInc_fechaPermisoGen_span" class="text-danger"></span>
+                        </div>
+                        <div class="form-group " v-if="DatInc.tipoIncidecia == 'Per'">
+                            <label>Tipo de permiso</label>
+                            <select class="form-control" v-model="DatInc.tipoPermiso" asp-items="ViewBag.PagoPermisoPersonal">
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                        </div>
+                        <div class="form-group ">
+                            <label>Horas a justificar</label>
+                            <input type="text" name="name" value="" v-model="DatInc.horasJustific" class="form-control" />
+                        </div>
+                        <div class="form-group ">
+                            <label>Comentarios</label>
+                            <textarea class="form-control" v-model="DatInc.comentarios"></textarea>
+                        </div>
+                        <div class="form-group"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SaveIncidencia()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<button href="#" style="display: none" onclick="window.location.reload()" id="btn_refrescar" type="button" class="btn btn-white"><i class="icon ion-md-time mg-r-5 tx-16 lh--9"></i>Refrescar</button>
+@section Scripts {
+    <script>
+        var app_horariosEmp = new Vue({
+            el: "#app_horariosEmp",
+            data: {
+                Fecha_inicio: new Date("@Model.Incio.ToString("yyyy-MM-ddTHH:mm:ss")"),
+                Fecha_Fin: new Date("@Model.Fin.ToString("yyyy-MM-ddTHH:mm:ss")"),
+                DatInc: {
+                    idGrupoProdIncidencia: 0,
+                    idPersona: '@Model.IdPersona',
+                    tipoIncidecia: 'Per',
+                    tipoPermiso: 0,
+                    fechaPermiso: '@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")',
+                    fechaSalVac: '@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")',
+                    fechaRegVac: '@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")',
+                    horasJustific: 0,
+                    comentarios: '',
+                    creado: '@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")',
+                    modificado: '@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")',
+                    creadoPor: '',
+                }
+            },
+            mounted() {
+                var cleaveC = new Cleave('#inp_fechaArrreglo_2', {
+                    delimiter: "-",
+                    date: true,
+                    datePattern: ['Y', 'm', 'd'],
+                });
+                var cleaveB = new Cleave('#inp_horaArrreglo_2', {
+                    time: true,
+                    timePattern: ['h', 'm']
+                });
+            },
+            methods: {
+                DetailsIncidencia: async function (id) {
+                    const params = new URLSearchParams([
+                        ['IdGrupoProdIncidencia', id],
+                            ['Idpersona', '@Model.IdPersona']
+                        ]);
+                    await axios.post('@Url.Action("DetailsInci", "produccionv4")', params, null).then(response => {
+                        console.log(response.data)
+                        this.DatInc = response.data;
+
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data, "error")
+                            }
+                        }
+                    }).finally()
+                    console.log(this.DatInc.fechaPermiso.substring(0, 10))
+                    document.getElementById("date1").value = this.DatInc.fechaPermiso.substring(0, 10)
+                },
+                DleteIncidencia: async function (id) {
+                    const params = new URLSearchParams([
+                        ['IdGrupoProdIncidencia', id],
+                            ['Idpersona', '@Model.IdPersona']
+                        ]);
+                    await axios.post('@Url.Action("DeleteInci", "produccionv4")', params, null).then(response => {
+                        console.log(response.data)
+                        ShowMessageErrorShort(response.data, "success")
+                        document.getElementById("btn_refrescar").click();
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data, "error")
+                            }
+                        }
+                    }).finally()
+                    console.log(this.DatInc.fechaPermiso.substring(0, 10))
+                    document.getElementById("date1").value = this.DatInc.fechaPermiso.substring(0, 10)
+                },
+                SaveIncidencia: async function() {
+                    if (this.DatInc.tipoIncidecia == 'Per') {
+                        var fecha = new Date(this.DatInc.fechaPermiso);
+                        fecha.setDate(fecha.getDate() + 1)
+                        fecha.setHours(0)
+                        if (fecha >= this.Fecha_inicio && fecha <= this.Fecha_Fin) {
+                            document.getElementById("DatInc_fechaPermiso_span").innerText = ""
+
+                            this.DatInc.tipoPermiso = 0
+                            this.DatInc.idPersona = parseInt(this.DatInc.idPersona)
+                            this.DatInc.horasJustific = parseFloat(this.DatInc.horasJustific)
+
+                            axios.post('@Url.Action("RegisterIncidencia", "produccionv4")', this.DatInc, null).then(response => {
+                                console.log(response.data)
+                                //this.access = response.data;
+                                ShowMessageErrorShort(response.data, "success")
+                                document.getElementById("btn_refrescar").click();
+                            }).catch(error => {
+                                if (error.response) {
+                                    if (error.response.status === 400) {
+                                        ShowMessageErrorShort(error.response.data, "error")
+                                    }
+                                }
+                            }).finally()
+                        } else {
+                            document.getElementById("DatInc_fechaPermiso_span").innerText = "Por favor selecciona una fecha de acuerdo al corte actual"
+                        }
+                    } else {
+                        var fecha1 = new Date(this.DatInc.fechaSalVac);
+                        fecha1.setDate(fecha1.getDate() + 1)
+                        fecha1.setHours(0)
+
+                        var fecha2 = new Date(this.DatInc.fechaRegVac);
+                        fecha2.setDate(fecha2.getDate() + 1)
+                        fecha2.setHours(0)
+
+
+                        if (fecha1 >= this.Fecha_inicio && fecha1 <= this.Fecha_Fin && fecha2 >= this.Fecha_inicio && fecha2 <= this.Fecha_Fin) {
+                            document.getElementById("DatInc_fechaPermisoGen_span").innerText = ""
+                            if (fecha1 <= fecha2) {
+                                this.DatInc.idPersona = parseInt(this.DatInc.idPersona)
+                                this.DatInc.tipoPermiso = parseInt(this.DatInc.tipoPermiso)
+                                this.DatInc.horasJustific = parseFloat(this.DatInc.horasJustific)
+
+                                axios.post('@Url.Action("RegisterIncidencia", "produccionv4")', this.DatInc, null).then(response => {
+                                    console.log(response.data)
+                                    //this.access = response.data;
+                                    ShowMessageErrorShort(response.data, "success")
+                                    document.getElementById("btn_refrescar").click();
+                                }).catch(error => {
+                                    if (error.response) {
+                                        if (error.response.status === 400) {
+                                            ShowMessageErrorShort(error.response.data, "error")
+                                        }
+                                    }
+                                }).finally()
+                            } else {
+                                document.getElementById("DatInc_fechaPermisoGen_span").innerText = "La fecha de salida es mayor que la fecha de Ultimo dia"
+                            }
+
+                        } else {
+                            document.getElementById("DatInc_fechaPermisoGen_span").innerText = "Por favor selecciona una fecha de acuerdo al corte actual"
+                        }
+                    }
+                },
+                SaveAddArreglo: function() {
+                    var FechaRe = new Date(document.getElementById("inp_fechaArrreglo_2").value + "T" + document.getElementById("inp_horaArrreglo_2").value)
+                    if (FechaRe >= this.Fecha_inicio && FechaRe <= this.Fecha_Fin) {
+                        document.getElementById("inp_fechaArrreglo_2_span").innerText = ""
+                        const params = new URLSearchParams([
+                            ['Idevent', 0],
+                            ['Fecha', (document.getElementById("inp_fechaArrreglo_2").value + "T" + document.getElementById("inp_horaArrreglo_2").value)],
+                            ['Comentarios', document.getElementById("inp_commArreglo_2").value],
+                            ['Idpersona', '@Model.IdPersona']
+                        ]);
+                        axios.post('@Url.Action("AddArregloEvento", "produccionv4")', params, null).then(response => {
+                            console.log(response.data)
+                            //this.access = response.data;
+                            ShowMessageErrorShort(response.data, "success")
+                            document.getElementById("btn_refrescar").click();
+                        }).catch(error => {
+                            if (error.response) {
+                                if (error.response.status === 400) {
+                                    ShowMessageErrorShort(error.response.data, "error")
+                                }
+                            }
+                        }).finally()
+                    }
+                    else
+                    {
+                        document.getElementById("inp_fechaArrreglo_2_span").innerText = "Por favor selecciona una fecha de acuerdo al corte actual"
+                    }
+                },
+                SaveHideArreglo: function () {
+                    const params = new URLSearchParams([
+                        ['Idevent', document.getElementById("inp_idEvento").value],
+                        ['Fecha', document.getElementById("inp_fechaArreglo").value],
+                        ['Comentarios', document.getElementById("inp_commArreglo").value],
+                        ['Idpersona', '@Model.IdPersona']
+                    ]);
+                    axios.post('@Url.Action("AddArregloEvento", "produccionv4")', params, null).then(response => {
+                        console.log(response.data)
+                        //this.access = response.data;
+                        ShowMessageErrorShort(response.data, "success")
+                        document.getElementById("btn_refrescar").click();
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data, "error")
+                            }
+                        }
+                    }).finally()
+                },
+                HideArreglo: function (fecha, Idevento, fechaTexto) {
+                    document.getElementById("inp_fechaArreglo").value = fecha;
+                    document.getElementById("inp_idEvento").value = Idevento;
+                    document.getElementById("inp_fechaArreglotext").value = fechaTexto;
+
+                },
+                DeleteArreglo: function (id) {
+                    const params = new URLSearchParams([['IdEvent', id], ['IdPersona', '@Model.IdPersona']]);
+                    axios.post('@Url.Action("DeleteArreglo", "ProduccionV4")', params, null).then(response => {
+                        console.log(response.data)
+                        //this.Access = response.data;
+                        ShowMessageErrorShort(response.data, "success")
+                        document.getElementById("btn_refrescar").click();
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data, "error")
+                            }
+                        }
+                    }).finally()
+                },
+            }
+        });
+    </script>
+}

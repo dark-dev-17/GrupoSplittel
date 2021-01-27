@@ -20,7 +20,7 @@ namespace GPSInformation.Models
         public int IdPersona { get; set; }
 
         [Required]
-        [Display(Name = "Fecha")]
+        [Display(Name = "Fecha del permiso")]
         [ColumnDB(IsMapped = true, IsKey = false)]
         public DateTime Fecha { get; set; }
 

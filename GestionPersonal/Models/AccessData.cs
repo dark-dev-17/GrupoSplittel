@@ -86,7 +86,6 @@ namespace GestionPersonal.Models
                 {
                     darkManager.OpenConnection();
                     darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
-
                     var result = darkManager.AccesosSistema.Get("" + filterContext.HttpContext.Session.GetInt32("user_id_permiss"), nameof(darkManager.AccesosSistema.Element.IdUsuario));
                     bool autorize = false;
 
@@ -94,6 +93,7 @@ namespace GestionPersonal.Models
                     {
                         if (result.Find(a => a.IdSubModulo == item && a.TieneAcceso) != null)
                         {
+
                             autorize = true;
                         }
                     }

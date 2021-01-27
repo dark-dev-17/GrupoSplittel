@@ -22,6 +22,12 @@ namespace GPSInformation.Reportes
         public string GrupoName { get; internal set; }
     }
 
+    public class WeekEmpleadoProd
+    {
+        public DateTime Inicio { get; set; }
+        public DateTime Fin { get; set; }
+        public List<EmpleadoProd> Empleados { get; set; }
+    }
     public class DiaProd
     {
         public DateTime Dia { get; set; }
@@ -34,7 +40,9 @@ namespace GPSInformation.Reportes
         public bool EsCruce { get; set; }
         public int IdGrupoHorario { get; set; }
         public string Turno { get; set; }
-        public double Horas { get { return Salida != null && Entrada != null ? Funciones.DifFechashoras((DateTime)Salida, (DateTime)Entrada) : 0; } }
+        //public double Horas { get { return Salida != null && Entrada != null ? Funciones.DifFechashoras((DateTime)Salida, (DateTime)Entrada) : 0; } }
+        public double Horas { get; set; }
         public double HorasMeta { get; set; }
+        public double HorasMin { get; set; }
     }
 }

@@ -34,11 +34,7 @@ namespace GestionPersonal.Controllers
             return View();
         }
 
-        public ActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("DoLogin");
-        }
+        
 
 
         // POST: Login/Create
@@ -100,6 +96,22 @@ namespace GestionPersonal.Controllers
             HttpContext.Session.SetString("user_imagenPerfil", usuario.ImagenDefault ? "imagenperfil.png" : usuario.ImagenPerfil);
             HttpContext.Session.SetString("user_fullname", ResultUser.NombreCompelto);
             HttpContext.Session.SetString("user_puesto", darkManager.View_empleado.Get(usuario.IdPersona).PuestoNombre);
+            HttpContext.Session.SetString("user_accesos", "");
+        }
+
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Remove("user_id");
+            HttpContext.Session.Remove("user_id_permiss");
+            HttpContext.Session.Remove("user_name");
+            HttpContext.Session.Remove("user_appP");
+            HttpContext.Session.Remove("user_appM");
+            HttpContext.Session.Remove("user_RFC");
+            HttpContext.Session.Remove("user_imagenPerfil");
+            HttpContext.Session.Remove("user_fullname");
+            HttpContext.Session.Remove("user_puesto");
+            HttpContext.Session.Remove("user_accesos");
+            return RedirectToAction("DoLogin");
         }
     }
 }

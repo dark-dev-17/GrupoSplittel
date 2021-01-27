@@ -36,6 +36,8 @@ namespace GestionIncidenciaPermisol.Controllers
             darkManager.LoadObject(GpsManagerObjects.Puesto);
             darkManager.LoadObject(GpsManagerObjects.Empleado);
             darkManager.LoadObject(GpsManagerObjects.View_empleado);
+
+            darkManager.LoadObject(GpsManagerObjects.AccesosSistema);
             _viewRenderService = viewRenderService;
         }
 
@@ -213,13 +215,54 @@ namespace GestionIncidenciaPermisol.Controllers
         {
             try
             {
+
+                var response = darkManager.IncidenciaPermiso.Get(id);
+                if (response is null)
+                {
+                    return NotFound();
+                }
+
+                if(Mode == "1")
+                {
+                    
+                    var resulst = darkManager.AccesosSistema.GetOpenquerys($"where IdUsuario = {(int)HttpContext.Session.GetInt32("user_id_permiss")} and IdSubModulo = 32");
+                    if(resulst == null || resulst != null && resulst.TieneAcceso == false)
+                    {
+                        return NotFound();
+                    }
+                }
+                if (Mode == "2")
+                {
+
+                    var resulst = darkManager.AccesosSistema.GetOpenquerys($"where IdUsuario = {(int)HttpContext.Session.GetInt32("user_id_permiss")} and IdSubModulo = 36");
+                    if (resulst == null || resulst != null && resulst.TieneAcceso == false)
+                    {
+                        return NotFound();
+                    }
+                }
+
+
                 TiposPermisos = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1009, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
                 PagoPermisoPersonal = new SelectList(darkManager.CatalogoOpcionesValores.Get("" + 1010, "IdCatalogoOpciones").OrderBy(a => a.Descripcion).ToList(), "IdCatalogoOpcionesValores", "Descripcion");
                 ViewData["TiposPermisos"] = TiposPermisos;
                 ViewData["PagoPermisoPersonal"] = PagoPermisoPersonal;
 
-                var response = darkManager.IncidenciaPermiso.Get(id);
                 ViewData["ModeAprobar"] = Mode;
+
+                var result = darkManager.IncidenciaProcess.Get("" + id, nameof(darkManager.IncidenciaProcess.Element.IdIncidenciaPermiso));
+                if (Mode == "1")
+                {
+                    var nivel = result.Find(a => a.Nivel == 2);
+                    ViewData["Procesada"] = nivel;
+                }
+
+                if (Mode == "2")
+                {
+                    var nivel = result.Find(a => a.Nivel == 3);
+                    ViewData["Procesada"] = nivel;
+                }
+
+
                 return View(response);
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
@@ -321,7 +364,7 @@ namespace GestionIncidenciaPermisol.Controllers
         [AccessMultipleView(IdAction = new int[] { 32, 36 })]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Aprobar(int id, int Mode, string Comentario)
+        public ActionResult Aprobar(int id, int Mode, string Comentario, string Autorizada)
         {
             darkManager.StartTransaction();
             try
@@ -332,7 +375,7 @@ namespace GestionIncidenciaPermisol.Controllers
                 {
                     var Persona = darkManager.Persona.Get((int)HttpContext.Session.GetInt32("user_id"));
                     var nivel = result.Find(a => a.Nivel == 2);
-                    nivel.Autorizada = true;
+                    nivel.Autorizada = Autorizada == "si" ? true : false;
                     nivel.Fecha = DateTime.Now;
                     nivel.IdPersona = (int)HttpContext.Session.GetInt32("user_id");
                     nivel.NombreEmpleado = Persona.NombreCompelto;
@@ -349,7 +392,7 @@ namespace GestionIncidenciaPermisol.Controllers
                     else
                     {
                         darkManager.RolBack();
-                        ModelState.AddModelError("", "Error al aprobar");
+                        ModelState.AddModelError("", "Error al guardar");
                         return RedirectToAction("Aprobar", new { id = id, Mode = Mode });
                     }
                 }
@@ -357,7 +400,7 @@ namespace GestionIncidenciaPermisol.Controllers
                 {
                     var Persona = darkManager.Persona.Get((int)HttpContext.Session.GetInt32("user_id"));
                     var nivel = result.Find(a => a.Nivel == 3);
-                    nivel.Autorizada = true;
+                    nivel.Autorizada = Autorizada == "si" ? true : false;
                     nivel.Fecha = DateTime.Now;
                     nivel.IdPersona = (int)HttpContext.Session.GetInt32("user_id");
                     nivel.NombreEmpleado = Persona.NombreCompelto;
@@ -374,7 +417,7 @@ namespace GestionIncidenciaPermisol.Controllers
                     else
                     {
                         darkManager.RolBack();
-                        ModelState.AddModelError("", "Error al aprobar");
+                        ModelState.AddModelError("", "Error al guardar");
                         return RedirectToAction("Aprobar", new { id = id, Mode = Mode });
                     }
                 }
