@@ -22,6 +22,7 @@ namespace GPSInformation.Reportes.ProduccionV3
         public int IdGrupo { get; set; }
         public double HorasMeta { get; set; }
         public string TipoJornada { get; set; }
+        public string ComentariosSistema { get; set; }
         public DateTime Fecha { get; set; }
         public DateTime Salida { get; set; }
         public string GrupoName { get { return IdGrupo == 86 ? "Gris" : IdGrupo == 87 ? "Rojo" : IdGrupo == 88 ? "Verde" : "Sin asginar"; } }

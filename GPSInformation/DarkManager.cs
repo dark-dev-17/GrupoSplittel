@@ -13,7 +13,7 @@ namespace GPSInformation
 {
     public class DarkManager
     {
-        protected DBConnection dBConnection { get; set; }
+        public  DBConnection dBConnection { get; internal set; }
         protected DBConnection dBConnectionAccess { get; set; }
         public EmailServ EmailServ_ { get; set; }
         public string IpPublic { get; internal set; }
@@ -82,6 +82,7 @@ namespace GPSInformation
         public virtual DarkAttributes<GrupoExcepcion> GrupoExcepcion { get; set; }
         public virtual DarkAttributes<GrupoArreglo> GrupoArreglo { get; set; }
         public virtual DarkAttributes<GrupoProdIncidencia> GrupoProdIncidencia { get; set; }
+        public virtual DarkAttributes<GrupoProdCorte> GrupoProdCorte { get; set; }
 
 
         private string CorreosBCC { get; set; }
@@ -354,6 +355,10 @@ namespace GPSInformation
             else if (gpsManagerObjects == GpsManagerObjects.GrupoProdIncidencia)
             {
                 GrupoProdIncidencia = new DarkAttributes<GrupoProdIncidencia>(dBConnection);
+            } 
+            else if (gpsManagerObjects == GpsManagerObjects.GrupoProdCorte)
+            {
+                GrupoProdCorte = new DarkAttributes<GrupoProdCorte>(dBConnection);
             }
         }
         public void OpenConnection()
@@ -463,5 +468,6 @@ namespace GPSInformation
         GrupoExcepcion = 53,
         GrupoArreglo = 54,
         GrupoProdIncidencia = 55,
+        GrupoProdCorte = 56,
     }
 }

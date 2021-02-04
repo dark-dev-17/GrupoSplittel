@@ -2,109 +2,193 @@
 
 @{
     ViewData["Title"] = "Reporte: " + Model.Inicio.ToString("F");
+    List<GPSInformation.Reportes.ProduccionV3.PermisosBloq> Permisos = (List<GPSInformation.Reportes.ProduccionV3.PermisosBloq>)ViewBag.Permisos;
 }
-<div class="d-flex align-items-center justify-content-between mg-b-30">
-    <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <h2 class="tx-15 mg-b-0"></h2>
-        <a href="@Url.Action("Index", "produccionv4", new {Inicio = Model.Inicio.AddDays(-7)})" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="chevron-left"></i></a>
-        <a href="@Url.Action("Index", "produccionv4", new {Inicio = Model.Inicio.AddDays(7)})" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="chevron-right"></i></a>
+<div id="app_reprteprod">
+    <div class="d-flex align-items-center justify-content-between mg-b-30">
+        <h4 class="tx-15 mg-b-0">@ViewData["Title"]</h4>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <h2 class="tx-15 mg-b-0"></h2>
+            @if (Permisos.Find(a => a.IdSubModulo == 53).Autorization)
+            {
+                @if (Model.EmpleadoProds.Count(item => (item.Accessos.Count(a => a.Activo) % 2) != 0 || item.JornadaGrupos.Count <= 0) == 0)
+                {
+                    <a href="#" v-on:click="CrearCorte()" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="scissors"></i>Crear Corte</a>
+                }
+            }
+            <a href="@Url.Action("DescargarReporte", "produccionv4", new {Inicio = Model.Inicio})" title="Exportar Reporte" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="file"></i></a>
+            @if (Permisos.Find(a => a.IdSubModulo == 53).Autorization)
+            {
+                <a href="#modal2" data-toggle="modal" title="Admistrar Permisos" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="users"></i></a>
+            }
+            @if (Permisos.Find(a => a.IdSubModulo == 53).Autorization || Permisos.Find(a => a.IdSubModulo == 58).Autorization)
+            {
+                <a href="@Url.Action("Index", "produccionv4", new {Inicio = Model.Inicio.AddDays(-7)})" title="Ver semana anterior" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="chevron-left"></i></a>
+                <a href="@Url.Action("Index", "produccionv4", new {Inicio = Model.Inicio.AddDays(7)})" title="Ver siguiente semana" class="btn btn-outline-primary btn-sm d-flex align-items-center"><i data-feather="chevron-right"></i></a>
+            }
+        </div>
     </div>
-</div>
-<hr />
-@if (DateTime.Now >= Model.Inicio && DateTime.Now <= Model.Fin)
-{
-    <div class="alert alert-success" role="alert">
-        <h4 class="alert-heading">Hola!</h4>
-        <p>Semana en curso,</p>
-        <hr>
-        <p class="mb-0">Sistema Gestión de Personal</p>
-    </div>
-}
-else
-{
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Hola!</h4>
-        <p>Semana en fuera curso,</p>
-        <hr>
-        <p class="mb-0">Sistema Gestión de Personal</p>
-    </div>
-}
-<hr />
-<div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Inicio)
-        </dt>
-        <dd>
-            @Model.Inicio.ToString("F")
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Fin)
-        </dt>
-        <dd>
-            @Model.Fin.ToString("F")
-        </dd>
-    </dl>
     <hr />
-</div>
-<table class="table table-responsive-sm table-sm">
-    <thead>
-        <tr>
-            <th>
-                no.Nomina
-            </th>
-            <th>
-                Nombre
-            </th>
-            <th>
-                Puesto
-            </th>
-            <th>
-                Hrs.Meta
-            </th>
-            <th>
-                Hrs.Reales
-            </th>
-            <th>
-
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.EmpleadoProds)
-        {
+    @if (DateTime.Now >= Model.Inicio && DateTime.Now <= Model.Fin)
+    {
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Semana en curso!</h4>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Semana fuera de curso!</h4>
+        </div>
+    }
+    <hr />
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Inicio)
+            </dt>
+            <dd>
+                @Model.Inicio.ToString("F")
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Fin)
+            </dt>
+            <dd>
+                @Model.Fin.ToString("F")
+            </dd>
+        </dl>
+        <hr />
+    </div>
+    <table class="table table-responsive-sm table-sm table-hover">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumeroNomina)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NombreCompleto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PuestoNombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HorasMeta)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HorasReal)
-                </td>
-                <td>
-                    @if ((item.Accessos.Count(a => a.Activo) % 2) != 0)
-                    {
-                        <span class="badge badge-warning">Info</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-primary">Ok</span>
-                    }
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "Details", new { IdPersona = item.IdPersona, Inicio = item.Incio })
-                </td>
+                <th>
+                    no.Nomina
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Puesto
+                </th>
+                <th>
+                    Hrs.Score
+                </th>
+                <th>
+
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.EmpleadoProds)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumeroNomina)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreCompleto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PuestoNombre)
+                    </td>
+                    <td>
+                        <span class="badge badge-@Html.Raw(item.HorasScore > 0 ? "danger" : "success")">@Html.DisplayFor(model => item.HorasScore)</span>
+                    </td>
+                    <td>
+                        @if ((item.Accessos.Count(a => a.Activo) % 2) != 0 || item.JornadaGrupos.Count <= 0)
+                        {
+                            <span class="badge badge-warning">Info</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-primary">Ok</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Administrar", "Details", new { IdPersona = item.IdPersona, Inicio = item.Incio })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="modal2" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel2">Permisos</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <select class="form-control select2" id="idPersona_per" onchange="app_reprteprod.VerPermisos()">
+                            <option value="0" selected>Secciona una opción</option>
+                            @foreach (var item in Model.EmpleadoProds.OrderBy(a => a.NombreCompleto))
+                            {
+                                <option value="@item.IdPersona">@item.NombreCompleto</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" v-if="permisos.length > 0">
+                        <label>Permisos</label>
+                        <div class="custom-control custom-checkbox" v-for="(item2, index2) in permisos">
+                            <input type="checkbox" class="custom-control-input" v-model="item2.autorization" v-bind:id="'id_' + item2.idSubModulo">
+                            <label class="custom-control-label" v-bind:for="'id_' + item2.idSubModulo">{{item2.idSubModulo}}.-{{ item2.descripcion }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="SavePermisos()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var app_reprteprod = new Vue({
+            el: "#app_reprteprod",
+            data: {
+                permisos:[]
+            },
+            mounted() {
+
+            },
+            methods: {
+                VerPermisos: async function () {
+                    var IdPersona = document.getElementById("idPersona_per").value
+                    const params = new URLSearchParams([
+                        ['IdPersona_', IdPersona]
+                        ]);
+                    await axios.post('@Url.Action("VerPermisos", "produccionv4")', params, null).then(response => {
+                        this.permisos = response.data
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data, "error")
+                            }
+                        }
+                    }).finally()
+                },
+                SavePermisos: async function () {
+
+                    await axios.post('@Url.Action("ChangePermisos", "produccionv4")', this.permisos, null).then(response => {
+                        ShowMessageErrorShort(response.data, "success")
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data, "error")
+                            }
+                        }
+                    }).finally()
+                }
+            }
+        });
+    </script>
+};

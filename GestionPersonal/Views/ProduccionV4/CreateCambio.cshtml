@@ -1,0 +1,59 @@
+﻿@model GPSInformation.Models.Produccion.GrupoCambios
+
+<h4>GrupoCambios</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateCambio">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdGrupoCambios" class="control-label"></label>
+                <input asp-for="IdGrupoCambios" class="form-control" />
+                <span asp-validation-for="IdGrupoCambios" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdPersona" class="control-label"></label>
+                <input asp-for="IdPersona" class="form-control" />
+                <span asp-validation-for="IdPersona" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdGrupo" class="control-label"></label>
+                <input asp-for="IdGrupo" class="form-control" />
+                <span asp-validation-for="IdGrupo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fecha" class="control-label"></label>
+                <input asp-for="Fecha" class="form-control" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comentarios" class="control-label"></label>
+                <input asp-for="Comentarios" class="form-control" />
+                <span asp-validation-for="Comentarios" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Creado" class="control-label"></label>
+                <input asp-for="Creado" class="form-control" />
+                <span asp-validation-for="Creado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Modificado" class="control-label"></label>
+                <input asp-for="Modificado" class="form-control" />
+                <span asp-validation-for="Modificado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GrupoName" class="control-label"></label>
+                <input asp-for="GrupoName" class="form-control" />
+                <span asp-validation-for="GrupoName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -7,19 +7,20 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title | Gestión de personal</title>
-    @if (controllerName == "Contrato" && controllerAction == "Determinado" || 
-        controllerName == "Contrato" && controllerAction == "Indeterminado" || 
-        controllerName == "Usuario" && controllerAction == "DetailsEmail" || 
-        controllerName == "Evaluacion" && controllerAction == "EmailDetails")
+    @if (controllerName == "Contrato" && controllerAction == "Determinado" ||
+       controllerName == "Contrato" && controllerAction == "Indeterminado" ||
+       controllerName == "Usuario" && controllerAction == "DetailsEmail" ||
+       controllerName == "Evaluacion" && controllerAction == "EmailDetails")
     {
-<style>
+        <style>
             @@import url('https://fonts.googleapis.com/css?family=Open+Sans');
-    @@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-body {
-    font-family: "Roboto";
-    /*font-family: "Open Sans";*/
-}
-</style>
+            @@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+            body {
+                font-family: "Roboto";
+                /*font-family: "Open Sans";*/
+            }
+        </style>
     }
     else
     {
@@ -31,17 +32,19 @@ body {
         </environment>
 
         <link href="~/css/site.css" rel="stylesheet" />
+
+        @RenderSection("Style", required: false)
     }
 
 </head>
 <body class="pos-relative" data-spy="scroll" data-target="#navSection" data-offset="120">
 
     @if (controllerName == "Login" ||
-     controllerName == "Contrato" && controllerAction == "Determinado" ||
-     controllerName == "Contrato" && controllerAction == "Indeterminado" ||
-     controllerName == "BuzonQueja" && controllerAction == "Create" ||
-     controllerName == "BuzonQueja" && controllerAction == "Complete" ||
-     controllerName == "Evaluacion" && controllerAction == "EmailDetails")
+   controllerName == "Contrato" && controllerAction == "Determinado" ||
+   controllerName == "Contrato" && controllerAction == "Indeterminado" ||
+   controllerName == "BuzonQueja" && controllerAction == "Create" ||
+   controllerName == "BuzonQueja" && controllerAction == "Complete" ||
+   controllerName == "Evaluacion" && controllerAction == "EmailDetails")
     {
         if (controllerName == "Login" || controllerName == "BuzonQueja" && controllerAction == "Create" || controllerName == "BuzonQueja" && controllerAction == "Complete")
         {
@@ -58,22 +61,26 @@ body {
         <partial name="_NavBar" />
         @if (controllerName == "Sala" && controllerAction == "Reservar" || controllerName == "Usuario" && controllerAction == "DetailsEmail")
         {
-
+            @if (controllerName == "Sala" && controllerAction == "Reservar")
+            {
+                @RenderBody()
+            }
         }
         else
         {
             <partial name="_Slide" />
-        }
-        <div class="content content-components">
-            <div class="container-fluid">
-                @*<ol class="breadcrumb df-breadcrumbs mg-b-10">
-                        <li class="breadcrumb-item"><a href="#">Components</a></li>
-                        <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Form Elements</li>
-                    </ol>*@
-                @RenderBody()
+            <div class="content content-components">
+                <div class="container-fluid">
+                    @*<ol class="breadcrumb df-breadcrumbs mg-b-10">
+                            <li class="breadcrumb-item"><a href="#">Components</a></li>
+                            <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Form Elements</li>
+                        </ol>*@
+                    @RenderBody()
+                </div>
             </div>
-        </div>
+        }
+
     }
 
 
@@ -116,7 +123,7 @@ body {
                         sSearch: '',
                         lengthMenu: '_MENU_ items/page',
                     },
-                    
+
                 });
                 $('.select2').select2({
                     placeholder: 'Seleccióna una opción',

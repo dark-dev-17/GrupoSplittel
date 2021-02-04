@@ -256,7 +256,15 @@ namespace GPSInformation
         }
         public void StartProcedure(string ProcedureName, List<ProcedureModel> DataModel)
         {
-            Command = new SqlCommand(ProcedureName, SqlConnection);
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            if (IsTracsactionActive)
+            {
+                Command = new SqlCommand(ProcedureName, SqlConnection, tran);
+            }
+            else
+            {
+                Command = new SqlCommand(ProcedureName, SqlConnection);
+            }
             Command.CommandType = CommandType.StoredProcedure;
 
             if(DataModel == null)

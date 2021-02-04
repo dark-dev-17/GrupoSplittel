@@ -4,55 +4,47 @@
     bool AccesoAdmin = (bool)ViewBag.access;
     int IdPersona = (int)ViewBag.IdPersona;
 }
+
+@section Style{
 <link href="~/template/lib/fullcalendar/fullcalendar.min.css" rel="stylesheet">
 <link rel="stylesheet" href="~/template/assets/css/dashforge.calendar.css">
-<link rel="stylesheet" href="~/template/assets/css/dashforge.contacts.css">
+@*<link rel="stylesheet" href="~/template/assets/css/dashforge.contacts.css">*@
 <style>
+    .fc-widget-content {
+        height: 140px !important;
+    }
 </style>
-<div class="calendar-wrapper" id="App_calendar">
-    <div class="calendar-sidebar">
-        <div class="calendar-sidebar-header">
-            @*<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <div class="search-form">
-            <input type="search" class="form-control" placeholder="Search calendar">
-        </div>*@
-            <button href="#" onclick="history.go(-1)" class="btn btn-danger btn-block" title="agregar nueva sala">Regresar</button>
-        </div><!-- calendar-sidebar-header -->
-        <div id="calendarSidebarBody" class="calendar-sidebar-body ps">
-            <div class="pd-y-20 pd-x-15">
-                <button href="#modalCreateEvent" data-toggle="modal" class="btn btn-primary btn-block" title="agregar nueva sala">Nueva Reservación</button>
-            </div>
-            <div class="pd-y-20 pd-x-15">
-                <nav class="calendar-nav" v-if="Salas.length" >
-                    <div class="pd-y-20 pd-x-10 contact-list" >
-                        <label id="contactA" class="contact-list-divider">Lista de salas</label>
-                        <div class="media active" v-for="(item, index) in Salas">
-                            <div class="media-body mg-l-10">
-                                <h6 class="tx-13 mg-b-3">{{ item.nombre }}</h6>
-                            </div><!-- media-body -->
-                            <nav>
-                            </nav>
+}
+
+<div id="App_calendar" class="">
+    <div class="calendar-wrapper">
+        <div class="calendar-sidebar">
+            <div class="calendar-sidebar-header">
+                <button href="#" onclick="history.go(-1)" class="btn btn-danger btn-block" title="agregar nueva sala">Regresar</button>
+            </div><!-- calendar-sidebar-header -->
+            <div id="calendarSidebarBody" class="calendar-sidebar-body">
+                <div class="pd-y-20 pd-x-15">
+                    <button href="#modalCreateEvent" data-toggle="modal" class="btn btn-primary btn-block" title="agregar nueva sala">Nueva Reservación</button>
+                </div>
+                <div class="pd-y-20 pd-x-15">
+                    <nav class="calendar-nav" v-if="Salas.length">
+                        <div class="schedule-group">
+                            <label id="contactA" class="contact-list-divider">Lista de salas</label>
+                            <div class="media active" v-for="(item, index) in Salas">
+                                <a href="#" class="schedule-item bd-l bd-2 bd-success">
+                                    <h6>{{ item.nombre }}</h6>
+                                </a><!-- schedule-item -->
+                            </div>
                         </div>
-                    </div>
-                </nav>
-            </div>
+                    </nav>
+                </div>
+            </div><!-- calendar-sidebar-body -->
+        </div><!-- calendar-sidebar -->
 
-            <!--<div class="pd-20 mg-b-20">
-                <label class="tx-uppercase tx-sans tx-10 tx-medium tx-spacing-1 tx-color-03 mg-b-15">Reservaciones para hoy</label>
-                <div class="schedule-group">
-                    <a href="#" class="schedule-item bd-l bd-2 bd-danger">
-                        <h6>Company Standup Meeting</h6>
-                        <span>8:00am - 9:00am, Engineering Room</span>
-                    </a>--><!-- schedule-item -->
-                <!--</div>--><!-- schedule-group -->
-            <!--</div>-->
-            <div class="ps__rail-x" style="left: 0px; top: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
-        </div><!-- calendar-sidebar-body -->
-    </div><!-- calendar-sidebar -->
-    <div class="calendar-content">
-        <div id="calendar" class="calendar-content-body"></div>
-    </div><!-- calendar-content -->
-
+        <div class="calendar-content">
+            <div id="calendar" class="calendar-content-body"></div>
+        </div><!-- calendar-content -->
+    </div>
     <div class="modal calendar-modal-create fade effect-scale" id="modalCreateEvent" role="dialog" data-backdrop="false" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -64,6 +56,9 @@
                     <h5 class="tx-18 tx-sm-20 mg-b-20 mg-sm-b-30">Crear nueva resevación</h5>
 
                     <form id="formCalendar" method="post" action="app-calendar.html">
+                        <div class="form-group" id="Mesnaje_result">
+                            
+                        </div><!-- form-group -->
                         <div class="form-group">
                             <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Titulo</label>
                             <input type="text" class="form-control" id="Motivo" placeholder="Agregar titulo">
@@ -117,12 +112,12 @@
                     <form id="formCalendar" method="post" action="app-calendar.html" v-if="Salas[salaselected] != null && salaselected != null">
                         <div class="form-group">
                             <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Nombre</label>
-                            <input type="text" class="form-control" v-model="Salas[salaselected].nombre"  placeholder="Agregar titulo">
+                            <input type="text" class="form-control" v-model="Salas[salaselected].nombre" placeholder="Agregar titulo">
                         </div><!-- form-group -->
                         <div class="form-group mg-t-30">
                             <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Cantidad</label>
-                            <input type="number" class="form-control" v-model="Salas[salaselected].capacidad"  placeholder="Fecha">
-                            
+                            <input type="number" class="form-control" v-model="Salas[salaselected].capacidad" placeholder="Fecha">
+
                         </div><!-- form-group -->
                         <div class="form-group mg-t-30">
                             <label class="tx-uppercase tx-sans tx-11 tx-medium tx-spacing-1 tx-color-03">Sala</label>
@@ -139,20 +134,25 @@
     </div><!-- modal -->
 </div>
 
-@section Scripts {
 
-    <script src="~/template/lib/moment/min/moment.min.js"></script>
-    <script src="~/template/lib/fullcalendar/fullcalendar.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
-    <script src="~/template/assets/js/calendar-events.js"></script>
-    <script>
+
+
+
+    @section Scripts {
+
+        <script src="~/template/lib/moment/min/moment.min.js"></script>
+        <script src="~/template/lib/fullcalendar/fullcalendar.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+        <script src="~/template/assets/js/calendar-events.js"></script>
+        <script>
         var App_calendar = new Vue({
             el: "#App_calendar",
             data: {
                 Reservaciones: [],
                 Salas: [],
                 salaselected: null,
-                Sala: null
+                Sala: null,
+                Details: null
             },
             async mounted () {
                 await this.GetSalas();
@@ -161,6 +161,7 @@
             },
             methods: {
                 AddReservacion: async function () {
+                    document.getElementById("Mesnaje_result").innerHTML = ''
                     var elemento = {
                         IdSala: document.getElementById("IdSala").value,
                         Motivo: document.getElementById("Motivo").value,
@@ -176,11 +177,13 @@
                         document.getElementById("FechaInicio").value = "";
                          document.getElementById("HoraIncio").value = "";
                          document.getElementById("HolaFin").value = "";
-                         document.getElementById("Comentarios").value = "";
+                        document.getElementById("Comentarios").value = "";
+                        document.getElementById("Mesnaje_result").innerHTML = ''
                         //this.GetReservaciones();
                     }).catch(error => {
                         if (error.response) {
                             if (error.response.status === 400) {
+                                document.getElementById("Mesnaje_result").innerHTML = '<div class="alert alert-warning" role="alert">' + error.response.data + '</div>'
                                 ShowMessageErrorShort(error.response.data,"error")
                             }
                         }
@@ -221,6 +224,20 @@
                     if (this.Sala != null) {
                         this.Delete(this.Sala.idSalaReservacion)
                     }
+                },
+                GetDetails: async function (id) {
+                    await axios.get('@Url.Action("DetailsReservacion", "Sala")/' + id, null, null).then(response => {
+                        ShowMessageErrorShort("Salas obtenidas, procesando...", "success")
+                        this.Details = response.data
+                        console.log(response.data)
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                ShowMessageErrorShort(error.response.data,"error")
+                            }
+                        }
+                        this.Details = null;
+                    }).finally()
                 },
                 Delete: async function (id) {
                     await axios.get('@Url.Action("Delete", "Sala")/' + id, null, null).then(response => {
@@ -365,7 +382,7 @@
                     // Display calendar event modal
                     calendar.on('eventClick', function(calEvent, jsEvent, view){
 
-                        //var modal = $('#modalCalendarEvent');
+                        //var modal = $('#modalCreateSala');
 
                         //modal.modal('show');
                         //modal.find('.event-title').text(calEvent.title);
@@ -383,6 +400,8 @@
 
                         ////styling
                         //modal.find('.modal-header').css('backgroundColor', (calEvent.source.borderColor)? calEvent.source.borderColor : calEvent.borderColor);
+                        console.log("@IdPersona")
+                        //App_calendar.GetDetails(calEvent.id)
                         if (calEvent.idPersona + "" == "@IdPersona") {
                             console.log(calEvent);
                             Swal.fire({
@@ -411,8 +430,8 @@
         });
 
 
-    </script>
+        </script>
 
 
-}
+    }
 

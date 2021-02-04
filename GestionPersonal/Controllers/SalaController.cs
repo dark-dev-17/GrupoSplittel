@@ -166,6 +166,7 @@ namespace GestionPersonal.Controllers
         [AccessDataSession(IdAction = new int[] { 33 })]
         public ActionResult CreateReservacion([FromBody]SalaReservacion SalaReservacion)
         {
+            darkManager.StartTransaction();
             try
             {
                 if (!ModelState.IsValid)
@@ -175,17 +176,29 @@ namespace GestionPersonal.Controllers
                 darkManager.SalaReservacion.Element = SalaReservacion;
                 darkManager.SalaReservacion.Element.IdPersona = (int)HttpContext.Session.GetInt32("user_id");
                 darkManager.SalaReservacion.Element.Activa = true;
-                if (darkManager.SalaReservacion.Add())
+                if (!darkManager.SalaReservacion.Add())
                 {
-                    return Ok(darkManager.SalaReservacion.GetLastId());
+                    //return BadRequest(darkManager.GetLastMessage());
+                    throw new GPSInformation.Exceptions.GpExceptions(darkManager.GetLastMessage());
                 }
-                else
+
+                int Lastid = darkManager.SalaReservacion.GetLastId();
+
+                darkManager.dBConnection.StartProcedure($"SP_Salas", new List<ProcedureModel>
                 {
-                    return BadRequest(darkManager.GetLastMessage());
+                    new ProcedureModel { Namefield = "IdSala", value = Lastid }
+                });
+
+                if(darkManager.dBConnection.ErrorCode != 0)
+                {
+                    throw new GPSInformation.Exceptions.GpExceptions(darkManager.GetLastMessage());
                 }
+                darkManager.Commit();
+                return Ok(Lastid);
             }
             catch (GPSInformation.Exceptions.GpExceptions ex)
             {
+                darkManager.RolBack();
                 return BadRequest(ex.Message);
             }
         }
