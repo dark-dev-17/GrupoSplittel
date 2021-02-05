@@ -80,8 +80,12 @@ namespace GPSInformation.Controllers
                     nomina.FechaFinalPago = DateTime.Parse(doc.SelectSingleNode("/cfdi:Comprobante/cfdi:Complemento/nomina12:Nomina", xmlmanager).Attributes.GetNamedItem("FechaFinalPago").Value);
                     nomina.FechaTimbrado = DateTime.Parse(doc.SelectSingleNode("/cfdi:Comprobante/cfdi:Complemento/tfd:TimbreFiscalDigital", xmlmanager).Attributes.GetNamedItem("FechaTimbrado").Value);
                     nomina.FechaPago = DateTime.Parse(doc.SelectSingleNode("/cfdi:Comprobante/cfdi:Complemento/nomina12:Nomina", xmlmanager).Attributes.GetNamedItem("FechaPago").Value);
-                    double TotalPercepciones = Double.Parse(doc.SelectSingleNode("/cfdi:Comprobante/cfdi:Complemento/nomina12:Nomina", xmlmanager).Attributes.GetNamedItem("TotalPercepciones").Value);
-                    double TotalDeducciones = Double.Parse(doc.SelectSingleNode("/cfdi:Comprobante/cfdi:Complemento/nomina12:Nomina", xmlmanager).Attributes.GetNamedItem("TotalDeducciones").Value);
+                    
+                    var TotPercep = doc.SelectSingleNode("/cfdi:Comprobante/cfdi:Complemento/nomina12:Nomina", xmlmanager).Attributes.GetNamedItem("TotalPercepciones");
+                    double TotalPercepciones = Double.Parse(TotPercep == null ? "0" : TotPercep.Value);
+
+                    var TotDeduc = doc.SelectSingleNode("/cfdi:Comprobante/cfdi:Complemento/nomina12:Nomina", xmlmanager).Attributes.GetNamedItem("TotalDeducciones");
+                    double TotalDeducciones = Double.Parse(TotDeduc == null ? "0" : TotDeduc.Value);
                     nomina.TotalNeto = TotalPercepciones - TotalDeducciones;
                     nomina.NumeroNomina = 1;
                     nomina.Comentarios = "";
@@ -101,7 +105,7 @@ namespace GPSInformation.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw new GPSInformation.Exceptions.GpExceptions(string.Format("{0} - {1}", PathNews + a.Name, ex.Message));
+                    throw new GPSInformation.Exceptions.GpExceptions(string.Format("{0} - {1}", PathNews + a.Name, ex.ToString()));
                 }
 
             });

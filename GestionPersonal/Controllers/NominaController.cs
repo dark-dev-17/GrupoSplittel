@@ -35,8 +35,20 @@ namespace GestionPersonal.Controllers
         // GET: Nomina
         public ActionResult ProccessFiles()
         {
-            ExpedienteCtrl.ProccessFiles();
-            return Ok("Proceso completo");
+            try
+            {
+                ExpedienteCtrl.ProccessFiles();
+                return Ok("Proceso completo");
+            }
+            catch (GPSInformation.Exceptions.GpExceptions ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+            
         }
         [HttpGet]
         public FileResult GetByRFC_Id(int id, string Type)
